@@ -64,6 +64,15 @@ class DashboardViewModel: NSObject {
         equityValues[snapshot] ?? 0.0
     }
     
+    func initializeSelectedSnapshot() {
+        if let selectedSnapshot, !unfilteredSnapshots.contains(selectedSnapshot){
+            self.selectedSnapshot = unfilteredSnapshots.last
+        }
+    }
+    
+    var selectedSnapshotDetailView: SnapshotDetailView = .assetDetailView
+    var currentPageAssetDetailView = 0
+    
     
     // MARK: members NetWorthChart
     var selectedTimeHorizon: TimeHorizon = .all
@@ -237,6 +246,12 @@ enum TimeHorizon: String, CaseIterable, Identifiable {
     case eighteenMonths = "18M"
     case all = "ALL"
 
+    var id: String { self.rawValue }
+}
+
+enum SnapshotDetailView: String, CaseIterable, Identifiable {
+    case assetDetailView = "Asset Details"
+    case liabilityDetailView = "Liability Details"
     var id: String { self.rawValue }
 }
 

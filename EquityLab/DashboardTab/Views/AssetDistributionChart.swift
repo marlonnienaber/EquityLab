@@ -15,7 +15,7 @@ struct AssetDistributionChart: View {
         Chart(viewModel.assetDistributionCategories) { category in
             SectorMark(angle: .value("type value", category.value),
                        innerRadius: .ratio(0.65),
-                       outerRadius: viewModel.selectedAssetCategory?.name == category.name ? 120 : 110,
+                       outerRadius: viewModel.selectedAssetCategory?.name == category.name ? 115 : 95,
                        angularInset: 3)
             .foregroundStyle(category.color)
             .cornerRadius(5)

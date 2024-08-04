@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Charts
+import UIKit
 
 struct Dashboard: View {
     @State var viewModel = DashboardViewModel()
@@ -14,14 +15,21 @@ struct Dashboard: View {
     var body: some View {
         NavigationView {
             dashboardContent
+                .padding([.top, .leading, .trailing], 16)
+                .padding(.bottom, 32)
                 .navigationTitle("Analytics")
         }
     }
     
     private var dashboardContent: some View {
-        VStack {
-            equitySection
-            distributionSection
+        GeometryReader { geometry in
+            VStack(spacing: 16) {
+                equitySection
+                    .frame(height: geometry.size.height * 0.45)
+                snapshotDetailSection
+                    .frame(height: geometry.size.height * 0.55)
+            }
+            .navigationTitle("Analytics")
         }
     }
     
@@ -40,12 +48,75 @@ struct Dashboard: View {
                 .frame(width: 235)
             }
             NetWorthChart(viewModel: viewModel)
-                .frame(maxHeight: 160)
         }
-        .padding()
     }
     
-    private var distributionSection: some View {
-        AssetDistributionChart(viewModel: viewModel)
+    private var snapshotDetailSection: some View {
+        GroupBox {
+            HStack {
+                if let currentDate = viewModel.selectedSnapshot?.date {
+                    Text(LocalizedLongDateFormatter.shared.string(from: currentDate))
+                        .bold()
+                }
+                Spacer()
+                Picker("Snapshot Detail View",selection: $viewModel.selectedSnapshotDetailView) {
+                    ForEach(SnapshotDetailView.allCases) { detailView in
+                        Text(detailView.rawValue).tag(detailView)
+                    }
+                }
+                .pickerStyle(MenuPickerStyle())
+                .accentColor(.primary)
+            }
+            Group {
+                if viewModel.selectedSnapshot == nil {
+                    VStack {
+                        Image(systemName: "chart.pie.fill")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 70, height: 70)
+                        Text("no snapshot selected")
+                    }
+                    .foregroundColor(Color.black.opacity(0.4))
+                } else {
+                    if viewModel.selectedSnapshotDetailView == .assetDetailView {
+                        assetDetailView
+                    } else {
+                        
+                    }
+                }
+            }
+        }
+        .groupBoxStyle(PageViewGroupBoxStyle())
+        .onAppear{
+            viewModel.initializeSelectedSnapshot()
+        }
+    }
+    
+    var assetDetailView: some View {
+        TabView {
+            VStack {
+                AssetDistributionChart(viewModel: viewModel)
+                Spacer()
+                    .frame(height: 45)
+            }
+            VStack {
+                AssetChangenChart(viewModel: viewModel)
+                Spacer()
+                    .frame(height: 45)
+            }
+        }
+        .tabViewStyle(PageTabViewStyle())
+    }
+}
+
+fileprivate struct PageViewGroupBoxStyle: GroupBoxStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.content
+            .padding([.top, .leading, .trailing]) // Default padding on top, leading, and trailing
+            .padding(.bottom, 0) // Remove bottom padding
+            .background(
+                RoundedRectangle(cornerRadius: 8, style: .continuous)
+                    .fill(Color(UIColor.secondarySystemBackground)) // Match the default background color
+            )
     }
 }

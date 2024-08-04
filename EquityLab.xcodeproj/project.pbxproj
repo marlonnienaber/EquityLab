@@ -60,6 +60,8 @@
 		7342EDC72C448A8F00BA20A4 /* AssetDistributionChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7342EDC62C448A8F00BA20A4 /* AssetDistributionChart.swift */; };
 		7342EDC92C448ABC00BA20A4 /* Dashboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7342EDC82C448ABC00BA20A4 /* Dashboard.swift */; };
 		73980F472AA57A4500CA4849 /* CoreDataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 73980F452AA57A4500CA4849 /* CoreDataModel.xcdatamodeld */; };
+		73D2C5902C5FBB970019A800 /* AssetChangeChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73D2C58F2C5FBB970019A800 /* AssetChangeChart.swift */; };
+		73D2C5922C5FBE3B0019A800 /* LocalizedLongDateFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73D2C5912C5FBE3B0019A800 /* LocalizedLongDateFormatter.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -117,6 +119,8 @@
 		7342EDC62C448A8F00BA20A4 /* AssetDistributionChart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetDistributionChart.swift; sourceTree = "<group>"; };
 		7342EDC82C448ABC00BA20A4 /* Dashboard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Dashboard.swift; sourceTree = "<group>"; };
 		73980F462AA57A4500CA4849 /* CoreDataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = CoreDataModel.xcdatamodel; sourceTree = "<group>"; };
+		73D2C58F2C5FBB970019A800 /* AssetChangeChart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetChangeChart.swift; sourceTree = "<group>"; };
+		73D2C5912C5FBE3B0019A800 /* LocalizedLongDateFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalizedLongDateFormatter.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -266,6 +270,7 @@
 			children = (
 				7342ED862C447E5000BA20A4 /* LocalizedCurrencyFormatter.swift */,
 				7342ED882C447E7000BA20A4 /* LocalizedShortDateFormatter.swift */,
+				73D2C5912C5FBE3B0019A800 /* LocalizedLongDateFormatter.swift */,
 			);
 			path = Formatters;
 			sourceTree = "<group>";
@@ -378,6 +383,7 @@
 				7342EDC82C448ABC00BA20A4 /* Dashboard.swift */,
 				7342EDC42C448A4300BA20A4 /* NetWorthChart.swift */,
 				7342EDC62C448A8F00BA20A4 /* AssetDistributionChart.swift */,
+				73D2C58F2C5FBB970019A800 /* AssetChangeChart.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -461,6 +467,7 @@
 				7342ED7D2C447CD700BA20A4 /* ObservingFetchedResultsController.swift in Sources */,
 				7342ED962C447FD400BA20A4 /* AssetPoolFormViewModel.swift in Sources */,
 				73980F472AA57A4500CA4849 /* CoreDataModel.xcdatamodeld in Sources */,
+				73D2C5902C5FBB970019A800 /* AssetChangeChart.swift in Sources */,
 				7342EDB52C44842100BA20A4 /* AssetPosition+CoreDataClass.swift in Sources */,
 				7342EDB62C44842100BA20A4 /* AssetPosition+CoreDataProperties.swift in Sources */,
 				7342EDB72C44842100BA20A4 /* LiabilityPosition+CoreDataClass.swift in Sources */,
@@ -472,6 +479,7 @@
 				7342EDC92C448ABC00BA20A4 /* Dashboard.swift in Sources */,
 				7342ED5F2C4478B200BA20A4 /* Position+CoreDataClass.swift in Sources */,
 				7342ED602C4478B200BA20A4 /* Position+CoreDataProperties.swift in Sources */,
+				73D2C5922C5FBE3B0019A800 /* LocalizedLongDateFormatter.swift in Sources */,
 				7342EDBA2C4484FC00BA20A4 /* SnapshotFormViewModel.swift in Sources */,
 				7342ED922C447F6300BA20A4 /* AssetForm.swift in Sources */,
 				7342EDA72C44821200BA20A4 /* LiabilityForm.swift in Sources */,
