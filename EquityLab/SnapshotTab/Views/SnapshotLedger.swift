@@ -15,7 +15,6 @@ struct SnapshotLedger: View {
         NavigationView {
             LedgerContent
                 .navigationTitle("Snapshots")
-//                .padding(.vertical)
                 .toolbar {
                     ToolbarItem(placement: .navigationBarLeading) {
                         if viewModel.snapshots.isEmpty {

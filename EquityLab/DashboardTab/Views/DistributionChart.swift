@@ -8,14 +8,14 @@
 import SwiftUI
 import Charts
 
-struct AssetDistributionChart: View {
-    @Bindable var viewModel: DashboardViewModel
+struct DistributionChart: View {
+    @Bindable var viewModel: DistributionChartViewModel
     
     var body: some View {
-        Chart(viewModel.assetDistributionCategories) { category in
+        Chart(viewModel.distributionCategories) { category in
             SectorMark(angle: .value("type value", category.value),
                        innerRadius: .ratio(0.65),
-                       outerRadius: viewModel.selectedAssetCategory?.name == category.name ? 115 : 95,
+                       outerRadius: viewModel.selectedCategory?.name == category.name ? 115 : 95,
                        angularInset: 3)
             .foregroundStyle(category.color)
             .cornerRadius(5)
@@ -29,7 +29,7 @@ struct AssetDistributionChart: View {
                 }
         }
         .chartBackground { _ in
-            if let selectedCategory = viewModel.selectedAssetCategory {
+            if let selectedCategory = viewModel.selectedCategory {
                 VStack {
                     Text(selectedCategory.name)
                     Text(viewModel.getSelectedCategoryValueString())
@@ -40,11 +40,11 @@ struct AssetDistributionChart: View {
         .onChange(of: viewModel.selectedCumulativeValue) { oldValue, newValue in
             if let newValue {
                 withAnimation {
-                    viewModel.setSelectedCategoryForNewCumulatveValue(cumulativeValue: newValue)
+                    viewModel.setSelectedCategoryForNewCumulativeValue(cumulativeValue: newValue)
                 }
             }
         }
-        .onChange(of: viewModel.selectedSnapshot) {
+        .onChange(of: viewModel.dashboardViewModel.selectedSnapshot) {
             viewModel.setSelectedCategoryForNewSnapshot()
         }
     }

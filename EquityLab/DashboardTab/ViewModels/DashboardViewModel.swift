@@ -119,7 +119,7 @@ class DashboardViewModel: NSObject {
         Self.logger.trace("computing assetDistributionCategories")
         var colorQueue = ColorQueue(colors: [Color("desert"), Color("midnight"), Color("dawn"), Color("coral")])
         
-        let poolValues = computeValueByPool(for: .assets, using: selectedSnapshot)
+        let poolValues = computeValueByPool(for: .assetDistributionChart, using: selectedSnapshot)
         let categories = poolValues.keys.sorted().map{
             DonutChartCategory(value: poolValues[$0]!, name: $0, color: colorQueue.dequeue())
         }
@@ -155,7 +155,7 @@ class DashboardViewModel: NSObject {
         return totalAssetValue
     }
     
-    func setSelectedCategoryForNewCumulatveValue(cumulativeValue: Double) {
+    func setSelectedCategoryForNewCumulativeValue(cumulativeValue: Double) {
         var cumulativeTotal = 0.0
         let _ = assetDistributionCategories.first { assetCategory in
             cumulativeTotal += Double(assetCategory.value)
@@ -178,8 +178,8 @@ class DashboardViewModel: NSObject {
             return []
         }
         
-        let poolValuesSelectedShot = computeValueByPool(for: .assets, using: selectedShot)
-        let poolValuesBeforeShot = computeValueByPool(for: .assets, using: beforeShot)
+        let poolValuesSelectedShot = computeValueByPool(for: .assetDistributionChart, using: selectedShot)
+        let poolValuesBeforeShot = computeValueByPool(for: .assetDistributionChart, using: beforeShot)
         
         let beforeShotKeySet = Set(poolValuesBeforeShot.keys)
         
@@ -204,8 +204,8 @@ class DashboardViewModel: NSObject {
         return nil
     }
     
-    func computeValueByPool(for positionType: PositionType, using snapshot: Snapshot) -> [String:Double] {
-        if positionType == .assets {
+    func computeValueByPool(for positionType: DistributionChartType, using snapshot: Snapshot) -> [String:Double] {
+        if positionType == .assetDistributionChart {
             let assetPositions = (try? context.fetch(snapshot.getAssetPositionRequest())) ?? []
             return Dictionary(grouping: assetPositions, by: { $0.poolName }).mapValues { array in
                 array.map { $0.value }.reduce(0, +)
@@ -235,11 +235,6 @@ extension DashboardViewModel: NSFetchedResultsControllerDelegate {
 
 
 // MARK: utilities
-enum PositionType {
-    case liabilities
-    case assets
-}
-
 enum TimeHorizon: String, CaseIterable, Identifiable {
     case threeMonths = "3M"
     case sixMonths = "6M"

@@ -95,7 +95,7 @@ struct Dashboard: View {
     var assetDetailView: some View {
         TabView {
             VStack {
-                AssetDistributionChart(viewModel: viewModel)
+                DistributionChart(viewModel: DistributionChartViewModel(distributionChartType: .assetDistributionChart, dashboardViewModel: viewModel))
                 Spacer()
                     .frame(height: 45)
             }
