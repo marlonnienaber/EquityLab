@@ -53,18 +53,17 @@ struct Dashboard: View {
     
     private var snapshotDetailSection: some View {
         GroupBox {
-            HStack {
+            HStack(spacing: 25) {
                 if let currentDate = viewModel.selectedSnapshot?.date {
                     Text(LocalizedLongDateFormatter.shared.string(from: currentDate))
                         .bold()
                 }
-                Spacer()
                 Picker("Snapshot Detail View",selection: $viewModel.selectedSnapshotDetailView) {
                     ForEach(SnapshotDetailView.allCases) { detailView in
                         Text(detailView.rawValue).tag(detailView)
                     }
                 }
-                .pickerStyle(MenuPickerStyle())
+                .pickerStyle(SegmentedPickerStyle())
                 .accentColor(.primary)
             }
             Group {
@@ -81,7 +80,7 @@ struct Dashboard: View {
                     if viewModel.selectedSnapshotDetailView == .assetDetailView {
                         assetDetailView
                     } else {
-                        
+                        liabilityDetailView
                     }
                 }
             }
@@ -103,6 +102,20 @@ struct Dashboard: View {
                 AssetChangenChart(viewModel: viewModel)
                 Spacer()
                     .frame(height: 45)
+            }
+        }
+        .tabViewStyle(PageTabViewStyle())
+    }
+    
+    var liabilityDetailView: some View {
+        TabView {
+            VStack {
+                DistributionChart(viewModel: DistributionChartViewModel(distributionChartType: .liabilityDistributionChart, dashboardViewModel: viewModel))
+                Spacer()
+                    .frame(height: 45)
+            }
+            VStack {
+                Text("not implemented")
             }
         }
         .tabViewStyle(PageTabViewStyle())

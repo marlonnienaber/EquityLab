@@ -49,7 +49,6 @@ class DashboardViewModel: NSObject {
         }
         
         self.selectedSnapshot = unfilteredSnapshots.last
-        self.selectedAssetCategory = assetDistributionCategories.first
     }
     
     private func calculateEquityValue(for snapshot: Snapshot) -> Double {
@@ -72,6 +71,20 @@ class DashboardViewModel: NSObject {
     
     var selectedSnapshotDetailView: SnapshotDetailView = .assetDetailView
     var currentPageAssetDetailView = 0
+    
+    func computeValueByPool(for positionType: PositionType, using snapshot: Snapshot) -> [String:Double] {
+        if positionType == .assets {
+            let assetPositions = (try? context.fetch(snapshot.getAssetPositionRequest())) ?? []
+            return Dictionary(grouping: assetPositions, by: { $0.poolName }).mapValues { array in
+                array.map { $0.value }.reduce(0, +)
+            }
+        } else {
+            let liabilityPositions = (try? context.fetch(snapshot.getLiabilityPositionRequest())) ?? []
+            return Dictionary(grouping: liabilityPositions, by: { $0.poolName }).mapValues { array in
+                array.map { $0.value }.reduce(0, +)
+            }
+        }
+    }
     
     
     // MARK: members NetWorthChart
@@ -112,74 +125,14 @@ class DashboardViewModel: NSObject {
     }
     
     
-    // MARK: members DistributionChart
-    var assetDistributionCategories: [DonutChartCategory] {
-        Self.logger.trace("comp. property assetDistributionCategories was called")
-        guard let selectedSnapshot else { return [] }
-        Self.logger.trace("computing assetDistributionCategories")
-        var colorQueue = ColorQueue(colors: [Color("desert"), Color("midnight"), Color("dawn"), Color("coral")])
-        
-        let poolValues = computeValueByPool(for: .assetDistributionChart, using: selectedSnapshot)
-        let categories = poolValues.keys.sorted().map{
-            DonutChartCategory(value: poolValues[$0]!, name: $0, color: colorQueue.dequeue())
-        }
-        
-        Self.logger.trace("categories created from assetPositions:")
-        for category in categories {
-            Self.logger.trace("\(category.name) (color: \(category.color) | value: \(category.value)")
-        }
-        
-        return categories
-    }
-    var selectedAssetCategory: DonutChartCategory?
-    var selectedCumulativeValue: Double?
-    
-    func getSelectedCategoryValueString() -> String {
-        guard let selectedAssetCategory else { return "" }
-        return LocalizedCurrencyFormatter.shared.string(from: selectedAssetCategory.value as NSNumber) ?? ""
-    }
-    
-    func getSelectedCategoryPercentageString() -> String {
-        guard let selectedAssetCategory, let selectedSnapshot else { return "" }
-        Self.logger.trace("computing percentage-String for category \(selectedAssetCategory.name)")
-        let percentage = (selectedAssetCategory.value / computeTotalAssetValue(for: selectedSnapshot)) * 100
-        Self.logger.trace("computed percentage: \(percentage)")
-        return String(format: "%.1f", percentage) + "%"
-    }
-    
-    func computeTotalAssetValue(for snapshot: Snapshot) -> Double {
-        Self.logger.trace("computing total asset value for snapshot \(snapshot.date)")
-        let assetPositions = (try? context.fetch(snapshot.getAssetPositionRequest())) ?? []
-        let totalAssetValue = assetPositions.map{ $0.value }.reduce(0, +)
-        Self.logger.trace("computed total asset value: \(totalAssetValue)")
-        return totalAssetValue
-    }
-    
-    func setSelectedCategoryForNewCumulativeValue(cumulativeValue: Double) {
-        var cumulativeTotal = 0.0
-        let _ = assetDistributionCategories.first { assetCategory in
-            cumulativeTotal += Double(assetCategory.value)
-            if cumulativeValue <= cumulativeTotal {
-                selectedAssetCategory = assetCategory
-                return true
-            }
-            return false
-        }
-    }
-    
-    func setSelectedCategoryForNewSnapshot() {
-        selectedAssetCategory = assetDistributionCategories.first(where: {$0.name == selectedAssetCategory?.name})
-    }
-    
-    
     // MARK: members ChangeChart
     var assetChangeCategories: [BarChartCategory] {
         guard let selectedShot = selectedSnapshot, let beforeShot = computeShotBeforeSelectedShot() else {
             return []
         }
         
-        let poolValuesSelectedShot = computeValueByPool(for: .assetDistributionChart, using: selectedShot)
-        let poolValuesBeforeShot = computeValueByPool(for: .assetDistributionChart, using: beforeShot)
+        let poolValuesSelectedShot = computeValueByPool(for: .assets, using: selectedShot)
+        let poolValuesBeforeShot = computeValueByPool(for: .assets, using: beforeShot)
         
         let beforeShotKeySet = Set(poolValuesBeforeShot.keys)
         
@@ -203,20 +156,6 @@ class DashboardViewModel: NSObject {
         }
         return nil
     }
-    
-    func computeValueByPool(for positionType: DistributionChartType, using snapshot: Snapshot) -> [String:Double] {
-        if positionType == .assetDistributionChart {
-            let assetPositions = (try? context.fetch(snapshot.getAssetPositionRequest())) ?? []
-            return Dictionary(grouping: assetPositions, by: { $0.poolName }).mapValues { array in
-                array.map { $0.value }.reduce(0, +)
-            }
-        } else {
-            let liabilityPositions = (try? context.fetch(snapshot.getLiabilityPositionRequest())) ?? []
-            return Dictionary(grouping: liabilityPositions, by: { $0.poolName }).mapValues { array in
-                array.map { $0.value }.reduce(0, +)
-            }
-        }
-    }
 }
 
 
@@ -235,6 +174,11 @@ extension DashboardViewModel: NSFetchedResultsControllerDelegate {
 
 
 // MARK: utilities
+enum PositionType {
+    case assets
+    case liabilities
+}
+
 enum TimeHorizon: String, CaseIterable, Identifiable {
     case threeMonths = "3M"
     case sixMonths = "6M"
@@ -245,16 +189,9 @@ enum TimeHorizon: String, CaseIterable, Identifiable {
 }
 
 enum SnapshotDetailView: String, CaseIterable, Identifiable {
-    case assetDetailView = "Asset Details"
-    case liabilityDetailView = "Liability Details"
+    case assetDetailView = "Assets"
+    case liabilityDetailView = "Liabilities"
     var id: String { self.rawValue }
-}
-
-struct DonutChartCategory: Identifiable {
-    let value: Double
-    let name: String
-    let id = UUID()
-    let color: Color
 }
 
 struct BarChartCategory: Identifiable {
