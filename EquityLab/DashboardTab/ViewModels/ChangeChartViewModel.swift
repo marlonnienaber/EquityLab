@@ -11,6 +11,10 @@ import os
 
 @Observable
 class ChangeChartViewModel {
+    @ObservationIgnored private static let logger = Logger(
+        subsystem: Bundle.main.bundleIdentifier ?? "",
+        category: String(describing: ChangeChartViewModel.self)
+    )
     @ObservationIgnored private var changeChartType: ChangeChartType
     @ObservationIgnored private var positionType: PositionType {
         switch changeChartType {
@@ -18,10 +22,6 @@ class ChangeChartViewModel {
         case .liabilityChangeChart: .liabilities
         }
     }
-    @ObservationIgnored private static let logger = Logger(
-        subsystem: Bundle.main.bundleIdentifier ?? "",
-        category: String(describing: ChangeChartViewModel.self)
-    )
     var dashboardViewModel: DashboardViewModel
     
     init(changeChartType: ChangeChartType, dashboardViewModel: DashboardViewModel) {

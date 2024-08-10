@@ -27,7 +27,7 @@ class DashboardViewModel: NSObject {
         self.context = context
         
         let request = ObservingFetchRequest<Snapshot>(entityName: "Snapshot")
-        request.sortDescriptors = [NSSortDescriptor(keyPath: \Snapshot.date, ascending: false)]
+        request.sortDescriptors = [NSSortDescriptor(keyPath: \Snapshot.date, ascending: true)]
         request.observedRelationships = ["liabilities"]
         fetchedResultsController = ObservingFetchedResultsController(fetchRequest: request, managedObjectContext: context, sectionNameKeyPath: nil, cacheName: nil)
         super.init()
