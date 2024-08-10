@@ -9,7 +9,7 @@ import SwiftUI
 import Charts
 
 struct DistributionChart: View {
-    @Bindable var viewModel: DistributionChartViewModel
+    @State var viewModel: DistributionChartViewModel
     
     var body: some View {
         Chart(viewModel.distributionCategories) { category in

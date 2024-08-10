@@ -23,7 +23,6 @@ class DashboardViewModel: NSObject {
     var selectedSnapshot: Snapshot?
     
     override init() {
-        Self.logger.trace("creating DashboardVM")
         let context = DataService.shared.persistentContainer.viewContext
         self.context = context
         
@@ -33,21 +32,13 @@ class DashboardViewModel: NSObject {
         fetchedResultsController = ObservingFetchedResultsController(fetchRequest: request, managedObjectContext: context, sectionNameKeyPath: nil, cacheName: nil)
         super.init()
         fetchedResultsController.delegate = self
-        Self.logger.trace("attempting to fetch Snapshots in dashboardVM")
         do {
             try fetchedResultsController.performFetch()
             self.unfilteredSnapshots = fetchedResultsController.fetchedObjects as! [Snapshot]
             for shot in unfilteredSnapshots {
                 equityValues[shot] = calculateEquityValue(for: shot)
             }
-            Self.logger.trace("fetched Snapshots in DashboardViewModel:")
-            for shot in unfilteredSnapshots {
-                Self.logger.trace("\(shot.date)")
-            }
-        } catch {
-            Self.logger.trace("something went wrong fetching snapshot in DashboardVM")
-        }
-        
+        } catch {}
         self.selectedSnapshot = unfilteredSnapshots.last
     }
     
@@ -86,15 +77,19 @@ class DashboardViewModel: NSObject {
         }
     }
     
+    func computeShotBeforeSelectedShot() -> Snapshot? {
+        if let selectedDate {
+            if let index = filteredSnapshots.firstIndex(where: {$0.date == selectedDate} ) {
+                return index == 0 ? nil : filteredSnapshots[index - 1]
+            }
+        }
+        return nil
+    }
     
     // MARK: members NetWorthChart
     var selectedTimeHorizon: TimeHorizon = .all
     var unfilteredSnapshots = [Snapshot]()
     var filteredSnapshots: [Snapshot] {
-        Self.logger.trace("returning filtered Snapshots:")
-        for shot in unfilteredSnapshots {
-            Self.logger.trace("\(shot.date)")
-        }
         return unfilteredSnapshots
     }
     var selectedDate: Date? {
@@ -122,39 +117,6 @@ class DashboardViewModel: NSObject {
         let calendar = Calendar.current
         let dateMonthsAgo = calendar.date(byAdding: .month, value: -amount, to: today) ?? Date()
         return date >= dateMonthsAgo && date <= today
-    }
-    
-    
-    // MARK: members ChangeChart
-    var assetChangeCategories: [BarChartCategory] {
-        guard let selectedShot = selectedSnapshot, let beforeShot = computeShotBeforeSelectedShot() else {
-            return []
-        }
-        
-        let poolValuesSelectedShot = computeValueByPool(for: .assets, using: selectedShot)
-        let poolValuesBeforeShot = computeValueByPool(for: .assets, using: beforeShot)
-        
-        let beforeShotKeySet = Set(poolValuesBeforeShot.keys)
-        
-        var changedPoolValues = poolValuesSelectedShot.filter{ beforeShotKeySet.contains($0.key)}
-        
-        changedPoolValues.forEach{ key,value in
-            changedPoolValues[key] = ((value / poolValuesBeforeShot[key]!) - 1) * 100
-        }
-        
-        return changedPoolValues.map{ BarChartCategory(change: $0.value, name: $0.key, color: Color("desert")) }
-    }
-    var maxAssetChangePercentage: Double {
-        assetChangeCategories.map{ abs($0.change) }.max() ?? 0.0
-    }
-    
-    func computeShotBeforeSelectedShot() -> Snapshot? {
-        if let selectedDate {
-            if let index = filteredSnapshots.firstIndex(where: {$0.date == selectedDate} ) {
-                return index == 0 ? nil : filteredSnapshots[index - 1]
-            }
-        }
-        return nil
     }
 }
 

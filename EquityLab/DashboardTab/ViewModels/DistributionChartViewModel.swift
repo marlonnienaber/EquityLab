@@ -38,19 +38,13 @@ class DistributionChartViewModel {
     var selectedCumulativeValue: Double?
     
     var distributionCategories: [DonutChartCategory] {
-        Self.logger.trace("comp. property assetDistributionCategories was called")
         guard let selectedSnapshot = dashboardViewModel.selectedSnapshot else { return [] }
-        Self.logger.trace("computing assetDistributionCategories")
+    
         var colorQueue = ColorQueue(colors: [Color("desert"), Color("midnight"), Color("dawn"), Color("coral")])
         
         let poolValues = dashboardViewModel.computeValueByPool(for: positionType, using: selectedSnapshot)
         let categories = poolValues.keys.sorted().map{
             DonutChartCategory(value: poolValues[$0]!, name: $0, color: colorQueue.dequeue())
-        }
-        
-        Self.logger.trace("categories created from assetPositions:")
-        for category in categories {
-            Self.logger.trace("\(category.name) (color: \(category.color) | value: \(category.value)")
         }
         
         return categories
@@ -63,14 +57,11 @@ class DistributionChartViewModel {
     
     func getSelectedCategoryPercentageString() -> String {
         guard let selectedCategory, let selectedSnapshot = dashboardViewModel.selectedSnapshot else { return "" }
-        Self.logger.trace("computing percentage-String for category \(selectedCategory.name)")
         let percentage = (selectedCategory.value / computeTotalValue(for: selectedSnapshot)) * 100
-        Self.logger.trace("computed percentage: \(percentage)")
         return String(format: "%.1f", percentage) + "%"
     }
     
     func computeTotalValue(for snapshot: Snapshot) -> Double {
-        Self.logger.trace("computing total asset value for snapshot \(snapshot.date)")
         let positions: [Position]
         if distributionChartType == .assetDistributionChart {
             positions = (try? context.fetch(snapshot.getAssetPositionRequest())) ?? []
@@ -78,7 +69,6 @@ class DistributionChartViewModel {
             positions = (try? context.fetch(snapshot.getLiabilityPositionRequest())) ?? []
         }
         let totalValue = positions.map{ $0.value }.reduce(0, +)
-        Self.logger.trace("computed total asset value: \(totalValue)")
         return totalValue
     }
     

@@ -94,12 +94,12 @@ struct Dashboard: View {
     var assetDetailView: some View {
         TabView {
             VStack {
-                DistributionChart(viewModel: DistributionChartViewModel(distributionChartType: .assetDistributionChart, dashboardViewModel: viewModel))
+                ChangenChart(viewModel: ChangeChartViewModel(changeChartType: .assetChangeChart, dashboardViewModel: viewModel))
                 Spacer()
                     .frame(height: 45)
             }
             VStack {
-                AssetChangenChart(viewModel: viewModel)
+                DistributionChart(viewModel: DistributionChartViewModel(distributionChartType: .assetDistributionChart, dashboardViewModel: viewModel))
                 Spacer()
                     .frame(height: 45)
             }
@@ -110,12 +110,14 @@ struct Dashboard: View {
     var liabilityDetailView: some View {
         TabView {
             VStack {
-                DistributionChart(viewModel: DistributionChartViewModel(distributionChartType: .liabilityDistributionChart, dashboardViewModel: viewModel))
+                ChangenChart(viewModel: ChangeChartViewModel(changeChartType: .liabilityChangeChart, dashboardViewModel: viewModel))
                 Spacer()
                     .frame(height: 45)
             }
             VStack {
-                Text("not implemented")
+                DistributionChart(viewModel: DistributionChartViewModel(distributionChartType: .liabilityDistributionChart, dashboardViewModel: viewModel))
+                Spacer()
+                    .frame(height: 45)
             }
         }
         .tabViewStyle(PageTabViewStyle())

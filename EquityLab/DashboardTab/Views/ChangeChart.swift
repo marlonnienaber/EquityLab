@@ -9,12 +9,12 @@ import Foundation
 import Charts
 import SwiftUI
 
-struct AssetChangenChart: View {
-    @Bindable var viewModel: DashboardViewModel
+struct ChangenChart: View {
+    @State var viewModel: ChangeChartViewModel
     
     var body: some View {
         Chart {
-            ForEach(viewModel.assetChangeCategories) { category in
+            ForEach(viewModel.changeCategories) { category in
                 BarMark(
                     x: .value("category", category.name),
                     y: .value("value", category.change)
@@ -36,8 +36,8 @@ struct AssetChangenChart: View {
             }
         }
         .chartYScale(domain: [
-                -viewModel.maxAssetChangePercentage - 11,
-                 viewModel.maxAssetChangePercentage + 11
+                -viewModel.maxChangePercentage - 11,
+                 viewModel.maxChangePercentage + 11
             ]
         )
         .animation(.easeInOut(duration: 0.5))
