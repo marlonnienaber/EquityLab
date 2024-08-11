@@ -1,10 +1,3 @@
-//
-//  Dashboard.swift
-//  EquityLab
-//
-//  Created by Marlon Nienaber on 15.07.24.
-//
-
 import SwiftUI
 import Charts
 import UIKit
@@ -53,41 +46,52 @@ struct Dashboard: View {
     
     private var snapshotDetailSection: some View {
         GroupBox {
-            HStack(spacing: 25) {
+            HStack {
                 if let currentDate = viewModel.selectedSnapshot?.date {
                     Text(LocalizedLongDateFormatter.shared.string(from: currentDate))
                         .bold()
                 }
+                Spacer()
                 Picker("Snapshot Detail View",selection: $viewModel.selectedSnapshotDetailView) {
                     ForEach(SnapshotDetailView.allCases) { detailView in
                         Text(detailView.rawValue).tag(detailView)
                     }
                 }
-                .pickerStyle(SegmentedPickerStyle())
+                .pickerStyle(MenuPickerStyle())
                 .accentColor(.primary)
+                .background(
+                    RoundedRectangle(cornerRadius: 8)
+                        .fill(Color.gray.opacity(0.2))
+                )
             }
-            Group {
-                if viewModel.selectedSnapshot == nil {
-                    VStack {
-                        Image(systemName: "chart.pie.fill")
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: 70, height: 70)
-                        Text("no snapshot selected")
-                    }
-                    .foregroundColor(Color.black.opacity(0.4))
-                } else {
-                    if viewModel.selectedSnapshotDetailView == .assetDetailView {
-                        assetDetailView
-                    } else {
-                        liabilityDetailView
-                    }
+            if viewModel.selectedSnapshot == nil {
+                VStack {
+                    Image(systemName: "chart.pie.fill")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 70, height: 70)
+                    Text("no snapshot selected")
+                }
+                .foregroundColor(Color.black.opacity(0.4))
+            } else {
+                switch viewModel.selectedSnapshotDetailView {
+                case .assetDetailView: assetDetailView
+                case .liabilityDetailView: liabilityDetailView
+                case .balanceDetailView: balanceDetailView
                 }
             }
         }
         .groupBoxStyle(PageViewGroupBoxStyle())
         .onAppear{
             viewModel.initializeSelectedSnapshot()
+        }
+    }
+    
+    var balanceDetailView: some View {
+        VStack {
+            Spacer()
+            BalanceView()
+            Spacer()
         }
     }
     

@@ -18,11 +18,13 @@ struct ChangenChart: View {
                 BarMark(
                     x: .value("category", category.name),
                     y: .value("value", category.change)
-                ).annotation(position: .bottom) {
+                )
+                .annotation(position: .bottom) {
                     Text(category.change == 0 ? "" :  String(format: "%.1f", category.change) + "%")
                         .font(.caption)
-                }.foregroundStyle(category.color)
-                    .cornerRadius(5)
+                }
+                .foregroundStyle(viewModel.changeChartColor)
+                .cornerRadius(5)
             }
         }
         .chartYAxis{

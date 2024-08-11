@@ -17,7 +17,7 @@ struct DistributionChart: View {
                        innerRadius: .ratio(0.65),
                        outerRadius: viewModel.selectedCategory?.name == category.name ? 115 : 95,
                        angularInset: 3)
-            .foregroundStyle(category.color)
+            .foregroundStyle(viewModel.unselectedColor)
             .cornerRadius(5)
         }
         .chartAngleSelection(value: $viewModel.selectedCumulativeValue)

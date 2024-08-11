@@ -24,6 +24,18 @@ class DistributionChartViewModel {
         case .liabilityDistributionChart: .liabilities
         }
     }
+    var unselectedColor: Color {
+        switch distributionChartType {
+        case .liabilityDistributionChart: Color("LiabilitiesUnselected")
+        case .assetDistributionChart: Color("AssetsUnselected")
+        }
+    }
+    var selectedColor: Color {
+        switch distributionChartType {
+        case .liabilityDistributionChart: Color("LiabilitiesSelected")
+        case .assetDistributionChart: Color("AssetsSelected")
+        }
+    }
     var dashboardViewModel: DashboardViewModel
     var selectedCategory: DonutChartCategory?
     
@@ -39,12 +51,10 @@ class DistributionChartViewModel {
     
     var distributionCategories: [DonutChartCategory] {
         guard let selectedSnapshot = dashboardViewModel.selectedSnapshot else { return [] }
-    
-        var colorQueue = ColorQueue(colors: [Color("desert"), Color("midnight"), Color("dawn"), Color("coral")])
-        
+
         let poolValues = dashboardViewModel.computeValueByPool(for: positionType, using: selectedSnapshot)
         let categories = poolValues.keys.sorted().map{
-            DonutChartCategory(value: poolValues[$0]!, name: $0, color: colorQueue.dequeue())
+            DonutChartCategory(value: poolValues[$0]!, name: $0)
         }
         
         return categories
@@ -98,5 +108,4 @@ struct DonutChartCategory: Identifiable {
     let value: Double
     let name: String
     let id = UUID()
-    let color: Color
 }

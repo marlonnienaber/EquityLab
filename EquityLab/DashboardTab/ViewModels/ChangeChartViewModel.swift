@@ -23,6 +23,12 @@ class ChangeChartViewModel {
         }
     }
     var dashboardViewModel: DashboardViewModel
+    var changeChartColor: Color {
+        switch changeChartType {
+        case .liabilityChangeChart: Color("LiabilitiesUnselected")
+        case .assetChangeChart: Color("AssetsUnselected")
+        }
+    }
     
     init(changeChartType: ChangeChartType, dashboardViewModel: DashboardViewModel) {
         self.changeChartType = changeChartType
@@ -42,7 +48,7 @@ class ChangeChartViewModel {
         changedPoolValues.forEach{ key,value in
             changedPoolValues[key] = ((value / poolValuesBeforeShot[key]!) - 1) * 100
         }
-        let changeCategories = changedPoolValues.map{ BarChartCategory(change: $0.value, name: $0.key, color: Color("desert")) }
+        let changeCategories = changedPoolValues.map{ BarChartCategory(change: $0.value, name: $0.key) }
         return changeCategories
     }
     
@@ -63,4 +69,10 @@ class ChangeChartViewModel {
 enum ChangeChartType {
     case liabilityChangeChart
     case assetChangeChart
+}
+
+struct BarChartCategory: Identifiable {
+    let change: Double
+    let name: String
+    let id = UUID()
 }

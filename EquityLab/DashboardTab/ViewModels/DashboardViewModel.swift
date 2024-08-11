@@ -60,7 +60,7 @@ class DashboardViewModel: NSObject {
         }
     }
     
-    var selectedSnapshotDetailView: SnapshotDetailView = .assetDetailView
+    var selectedSnapshotDetailView: SnapshotDetailView = .balanceDetailView
     var currentPageAssetDetailView = 0
     
     func computeValueByPool(for positionType: PositionType, using snapshot: Snapshot) -> [String:Double] {
@@ -151,17 +151,13 @@ enum TimeHorizon: String, CaseIterable, Identifiable {
 }
 
 enum SnapshotDetailView: String, CaseIterable, Identifiable {
+    case balanceDetailView = "Balance"
     case assetDetailView = "Assets"
     case liabilityDetailView = "Liabilities"
     var id: String { self.rawValue }
 }
 
-struct BarChartCategory: Identifiable {
-    let change: Double
-    let name: String
-    let color: Color
-    let id = UUID()
-}
+
 
 struct ColorQueue {
     private var colors: [Color]
