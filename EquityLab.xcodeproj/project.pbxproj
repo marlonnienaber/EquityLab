@@ -56,7 +56,7 @@
 		7342EDBC2C44868900BA20A4 /* SnapshotLedger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7342EDBB2C44868900BA20A4 /* SnapshotLedger.swift */; };
 		7342EDBE2C4487DA00BA20A4 /* SnapshotForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7342EDBD2C4487DA00BA20A4 /* SnapshotForm.swift */; };
 		7342EDC32C4489AC00BA20A4 /* DashboardViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7342EDC22C4489AC00BA20A4 /* DashboardViewModel.swift */; };
-		7342EDC52C448A4300BA20A4 /* NetWorthChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7342EDC42C448A4300BA20A4 /* NetWorthChart.swift */; };
+		7342EDC52C448A4300BA20A4 /* EquityChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7342EDC42C448A4300BA20A4 /* EquityChart.swift */; };
 		7342EDC72C448A8F00BA20A4 /* DistributionChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7342EDC62C448A8F00BA20A4 /* DistributionChart.swift */; };
 		7342EDC92C448ABC00BA20A4 /* Dashboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7342EDC82C448ABC00BA20A4 /* Dashboard.swift */; };
 		73823CDD2C6154930049D03C /* DistributionChartViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73823CDC2C6154930049D03C /* DistributionChartViewModel.swift */; };
@@ -118,7 +118,7 @@
 		7342EDBB2C44868900BA20A4 /* SnapshotLedger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapshotLedger.swift; sourceTree = "<group>"; };
 		7342EDBD2C4487DA00BA20A4 /* SnapshotForm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapshotForm.swift; sourceTree = "<group>"; };
 		7342EDC22C4489AC00BA20A4 /* DashboardViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardViewModel.swift; sourceTree = "<group>"; };
-		7342EDC42C448A4300BA20A4 /* NetWorthChart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetWorthChart.swift; sourceTree = "<group>"; };
+		7342EDC42C448A4300BA20A4 /* EquityChart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EquityChart.swift; sourceTree = "<group>"; };
 		7342EDC62C448A8F00BA20A4 /* DistributionChart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DistributionChart.swift; sourceTree = "<group>"; };
 		7342EDC82C448ABC00BA20A4 /* Dashboard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Dashboard.swift; sourceTree = "<group>"; };
 		73823CDC2C6154930049D03C /* DistributionChartViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DistributionChartViewModel.swift; sourceTree = "<group>"; };
@@ -389,7 +389,7 @@
 			isa = PBXGroup;
 			children = (
 				7342EDC82C448ABC00BA20A4 /* Dashboard.swift */,
-				7342EDC42C448A4300BA20A4 /* NetWorthChart.swift */,
+				7342EDC42C448A4300BA20A4 /* EquityChart.swift */,
 				7342EDC62C448A8F00BA20A4 /* DistributionChart.swift */,
 				73D2C58F2C5FBB970019A800 /* ChangeChart.swift */,
 				73823CE02C68023E0049D03C /* BalanceView.swift */,
@@ -484,7 +484,7 @@
 				7342EDB62C44842100BA20A4 /* AssetPosition+CoreDataProperties.swift in Sources */,
 				7342EDB72C44842100BA20A4 /* LiabilityPosition+CoreDataClass.swift in Sources */,
 				7342EDB82C44842100BA20A4 /* LiabilityPosition+CoreDataProperties.swift in Sources */,
-				7342EDC52C448A4300BA20A4 /* NetWorthChart.swift in Sources */,
+				7342EDC52C448A4300BA20A4 /* EquityChart.swift in Sources */,
 				7342EDC72C448A8F00BA20A4 /* DistributionChart.swift in Sources */,
 				7342EDAC2C4482C700BA20A4 /* SnapshotLedgerViewModel.swift in Sources */,
 				7342EDA52C4481EE00BA20A4 /* LiabilityPoolForm.swift in Sources */,

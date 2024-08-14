@@ -8,7 +8,7 @@
 import Charts
 import SwiftUI
 
-struct NetWorthChart: View {
+struct EquityChart: View {
     @Bindable var viewModel: DashboardViewModel
 
     var body: some View {

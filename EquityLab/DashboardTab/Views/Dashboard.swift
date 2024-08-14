@@ -40,7 +40,7 @@ struct Dashboard: View {
                 .pickerStyle(SegmentedPickerStyle())
                 .frame(width: 235)
             }
-            NetWorthChart(viewModel: viewModel)
+            EquityChart(viewModel: viewModel)
         }
     }
     
