@@ -90,7 +90,7 @@ struct Dashboard: View {
     var balanceDetailView: some View {
         VStack {
             Spacer()
-            BalanceView()
+            BalanceView(viewModel: viewModel)
             Spacer()
         }
     }

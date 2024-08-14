@@ -20,6 +20,8 @@ class DashboardViewModel: NSObject {
     @ObservationIgnored private var context: NSManagedObjectContext
     @ObservationIgnored private let fetchedResultsController: ObservingFetchedResultsController<Snapshot>
     @ObservationIgnored private var equityValues = [Snapshot:Double]()
+    @ObservationIgnored private var assetValues = [Snapshot:Double]()
+    @ObservationIgnored private var liabilityValues = [Snapshot:Double]()
     var selectedSnapshot: Snapshot?
     
     override init() {
@@ -43,15 +45,39 @@ class DashboardViewModel: NSObject {
     }
     
     private func calculateEquityValue(for snapshot: Snapshot) -> Double {
-        let liabilityPositions = (try? context.fetch(snapshot.getLiabilityPositionRequest())) ?? []
-        let totalLiabilityValue = liabilityPositions.map{ $0.value }.reduce(0, +)
-        let assetPositions = (try? context.fetch(snapshot.getAssetPositionRequest())) ?? []
-        let totalAssetValue = assetPositions.map{ $0.value }.reduce(0, +)
+        let totalLiabilityValue = calculateLiabilityValue(for: snapshot)
+        let totalAssetValue = calculateAssetValue(for: snapshot)
         return totalAssetValue - totalLiabilityValue
+    }
+    private func calculateAssetValue(for snapshot: Snapshot) -> Double {
+        let assetPositions = (try? context.fetch(snapshot.getAssetPositionRequest())) ?? []
+        return assetPositions.map{ $0.value }.reduce(0, +)
+    }
+    private func calculateLiabilityValue(for snapshot: Snapshot) -> Double {
+        let liabilityPositions = (try? context.fetch(snapshot.getLiabilityPositionRequest())) ?? []
+        return liabilityPositions.map{ $0.value }.reduce(0, +)
     }
     
     func equityValue(of snapshot: Snapshot) -> Double {
         equityValues[snapshot] ?? 0.0
+    }
+    func assetValue(of snapshot: Snapshot) -> Double {
+        if let assetValue = assetValues[snapshot] {
+            return assetValue
+        } else {
+            let assetValue = calculateAssetValue(for: snapshot)
+            assetValues[snapshot] = assetValue
+            return assetValue
+        }
+    }
+    func liabilityValue(of snapshot: Snapshot) -> Double {
+        if let liabilityValue = liabilityValues[snapshot] {
+            return liabilityValue
+        } else {
+            let liabilityValue = calculateLiabilityValue(for: snapshot)
+            liabilityValues[snapshot] = liabilityValue
+            return liabilityValue
+        }
     }
     
     func initializeSelectedSnapshot() {
