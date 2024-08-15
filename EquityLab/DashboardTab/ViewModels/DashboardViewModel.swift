@@ -86,8 +86,10 @@ class DashboardViewModel: NSObject {
         }
     }
     
+    //TODO: implement SharedStateManager and use enum for currentPageAssetDetailView and currentPageLiabilityDetailView
     var selectedSnapshotDetailView: SnapshotDetailView = .balanceDetailView
-    var currentPageAssetDetailView = 0
+    var currentPageAssetDetailView: DetailPage = .changeDetailPage
+    var currentPageLiabilityDetailView: DetailPage = .changeDetailPage
     
     func computeValueByPool(for positionType: PositionType, using snapshot: Snapshot) -> [String:Double] {
         if positionType == .assets {
@@ -101,15 +103,6 @@ class DashboardViewModel: NSObject {
                 array.map { $0.value }.reduce(0, +)
             }
         }
-    }
-    
-    func computeShotBeforeSelectedShot() -> Snapshot? {
-        if let selectedDate {
-            if let index = filteredSnapshots.firstIndex(where: {$0.date == selectedDate} ) {
-                return index == 0 ? nil : filteredSnapshots[index - 1]
-            }
-        }
-        return nil
     }
     
     // MARK: members NetWorthChart
@@ -132,17 +125,9 @@ class DashboardViewModel: NSObject {
     func closestDayPredicate(firstShot: Snapshot, secondShot: Snapshot, selectedDate: Date) -> Bool {
         computeAbsoluteMinuteDifference(first: firstShot.date, second: selectedDate) < computeAbsoluteMinuteDifference(first: secondShot.date, second: selectedDate) ? true : false
     }
-    
     func computeAbsoluteMinuteDifference(first: Date, second: Date) -> Int {
         let components = Calendar.current.dateComponents([.minute], from: first, to: second)
         return abs(components.minute!)
-    }
-    
-    func dateFallsIntoLastMonth(date: Date, amount: Int) -> Bool {
-        let today = Date.now
-        let calendar = Calendar.current
-        let dateMonthsAgo = calendar.date(byAdding: .month, value: -amount, to: today) ?? Date()
-        return date >= dateMonthsAgo && date <= today
     }
 }
 
@@ -181,6 +166,11 @@ enum SnapshotDetailView: String, CaseIterable, Identifiable {
     case assetDetailView = "Assets"
     case liabilityDetailView = "Liabilities"
     var id: String { self.rawValue }
+}
+
+enum DetailPage {
+    case changeDetailPage
+    case distributionDetailPage
 }
 
 
