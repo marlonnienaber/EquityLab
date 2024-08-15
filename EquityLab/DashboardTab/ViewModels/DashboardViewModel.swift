@@ -29,11 +29,7 @@ class DashboardViewModel: NSObject {
             SnapshotDetailSectionSharedStateManager.shared.lastSelectedSnapshotDetailView = selectedSnapshotDetailView
         }
     }
-    var selectedDetailPage: DetailPage {
-        didSet {
-            SnapshotDetailSectionSharedStateManager.shared.lastSelectedDetailPage = selectedDetailPage
-        }
-    }
+    var selectedDetailPage: DetailPage = .changeDetailPage
     
     override init() {
         let context = DataService.shared.persistentContainer.viewContext
@@ -44,7 +40,6 @@ class DashboardViewModel: NSObject {
         request.observedRelationships = ["liabilities"]
         fetchedResultsController = ObservingFetchedResultsController(fetchRequest: request, managedObjectContext: context, sectionNameKeyPath: nil, cacheName: nil)
         self.selectedSnapshotDetailView = SnapshotDetailSectionSharedStateManager.shared.lastSelectedSnapshotDetailView
-        self.selectedDetailPage = SnapshotDetailSectionSharedStateManager.shared.lastSelectedDetailPage
         super.init()
         fetchedResultsController.delegate = self
         do {
