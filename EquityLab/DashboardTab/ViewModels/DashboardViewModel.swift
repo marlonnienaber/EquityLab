@@ -24,11 +24,7 @@ class DashboardViewModel: NSObject {
     @ObservationIgnored private var liabilityValues = [Snapshot:Double]()
     var selectedSnapshot: Snapshot?
     
-    var selectedSnapshotDetailView: SnapshotDetailView {
-        didSet {
-            SnapshotDetailSectionSharedStateManager.shared.lastSelectedSnapshotDetailView = selectedSnapshotDetailView
-        }
-    }
+    var selectedSnapshotDetailView: SnapshotDetailView = .balanceDetailView
     var selectedDetailPage: DetailPage = .changeDetailPage
     
     override init() {
@@ -39,7 +35,6 @@ class DashboardViewModel: NSObject {
         request.sortDescriptors = [NSSortDescriptor(keyPath: \Snapshot.date, ascending: true)]
         request.observedRelationships = ["liabilities"]
         fetchedResultsController = ObservingFetchedResultsController(fetchRequest: request, managedObjectContext: context, sectionNameKeyPath: nil, cacheName: nil)
-        self.selectedSnapshotDetailView = SnapshotDetailSectionSharedStateManager.shared.lastSelectedSnapshotDetailView
         super.init()
         fetchedResultsController.delegate = self
         do {
