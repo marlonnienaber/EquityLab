@@ -96,7 +96,7 @@ struct Dashboard: View {
     }
     
     var assetDetailView: some View {
-        TabView(selection: $viewModel.currentPageAssetDetailView) {
+        TabView(selection: $viewModel.selectedDetailPage) {
             VStack {
                 ChangenChart(viewModel: ChangeChartViewModel(changeChartType: .assetChangeChart, dashboardViewModel: viewModel))
                 Spacer()
@@ -108,13 +108,13 @@ struct Dashboard: View {
                 Spacer()
                     .frame(height: 45)
             }
-            .tag(DetailPage.changeDetailPage)
+            .tag(DetailPage.distributionDetailPage)
         }
         .tabViewStyle(PageTabViewStyle())
     }
     
     var liabilityDetailView: some View {
-        TabView(selection: $viewModel.currentPageAssetDetailView) {
+        TabView(selection: $viewModel.selectedDetailPage) {
             VStack {
                 ChangenChart(viewModel: ChangeChartViewModel(changeChartType: .liabilityChangeChart, dashboardViewModel: viewModel))
                 Spacer()
@@ -126,7 +126,7 @@ struct Dashboard: View {
                 Spacer()
                     .frame(height: 45)
             }
-            .tag(DetailPage.changeDetailPage)
+            .tag(DetailPage.distributionDetailPage)
         }
         .tabViewStyle(PageTabViewStyle())
     }

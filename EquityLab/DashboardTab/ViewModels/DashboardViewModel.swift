@@ -24,6 +24,17 @@ class DashboardViewModel: NSObject {
     @ObservationIgnored private var liabilityValues = [Snapshot:Double]()
     var selectedSnapshot: Snapshot?
     
+    var selectedSnapshotDetailView: SnapshotDetailView {
+        didSet {
+            SnapshotDetailSectionSharedStateManager.shared.lastSelectedSnapshotDetailView = selectedSnapshotDetailView
+        }
+    }
+    var selectedDetailPage: DetailPage {
+        didSet {
+            SnapshotDetailSectionSharedStateManager.shared.lastSelectedDetailPage = selectedDetailPage
+        }
+    }
+    
     override init() {
         let context = DataService.shared.persistentContainer.viewContext
         self.context = context
@@ -32,6 +43,8 @@ class DashboardViewModel: NSObject {
         request.sortDescriptors = [NSSortDescriptor(keyPath: \Snapshot.date, ascending: true)]
         request.observedRelationships = ["liabilities"]
         fetchedResultsController = ObservingFetchedResultsController(fetchRequest: request, managedObjectContext: context, sectionNameKeyPath: nil, cacheName: nil)
+        self.selectedSnapshotDetailView = SnapshotDetailSectionSharedStateManager.shared.lastSelectedSnapshotDetailView
+        self.selectedDetailPage = SnapshotDetailSectionSharedStateManager.shared.lastSelectedDetailPage
         super.init()
         fetchedResultsController.delegate = self
         do {
@@ -86,10 +99,7 @@ class DashboardViewModel: NSObject {
         }
     }
     
-    //TODO: implement SharedStateManager and use enum for currentPageAssetDetailView and currentPageLiabilityDetailView
-    var selectedSnapshotDetailView: SnapshotDetailView = .balanceDetailView
-    var currentPageAssetDetailView: DetailPage = .changeDetailPage
-    var currentPageLiabilityDetailView: DetailPage = .changeDetailPage
+    
     
     func computeValueByPool(for positionType: PositionType, using snapshot: Snapshot) -> [String:Double] {
         if positionType == .assets {
