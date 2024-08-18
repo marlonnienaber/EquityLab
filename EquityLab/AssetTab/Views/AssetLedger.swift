@@ -36,6 +36,27 @@ struct AssetLedger: View {
                     }
                 }
             }
+            .alert("What should the name of the new pool be?", isPresented: $viewModel.showCreatePoolAlert) {
+                TextField("Value", text: $viewModel.poolName)
+                Button("Cancel") {
+                    viewModel.showCreatePoolAlert = false
+                }
+                Button("Save") {
+                    viewModel.createAssetPool()
+                }
+            }
+            .alert("Edit \(viewModel.pool?.name ?? "")", isPresented: $viewModel.showEditPoolAlert) {
+                TextField("Value", text: $viewModel.poolName)
+                Button("Cancel", role: .cancel) {
+                    viewModel.showEditPoolAlert = false
+                }
+                Button("Save") {
+                    viewModel.updateAssetPool()
+                }
+                Button("Delete", role: .destructive) {
+                    viewModel.deleteAssetPool()
+                }
+            }
         }
         .sheet(item: $viewModel.activeSheet) { activeSheet in
             switch activeSheet {
@@ -97,27 +118,6 @@ struct AssetLedger: View {
                 Image(systemName: "slider.horizontal.3")
             }
             .buttonStyle(BorderlessButtonStyle())
-        }
-        .alert("What should the name of the new pool be?", isPresented: $viewModel.showCreatePoolAlert) {
-            TextField("Value", text: $viewModel.poolName)
-            Button("Cancel") {
-                viewModel.showCreatePoolAlert = false
-            }
-            Button("Save") {
-                viewModel.createAssetPool()
-            }
-        }
-        .alert("Edit \(viewModel.pool?.name ?? "")", isPresented: $viewModel.showEditPoolAlert) {
-            TextField("Value", text: $viewModel.poolName)
-            Button("Cancel", role: .cancel) {
-                viewModel.showEditPoolAlert = false
-            }
-            Button("Save") {
-                viewModel.updateAssetPool()
-            }
-            Button("Delete", role: .destructive) {
-                viewModel.deleteAssetPool()
-            }
         }
     }
 }

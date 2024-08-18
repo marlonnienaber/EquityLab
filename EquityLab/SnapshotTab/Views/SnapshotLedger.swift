@@ -17,11 +17,8 @@ struct SnapshotLedger: View {
                 .navigationTitle("Snapshots")
                 .toolbar {
                     ToolbarItem(placement: .navigationBarLeading) {
-                        if viewModel.snapshots.isEmpty {
-                            EditButton().disabled(true)
-                        } else {
-                            EditButton()
-                        }
+                        EditButton()
+                            .disabled(viewModel.years.isEmpty)
                     }
                     ToolbarItem(placement: .navigationBarTrailing) {
                         Button (action: {activeSheet = .addSheet} ){
@@ -37,22 +34,22 @@ struct SnapshotLedger: View {
         }
     }
     
-    @ViewBuilder var LedgerContent: some View {
-        if viewModel.snapshots.isEmpty {
+    @ViewBuilder 
+    var LedgerContent: some View {
+        if viewModel.years.isEmpty {
             NoSnapshotDataView
         } else {
             List {
-                ForEach(viewModel.snapshots) { shot in
-                    SnapshotListCell(for: shot)
-                }
-                .onDelete{ indexSet in
-                    viewModel.deleteSnapshots(withIndices: indexSet)
+                ForEach(viewModel.years, id: \.self) { year in
+                    Section(String(year)) {
+                        sectionContent(for: year, containing: viewModel.snapshots(fallingInto: year))
+                    }
                 }
             }
         }
     }
     
-    @ViewBuilder var NoSnapshotDataView: some View {
+    var NoSnapshotDataView: some View {
         VStack {
             Image(systemName: "tray.fill")
                 .resizable()
@@ -63,9 +60,21 @@ struct SnapshotLedger: View {
         .foregroundColor(Color.primary.opacity(0.4))
     }
     
-    @ViewBuilder func SnapshotListCell(for snapshot: Snapshot) -> some View {
+    func sectionContent(for year: Int, containing snapshots: [Snapshot]) -> some View {
+        ForEach(snapshots) { snapshot in
+            SnapshotListCell(for: snapshot)
+        }
+        .onDelete{ indexSet in
+            viewModel.deleteSnapshots(in: year, for: indexSet)
+        }
+    }
+    
+    @ViewBuilder 
+    func SnapshotListCell(for snapshot: Snapshot) -> some View {
         if let equityStringRepresentation = LocalizedCurrencyFormatter.shared.string(from: viewModel.equityValue(of: snapshot)) {
-            Button(action: {activeSheet = .updateSheet(snapshot: snapshot)}) {
+            Button {
+                activeSheet = .updateSheet(snapshot: snapshot)
+            } label: {
                 HStack {
                     Text(LocalizedShortDateFormatter.shared.string(from: snapshot.date))
                         .font(.headline).foregroundColor(.primary)

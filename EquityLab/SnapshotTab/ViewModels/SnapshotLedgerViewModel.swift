@@ -13,7 +13,9 @@ class SnapshotLedgerViewModel: NSObject {
     private let context: NSManagedObjectContext
     private let fetchedResultsController: ObservingFetchedResultsController<Snapshot>
     private var equityValues = [Snapshot:Double]()
-    var snapshots = [Snapshot]()
+    private var snapshots = [Snapshot]()
+    var yearToSnapshotDictionary = [Int:[Snapshot]]()
+    var years = [Int]()
     
     override init() {
         let context = DataService.shared.persistentContainer.viewContext
@@ -27,10 +29,27 @@ class SnapshotLedgerViewModel: NSObject {
         do {
             try fetchedResultsController.performFetch()
             self.snapshots = fetchedResultsController.fetchedObjects as! [Snapshot]
-            for shot in snapshots {
-                equityValues[shot] = calculateEquityValue(for: shot)
+            for snapshot in snapshots {
+                equityValues[snapshot] = calculateEquityValue(for: snapshot)
+                if let year = extractYear(from: snapshot) {
+                    if !yearToSnapshotDictionary.keys.contains(year) {
+                        years.append(year)
+                    }
+                    if var associatedSnapshots = yearToSnapshotDictionary[year] {
+                        associatedSnapshots.append(snapshot)
+                        yearToSnapshotDictionary[year] = associatedSnapshots
+                    } else {
+                        yearToSnapshotDictionary[year] = [snapshot]
+                    }
+                }
             }
         } catch {}
+    }
+    
+    private func extractYear(from snapshot: Snapshot) -> Int? {
+        let calendar = Calendar.current
+        let components = calendar.dateComponents([.year], from: snapshot.date)
+        return components.year
     }
     
     //TODO: remove duplicate code (see DashboardViewModel)
@@ -40,6 +59,16 @@ class SnapshotLedgerViewModel: NSObject {
         let assetPositions = (try? context.fetch(snapshot.getAssetPositionRequest())) ?? []
         let totalAssetValue = assetPositions.map{ $0.value }.reduce(0, +)
         return totalAssetValue - totalLiabilityValue
+    }
+    
+    func snapshots(fallingInto year: Int) -> [Snapshot] {
+        yearToSnapshotDictionary[year] ?? []
+    }
+    
+    func deleteSnapshots(in year: Int, for indexSet: IndexSet) {
+        guard let sectionSnapshots = yearToSnapshotDictionary[year] else { return }
+        indexSet.map{sectionSnapshots[$0]}.forEach{context.delete($0)}
+        try? context.save()
     }
     
     func deleteSnapshots(withIndices indexSet: IndexSet) {
@@ -55,45 +84,26 @@ class SnapshotLedgerViewModel: NSObject {
 }
 
 extension SnapshotLedgerViewModel: NSFetchedResultsControllerDelegate {
-    
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
-        guard let shot = anObject as? Snapshot else { return }
-        switch type {
-        case .update:
-            if let indexPath = indexPath, snapshots[indexPath.row] == shot {
-                equityValues[shot] = calculateEquityValue(for: shot)
-                snapshots[indexPath.row] = shot
+        do {
+            try fetchedResultsController.performFetch()
+            yearToSnapshotDictionary = [Int:[Snapshot]]()
+            years = [Int]()
+            self.snapshots = fetchedResultsController.fetchedObjects as! [Snapshot]
+            for snapshot in snapshots {
+                equityValues[snapshot] = calculateEquityValue(for: snapshot)
+                if let year = extractYear(from: snapshot) {
+                    if !yearToSnapshotDictionary.keys.contains(year) {
+                        years.append(year)
+                    }
+                    if var associatedSnapshots = yearToSnapshotDictionary[year] {
+                        associatedSnapshots.append(snapshot)
+                        yearToSnapshotDictionary[year] = associatedSnapshots
+                    } else {
+                        yearToSnapshotDictionary[year] = [snapshot]
+                    }
+                }
             }
-        case .move:
-            /// necessary in case FetchRequests without SortDescriptors are involved (repeated fetching might cause changes in indexPath)
-            if let indexPath = indexPath, let newIndexPath = newIndexPath {
-                equityValues[shot] = calculateEquityValue(for: shot)
-                snapshots.remove(at: indexPath.row)
-                snapshots.insert(shot, at: newIndexPath.row)
-            }
-        case .delete:
-            if let indexPath = indexPath {
-                let removedShot = snapshots.remove(at: indexPath.row)
-            }
-        case .insert:
-            if !snapshots.contains(shot) {
-                equityValues[shot] = calculateEquityValue(for: shot)
-                sortedlyInsert(snapshot: shot, into: &snapshots)
-            }
-        default:
-            break
-        }
+        } catch {}
     }
-    
-    func sortedlyInsert(snapshot newSnapshot: Snapshot, into sortedArray: inout [Snapshot]) {
-        var insertionIndex = 0
-        for (index, snapshot) in sortedArray.enumerated() {
-            if newSnapshot.date > snapshot.date {
-                insertionIndex = index
-                break
-            }
-        }
-        sortedArray.insert(newSnapshot, at: insertionIndex)
-    }
-    
 }

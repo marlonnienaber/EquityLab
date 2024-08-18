@@ -33,7 +33,7 @@ struct CurrencyUITextFieldRepresentable: UIViewRepresentable {
     }
     
     func updateUIView(_ uiView: CurrencyUITextField, context: Context) {
-        print("updateUIView called when value: \(value)")
+        
         if uiView.text?.containedFloat != value {
             uiView.setText(using: value)
         }
@@ -149,7 +149,6 @@ class CurrencyUITextField: UITextField {
     /// formats the value parameter (designed for value property of CurrencyUITextFieldRepresentable) to a localized string representing  a currency amount
     func setText(using value: Double) {
         let textValue = formatter.string(from: NSNumber(value: value)) ?? ""
-        print("textValue \(textValue)")
         text = textValue
     }
     
