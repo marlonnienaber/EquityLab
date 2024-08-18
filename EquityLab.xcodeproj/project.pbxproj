@@ -34,10 +34,8 @@
 		7342ED872C447E5000BA20A4 /* LocalizedCurrencyFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7342ED862C447E5000BA20A4 /* LocalizedCurrencyFormatter.swift */; };
 		7342ED892C447E7000BA20A4 /* LocalizedShortDateFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7342ED882C447E7000BA20A4 /* LocalizedShortDateFormatter.swift */; };
 		7342ED8E2C447EDF00BA20A4 /* AssetLedger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7342ED8D2C447EDF00BA20A4 /* AssetLedger.swift */; };
-		7342ED902C447F3B00BA20A4 /* AssetPoolForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7342ED8F2C447F3B00BA20A4 /* AssetPoolForm.swift */; };
 		7342ED922C447F6300BA20A4 /* AssetForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7342ED912C447F6300BA20A4 /* AssetForm.swift */; };
 		7342ED942C447FAF00BA20A4 /* AssetLedgerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7342ED932C447FAF00BA20A4 /* AssetLedgerViewModel.swift */; };
-		7342ED962C447FD400BA20A4 /* AssetPoolFormViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7342ED952C447FD400BA20A4 /* AssetPoolFormViewModel.swift */; };
 		7342ED982C447FF500BA20A4 /* AssetFormViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7342ED972C447FF500BA20A4 /* AssetFormViewModel.swift */; };
 		7342ED9D2C44815D00BA20A4 /* LiabilityLedgerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7342ED9C2C44815D00BA20A4 /* LiabilityLedgerViewModel.swift */; };
 		7342ED9F2C44818100BA20A4 /* LiabilityFormViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7342ED9E2C44818100BA20A4 /* LiabilityFormViewModel.swift */; };
@@ -94,10 +92,8 @@
 		7342ED862C447E5000BA20A4 /* LocalizedCurrencyFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalizedCurrencyFormatter.swift; sourceTree = "<group>"; };
 		7342ED882C447E7000BA20A4 /* LocalizedShortDateFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalizedShortDateFormatter.swift; sourceTree = "<group>"; };
 		7342ED8D2C447EDF00BA20A4 /* AssetLedger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetLedger.swift; sourceTree = "<group>"; };
-		7342ED8F2C447F3B00BA20A4 /* AssetPoolForm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetPoolForm.swift; sourceTree = "<group>"; };
 		7342ED912C447F6300BA20A4 /* AssetForm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetForm.swift; sourceTree = "<group>"; };
 		7342ED932C447FAF00BA20A4 /* AssetLedgerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetLedgerViewModel.swift; sourceTree = "<group>"; };
-		7342ED952C447FD400BA20A4 /* AssetPoolFormViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetPoolFormViewModel.swift; sourceTree = "<group>"; };
 		7342ED972C447FF500BA20A4 /* AssetFormViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetFormViewModel.swift; sourceTree = "<group>"; };
 		7342ED9C2C44815D00BA20A4 /* LiabilityLedgerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiabilityLedgerViewModel.swift; sourceTree = "<group>"; };
 		7342ED9E2C44818100BA20A4 /* LiabilityFormViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiabilityFormViewModel.swift; sourceTree = "<group>"; };
@@ -290,7 +286,6 @@
 			isa = PBXGroup;
 			children = (
 				7342ED932C447FAF00BA20A4 /* AssetLedgerViewModel.swift */,
-				7342ED952C447FD400BA20A4 /* AssetPoolFormViewModel.swift */,
 				7342ED972C447FF500BA20A4 /* AssetFormViewModel.swift */,
 			);
 			path = ViewModels;
@@ -300,7 +295,6 @@
 			isa = PBXGroup;
 			children = (
 				7342ED8D2C447EDF00BA20A4 /* AssetLedger.swift */,
-				7342ED8F2C447F3B00BA20A4 /* AssetPoolForm.swift */,
 				7342ED912C447F6300BA20A4 /* AssetForm.swift */,
 			);
 			path = Views;
@@ -461,7 +455,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7342ED902C447F3B00BA20A4 /* AssetPoolForm.swift in Sources */,
 				7342ED8E2C447EDF00BA20A4 /* AssetLedger.swift in Sources */,
 				73823CDD2C6154930049D03C /* DistributionChartViewModel.swift in Sources */,
 				7342EDBE2C4487DA00BA20A4 /* SnapshotForm.swift in Sources */,
@@ -469,7 +462,6 @@
 				73823CDF2C62B2EE0049D03C /* ChangeChartViewModel.swift in Sources */,
 				7342ED982C447FF500BA20A4 /* AssetFormViewModel.swift in Sources */,
 				7342ED7D2C447CD700BA20A4 /* ObservingFetchedResultsController.swift in Sources */,
-				7342ED962C447FD400BA20A4 /* AssetPoolFormViewModel.swift in Sources */,
 				73980F472AA57A4500CA4849 /* CoreDataModel.xcdatamodeld in Sources */,
 				73D2C5902C5FBB970019A800 /* ChangeChart.swift in Sources */,
 				7342EDB52C44842100BA20A4 /* AssetPosition+CoreDataClass.swift in Sources */,

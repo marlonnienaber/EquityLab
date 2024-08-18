@@ -14,6 +14,11 @@ class AssetLedgerViewModel: NSObject {
     private let fetchedResultsController: ObservingFetchedResultsController<AssetPool>
     private var assets = [AssetPool:[Asset]]()
     var pools = [AssetPool]()
+    var activeSheet: AssetLedgerSheetType? = nil
+    var showCreatePoolAlert = false
+    var showEditPoolAlert = false
+    var poolName = ""
+    var pool: AssetPool? = nil
     
     override init() {
         let context = DataService.shared.persistentContainer.viewContext
@@ -45,6 +50,29 @@ class AssetLedgerViewModel: NSObject {
         guard let sectionAssets = assets[pool] else { return }
         indexSet.map{sectionAssets[$0]}.forEach{context.delete($0)}
         try? context.save()
+    }
+    
+    func createAssetPool() {
+        let pool = AssetPool(context: context)
+        pool.name = poolName
+        try? context.save()
+    }
+    
+    func deleteAssetPool() {
+        guard let pool else { return }
+        context.delete(pool)
+        try? context.save()
+    }
+    
+    func updateAssetPool() {
+        guard let pool else { return }
+        pool.name = poolName
+        try? context.save()
+    }
+    
+    func resetPoolVariables() {
+        pool = nil
+        poolName = ""
     }
 }
 
@@ -86,4 +114,10 @@ extension AssetLedgerViewModel: NSFetchedResultsControllerDelegate {
 //        }
     }
     
+}
+
+enum AssetLedgerSheetType: Identifiable {
+    var id: UUID { UUID() }
+    case addSheetAsset(pool: AssetPool)
+    case updateSheetAsset(asset: Asset)
 }

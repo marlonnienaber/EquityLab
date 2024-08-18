@@ -25,14 +25,12 @@ struct LiabilityLedger: View {
             .navigationTitle("Liabilities")
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
-                    if viewModel.pools.isEmpty {
-                        EditButton().disabled(true)
-                    } else {
-                        EditButton()
-                    }
+                    EditButton()
+                        .disabled(viewModel.pools.isEmpty)
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button {
+                        viewModel.resetPoolVariables()
                         viewModel.showCreatePoolAlert = true
                     } label: {
                         Text("new pool")
@@ -101,27 +99,22 @@ struct LiabilityLedger: View {
         .alert("What should the name of the new pool be?", isPresented: $viewModel.showCreatePoolAlert) {
             TextField("Value", text: $viewModel.poolName)
             Button("Cancel") {
-                viewModel.resetPoolVariables()
                 viewModel.showCreatePoolAlert = false
             }
             Button("Save") {
                 viewModel.createLiabilityPool()
-                viewModel.resetPoolVariables()
             }
         }
         .alert("Edit \(viewModel.pool?.name ?? "")", isPresented: $viewModel.showEditPoolAlert) {
             TextField("Value", text: $viewModel.poolName)
             Button("Cancel", role: .cancel) {
-                viewModel.resetPoolVariables()
                 viewModel.showEditPoolAlert = false
             }
             Button("Save") {
                 viewModel.updateLiabilityPool()
-                viewModel.resetPoolVariables()
             }
             Button("Delete", role: .destructive) {
                 viewModel.deleteLiabilityPool()
-                viewModel.resetPoolVariables()
             }
         }
     }

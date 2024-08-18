@@ -10,21 +10,22 @@ import CoreData
 
 struct AssetForm: View {
     @State public var viewModel: AssetFormViewModel
-    @Binding public var assetLedgerActiveSheet: AssetLedger.AssetLedgerSheetType?
+    @Binding public var assetLedgerActiveSheet: AssetLedgerSheetType?
     @State private var showPopover: Bool = false
     
     var body: some View {
         NavigationView{
             VStack {
-                if(viewModel.asset == nil) {
-                    Picker(selection: $viewModel.selectedAssetType,
-                           label: Text("picker"),
-                           content: {
+                if viewModel.asset == nil {
+                    Picker(selection: $viewModel.selectedAssetType) {
                         Text("possession").tag("possession")
                         Text("receivable").tag("receivable")
-                    }).pickerStyle(.segmented)
-                        .frame(width: 180)
-                        .padding(.top)
+                    } label: {
+                        Text("picker")
+                    }
+                    .pickerStyle(.segmented)
+                    .frame(width: 180)
+                    .padding(.top)
                 }
                 FormSection
                     .toolbar {
@@ -41,7 +42,8 @@ struct AssetForm: View {
                     .onTapGesture {
                         hideKeyboard()
                     }
-            }.navigationTitle(viewModel.asset == nil ? "new Asset" : "edit Asset")
+            }
+            .navigationTitle(viewModel.asset == nil ? "new Asset" : "edit Asset")
         }
     }
     
@@ -70,10 +72,12 @@ struct AssetForm: View {
                     Spacer()
                     Button(action: { showPopover.toggle() }) {
                         Image(systemName: "info.circle")
-                    }.popover(isPresented: $showPopover) {
+                    }
+                    .popover(isPresented: $showPopover) {
                         Text("the latest value of non-volatile assets will be reused when taking a new snapshot")
                             .presentationCompactAdaptation(.popover)
-                    }.buttonStyle(BorderlessButtonStyle())
+                    }
+                    .buttonStyle(BorderlessButtonStyle())
                 }
                 
             }

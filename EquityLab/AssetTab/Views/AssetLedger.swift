@@ -10,7 +10,6 @@ import CoreData
 
 struct AssetLedger: View {
     @State private var viewModel = AssetLedgerViewModel()
-    @State private var activeSheet: AssetLedgerSheetType? = nil
     
     var body: some View {
         NavigationView {
@@ -25,32 +24,32 @@ struct AssetLedger: View {
             .navigationTitle("Assets")
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
-                    if viewModel.pools.isEmpty {
-                        EditButton().disabled(true)
-                    } else {
-                        EditButton()
-                    }
+                    EditButton()
+                        .disabled(viewModel.pools.isEmpty)
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button (action: {activeSheet = .addSheetAssetPool} ){
+                    Button {
+                        viewModel.resetPoolVariables()
+                        viewModel.showCreatePoolAlert = true
+                    } label: {
                         Text("new pool")
                     }
                 }
             }
         }
-        .sheet(item: $activeSheet) { activeSheet in
+        .sheet(item: $viewModel.activeSheet) { activeSheet in
             switch activeSheet {
-            case .addSheetAssetPool: AssetPoolForm(viewModel: AssetPoolFormViewModel(allPools: viewModel.pools),assetLedgerActiveSheet: $activeSheet)
-            case .updateSheetAssetPool(let pool): AssetPoolForm(viewModel: AssetPoolFormViewModel(pool: pool, allPools: viewModel.pools), assetLedgerActiveSheet: $activeSheet)
-            case .addSheetAsset(let pool): AssetForm(viewModel: AssetFormViewModel(pool: pool, allAssets: viewModel.allAssets()), assetLedgerActiveSheet: $activeSheet)
-            case .updateSheetAsset(let asset): AssetForm(viewModel: AssetFormViewModel(asset: asset, allAssets: viewModel.allAssets()), assetLedgerActiveSheet: $activeSheet)
+            case .addSheetAsset(let pool): AssetForm(viewModel: AssetFormViewModel(pool: pool, allAssets: viewModel.allAssets()), assetLedgerActiveSheet: $viewModel.activeSheet)
+            case .updateSheetAsset(let asset): AssetForm(viewModel: AssetFormViewModel(asset: asset, allAssets: viewModel.allAssets()), assetLedgerActiveSheet: $viewModel.activeSheet)
             }
         }
     }
     
     @ViewBuilder func SectionContent(pool: AssetPool, sectionAssets: [Asset]) -> some View {
         ForEach(sectionAssets, id: \.name) { asset in
-            Button(action: { activeSheet = AssetLedgerSheetType.updateSheetAsset(asset: asset)}) {
+            Button {
+                viewModel.activeSheet = AssetLedgerSheetType.updateSheetAsset(asset: asset)
+            } label: {
                 if let receivable = asset as? Receivable {
                     HStack{
                         if let initialAmountStringRepresentation = LocalizedCurrencyFormatter.shared.string(from: NSNumber(value: receivable.initialAmount)) {
@@ -80,25 +79,45 @@ struct AssetLedger: View {
         
     @ViewBuilder func SectionControls(for pool: AssetPool) -> some View {
         HStack{
-            Button(action: {activeSheet = .addSheetAsset(pool: pool)} ) {
+            Button {
+                viewModel.activeSheet = .addSheetAsset(pool: pool)
+            } label: {
                 HStack{
                     Image(systemName: "plus")
                     Text("new asset")
                 }
-            }.buttonStyle(BorderlessButtonStyle())
+            }
+            .buttonStyle(BorderlessButtonStyle())
             Spacer()
-            Button(action: {activeSheet = .updateSheetAssetPool(pool: pool)}) {
+            Button {
+                viewModel.pool = pool
+                viewModel.poolName = pool.name
+                viewModel.showEditPoolAlert = true
+            } label: {
                 Image(systemName: "slider.horizontal.3")
-            }.buttonStyle(BorderlessButtonStyle())
+            }
+            .buttonStyle(BorderlessButtonStyle())
+        }
+        .alert("What should the name of the new pool be?", isPresented: $viewModel.showCreatePoolAlert) {
+            TextField("Value", text: $viewModel.poolName)
+            Button("Cancel") {
+                viewModel.showCreatePoolAlert = false
+            }
+            Button("Save") {
+                viewModel.createAssetPool()
+            }
+        }
+        .alert("Edit \(viewModel.pool?.name ?? "")", isPresented: $viewModel.showEditPoolAlert) {
+            TextField("Value", text: $viewModel.poolName)
+            Button("Cancel", role: .cancel) {
+                viewModel.showEditPoolAlert = false
+            }
+            Button("Save") {
+                viewModel.updateAssetPool()
+            }
+            Button("Delete", role: .destructive) {
+                viewModel.deleteAssetPool()
+            }
         }
     }
-    
-    public enum AssetLedgerSheetType: Identifiable {
-        var id: UUID { UUID() }
-        case addSheetAssetPool
-        case updateSheetAssetPool(pool: AssetPool)
-        case addSheetAsset(pool: AssetPool)
-        case updateSheetAsset(asset: Asset)
-    }
-    
 }
