@@ -10,7 +10,7 @@ import SwiftUI
 
 struct LiabilityForm: View {
     @State var viewModel: LiabilityFormViewModel
-    @Binding public var liabilityLedgerActiveSheet: LiabilityLedger.LiabilityLedgerSheetType?
+    @Binding public var liabilityLedgerActiveSheet: LiabilityLedgerSheetType?
     
     var body: some View {
         NavigationView {

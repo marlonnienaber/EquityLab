@@ -11,7 +11,6 @@ import CoreData
 
 struct LiabilityLedger: View {
     @State var viewModel = LiabilityLedgerViewModel()
-    @State private var activeSheet: LiabilityLedgerSheetType? = nil
     
     var body: some View {
         NavigationView {
@@ -33,24 +32,28 @@ struct LiabilityLedger: View {
                     }
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button (action: {activeSheet = .addSheetLiabilityPool} ){
+                    Button {
+                        viewModel.showCreatePoolAlert = true
+                    } label: {
                         Text("new pool")
                     }
                 }
             }
-        }.sheet(item: $activeSheet) { activeSheet in
+        }
+        .sheet(item: $viewModel.activeSheet) { activeSheet in
             switch activeSheet {
-            case .addSheetLiabilityPool: LiabilityPoolForm(viewModel: LiabilityPoolFormViewModel(allPools: viewModel.pools),liabilityLedgerActiveSheet: $activeSheet)
-            case .updateSheetLiabilityPool(let pool): LiabilityPoolForm(viewModel: LiabilityPoolFormViewModel(pool: pool, allPools: viewModel.pools), liabilityLedgerActiveSheet: $activeSheet)
-            case .addSheetLiability(let pool): LiabilityForm(viewModel: LiabilityFormViewModel(pool: pool, allLiabilities: viewModel.allLiabilities()), liabilityLedgerActiveSheet: $activeSheet)
-            case .updateSheetLiability(let liability): LiabilityForm(viewModel: LiabilityFormViewModel(liability: liability, allLiabilities: viewModel.allLiabilities()), liabilityLedgerActiveSheet: $activeSheet)
+            case .addSheetLiability(let pool): LiabilityForm(viewModel: LiabilityFormViewModel(pool: pool, allLiabilities: viewModel.allLiabilities()), liabilityLedgerActiveSheet: $viewModel.activeSheet)
+            case .updateSheetLiability(let liability): LiabilityForm(viewModel: LiabilityFormViewModel(liability: liability, allLiabilities: viewModel.allLiabilities()), liabilityLedgerActiveSheet: $viewModel.activeSheet)
             }
         }
+        
     }
     
     @ViewBuilder func SectionContent(pool: LiabilityPool, sectionLiabilities: [Liability]) -> some View {
         ForEach(sectionLiabilities) { liability in
-            Button(action: {activeSheet = LiabilityLedgerSheetType.updateSheetLiability(liability: liability) }) {
+            Button {
+                viewModel.activeSheet = .updateSheetLiability(liability: liability)
+            } label: {
                 HStack{
                     if let initialAmountStringRepresentation = LocalizedCurrencyFormatter.shared.string(from: NSNumber(value: liability.initialAmount)) {
                         VStack(alignment: .leading) {
@@ -76,25 +79,53 @@ struct LiabilityLedger: View {
         
     @ViewBuilder func SectionControls(for pool: LiabilityPool) -> some View {
         HStack{
-            Button(action: {activeSheet = .addSheetLiability(pool: pool)} ) {
+            Button {
+                viewModel.activeSheet = LiabilityLedgerSheetType.addSheetLiability(pool: pool)
+            } label: {
                 HStack{
                     Image(systemName: "plus")
                     Text("new liability")
                 }
-            }.buttonStyle(BorderlessButtonStyle())
+            }
+            .buttonStyle(BorderlessButtonStyle())
             Spacer()
-            Button(action: {activeSheet = .updateSheetLiabilityPool(pool: pool)}) {
+            Button {
+                viewModel.pool = pool
+                viewModel.poolName = pool.name
+                viewModel.showEditPoolAlert = true
+            } label: {
                 Image(systemName: "slider.horizontal.3")
-            }.buttonStyle(BorderlessButtonStyle())
+            }
+            .buttonStyle(BorderlessButtonStyle())
+        }
+        .alert("What should the name of the new pool be?", isPresented: $viewModel.showCreatePoolAlert) {
+            TextField("Value", text: $viewModel.poolName)
+            Button("Cancel") {
+                viewModel.resetPoolVariables()
+                viewModel.showCreatePoolAlert = false
+            }
+            Button("Save") {
+                viewModel.createLiabilityPool()
+                viewModel.resetPoolVariables()
+            }
+        }
+        .alert("Edit \(viewModel.pool?.name ?? "")", isPresented: $viewModel.showEditPoolAlert) {
+            TextField("Value", text: $viewModel.poolName)
+            Button("Cancel", role: .cancel) {
+                viewModel.resetPoolVariables()
+                viewModel.showEditPoolAlert = false
+            }
+            Button("Save") {
+                viewModel.updateLiabilityPool()
+                viewModel.resetPoolVariables()
+            }
+            Button("Delete", role: .destructive) {
+                viewModel.deleteLiabilityPool()
+                viewModel.resetPoolVariables()
+            }
         }
     }
     
-    enum LiabilityLedgerSheetType: Identifiable {
-        var id: UUID { UUID() }
-        case addSheetLiabilityPool
-        case updateSheetLiabilityPool(pool: LiabilityPool)
-        case addSheetLiability(pool: LiabilityPool)
-        case updateSheetLiability(liability: Liability)
-    }
+    
     
 }

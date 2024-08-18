@@ -14,6 +14,11 @@ class LiabilityLedgerViewModel: NSObject {
     private let fetchedResultsController: ObservingFetchedResultsController<LiabilityPool>
     private var liabilities = [LiabilityPool:[Liability]]()
     var pools = [LiabilityPool]()
+    var showCreatePoolAlert = false
+    var showEditPoolAlert = false
+    var pool: LiabilityPool? = nil
+    var poolName = ""
+    var activeSheet: LiabilityLedgerSheetType? = nil
     
     override init() {
         let context = DataService.shared.persistentContainer.viewContext
@@ -47,6 +52,28 @@ class LiabilityLedgerViewModel: NSObject {
         try? context.save()
     }
     
+    func deleteLiabilityPool() {
+        guard let pool else { return }
+        context.delete(pool)
+        try? context.save()
+    }
+    
+    func createLiabilityPool() {
+        let pool = LiabilityPool(context: context)
+        pool.name = poolName
+        try? context.save()
+    }
+    
+    func updateLiabilityPool() {
+        guard let pool else { return }
+        pool.name = poolName
+        try? context.save()
+    }
+    
+    func resetPoolVariables() {
+        pool = nil
+        poolName = ""
+    }
 }
 
 extension LiabilityLedgerViewModel: NSFetchedResultsControllerDelegate {
@@ -87,4 +114,10 @@ extension LiabilityLedgerViewModel: NSFetchedResultsControllerDelegate {
 //        }
     }
     
+}
+
+enum LiabilityLedgerSheetType: Identifiable {
+    var id: UUID { UUID() }
+    case addSheetLiability(pool: LiabilityPool)
+    case updateSheetLiability(liability: Liability)
 }
