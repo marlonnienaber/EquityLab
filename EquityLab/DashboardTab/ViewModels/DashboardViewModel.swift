@@ -1,10 +1,3 @@
-//
-//  DashboardViewModel.swift
-//  EquityLab
-//
-//  Created by Marlon Nienaber on 15.07.24.
-//
-
 import Foundation
 import CoreData
 import os
@@ -13,37 +6,27 @@ import SwiftUI
 @Observable
 class DashboardViewModel: NSObject {
     // MARK: shared members
-    @ObservationIgnored private static let logger = Logger(
-        subsystem: Bundle.main.bundleIdentifier ?? "",
-        category: String(describing: DashboardViewModel.self)
-    )
-    @ObservationIgnored private var context: NSManagedObjectContext
-    @ObservationIgnored private let fetchedResultsController: ObservingFetchedResultsController<Snapshot>
+    @ObservationIgnored private static let loggerSubsystem = Bundle.main.bundleIdentifier ?? ""
+    @ObservationIgnored private static let loggerCategory = String(describing: DashboardViewModel.self)
+    @ObservationIgnored private static let logger = Logger(subsystem: loggerSubsystem, category: loggerCategory)
+    
+    @ObservationIgnored private let modelManager: DashboardModelManager
     @ObservationIgnored private var equityValues = [Snapshot:Double]()
     @ObservationIgnored private var assetValues = [Snapshot:Double]()
     @ObservationIgnored private var liabilityValues = [Snapshot:Double]()
-    var selectedSnapshot: Snapshot?
     
+    var selectedSnapshot: Snapshot?
     var selectedSnapshotDetailView: SnapshotDetailView = .balanceDetailView
     var selectedDetailPage: DetailPage = .changeDetailPage
     
-    override init() {
-        let context = DataService.shared.persistentContainer.viewContext
-        self.context = context
-        
-        let request = ObservingFetchRequest<Snapshot>(entityName: "Snapshot")
-        request.sortDescriptors = [NSSortDescriptor(keyPath: \Snapshot.date, ascending: true)]
-        request.observedRelationships = ["liabilities"]
-        fetchedResultsController = ObservingFetchedResultsController(fetchRequest: request, managedObjectContext: context, sectionNameKeyPath: nil, cacheName: nil)
+    init(modelManager: DashboardModelManager = DashboardFetchedResultsController()) {
+        self.modelManager = modelManager
         super.init()
-        fetchedResultsController.delegate = self
-        do {
-            try fetchedResultsController.performFetch()
-            self.unfilteredSnapshots = fetchedResultsController.fetchedObjects as! [Snapshot]
-            for shot in unfilteredSnapshots {
-                equityValues[shot] = calculateEquityValue(for: shot)
-            }
-        } catch {}
+        self.modelManager.delegate = self
+        self.unfilteredSnapshots = modelManager.fetchSnapshots()
+        for snapshot in unfilteredSnapshots {
+            equityValues[snapshot] = calculateEquityValue(for: snapshot)
+        }
         self.selectedSnapshot = unfilteredSnapshots.last
     }
     
@@ -53,11 +36,11 @@ class DashboardViewModel: NSObject {
         return totalAssetValue - totalLiabilityValue
     }
     private func calculateAssetValue(for snapshot: Snapshot) -> Double {
-        let assetPositions = (try? context.fetch(snapshot.getAssetPositionRequest())) ?? []
+        let assetPositions = modelManager.fetchAssetPositions(of: snapshot)
         return assetPositions.map{ $0.value }.reduce(0, +)
     }
     private func calculateLiabilityValue(for snapshot: Snapshot) -> Double {
-        let liabilityPositions = (try? context.fetch(snapshot.getLiabilityPositionRequest())) ?? []
+        let liabilityPositions = modelManager.fetchLiabilityPositions(of: snapshot)
         return liabilityPositions.map{ $0.value }.reduce(0, +)
     }
     
@@ -82,23 +65,19 @@ class DashboardViewModel: NSObject {
             return liabilityValue
         }
     }
-    
     func initializeSelectedSnapshot() {
         if let selectedSnapshot, !unfilteredSnapshots.contains(selectedSnapshot){
             self.selectedSnapshot = unfilteredSnapshots.last
         }
     }
-    
-    
-    
     func computeValueByPool(for positionType: PositionType, using snapshot: Snapshot) -> [String:Double] {
         if positionType == .assets {
-            let assetPositions = (try? context.fetch(snapshot.getAssetPositionRequest())) ?? []
+            let assetPositions = modelManager.fetchAssetPositions(of: snapshot)
             return Dictionary(grouping: assetPositions, by: { $0.poolName }).mapValues { array in
                 array.map { $0.value }.reduce(0, +)
             }
         } else {
-            let liabilityPositions = (try? context.fetch(snapshot.getLiabilityPositionRequest())) ?? []
+            let liabilityPositions = modelManager.fetchLiabilityPositions(of: snapshot)
             return Dictionary(grouping: liabilityPositions, by: { $0.poolName }).mapValues { array in
                 array.map { $0.value }.reduce(0, +)
             }
@@ -131,17 +110,43 @@ class DashboardViewModel: NSObject {
     }
 }
 
+// MARK: making the viewModel testable
+protocol DashboardModelManager: AnyObject {
+    var delegate: NSFetchedResultsControllerDelegate? { get set }
+    func fetchSnapshots() -> [Snapshot]
+    func fetchAssetPositions(of snapshot: Snapshot) -> [AssetPosition]
+    func fetchLiabilityPositions(of snapshot: Snapshot) -> [LiabilityPosition]
+}
+
+class DashboardFetchedResultsController: ObservingFetchedResultsController<Snapshot>, DashboardModelManager {
+    init() {
+        let context = DataService.shared.persistentContainer.viewContext
+        let request = ObservingFetchRequest<Snapshot>(entityName: "Snapshot")
+        request.sortDescriptors = [NSSortDescriptor(keyPath: \Snapshot.date, ascending: true)]
+        request.observedRelationships = ["liabilities"]
+        super.init(fetchRequest: request, managedObjectContext: context, sectionNameKeyPath: nil, cacheName: nil)
+    }
+    
+    func fetchSnapshots() -> [Snapshot] {
+        try? self.performFetch()
+        return super.fetchedObjects as? [Snapshot] ?? []
+    }
+    func fetchAssetPositions(of snapshot: Snapshot) -> [AssetPosition] {
+        (try? self.managedObjectContext.fetch(snapshot.getAssetPositionRequest())) ?? []
+    }
+    func fetchLiabilityPositions(of snapshot: Snapshot) -> [LiabilityPosition] {
+        (try? self.managedObjectContext.fetch(snapshot.getLiabilityPositionRequest())) ?? []
+    }
+}
+
 
 // MARK: change management
 extension DashboardViewModel: NSFetchedResultsControllerDelegate {
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<any NSFetchRequestResult>) {
-        do {
-            try fetchedResultsController.performFetch()
-            self.unfilteredSnapshots = fetchedResultsController.fetchedObjects as! [Snapshot]
-            for shot in unfilteredSnapshots {
-                equityValues[shot] = calculateEquityValue(for: shot)
-            }
-        } catch {}
+        self.unfilteredSnapshots = modelManager.fetchSnapshots()
+        for snapshot in unfilteredSnapshots {
+            equityValues[snapshot] = calculateEquityValue(for: snapshot)
+        }
     }
 }
 
@@ -171,21 +176,4 @@ enum SnapshotDetailView: String, CaseIterable, Identifiable {
 enum DetailPage {
     case changeDetailPage
     case distributionDetailPage
-}
-
-
-
-struct ColorQueue {
-    private var colors: [Color]
-    private var currentIndex: Int = 0
-    
-    init(colors: [Color]) {
-        self.colors = colors
-    }
-    
-    mutating func dequeue() -> Color {
-        let color = colors[currentIndex]
-        currentIndex = (currentIndex + 1) % colors.count
-        return color
-    }
 }
