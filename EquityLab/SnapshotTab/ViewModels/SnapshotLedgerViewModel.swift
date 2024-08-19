@@ -18,7 +18,7 @@ class SnapshotLedgerViewModel: NSObject {
     var years = [Int]()
     
     override init() {
-        let context = DataService.shared.persistentContainer.viewContext
+        let context = ProductionCoreDataStack.shared.context
         self.context = context
         let request = ObservingFetchRequest<Snapshot>(entityName: "Snapshot")
         request.sortDescriptors = [NSSortDescriptor(keyPath: \Snapshot.date, ascending: false)]

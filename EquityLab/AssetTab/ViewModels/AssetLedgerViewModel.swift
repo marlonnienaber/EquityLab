@@ -21,7 +21,7 @@ class AssetLedgerViewModel: NSObject {
     var pool: AssetPool? = nil
     
     override init() {
-        let context = DataService.shared.persistentContainer.viewContext
+        let context = ProductionCoreDataStack.shared.context
         self.context = context
         let request = ObservingFetchRequest<AssetPool>(entityName: "AssetPool")
         request.sortDescriptors = [NSSortDescriptor(keyPath: \AssetPool.name, ascending: true)]

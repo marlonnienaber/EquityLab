@@ -8,9 +8,10 @@
 import UIKit
 import CoreData
 
-class DataService: NSObject {
-    static let shared = DataService()
-    let persistentContainer: NSPersistentContainer
+class ProductionCoreDataStack: NSObject {
+    static let shared = ProductionCoreDataStack()
+    private let persistentContainer: NSPersistentContainer
+    let context: NSManagedObjectContext
     
     private override init() {
         persistentContainer = NSPersistentContainer(name: "CoreDataModel")
@@ -19,5 +20,6 @@ class DataService: NSObject {
                 fatalError("failed to load persistentStores of persistentContainer. Error: \(error)")
             }
         }
+        context = persistentContainer.viewContext
     }
 }

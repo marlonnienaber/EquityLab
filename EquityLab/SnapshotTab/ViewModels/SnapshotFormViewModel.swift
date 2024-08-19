@@ -18,7 +18,7 @@ class SnapshotFormViewModel {
     
     
     init(snapshot: Snapshot? = nil) {
-        let context = DataService.shared.persistentContainer.viewContext
+        let context = ProductionCoreDataStack.shared.context
         self.context = context
         self.snapshot = snapshot
         if let snapshot {

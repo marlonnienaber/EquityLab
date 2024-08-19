@@ -23,7 +23,7 @@ class AssetFormViewModel {
     public var possessionIsVolatile: Bool
     
     init(asset: Asset? = nil, pool: AssetPool? = nil, allAssets: [Asset]) {
-        self.context = DataService.shared.persistentContainer.viewContext
+        self.context = ProductionCoreDataStack.shared.context
         self.assets = allAssets
         self.assetPool = pool
         self.asset = asset

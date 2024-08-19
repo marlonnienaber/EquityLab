@@ -24,7 +24,7 @@
 		7342ED702C447A0C00BA20A4 /* Asset+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7342ED682C447A0C00BA20A4 /* Asset+CoreDataProperties.swift */; };
 		7342ED712C447A0C00BA20A4 /* Receivable+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7342ED692C447A0C00BA20A4 /* Receivable+CoreDataClass.swift */; };
 		7342ED722C447A0C00BA20A4 /* Receivable+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7342ED6A2C447A0C00BA20A4 /* Receivable+CoreDataProperties.swift */; };
-		7342ED742C447B7200BA20A4 /* DataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7342ED732C447B7200BA20A4 /* DataService.swift */; };
+		7342ED742C447B7200BA20A4 /* ProductionCoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7342ED732C447B7200BA20A4 /* ProductionCoreDataStack.swift */; };
 		7342ED782C447BDC00BA20A4 /* CurrencyInputField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7342ED772C447BDC00BA20A4 /* CurrencyInputField.swift */; };
 		7342ED7B2C447CAF00BA20A4 /* ObservingFetchRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7342ED7A2C447CAF00BA20A4 /* ObservingFetchRequest.swift */; };
 		7342ED7D2C447CD700BA20A4 /* ObservingFetchedResultsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7342ED7C2C447CD700BA20A4 /* ObservingFetchedResultsController.swift */; };
@@ -82,7 +82,7 @@
 		7342ED682C447A0C00BA20A4 /* Asset+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Asset+CoreDataProperties.swift"; sourceTree = SOURCE_ROOT; };
 		7342ED692C447A0C00BA20A4 /* Receivable+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Receivable+CoreDataClass.swift"; sourceTree = SOURCE_ROOT; };
 		7342ED6A2C447A0C00BA20A4 /* Receivable+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Receivable+CoreDataProperties.swift"; sourceTree = SOURCE_ROOT; };
-		7342ED732C447B7200BA20A4 /* DataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataService.swift; sourceTree = "<group>"; };
+		7342ED732C447B7200BA20A4 /* ProductionCoreDataStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductionCoreDataStack.swift; sourceTree = "<group>"; };
 		7342ED772C447BDC00BA20A4 /* CurrencyInputField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyInputField.swift; sourceTree = "<group>"; };
 		7342ED7A2C447CAF00BA20A4 /* ObservingFetchRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObservingFetchRequest.swift; sourceTree = "<group>"; };
 		7342ED7C2C447CD700BA20A4 /* ObservingFetchedResultsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObservingFetchedResultsController.swift; sourceTree = "<group>"; };
@@ -179,7 +179,7 @@
 				7342ED382C44781000BA20A4 /* AssetFiles */,
 				7342ED392C44781D00BA20A4 /* LiabilityFiles */,
 				73980F452AA57A4500CA4849 /* CoreDataModel.xcdatamodeld */,
-				7342ED732C447B7200BA20A4 /* DataService.swift */,
+				7342ED732C447B7200BA20A4 /* ProductionCoreDataStack.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -492,7 +492,7 @@
 				7342EDA32C4481D200BA20A4 /* LiabilityLedger.swift in Sources */,
 				7342ED872C447E5000BA20A4 /* LocalizedCurrencyFormatter.swift in Sources */,
 				7342ED712C447A0C00BA20A4 /* Receivable+CoreDataClass.swift in Sources */,
-				7342ED742C447B7200BA20A4 /* DataService.swift in Sources */,
+				7342ED742C447B7200BA20A4 /* ProductionCoreDataStack.swift in Sources */,
 				7342ED722C447A0C00BA20A4 /* Receivable+CoreDataProperties.swift in Sources */,
 				7342ED272C44750200BA20A4 /* EquityLabApp.swift in Sources */,
 				7342ED4F2C44789A00BA20A4 /* LiabilityPool+CoreDataClass.swift in Sources */,

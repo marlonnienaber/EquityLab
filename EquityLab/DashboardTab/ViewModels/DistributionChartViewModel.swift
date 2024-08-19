@@ -42,7 +42,7 @@ class DistributionChartViewModel {
     init(distributionChartType: DistributionChartType, dashboardViewModel: DashboardViewModel) {
         self.distributionChartType = distributionChartType
         self.dashboardViewModel = dashboardViewModel
-        let context = DataService.shared.persistentContainer.viewContext
+        let context = ProductionCoreDataStack.shared.context
         self.context = context
         self.selectedCategory = distributionCategories.first
     }

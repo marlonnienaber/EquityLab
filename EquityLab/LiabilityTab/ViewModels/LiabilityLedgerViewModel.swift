@@ -21,7 +21,7 @@ class LiabilityLedgerViewModel: NSObject {
     var activeSheet: LiabilityLedgerSheetType? = nil
     
     override init() {
-        let context = DataService.shared.persistentContainer.viewContext
+        let context = ProductionCoreDataStack.shared.context
         self.context = context
         let request = ObservingFetchRequest<LiabilityPool>(entityName: "LiabilityPool")
         request.sortDescriptors = [NSSortDescriptor(keyPath: \Liability.name, ascending: true)]

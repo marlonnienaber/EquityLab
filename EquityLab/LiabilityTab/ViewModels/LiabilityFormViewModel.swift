@@ -21,7 +21,7 @@ class LiabilityFormViewModel {
     public var liabilityCreditor: String
     
     init(liability: Liability? = nil, pool: LiabilityPool? = nil, allLiabilities: [Liability]) {
-        self.context = DataService.shared.persistentContainer.viewContext
+        self.context = ProductionCoreDataStack.shared.context
         self.liabilities = allLiabilities
         self.liabilityPool = pool
         self.liability = liability
