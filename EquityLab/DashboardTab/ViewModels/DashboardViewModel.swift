@@ -11,6 +11,7 @@ class DashboardViewModel: NSObject {
     @ObservationIgnored private static let logger = Logger(subsystem: loggerSubsystem, category: loggerCategory)
     
     @ObservationIgnored private var modelManager: DashboardModelManager!
+    @ObservationIgnored private var snapshots = [Snapshot]()
     @ObservationIgnored private var equityValues = [Snapshot:Double]()
     @ObservationIgnored private var assetValues = [Snapshot:Double]()
     @ObservationIgnored private var liabilityValues = [Snapshot:Double]()
@@ -23,11 +24,11 @@ class DashboardViewModel: NSObject {
     init(context: NSManagedObjectContext = ProductionCoreDataStack.shared.context) {
         super.init()
         self.modelManager = DashboardModelManager(context: context, viewModel: self)
-        self.unfilteredSnapshots = modelManager.fetchSnapshots()
-        for snapshot in unfilteredSnapshots {
+        self.snapshots = modelManager.fetchSnapshots()
+        for snapshot in snapshots {
             equityValues[snapshot] = calculateEquityValue(for: snapshot)
         }
-        self.selectedSnapshot = unfilteredSnapshots.last
+        self.selectedSnapshot = snapshots.last
     }
     
     
@@ -73,8 +74,8 @@ class DashboardViewModel: NSObject {
     }
     
     func initializeSelectedSnapshot() {
-        if let selectedSnapshot, !unfilteredSnapshots.contains(selectedSnapshot){
-            self.selectedSnapshot = unfilteredSnapshots.last
+        if let selectedSnapshot, !snapshots.contains(selectedSnapshot){
+            self.selectedSnapshot = snapshots.last
         }
     }
     
@@ -95,9 +96,8 @@ class DashboardViewModel: NSObject {
     
     // MARK: members NetWorthChart
     var selectedTimeHorizon: TimeHorizon = .all
-    var unfilteredSnapshots = [Snapshot]()
     var filteredSnapshots: [Snapshot] {
-        return unfilteredSnapshots
+        return snapshots
     }
     var selectedDate: Date? {
         get {
@@ -105,7 +105,7 @@ class DashboardViewModel: NSObject {
         }
         set {
             if let newValue {
-                selectedSnapshot = unfilteredSnapshots.min(by: {closestDayPredicate(firstShot: $0, secondShot: $1, selectedDate: newValue)} )
+                selectedSnapshot = snapshots.min(by: {closestDayPredicate(firstShot: $0, secondShot: $1, selectedDate: newValue)} )
             }
         }
     }
@@ -151,8 +151,8 @@ class DashboardModelManager {
 // MARK: change management
 extension DashboardViewModel: NSFetchedResultsControllerDelegate {
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<any NSFetchRequestResult>) {
-        self.unfilteredSnapshots = modelManager.fetchSnapshots()
-        for snapshot in unfilteredSnapshots {
+        self.snapshots = modelManager.fetchSnapshots()
+        for snapshot in snapshots {
             equityValues[snapshot] = calculateEquityValue(for: snapshot)
         }
     }
