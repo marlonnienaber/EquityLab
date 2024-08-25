@@ -19,8 +19,8 @@ struct Dashboard: View {
             VStack(spacing: 16) {
                 equitySection
                     .frame(height: geometry.size.height * 0.45)
-                snapshotDetailSection
-                    .frame(height: geometry.size.height * 0.55)
+//                snapshotDetailSection
+//                    .frame(height: geometry.size.height * 0.55)
             }
             .navigationTitle("Analytics")
         }
@@ -47,8 +47,8 @@ struct Dashboard: View {
     private var snapshotDetailSection: some View {
         GroupBox {
             HStack {
-                if let currentDate = viewModel.selectedSnapshot?.date {
-                    Text(LocalizedLongDateFormatter.shared.string(from: currentDate))
+                if let selectedSnapshot = viewModel.selectedSnapshot {
+                    Text(LocalizedLongDateFormatter.shared.string(from: selectedSnapshot.date))
                         .bold()
                 }
                 Spacer()

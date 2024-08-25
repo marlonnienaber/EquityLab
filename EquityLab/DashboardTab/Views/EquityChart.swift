@@ -16,7 +16,7 @@ struct EquityChart: View {
             let curColor = Color("EquityPrimary")
             let curGradient = LinearGradient(gradient: Gradient(colors: [curColor.opacity(0.1), curColor.opacity(0.2), curColor.opacity(0.5), curColor.opacity(0.6)]), startPoint: .bottom, endPoint: .top)
             let startOfDay = Calendar.current.startOfDay(for: snapshot.date)
-            let equityValue = viewModel.equityValue(of: snapshot)
+            let equityValue = viewModel.getEquityValue(of: snapshot)
             AreaMark(
                 x: .value("date", Calendar.current.startOfDay(for: snapshot.date)),
                 y: .value("net worth", equityValue)

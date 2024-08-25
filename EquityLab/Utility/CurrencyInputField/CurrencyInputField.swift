@@ -33,7 +33,6 @@ struct CurrencyUITextFieldRepresentable: UIViewRepresentable {
     }
     
     func updateUIView(_ uiView: CurrencyUITextField, context: Context) {
-        
         if uiView.text?.containedFloat != value {
             uiView.setText(using: value)
         }

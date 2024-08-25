@@ -2,11 +2,10 @@ import UIKit
 import CoreData
 
 class TestingCoreDataStack: NSObject {
-    static let shared = TestingCoreDataStack()
     private let persistentContainer: NSPersistentContainer
     let context: NSManagedObjectContext
     
-    private override init() {
+    override init() {
         persistentContainer = NSPersistentContainer(name: "CoreDataModel")
         let description = persistentContainer.persistentStoreDescriptions.first
         description?.type = NSInMemoryStoreType

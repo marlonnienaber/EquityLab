@@ -5,28 +5,43 @@ import SwiftUI
 
 @Observable
 class DashboardViewModel: NSObject {
-    // MARK: shared members
     @ObservationIgnored private static let loggerSubsystem = Bundle.main.bundleIdentifier ?? ""
     @ObservationIgnored private static let loggerCategory = String(describing: DashboardViewModel.self)
     @ObservationIgnored private static let logger = Logger(subsystem: loggerSubsystem, category: loggerCategory)
     
-    @ObservationIgnored private var modelManager: DashboardModelManager!
+    @ObservationIgnored private var repository: DashboardRepository!
     @ObservationIgnored private var snapshots = [Snapshot]()
-    @ObservationIgnored private var equityValues = [Snapshot:Double]()
-    @ObservationIgnored private var assetValues = [Snapshot:Double]()
-    @ObservationIgnored private var liabilityValues = [Snapshot:Double]()
+    @ObservationIgnored private var equityValueCache = [Snapshot:Double]()
+    @ObservationIgnored private var assetValueCache = [Snapshot:Double]()
+    @ObservationIgnored private var liabilityValueCache = [Snapshot:Double]()
     
+    var filteredSnapshots: [Snapshot] {
+        return snapshots
+    }
+    var selectedDate: Date? {
+        get {
+            selectedSnapshot?.date
+        }
+        set {
+            if let newValue {
+                selectedSnapshot = snapshots.min{ firstSnapshot, secondSnapshot in
+                    firstSnapshot.date.isCloser(to: newValue, than: secondSnapshot.date)
+                }
+            }
+        }
+    }
     var selectedSnapshot: Snapshot?
+    var selectedTimeHorizon: TimeHorizon = .all
     var selectedSnapshotDetailView: SnapshotDetailView = .balanceDetailView
     var selectedDetailPage: DetailPage = .changeDetailPage
     
     
     init(context: NSManagedObjectContext = ProductionCoreDataStack.shared.context) {
         super.init()
-        self.modelManager = DashboardModelManager(context: context, viewModel: self)
-        self.snapshots = modelManager.fetchSnapshots()
+        self.repository = DashboardRepository(context: context, viewModel: self)
+        self.snapshots = repository.fetchSnapshots()
         for snapshot in snapshots {
-            equityValues[snapshot] = calculateEquityValue(for: snapshot)
+            equityValueCache[snapshot] = calculateEquityValue(for: snapshot)
         }
         self.selectedSnapshot = snapshots.last
     }
@@ -39,36 +54,36 @@ class DashboardViewModel: NSObject {
     }
     
     private func calculateAssetValue(for snapshot: Snapshot) -> Double {
-        let assetPositions = modelManager.fetchAssetPositions(of: snapshot)
+        let assetPositions = repository.fetchAssetPositions(of: snapshot)
         return assetPositions.map{ $0.value }.reduce(0, +)
     }
     
     private func calculateLiabilityValue(for snapshot: Snapshot) -> Double {
-        let liabilityPositions = modelManager.fetchLiabilityPositions(of: snapshot)
+        let liabilityPositions = repository.fetchLiabilityPositions(of: snapshot)
         return liabilityPositions.map{ $0.value }.reduce(0, +)
     }
     
     
-    func equityValue(of snapshot: Snapshot) -> Double {
-        equityValues[snapshot] ?? 0.0
+    func getEquityValue(of snapshot: Snapshot) -> Double {
+        equityValueCache[snapshot] ?? 0.0
     }
     
-    func assetValue(of snapshot: Snapshot) -> Double {
-        if let assetValue = assetValues[snapshot] {
+    func getAssetValue(of snapshot: Snapshot) -> Double {
+        if let assetValue = assetValueCache[snapshot] {
             return assetValue
         } else {
             let assetValue = calculateAssetValue(for: snapshot)
-            assetValues[snapshot] = assetValue
+            assetValueCache[snapshot] = assetValue
             return assetValue
         }
     }
     
-    func liabilityValue(of snapshot: Snapshot) -> Double {
-        if let liabilityValue = liabilityValues[snapshot] {
+    func getLiabilityValue(of snapshot: Snapshot) -> Double {
+        if let liabilityValue = liabilityValueCache[snapshot] {
             return liabilityValue
         } else {
             let liabilityValue = calculateLiabilityValue(for: snapshot)
-            liabilityValues[snapshot] = liabilityValue
+            liabilityValueCache[snapshot] = liabilityValue
             return liabilityValue
         }
     }
@@ -81,48 +96,22 @@ class DashboardViewModel: NSObject {
     
     func computeValueByPool(for positionType: PositionType, using snapshot: Snapshot) -> [String:Double] {
         if positionType == .assets {
-            let assetPositions = modelManager.fetchAssetPositions(of: snapshot)
+            let assetPositions = repository.fetchAssetPositions(of: snapshot)
             return Dictionary(grouping: assetPositions, by: { $0.poolName }).mapValues { array in
                 array.map { $0.value }.reduce(0, +)
             }
         } else {
-            let liabilityPositions = modelManager.fetchLiabilityPositions(of: snapshot)
+            let liabilityPositions = repository.fetchLiabilityPositions(of: snapshot)
             return Dictionary(grouping: liabilityPositions, by: { $0.poolName }).mapValues { array in
                 array.map { $0.value }.reduce(0, +)
             }
         }
     }
-    
-    
-    // MARK: members NetWorthChart
-    var selectedTimeHorizon: TimeHorizon = .all
-    var filteredSnapshots: [Snapshot] {
-        return snapshots
-    }
-    var selectedDate: Date? {
-        get {
-            selectedSnapshot?.date
-        }
-        set {
-            if let newValue {
-                selectedSnapshot = snapshots.min(by: {closestDayPredicate(firstShot: $0, secondShot: $1, selectedDate: newValue)} )
-            }
-        }
-    }
-    
-    
-    func closestDayPredicate(firstShot: Snapshot, secondShot: Snapshot, selectedDate: Date) -> Bool {
-        computeAbsoluteMinuteDifference(first: firstShot.date, second: selectedDate) < computeAbsoluteMinuteDifference(first: secondShot.date, second: selectedDate) ? true : false
-    }
-    
-    func computeAbsoluteMinuteDifference(first: Date, second: Date) -> Int {
-        let components = Calendar.current.dateComponents([.minute], from: first, to: second)
-        return abs(components.minute!)
-    }
 }
 
-// MARK: making the viewModel testable
-class DashboardModelManager {
+
+// MARK: data access
+private class DashboardRepository {
     private let fetchedResultsController: ObservingFetchedResultsController<Snapshot>
     
     init(context: NSManagedObjectContext, viewModel: DashboardViewModel) {
@@ -151,9 +140,9 @@ class DashboardModelManager {
 // MARK: change management
 extension DashboardViewModel: NSFetchedResultsControllerDelegate {
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<any NSFetchRequestResult>) {
-        self.snapshots = modelManager.fetchSnapshots()
+        self.snapshots = repository.fetchSnapshots()
         for snapshot in snapshots {
-            equityValues[snapshot] = calculateEquityValue(for: snapshot)
+            equityValueCache[snapshot] = calculateEquityValue(for: snapshot)
         }
     }
 }
@@ -184,4 +173,15 @@ enum SnapshotDetailView: String, CaseIterable, Identifiable {
 enum DetailPage {
     case changeDetailPage
     case distributionDetailPage
+}
+
+extension Date {
+    func isCloser(to referenceDate: Date, than otherDate: Date) -> Bool {
+        self.computeAbsoluteMinuteDifference(to: referenceDate) < otherDate.computeAbsoluteMinuteDifference(to: referenceDate)
+    }
+    
+    func computeAbsoluteMinuteDifference(to otherDate: Date) -> Int {
+        let components = Calendar.current.dateComponents([.minute], from: self, to: otherDate)
+        return abs(components.minute!)
+    }
 }
