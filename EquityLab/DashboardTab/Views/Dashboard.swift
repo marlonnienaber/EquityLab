@@ -19,8 +19,8 @@ struct Dashboard: View {
             VStack(spacing: 16) {
                 equitySection
                     .frame(height: geometry.size.height * 0.45)
-//                snapshotDetailSection
-//                    .frame(height: geometry.size.height * 0.55)
+                snapshotDetailSection
+                    .frame(height: geometry.size.height * 0.55)
             }
             .navigationTitle("Analytics")
         }

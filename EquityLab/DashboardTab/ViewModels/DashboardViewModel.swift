@@ -10,10 +10,10 @@ class DashboardViewModel: NSObject {
     @ObservationIgnored private static let logger = Logger(subsystem: loggerSubsystem, category: loggerCategory)
     
     @ObservationIgnored private var repository: DashboardRepository!
-    @ObservationIgnored private var snapshots = [Snapshot]()
     @ObservationIgnored private var equityValueCache = [Snapshot:Double]()
     @ObservationIgnored private var assetValueCache = [Snapshot:Double]()
     @ObservationIgnored private var liabilityValueCache = [Snapshot:Double]()
+    private var snapshots = [Snapshot]()
     
     var filteredSnapshots: [Snapshot] {
         return snapshots
