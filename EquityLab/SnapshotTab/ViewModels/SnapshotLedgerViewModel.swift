@@ -47,8 +47,9 @@ class SnapshotLedgerViewModel: NSObject {
     }
     
     private func extractYear(from snapshot: Snapshot) -> Int? {
+        guard let date = snapshot.date else { return nil }
         let calendar = Calendar.current
-        let components = calendar.dateComponents([.year], from: snapshot.date)
+        let components = calendar.dateComponents([.year], from: date)
         return components.year
     }
     

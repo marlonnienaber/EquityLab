@@ -16,7 +16,7 @@ extension Snapshot {
         return NSFetchRequest<Snapshot>(entityName: "Snapshot")
     }
 
-    @NSManaged public var date: Date
+    @NSManaged public var date: Date?
     @NSManaged public var assets: NSSet?
     @NSManaged public var liabilities: NSSet?
 

@@ -24,8 +24,10 @@ class DashboardViewModel: NSObject {
         }
         set {
             if let newValue {
-                selectedSnapshot = snapshots.min{ firstSnapshot, secondSnapshot in
-                    firstSnapshot.date.isCloser(to: newValue, than: secondSnapshot.date)
+                selectedSnapshot = snapshots.filter { snapshot in
+                    snapshot.date != nil
+                }.min{ firstSnapshot, secondSnapshot in
+                    firstSnapshot.date!.isCloser(to: newValue, than: secondSnapshot.date!)
                 }
             }
         }

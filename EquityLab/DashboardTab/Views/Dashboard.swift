@@ -47,8 +47,8 @@ struct Dashboard: View {
     private var snapshotDetailSection: some View {
         GroupBox {
             HStack {
-                if let selectedSnapshot = viewModel.selectedSnapshot {
-                    Text(LocalizedLongDateFormatter.shared.string(from: selectedSnapshot.date))
+                if let selectedSnapshot = viewModel.selectedSnapshot, let date = selectedSnapshot.date {
+                    Text(LocalizedLongDateFormatter.shared.string(from: date))
                         .bold()
                 }
                 Spacer()

@@ -71,12 +71,13 @@ struct SnapshotLedger: View {
     
     @ViewBuilder 
     func SnapshotListCell(for snapshot: Snapshot) -> some View {
-        if let equityStringRepresentation = LocalizedCurrencyFormatter.shared.string(from: viewModel.equityValue(of: snapshot)) {
+        if let equityStringRepresentation = LocalizedCurrencyFormatter.shared.string(from: viewModel.equityValue(of: snapshot)),
+           let date = snapshot.date {
             Button {
                 activeSheet = .updateSheet(snapshot: snapshot)
             } label: {
                 HStack {
-                    Text(LocalizedShortDateFormatter.shared.string(from: snapshot.date))
+                    Text(LocalizedShortDateFormatter.shared.string(from: date))
                         .font(.headline).foregroundColor(.primary)
                     Text(equityStringRepresentation)
                         .font(.subheadline).foregroundColor(.gray)
