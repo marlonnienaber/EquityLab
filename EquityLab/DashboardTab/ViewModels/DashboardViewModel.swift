@@ -16,7 +16,21 @@ class DashboardViewModel: NSObject {
     private var snapshots = [Snapshot]()
     
     var filteredSnapshots: [Snapshot] {
-        return snapshots
+        let calendar = Calendar.current
+        let today = calendar.startOfDay(for: .now)
+        switch selectedTimeHorizon {
+        case .threeMonths:
+            let threeMonthsAgo = calendar.date(byAdding: .month, value: -3, to: today)!
+            return snapshots.filter{ $0.date != nil }.filter{ $0.date! >= threeMonthsAgo }
+        case .sixMonths:
+            let sixMonthsAgo = calendar.date(byAdding: .month, value: -6, to: today)!
+            return snapshots.filter{ $0.date != nil }.filter{ $0.date! >= sixMonthsAgo }
+        case .eighteenMonths:
+            let eighteenMonthsAgo = calendar.date(byAdding: .month, value: -18, to: today)!
+            return snapshots.filter{ $0.date != nil }.filter{ $0.date! >= eighteenMonthsAgo }
+        case .all:
+            return snapshots
+        }
     }
     var selectedDate: Date? {
         get {

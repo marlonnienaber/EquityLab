@@ -90,8 +90,9 @@ class SnapshotFormViewModel {
     }
     
     func createSnapshot() {
+        //TODO: only allow creation of date if snapshot with date does not exist already
         let snapshot = Snapshot(context: context)
-        snapshot.date = date
+        snapshot.date = Calendar.current.startOfDay(for: date)
         
         var assetPositions = [AssetPosition]()
         assetProxies.forEach { proxy in
@@ -116,8 +117,9 @@ class SnapshotFormViewModel {
     }
     
     func updateSnapshot() {
+        //TODO: only allow updates of date if snapshot with date does not exist already
         if let snapshot {
-            snapshot.date = date
+            snapshot.date = Calendar.current.startOfDay(for: date)
             let assetPositions = getAssetPositions(for: snapshot)
             assetProxies.forEach { proxy in
                 if let position = assetPositions.first(where: { $0.name == proxy.name} ) {

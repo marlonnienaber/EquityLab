@@ -327,5 +327,38 @@ final class DashboardViewModelTests: XCTestCase {
     }
     
     
+    /// many persisted snapshots covering all scopes
+    func test_filteredSnapshots_1() throws {
+        let sut = DashboardViewModel(context: testingCoreDataStack.context)
+        sut.selectedTimeHorizon = .threeMonths
+        let (threeMonthSnapshots, sixMonthSnapshots, eighteenMonthSnapshots, allScopeSnapshots) = testDataProvider.createAndPersistTestObjects_filteredSnapshots_1(using: testingCoreDataStack.context)
+        
+        sut.selectedTimeHorizon = .threeMonths
+        var expectedSnapshots = threeMonthSnapshots
+        var actualSnapshots = sut.filteredSnapshots
+        XCTAssertEqual(Set(expectedSnapshots), Set(actualSnapshots))
+        
+        sut.selectedTimeHorizon = .sixMonths
+        expectedSnapshots = threeMonthSnapshots + sixMonthSnapshots
+        actualSnapshots = sut.filteredSnapshots
+        XCTAssertEqual(Set(expectedSnapshots), Set(actualSnapshots))
+        
+        sut.selectedTimeHorizon = .eighteenMonths
+        expectedSnapshots = threeMonthSnapshots + sixMonthSnapshots + eighteenMonthSnapshots
+        actualSnapshots = sut.filteredSnapshots
+        XCTAssertEqual(Set(expectedSnapshots), Set(actualSnapshots))
+        
+        sut.selectedTimeHorizon = .all
+        expectedSnapshots = threeMonthSnapshots + sixMonthSnapshots + eighteenMonthSnapshots + allScopeSnapshots
+        actualSnapshots = sut.filteredSnapshots
+        XCTAssertEqual(Set(expectedSnapshots), Set(actualSnapshots))
+    }
     
+    /// no snapshots persisted
+    func test_filteredSnapshots_2() throws {
+        let sut = DashboardViewModel(context: testingCoreDataStack.context)
+        let expectedSnapshots: [Snapshot] = []
+        let actualSnapshots = sut.filteredSnapshots
+        XCTAssertEqual(expectedSnapshots, actualSnapshots)
+    }
 }

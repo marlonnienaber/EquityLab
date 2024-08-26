@@ -40,6 +40,13 @@ class TestDataProvider {
         return snapshot
     }
     
+    private func createSnapshotWithoutPositions(for date: Date, in context: NSManagedObjectContext) -> Snapshot {
+        let snapshot = Snapshot(context: context)
+        snapshot.date = date
+        try? context.save()
+        return snapshot
+    }
+    
     
     func createAndPersistTestObjects_assetValue_1(using context: NSManagedObjectContext) -> Snapshot {
         let assetPositions: [AssetPosition] = []
@@ -287,5 +294,53 @@ class TestDataProvider {
         let liabilityPositions: [LiabilityPosition] = [liabilityPosition1, liabilityPosition2]
         let date: Date = .now
         return createSnapshot(with: assetPositions, and: liabilityPositions, for: date, in: context)
+    }
+    
+    
+    func createAndPersistTestObjects_filteredSnapshots_1(using context: NSManagedObjectContext) -> ([Snapshot],[Snapshot],[Snapshot],[Snapshot]) {
+        let calendar = Calendar.current
+        let today = calendar.startOfDay(for: .now)
+        
+        let threeMonthScopeDate1 = calendar.date(byAdding: DateComponents(day: -6), to: today)!
+        let threeMonthScopeDate2 = calendar.date(byAdding: DateComponents(month: -1, day: -14), to: today)!
+        let threeMonthScopeDate3 = calendar.date(byAdding: DateComponents(month: -2, day: -17), to: today)!
+        let threeMonthScopeDate4 = calendar.date(byAdding: DateComponents(month: -3), to: today)!
+        
+        let sixMonthScopeDate1 = calendar.date(byAdding: DateComponents(month: -3, day: -2), to: today)!
+        let sixMonthScopeDate2 = calendar.date(byAdding: DateComponents(month: -4, day: -6), to: today)!
+        let sixMonthScopeDate3 = calendar.date(byAdding: DateComponents(month: -5, day: -21), to: today)!
+        let sixMonthScopeDate4 = calendar.date(byAdding: DateComponents(month: -6), to: today)!
+        
+        let eighteenMonthScopeDate1 = calendar.date(byAdding: DateComponents(month: -6, day: -1), to: today)!
+        let eighteenMonthScopeDate2 = calendar.date(byAdding: DateComponents(month: -9, day: -17), to: today)!
+        let eighteenMonthScopeDate3 = calendar.date(byAdding: DateComponents(month: -14, day: -13), to: today)!
+        let eighteenMonthScopeDate4 = calendar.date(byAdding: DateComponents(month: -18), to: today)!
+        
+        let allScopeDate1 = calendar.date(byAdding: DateComponents(month: -18, day: -1), to: today)!
+        let allScopeDate2 = calendar.date(byAdding: DateComponents(month: -30, day: -1), to: today)!
+        
+        let threeMonthSnapshot1 = createSnapshotWithoutPositions(for: threeMonthScopeDate1, in: context)
+        let threeMonthSnapshot2 = createSnapshotWithoutPositions(for: threeMonthScopeDate2, in: context)
+        let threeMonthSnapshot3 = createSnapshotWithoutPositions(for: threeMonthScopeDate3, in: context)
+        let threeMonthSnapshot4 = createSnapshotWithoutPositions(for: threeMonthScopeDate4, in: context)
+        let threeMonthSnapshots = [threeMonthSnapshot1, threeMonthSnapshot2, threeMonthSnapshot3, threeMonthSnapshot4]
+        
+        let sixMonthSnapshot1 = createSnapshotWithoutPositions(for: sixMonthScopeDate1, in: context)
+        let sixMonthSnapshot2 = createSnapshotWithoutPositions(for: sixMonthScopeDate2, in: context)
+        let sixMonthSnapshot3 = createSnapshotWithoutPositions(for: sixMonthScopeDate3, in: context)
+        let sixMonthSnapshot4 = createSnapshotWithoutPositions(for: sixMonthScopeDate4, in: context)
+        let sixMonthSnapshots = [sixMonthSnapshot1, sixMonthSnapshot2, sixMonthSnapshot3, sixMonthSnapshot4]
+        
+        let eighteenMonthSnapshot1 = createSnapshotWithoutPositions(for: eighteenMonthScopeDate1, in: context)
+        let eighteenMonthSnapshot2 = createSnapshotWithoutPositions(for: eighteenMonthScopeDate2, in: context)
+        let eighteenMonthSnapshot3 = createSnapshotWithoutPositions(for: eighteenMonthScopeDate3, in: context)
+        let eighteenMonthSnapshot4 = createSnapshotWithoutPositions(for: eighteenMonthScopeDate4, in: context)
+        let eighteenMonthSnapshots = [eighteenMonthSnapshot1, eighteenMonthSnapshot2, eighteenMonthSnapshot3, eighteenMonthSnapshot4]
+        
+        let allScopeSnapshot1 = createSnapshotWithoutPositions(for: allScopeDate1, in: context)
+        let allScopeSnapshot2 = createSnapshotWithoutPositions(for: allScopeDate2, in: context)
+        let allScopeSnapshots = [allScopeSnapshot1, allScopeSnapshot2]
+        
+        return (threeMonthSnapshots, sixMonthSnapshots, eighteenMonthSnapshots, allScopeSnapshots)
     }
 }
