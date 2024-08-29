@@ -4,8 +4,8 @@ import CoreData
 
 final class DashboardViewModelTests: XCTestCase {
     private var testingCoreDataStack: TestingCoreDataStack!
-    private let testDataProvider = TestDataProvider()
     
+    private let testDataProvider = TestDataProvider()
     
     override func setUpWithError() throws {
         testingCoreDataStack = TestingCoreDataStack()
@@ -327,6 +327,7 @@ final class DashboardViewModelTests: XCTestCase {
     }
     
     
+    
     /// many persisted snapshots covering all scopes
     func test_filteredSnapshots_1() throws {
         let sut = DashboardViewModel(context: testingCoreDataStack.context)
@@ -360,5 +361,320 @@ final class DashboardViewModelTests: XCTestCase {
         let expectedSnapshots: [Snapshot] = []
         let actualSnapshots = sut.filteredSnapshots
         XCTAssertEqual(expectedSnapshots, actualSnapshots)
+    }
+    
+    
+    
+    /// 1 snapshot persisted
+    func test_selectedDate_1() throws {
+        let snapshot = testDataProvider.createAndPersistTestObjects_selectedDate_1(using: testingCoreDataStack.context)
+        let sut = DashboardViewModel(context: testingCoreDataStack.context)
+        let calendar = Calendar.current
+        let expectedSelectedSnapshot = snapshot
+        
+        let dateBeforeSnapshot = calendar.date(byAdding: DateComponents(day: -6), to: snapshot.date!)
+        sut.selectedDate = dateBeforeSnapshot
+        XCTAssertNotNil(sut.selectedSnapshot)
+        var actualSelectedSnapshot = sut.selectedSnapshot
+        XCTAssertEqual(expectedSelectedSnapshot, actualSelectedSnapshot)
+        
+        let dateLongBeforeSnapshot = calendar.date(byAdding: DateComponents(month: -3, day: -6), to: snapshot.date!)
+        sut.selectedDate = dateLongBeforeSnapshot
+        XCTAssertNotNil(sut.selectedSnapshot)
+        actualSelectedSnapshot = sut.selectedSnapshot
+        XCTAssertEqual(expectedSelectedSnapshot, actualSelectedSnapshot)
+        
+        let dateAfterSnapshot = calendar.date(byAdding: DateComponents(day: 1), to: snapshot.date!)!
+        sut.selectedDate = dateAfterSnapshot
+        XCTAssertNotNil(sut.selectedSnapshot)
+        actualSelectedSnapshot = sut.selectedSnapshot
+        XCTAssertEqual(expectedSelectedSnapshot, actualSelectedSnapshot)
+        
+        let dateLongAfterSnapshot = calendar.date(byAdding: DateComponents(month: 6, day: 2), to: snapshot.date!)
+        sut.selectedDate = dateLongAfterSnapshot
+        XCTAssertNotNil(sut.selectedSnapshot)
+        actualSelectedSnapshot = sut.selectedSnapshot
+        XCTAssertEqual(expectedSelectedSnapshot, actualSelectedSnapshot)
+        
+        sut.selectedDate = snapshot.date
+        XCTAssertNotNil(sut.selectedSnapshot)
+        actualSelectedSnapshot = sut.selectedSnapshot
+        XCTAssertEqual(expectedSelectedSnapshot, actualSelectedSnapshot)
+    }
+    
+    /// 2 snapshots persisted one month apart
+    func test_selectedDate_2() throws {
+        let (snapshot_15_03_2024, snapshot_15_04_2024) = testDataProvider.createAndPersistTestObjects_selectedDate_2(using: testingCoreDataStack.context)
+        let sut = DashboardViewModel(context: testingCoreDataStack.context)
+        
+        
+        let middleDate = DateParser.shared.date(from: "2024-03-30T00:00:00Z")!
+        sut.selectedDate = middleDate
+        var selectedSnapshot = sut.selectedSnapshot
+        XCTAssertNotNil(selectedSnapshot)
+        var expectedSelectedSnapshot = snapshot_15_03_2024
+        var actualSelectedSnapshot = selectedSnapshot!
+        XCTAssertEqual(expectedSelectedSnapshot, actualSelectedSnapshot)
+        
+        
+        let dateCloseToMiddleNear_15_03_2024 = DateParser.shared.date(from: "2024-03-29T00:00:00Z")!
+        sut.selectedDate = dateCloseToMiddleNear_15_03_2024
+        selectedSnapshot = sut.selectedSnapshot
+        XCTAssertNotNil(selectedSnapshot)
+        expectedSelectedSnapshot = snapshot_15_03_2024
+        actualSelectedSnapshot = selectedSnapshot!
+        XCTAssertEqual(expectedSelectedSnapshot, actualSelectedSnapshot)
+        
+        
+        let dateCloseToMiddleNear_15_04_2024 = DateParser.shared.date(from: "2024-03-31T00:00:00Z")!
+        sut.selectedDate = dateCloseToMiddleNear_15_04_2024
+        selectedSnapshot = sut.selectedSnapshot
+        XCTAssertNotNil(selectedSnapshot)
+        expectedSelectedSnapshot = snapshot_15_04_2024
+        actualSelectedSnapshot = selectedSnapshot!
+        XCTAssertEqual(expectedSelectedSnapshot, actualSelectedSnapshot)
+        
+        
+        let dateNear_15_03_2024 = DateParser.shared.date(from: "2024-03-21T00:00:00Z")!
+        sut.selectedDate = dateNear_15_03_2024
+        selectedSnapshot = sut.selectedSnapshot
+        XCTAssertNotNil(selectedSnapshot)
+        expectedSelectedSnapshot = snapshot_15_03_2024
+        actualSelectedSnapshot = selectedSnapshot!
+        XCTAssertEqual(expectedSelectedSnapshot, actualSelectedSnapshot)
+        
+        
+        let dateNear_15_04_2024 = DateParser.shared.date(from: "2024-04-08T00:00:00Z")!
+        sut.selectedDate = dateNear_15_04_2024
+        selectedSnapshot = sut.selectedSnapshot
+        XCTAssertNotNil(selectedSnapshot)
+        expectedSelectedSnapshot = snapshot_15_04_2024
+        actualSelectedSnapshot = selectedSnapshot!
+        XCTAssertEqual(expectedSelectedSnapshot, actualSelectedSnapshot)
+        
+        
+        let dateVeryNear_15_03_2024 = DateParser.shared.date(from: "2024-03-16T00:00:00Z")!
+        sut.selectedDate = dateVeryNear_15_03_2024
+        selectedSnapshot = sut.selectedSnapshot
+        XCTAssertNotNil(selectedSnapshot)
+        expectedSelectedSnapshot = snapshot_15_03_2024
+        actualSelectedSnapshot = selectedSnapshot!
+        XCTAssertEqual(expectedSelectedSnapshot, actualSelectedSnapshot)
+        
+        
+        let dateVeryNear_15_04_2024 = DateParser.shared.date(from: "2024-04-14T00:00:00Z")!
+        sut.selectedDate = dateVeryNear_15_04_2024
+        selectedSnapshot = sut.selectedSnapshot
+        XCTAssertNotNil(selectedSnapshot)
+        expectedSelectedSnapshot = snapshot_15_04_2024
+        actualSelectedSnapshot = selectedSnapshot!
+        XCTAssertEqual(expectedSelectedSnapshot, actualSelectedSnapshot)
+        
+        
+        sut.selectedDate = snapshot_15_03_2024.date
+        selectedSnapshot = sut.selectedSnapshot
+        XCTAssertNotNil(selectedSnapshot)
+        expectedSelectedSnapshot = snapshot_15_03_2024
+        actualSelectedSnapshot = selectedSnapshot!
+        XCTAssertEqual(expectedSelectedSnapshot, actualSelectedSnapshot)
+        
+        
+        sut.selectedDate = snapshot_15_04_2024.date
+        selectedSnapshot = sut.selectedSnapshot
+        XCTAssertNotNil(selectedSnapshot)
+        expectedSelectedSnapshot = snapshot_15_04_2024
+        actualSelectedSnapshot = selectedSnapshot!
+        XCTAssertEqual(expectedSelectedSnapshot, actualSelectedSnapshot)
+    }
+    
+    /// 3 snapshots persisted several days apart
+    func test_selectedDate_3() throws {
+        let (snapshot_10_05_2023, snapshot_13_05_2023, snapshot_15_05_2023) = testDataProvider.createAndPersistTestObjects_selectedDate_3(using: testingCoreDataStack.context)
+        let sut = DashboardViewModel(context: testingCoreDataStack.context)
+        
+        sut.selectedDate = snapshot_10_05_2023.date
+        var selectedSnapshot = sut.selectedSnapshot
+        XCTAssertNotNil(selectedSnapshot)
+        var expectedSelectedSnapshot = snapshot_10_05_2023
+        var actualSelectedSnapshot = selectedSnapshot!
+        XCTAssertEqual(expectedSelectedSnapshot, actualSelectedSnapshot)
+        
+        let dateNear_10_05_2023 = DateParser.shared.date(from: "2023-05-10T03:30:12Z")!
+        sut.selectedDate = dateNear_10_05_2023
+        selectedSnapshot = sut.selectedSnapshot
+        XCTAssertNotNil(selectedSnapshot)
+        expectedSelectedSnapshot = snapshot_10_05_2023
+        actualSelectedSnapshot = selectedSnapshot!
+        XCTAssertEqual(expectedSelectedSnapshot, actualSelectedSnapshot)
+        
+        let dateMiddle_10_05_2023_and_13_05_2023 = DateParser.shared.date(from: "2023-05-11T12:00:00Z")!
+        sut.selectedDate = dateMiddle_10_05_2023_and_13_05_2023
+        selectedSnapshot = sut.selectedSnapshot
+        XCTAssertNotNil(selectedSnapshot)
+        expectedSelectedSnapshot = snapshot_10_05_2023
+        actualSelectedSnapshot = selectedSnapshot!
+        XCTAssertEqual(expectedSelectedSnapshot, actualSelectedSnapshot)
+        
+        let dateNear1_13_05_2023 = DateParser.shared.date(from: "2023-05-12T10:55:27Z")!
+        sut.selectedDate = dateNear1_13_05_2023
+        selectedSnapshot = sut.selectedSnapshot
+        XCTAssertNotNil(selectedSnapshot)
+        expectedSelectedSnapshot = snapshot_13_05_2023
+        actualSelectedSnapshot = selectedSnapshot!
+        XCTAssertEqual(expectedSelectedSnapshot, actualSelectedSnapshot)
+        
+        sut.selectedDate = snapshot_13_05_2023.date
+        selectedSnapshot = sut.selectedSnapshot
+        XCTAssertNotNil(selectedSnapshot)
+        expectedSelectedSnapshot = snapshot_13_05_2023
+        actualSelectedSnapshot = selectedSnapshot!
+        XCTAssertEqual(expectedSelectedSnapshot, actualSelectedSnapshot)
+        
+        let dateNear2_13_05_2023 = DateParser.shared.date(from: "2023-05-13T07:37:42Z")!
+        sut.selectedDate = dateNear2_13_05_2023
+        selectedSnapshot = sut.selectedSnapshot
+        XCTAssertNotNil(selectedSnapshot)
+        expectedSelectedSnapshot = snapshot_13_05_2023
+        actualSelectedSnapshot = selectedSnapshot!
+        XCTAssertEqual(expectedSelectedSnapshot, actualSelectedSnapshot)
+        
+        let dateMiddle_13_05_2023_and_15_05_2023 = DateParser.shared.date(from: "2023-05-14T00:00:00Z")!
+        sut.selectedDate = dateMiddle_13_05_2023_and_15_05_2023
+        selectedSnapshot = sut.selectedSnapshot
+        XCTAssertNotNil(selectedSnapshot)
+        expectedSelectedSnapshot = snapshot_13_05_2023
+        actualSelectedSnapshot = selectedSnapshot!
+        XCTAssertEqual(expectedSelectedSnapshot, actualSelectedSnapshot)
+        
+        let dateNear_15_05_2023 = DateParser.shared.date(from: "2023-05-14T16:16:01Z")!
+        sut.selectedDate = dateNear_15_05_2023
+        selectedSnapshot = sut.selectedSnapshot
+        XCTAssertNotNil(selectedSnapshot)
+        expectedSelectedSnapshot = snapshot_15_05_2023
+        actualSelectedSnapshot = selectedSnapshot!
+        XCTAssertEqual(expectedSelectedSnapshot, actualSelectedSnapshot)
+        
+        sut.selectedDate = snapshot_15_05_2023.date
+        selectedSnapshot = sut.selectedSnapshot
+        XCTAssertNotNil(selectedSnapshot)
+        expectedSelectedSnapshot = snapshot_15_05_2023
+        actualSelectedSnapshot = selectedSnapshot!
+        XCTAssertEqual(expectedSelectedSnapshot, actualSelectedSnapshot)
+    }
+    
+    /// 3 snapshots persisted several months apart
+    func test_selectedDate_4() throws {
+        let (snapshot_17_05_2022, snapshot_05_09_2022, snapshot_15_12_2022) = testDataProvider.createAndPersistTestObjects_selectedDate_4(using: testingCoreDataStack.context)
+        let sut = DashboardViewModel(context: testingCoreDataStack.context)
+        
+        sut.selectedDate = snapshot_17_05_2022.date
+        var selectedSnapshot = sut.selectedSnapshot
+        XCTAssertNotNil(selectedSnapshot)
+        var expectedSelectedSnapshot = snapshot_17_05_2022
+        var actualSelectedSnapshot = selectedSnapshot!
+        XCTAssertEqual(expectedSelectedSnapshot, actualSelectedSnapshot)
+        
+        let dateNear_17_05_2022 = DateParser.shared.date(from: "2022-06-27T14:27:19Z")!
+        sut.selectedDate = dateNear_17_05_2022
+        selectedSnapshot = sut.selectedSnapshot
+        XCTAssertNotNil(selectedSnapshot)
+        expectedSelectedSnapshot = snapshot_17_05_2022
+        actualSelectedSnapshot = selectedSnapshot!
+        XCTAssertEqual(expectedSelectedSnapshot, actualSelectedSnapshot)
+        
+        let dateMiddle_17_05_2022_and_05_09_2022 = DateParser.shared.date(from: "2022-07-06T00:00:00Z")!
+        sut.selectedDate = dateMiddle_17_05_2022_and_05_09_2022
+        selectedSnapshot = sut.selectedSnapshot
+        XCTAssertNotNil(selectedSnapshot)
+        expectedSelectedSnapshot = snapshot_17_05_2022
+        actualSelectedSnapshot = selectedSnapshot!
+        XCTAssertEqual(expectedSelectedSnapshot, actualSelectedSnapshot)
+        
+        let dateNear1_05_09_2022 = DateParser.shared.date(from: "2022-07-25T23:47:29Z")!
+        sut.selectedDate = dateNear1_05_09_2022
+        selectedSnapshot = sut.selectedSnapshot
+        XCTAssertNotNil(selectedSnapshot)
+        expectedSelectedSnapshot = snapshot_05_09_2022
+        actualSelectedSnapshot = selectedSnapshot!
+        XCTAssertEqual(expectedSelectedSnapshot, actualSelectedSnapshot)
+        
+        sut.selectedDate = snapshot_05_09_2022.date
+        selectedSnapshot = sut.selectedSnapshot
+        XCTAssertNotNil(selectedSnapshot)
+        expectedSelectedSnapshot = snapshot_05_09_2022
+        actualSelectedSnapshot = selectedSnapshot!
+        XCTAssertEqual(expectedSelectedSnapshot, actualSelectedSnapshot)
+        
+        let dateNear2_05_09_2022 = DateParser.shared.date(from: "2022-09-29T07:37:42Z")!
+        sut.selectedDate = dateNear2_05_09_2022
+        selectedSnapshot = sut.selectedSnapshot
+        XCTAssertNotNil(selectedSnapshot)
+        expectedSelectedSnapshot = snapshot_05_09_2022
+        actualSelectedSnapshot = selectedSnapshot!
+        XCTAssertEqual(expectedSelectedSnapshot, actualSelectedSnapshot)
+        
+        let dateMiddle_05_09_2022_and_15_12_2022 = DateParser.shared.date(from: "2022-10-25T00:00:00Z")!
+        sut.selectedDate = dateMiddle_05_09_2022_and_15_12_2022
+        selectedSnapshot = sut.selectedSnapshot
+        XCTAssertNotNil(selectedSnapshot)
+        expectedSelectedSnapshot = snapshot_05_09_2022
+        actualSelectedSnapshot = selectedSnapshot!
+        XCTAssertEqual(expectedSelectedSnapshot, actualSelectedSnapshot)
+        
+        let dateNear_15_12_2022 = DateParser.shared.date(from: "2022-11-17T13:37:11Z")!
+        sut.selectedDate = dateNear_15_12_2022
+        selectedSnapshot = sut.selectedSnapshot
+        XCTAssertNotNil(selectedSnapshot)
+        expectedSelectedSnapshot = snapshot_15_12_2022
+        actualSelectedSnapshot = selectedSnapshot!
+        XCTAssertEqual(expectedSelectedSnapshot, actualSelectedSnapshot)
+        
+        sut.selectedDate = snapshot_15_12_2022.date
+        selectedSnapshot = sut.selectedSnapshot
+        XCTAssertNotNil(selectedSnapshot)
+        expectedSelectedSnapshot = snapshot_15_12_2022
+        actualSelectedSnapshot = selectedSnapshot!
+        XCTAssertEqual(expectedSelectedSnapshot, actualSelectedSnapshot)
+    }
+    
+    /// 16 snapshots persisted each about 1 month apart (realistic spacing)
+    func test_selectedDate_5() throws {
+        let snapshots = testDataProvider.createAndPersistTestObjects_selectedDate_5(using: testingCoreDataStack.context)
+        let sut = DashboardViewModel(context: testingCoreDataStack.context)
+        
+        let snapshot_28_02_2022 = snapshots[0]
+        let dateNear_28_02_2022 = DateParser.shared.date(from: "2022-03-06T14:27:19Z")!
+        sut.selectedDate = dateNear_28_02_2022
+        var selectedSnapshot = sut.selectedSnapshot
+        XCTAssertNotNil(selectedSnapshot)
+        var expectedSelectedSnapshot = snapshot_28_02_2022
+        var actualSelectedSnapshot = selectedSnapshot!
+        XCTAssertEqual(expectedSelectedSnapshot, actualSelectedSnapshot)
+        
+        let snapshot_31_05_2023 = snapshots[15]
+        let dateNear_31_05_2023 = DateParser.shared.date(from: "2023-05-20T22:02:33Z")!
+        sut.selectedDate = dateNear_31_05_2023
+        selectedSnapshot = sut.selectedSnapshot
+        XCTAssertNotNil(selectedSnapshot)
+        expectedSelectedSnapshot = snapshot_31_05_2023
+        actualSelectedSnapshot = selectedSnapshot!
+        XCTAssertEqual(expectedSelectedSnapshot, actualSelectedSnapshot)
+        
+        let snapshot_01_12_2022 = snapshots[9]
+        let dateNear_01_12_2022 = DateParser.shared.date(from: "2022-12-13T07:13:51Z")!
+        sut.selectedDate = dateNear_01_12_2022
+        selectedSnapshot = sut.selectedSnapshot
+        XCTAssertNotNil(selectedSnapshot)
+        expectedSelectedSnapshot = snapshot_01_12_2022
+        actualSelectedSnapshot = selectedSnapshot!
+        XCTAssertEqual(expectedSelectedSnapshot, actualSelectedSnapshot)
+        
+        let snapshot_31_07_2022 = snapshots[5]
+        sut.selectedDate = snapshot_31_07_2022.date
+        selectedSnapshot = sut.selectedSnapshot
+        XCTAssertNotNil(selectedSnapshot)
+        expectedSelectedSnapshot = snapshot_31_07_2022
+        actualSelectedSnapshot = selectedSnapshot!
+        XCTAssertEqual(expectedSelectedSnapshot, actualSelectedSnapshot)
     }
 }

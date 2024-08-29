@@ -11,7 +11,7 @@ import CoreData
 
 class TestDataProvider {
     private func createAssetPosition(name: String, poolName: String, value: Double, context: NSManagedObjectContext) -> AssetPosition {
-        let assetPosition = AssetPosition(context: context)
+        let assetPosition = AssetPosition(usedContext: context)
         assetPosition.name = name
         assetPosition.poolName = poolName
         assetPosition.value = value
@@ -20,7 +20,7 @@ class TestDataProvider {
     }
     
     private func createLiabilityPosition(name: String, poolName: String, value: Double, context: NSManagedObjectContext) -> LiabilityPosition {
-        let liabilityPosition = LiabilityPosition(context: context)
+        let liabilityPosition = LiabilityPosition(usedContext: context)
         liabilityPosition.name = name
         liabilityPosition.poolName = poolName
         liabilityPosition.value = value
@@ -32,7 +32,7 @@ class TestDataProvider {
                                 and liabilityPositions: [LiabilityPosition],
                                 for date: Date,
                                 in context: NSManagedObjectContext) -> Snapshot {
-        let snapshot = Snapshot(context: context)
+        let snapshot = Snapshot(usedContext: context)
         snapshot.date = date
         assetPositions.forEach{ $0.snapshot = snapshot }
         liabilityPositions.forEach{ $0.snapshot = snapshot }
@@ -41,7 +41,7 @@ class TestDataProvider {
     }
     
     private func createSnapshotWithoutPositions(for date: Date, in context: NSManagedObjectContext) -> Snapshot {
-        let snapshot = Snapshot(context: context)
+        let snapshot = Snapshot(usedContext: context)
         snapshot.date = date
         try? context.save()
         return snapshot
@@ -342,5 +342,100 @@ class TestDataProvider {
         let allScopeSnapshots = [allScopeSnapshot1, allScopeSnapshot2]
         
         return (threeMonthSnapshots, sixMonthSnapshots, eighteenMonthSnapshots, allScopeSnapshots)
+    }
+    
+    
+    func createAndPersistTestObjects_selectedDate_1(using context: NSManagedObjectContext) -> Snapshot {
+        let today = Calendar.current.startOfDay(for: .now)
+        return createSnapshotWithoutPositions(for: today, in: context)
+    }
+    
+    func createAndPersistTestObjects_selectedDate_2(using context: NSManagedObjectContext) -> (Snapshot, Snapshot) {
+        let date_15_04_2024 = DateParser.shared.date(from: "2024-04-15T00:00:00Z")!
+        let date_15_03_2024 = DateParser.shared.date(from: "2024-03-15T00:00:00Z")!
+
+        let snapshot_15_04_2024 = createSnapshotWithoutPositions(for: date_15_04_2024, in: context)
+        let snapshot_15_03_2024 = createSnapshotWithoutPositions(for: date_15_03_2024, in: context)
+        
+        return (snapshot_15_03_2024, snapshot_15_04_2024)
+    }
+    
+    func createAndPersistTestObjects_selectedDate_3(using context: NSManagedObjectContext) -> (Snapshot, Snapshot, Snapshot) {
+        let date_10_05_2023 = DateParser.shared.date(from: "2023-05-10T00:00:00Z")!
+        let date_13_05_2023 = DateParser.shared.date(from: "2023-05-13T00:00:00Z")!
+        let date_15_05_2023 = DateParser.shared.date(from: "2023-05-15T00:00:00Z")!
+        
+        let snapshot_10_05_2023 = createSnapshotWithoutPositions(for: date_10_05_2023, in: context)
+        let snapshot_13_05_2023 = createSnapshotWithoutPositions(for: date_13_05_2023, in: context)
+        let snapshot_15_05_2023 = createSnapshotWithoutPositions(for: date_15_05_2023, in: context)
+        
+        return (snapshot_10_05_2023, snapshot_13_05_2023, snapshot_15_05_2023)
+    }
+    
+    func createAndPersistTestObjects_selectedDate_4(using context: NSManagedObjectContext) -> (Snapshot, Snapshot, Snapshot) {
+        let date_17_05_2022 = DateParser.shared.date(from: "2022-05-17T00:00:00Z")!
+        let date_05_09_2022 = DateParser.shared.date(from: "2022-09-05T00:00:00Z")!
+        let date_15_12_2022 = DateParser.shared.date(from: "2022-12-15T00:00:00Z")!
+        
+        let snapshot_17_05_2022 = createSnapshotWithoutPositions(for: date_17_05_2022, in: context)
+        let snapshot_05_09_2022 = createSnapshotWithoutPositions(for: date_05_09_2022, in: context)
+        let snapshot_15_12_2022 = createSnapshotWithoutPositions(for: date_15_12_2022, in: context)
+        
+        return (snapshot_17_05_2022, snapshot_05_09_2022, snapshot_15_12_2022)
+    }
+    
+    func createAndPersistTestObjects_selectedDate_5(using context: NSManagedObjectContext) -> [Snapshot] {
+        let date_28_02_2022 = DateParser.shared.date(from: "2022-02-28T00:00:00Z")!
+        let date_31_03_2022 = DateParser.shared.date(from: "2022-03-31T00:00:00Z")!
+        let date_30_04_2022 = DateParser.shared.date(from: "2022-04-30T00:00:00Z")!
+        let date_30_05_2022 = DateParser.shared.date(from: "2022-05-30T00:00:00Z")!
+        let date_30_06_2022 = DateParser.shared.date(from: "2022-06-30T00:00:00Z")!
+        let date_31_07_2022 = DateParser.shared.date(from: "2022-07-31T00:00:00Z")!
+        let date_31_08_2022 = DateParser.shared.date(from: "2022-08-31T00:00:00Z")!
+        let date_28_09_2022 = DateParser.shared.date(from: "2022-09-28T00:00:00Z")!
+        let date_31_10_2022 = DateParser.shared.date(from: "2022-10-31T00:00:00Z")!
+        let date_01_12_2022 = DateParser.shared.date(from: "2022-12-01T00:00:00Z")!
+        let date_31_12_2022 = DateParser.shared.date(from: "2022-12-31T00:00:00Z")!
+        let date_31_01_2023 = DateParser.shared.date(from: "2023-01-31T00:00:00Z")!
+        let date_28_02_2023 = DateParser.shared.date(from: "2023-02-28T00:00:00Z")!
+        let date_31_03_2023 = DateParser.shared.date(from: "2023-03-31T00:00:00Z")!
+        let date_02_05_2023 = DateParser.shared.date(from: "2023-05-02T00:00:00Z")!
+        let date_31_05_2023 = DateParser.shared.date(from: "2023-05-31T00:00:00Z")!
+        
+        var snapshots: [Snapshot] = []
+        let snapshot_28_02_2022 = createSnapshotWithoutPositions(for: date_28_02_2022, in: context)
+        snapshots.append(snapshot_28_02_2022)
+        let snapshot_31_03_2022 = createSnapshotWithoutPositions(for: date_31_03_2022, in: context)
+        snapshots.append(snapshot_31_03_2022)
+        let snapshot_30_04_2022 = createSnapshotWithoutPositions(for: date_30_04_2022, in: context)
+        snapshots.append(snapshot_30_04_2022)
+        let snapshot_30_05_2022 = createSnapshotWithoutPositions(for: date_30_05_2022, in: context)
+        snapshots.append(snapshot_30_05_2022)
+        let snapshot_30_06_2022 = createSnapshotWithoutPositions(for: date_30_06_2022, in: context)
+        snapshots.append(snapshot_30_06_2022)
+        let snapshot_31_07_2022 = createSnapshotWithoutPositions(for: date_31_07_2022, in: context)
+        snapshots.append(snapshot_31_07_2022)
+        let snapshot_31_08_2022 = createSnapshotWithoutPositions(for: date_31_08_2022, in: context)
+        snapshots.append(snapshot_31_08_2022)
+        let snapshot_28_09_2022 = createSnapshotWithoutPositions(for: date_28_09_2022, in: context)
+        snapshots.append(snapshot_28_09_2022)
+        let snapshot_31_10_2022 = createSnapshotWithoutPositions(for: date_31_10_2022, in: context)
+        snapshots.append(snapshot_31_10_2022)
+        let snapshot_01_12_2022 = createSnapshotWithoutPositions(for: date_01_12_2022, in: context)
+        snapshots.append(snapshot_01_12_2022)
+        let snapshot_31_12_2022 = createSnapshotWithoutPositions(for: date_31_12_2022, in: context)
+        snapshots.append(snapshot_31_12_2022)
+        let snapshot_31_01_2023 = createSnapshotWithoutPositions(for: date_31_01_2023, in: context)
+        snapshots.append(snapshot_31_01_2023)
+        let snapshot_28_02_2023 = createSnapshotWithoutPositions(for: date_28_02_2023, in: context)
+        snapshots.append(snapshot_28_02_2023)
+        let snapshot_31_03_2023 = createSnapshotWithoutPositions(for: date_31_03_2023, in: context)
+        snapshots.append(snapshot_31_03_2023)
+        let snapshot_02_05_2023 = createSnapshotWithoutPositions(for: date_02_05_2023, in: context)
+        snapshots.append(snapshot_02_05_2023)
+        let snapshot_31_05_2023 = createSnapshotWithoutPositions(for: date_31_05_2023, in: context)
+        snapshots.append(snapshot_31_05_2023)
+        
+        return snapshots
     }
 }

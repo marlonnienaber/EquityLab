@@ -62,8 +62,10 @@
 		73823CDF2C62B2EE0049D03C /* ChangeChartViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73823CDE2C62B2EE0049D03C /* ChangeChartViewModel.swift */; };
 		73823CE12C68023E0049D03C /* BalanceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73823CE02C68023E0049D03C /* BalanceView.swift */; };
 		73980F472AA57A4500CA4849 /* CoreDataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 73980F452AA57A4500CA4849 /* CoreDataModel.xcdatamodeld */; };
+		73A428092C7E3B1F0086181F /* DateParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73A428082C7E3B1F0086181F /* DateParser.swift */; };
 		73D2C5902C5FBB970019A800 /* ChangeChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73D2C58F2C5FBB970019A800 /* ChangeChart.swift */; };
 		73D2C5922C5FBE3B0019A800 /* LocalizedLongDateFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73D2C5912C5FBE3B0019A800 /* LocalizedLongDateFormatter.swift */; };
+		73E9DA602C7E60B800601C66 /* NSManagedObjectExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73E9DA5F2C7E60B800601C66 /* NSManagedObjectExtension.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -134,8 +136,10 @@
 		73823CDE2C62B2EE0049D03C /* ChangeChartViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangeChartViewModel.swift; sourceTree = "<group>"; };
 		73823CE02C68023E0049D03C /* BalanceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BalanceView.swift; sourceTree = "<group>"; };
 		73980F462AA57A4500CA4849 /* CoreDataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = CoreDataModel.xcdatamodel; sourceTree = "<group>"; };
+		73A428082C7E3B1F0086181F /* DateParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateParser.swift; sourceTree = "<group>"; };
 		73D2C58F2C5FBB970019A800 /* ChangeChart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangeChart.swift; sourceTree = "<group>"; };
 		73D2C5912C5FBE3B0019A800 /* LocalizedLongDateFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalizedLongDateFormatter.swift; sourceTree = "<group>"; };
+		73E9DA5F2C7E60B800601C66 /* NSManagedObjectExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSManagedObjectExtension.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -159,8 +163,8 @@
 		7314FD662C75106500483835 /* EquityLabTests */ = {
 			isa = PBXGroup;
 			children = (
+				73A428072C7E3B090086181F /* Utility */,
 				7314FD672C75106500483835 /* DashboardViewModelTests.swift */,
-				7314FD8A2C76696300483835 /* TestDataProvider.swift */,
 			);
 			path = EquityLabTests;
 			sourceTree = "<group>";
@@ -421,6 +425,16 @@
 			path = Views;
 			sourceTree = "<group>";
 		};
+		73A428072C7E3B090086181F /* Utility */ = {
+			isa = PBXGroup;
+			children = (
+				7314FD8A2C76696300483835 /* TestDataProvider.swift */,
+				73A428082C7E3B1F0086181F /* DateParser.swift */,
+				73E9DA5F2C7E60B800601C66 /* NSManagedObjectExtension.swift */,
+			);
+			path = Utility;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -521,8 +535,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				73A428092C7E3B1F0086181F /* DateParser.swift in Sources */,
 				7314FD8B2C76696300483835 /* TestDataProvider.swift in Sources */,
 				7314FD682C75106500483835 /* DashboardViewModelTests.swift in Sources */,
+				73E9DA602C7E60B800601C66 /* NSManagedObjectExtension.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
