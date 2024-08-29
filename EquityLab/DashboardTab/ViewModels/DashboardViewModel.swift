@@ -47,6 +47,9 @@ class DashboardViewModel: NSObject {
         }
     }
     var selectedSnapshot: Snapshot?
+    var noSnapshotsAvailable: Bool {
+        snapshots.isEmpty
+    }
     var selectedTimeHorizon: TimeHorizon = .all
     var selectedSnapshotDetailView: SnapshotDetailView = .balanceDetailView
     var selectedDetailPage: DetailPage = .changeDetailPage
@@ -125,8 +128,6 @@ class DashboardViewModel: NSObject {
     }
 }
 
-
-// MARK: data access
 private class DashboardRepository {
     private let fetchedResultsController: ObservingFetchedResultsController<Snapshot>
     
@@ -152,8 +153,6 @@ private class DashboardRepository {
     }
 }
 
-
-// MARK: change management
 extension DashboardViewModel: NSFetchedResultsControllerDelegate {
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<any NSFetchRequestResult>) {
         self.snapshots = repository.fetchSnapshots()
@@ -163,8 +162,6 @@ extension DashboardViewModel: NSFetchedResultsControllerDelegate {
     }
 }
 
-
-// MARK: utilities
 enum PositionType {
     case assets
     case liabilities
