@@ -18,15 +18,15 @@ class SnapshotFormViewModel {
     
     
     init(snapshot: Snapshot? = nil) {
-        let context = DataService.shared.persistentContainer.viewContext
+        let context = ProductionCoreDataStack.shared.context
         self.context = context
         self.snapshot = snapshot
-        if let snapshot {
+        if let snapshot, let date = snapshot.date {
             let assetPositions = (try? context.fetch(snapshot.getAssetPositionRequest())) ?? []
             self.assetProxies = assetPositions.map{ PositionProxy(name: $0.name, value: $0.value, pool: $0.poolName) }
             let liabilityPositions = (try? context.fetch(snapshot.getLiabilityPositionRequest())) ?? []
             self.liabilityProxies = liabilityPositions.map{ PositionProxy(name: $0.name, value: $0.value, pool: $0.poolName) }
-            self.date = snapshot.date
+            self.date = date
         } else {
             self.date = Date.now
             let assetFetchRequest = NSFetchRequest<Asset>(entityName: String(describing: "Asset"))
@@ -38,7 +38,11 @@ class SnapshotFormViewModel {
                         request.predicate = NSPredicate(format: "name == %@", possession.name)
                         let positions = (try? context.fetch(request)) ?? []
                         let valuesAndDates = positions.map{ (date: $0.snapshot!.date, value: $0.value) }
-                        let latestValue = valuesAndDates.max(by: { $0.date < $1.date })?.value ?? 0.0
+                        let latestValue = valuesAndDates.filter {
+                            $0.date != nil
+                        }.max {
+                            $0.date! < $1.date!
+                        }?.value ?? 0.0
                         return PositionProxy(name: possession.name, value: latestValue, pool: possession.pool?.name ?? "unknown pool")
                     } else {
                         return PositionProxy(name: possession.name, value: 0.0, pool: possession.pool?.name ?? "unknown pool")
@@ -86,8 +90,9 @@ class SnapshotFormViewModel {
     }
     
     func createSnapshot() {
+        //TODO: only allow creation of date if snapshot with date does not exist already
         let snapshot = Snapshot(context: context)
-        snapshot.date = date
+        snapshot.date = Calendar.current.startOfDay(for: date)
         
         var assetPositions = [AssetPosition]()
         assetProxies.forEach { proxy in
@@ -112,8 +117,9 @@ class SnapshotFormViewModel {
     }
     
     func updateSnapshot() {
+        //TODO: only allow updates of date if snapshot with date does not exist already
         if let snapshot {
-            snapshot.date = date
+            snapshot.date = Calendar.current.startOfDay(for: date)
             let assetPositions = getAssetPositions(for: snapshot)
             assetProxies.forEach { proxy in
                 if let position = assetPositions.first(where: { $0.name == proxy.name} ) {

@@ -25,7 +25,7 @@ struct EquityLabApp: App {
                     Image(systemName: "camera.aperture")
                 }
             }
-        }.environment(\.managedObjectContext, DataService.shared.persistentContainer.viewContext)
+        }
     }
 }
 

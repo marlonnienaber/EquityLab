@@ -18,7 +18,7 @@ class SnapshotLedgerViewModel: NSObject {
     var years = [Int]()
     
     override init() {
-        let context = DataService.shared.persistentContainer.viewContext
+        let context = ProductionCoreDataStack.shared.context
         self.context = context
         let request = ObservingFetchRequest<Snapshot>(entityName: "Snapshot")
         request.sortDescriptors = [NSSortDescriptor(keyPath: \Snapshot.date, ascending: false)]
@@ -47,8 +47,9 @@ class SnapshotLedgerViewModel: NSObject {
     }
     
     private func extractYear(from snapshot: Snapshot) -> Int? {
+        guard let date = snapshot.date else { return nil }
         let calendar = Calendar.current
-        let components = calendar.dateComponents([.year], from: snapshot.date)
+        let components = calendar.dateComponents([.year], from: date)
         return components.year
     }
     

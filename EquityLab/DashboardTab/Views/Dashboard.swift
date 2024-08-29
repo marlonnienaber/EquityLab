@@ -8,22 +8,37 @@ struct Dashboard: View {
     var body: some View {
         NavigationView {
             dashboardContent
-                .padding([.top, .leading, .trailing], 16)
-                .padding(.bottom, 32)
                 .navigationTitle("Analytics")
         }
     }
     
+    @ViewBuilder
     private var dashboardContent: some View {
-        GeometryReader { geometry in
-            VStack(spacing: 16) {
-                equitySection
-                    .frame(height: geometry.size.height * 0.45)
-                snapshotDetailSection
-                    .frame(height: geometry.size.height * 0.55)
+        if viewModel.noSnapshotsAvailable {
+            noSnapshotsView
+        } else {
+            GeometryReader { geometry in
+                VStack(spacing: 16) {
+                    equitySection
+                        .frame(height: geometry.size.height * 0.45)
+                    snapshotDetailSection
+                        .frame(height: geometry.size.height * 0.55)
+                }
             }
-            .navigationTitle("Analytics")
+            .padding([.top, .leading, .trailing], 16)
+            .padding(.bottom, 32)
         }
+    }
+    
+    private var noSnapshotsView: some View {
+        VStack {
+            Image(systemName: "tray.fill")
+                .resizable()
+                .scaledToFit()
+                .frame(width: 70, height: 70)
+            Text("no snapshots available for analysis")
+        }
+        .foregroundColor(Color.primary.opacity(0.4))
     }
     
     private var equitySection: some View {
@@ -47,8 +62,8 @@ struct Dashboard: View {
     private var snapshotDetailSection: some View {
         GroupBox {
             HStack {
-                if let currentDate = viewModel.selectedSnapshot?.date {
-                    Text(LocalizedLongDateFormatter.shared.string(from: currentDate))
+                if let selectedSnapshot = viewModel.selectedSnapshot, let date = selectedSnapshot.date {
+                    Text(LocalizedLongDateFormatter.shared.string(from: date))
                         .bold()
                 }
                 Spacer()
@@ -64,21 +79,10 @@ struct Dashboard: View {
                         .fill(Color.gray.opacity(0.2))
                 )
             }
-            if viewModel.selectedSnapshot == nil {
-                VStack {
-                    Image(systemName: "chart.pie.fill")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 70, height: 70)
-                    Text("no snapshot selected")
-                }
-                .foregroundColor(Color.black.opacity(0.4))
-            } else {
-                switch viewModel.selectedSnapshotDetailView {
-                case .assetDetailView: assetDetailView
-                case .liabilityDetailView: liabilityDetailView
-                case .balanceDetailView: balanceDetailView
-                }
+            switch viewModel.selectedSnapshotDetailView {
+            case .assetDetailView: assetDetailView
+            case .liabilityDetailView: liabilityDetailView
+            case .balanceDetailView: balanceDetailView
             }
         }
         .groupBoxStyle(PageViewGroupBoxStyle())
@@ -87,7 +91,7 @@ struct Dashboard: View {
         }
     }
     
-    var balanceDetailView: some View {
+    private var balanceDetailView: some View {
         VStack {
             Spacer()
             BalanceView(viewModel: viewModel)
@@ -95,7 +99,7 @@ struct Dashboard: View {
         }
     }
     
-    var assetDetailView: some View {
+    private var assetDetailView: some View {
         TabView(selection: $viewModel.selectedDetailPage) {
             VStack {
                 ChangenChart(viewModel: ChangeChartViewModel(changeChartType: .assetChangeChart, dashboardViewModel: viewModel))
@@ -113,7 +117,7 @@ struct Dashboard: View {
         .tabViewStyle(PageTabViewStyle())
     }
     
-    var liabilityDetailView: some View {
+    private var liabilityDetailView: some View {
         TabView(selection: $viewModel.selectedDetailPage) {
             VStack {
                 ChangenChart(viewModel: ChangeChartViewModel(changeChartType: .liabilityChangeChart, dashboardViewModel: viewModel))
@@ -132,14 +136,14 @@ struct Dashboard: View {
     }
 }
 
-fileprivate struct PageViewGroupBoxStyle: GroupBoxStyle {
+private struct PageViewGroupBoxStyle: GroupBoxStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.content
-            .padding([.top, .leading, .trailing]) // Default padding on top, leading, and trailing
-            .padding(.bottom, 0) // Remove bottom padding
+            .padding([.top, .leading, .trailing])
+            .padding(.bottom, 0)
             .background(
                 RoundedRectangle(cornerRadius: 8, style: .continuous)
-                    .fill(Color(UIColor.secondarySystemBackground)) // Match the default background color
+                    .fill(Color(UIColor.secondarySystemBackground))
             )
     }
 }

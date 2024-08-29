@@ -1,10 +1,3 @@
-//
-//  DashboardViewModel.swift
-//  EquityLab
-//
-//  Created by Marlon Nienaber on 15.07.24.
-//
-
 import Foundation
 import CoreData
 import os
@@ -12,104 +5,32 @@ import SwiftUI
 
 @Observable
 class DashboardViewModel: NSObject {
-    // MARK: shared members
-    @ObservationIgnored private static let logger = Logger(
-        subsystem: Bundle.main.bundleIdentifier ?? "",
-        category: String(describing: DashboardViewModel.self)
-    )
-    @ObservationIgnored private var context: NSManagedObjectContext
-    @ObservationIgnored private let fetchedResultsController: ObservingFetchedResultsController<Snapshot>
-    @ObservationIgnored private var equityValues = [Snapshot:Double]()
-    @ObservationIgnored private var assetValues = [Snapshot:Double]()
-    @ObservationIgnored private var liabilityValues = [Snapshot:Double]()
-    var selectedSnapshot: Snapshot?
+    @ObservationIgnored private static let loggerSubsystem = Bundle.main.bundleIdentifier ?? ""
+    @ObservationIgnored private static let loggerCategory = String(describing: DashboardViewModel.self)
+    @ObservationIgnored private static let logger = Logger(subsystem: loggerSubsystem, category: loggerCategory)
     
-    var selectedSnapshotDetailView: SnapshotDetailView = .balanceDetailView
-    var selectedDetailPage: DetailPage = .changeDetailPage
+    @ObservationIgnored private var repository: DashboardRepository!
+    @ObservationIgnored private var equityValueCache = [Snapshot:Double]()
+    @ObservationIgnored private var assetValueCache = [Snapshot:Double]()
+    @ObservationIgnored private var liabilityValueCache = [Snapshot:Double]()
+    private var snapshots = [Snapshot]()
     
-    override init() {
-        let context = DataService.shared.persistentContainer.viewContext
-        self.context = context
-        
-        let request = ObservingFetchRequest<Snapshot>(entityName: "Snapshot")
-        request.sortDescriptors = [NSSortDescriptor(keyPath: \Snapshot.date, ascending: true)]
-        request.observedRelationships = ["liabilities"]
-        fetchedResultsController = ObservingFetchedResultsController(fetchRequest: request, managedObjectContext: context, sectionNameKeyPath: nil, cacheName: nil)
-        super.init()
-        fetchedResultsController.delegate = self
-        do {
-            try fetchedResultsController.performFetch()
-            self.unfilteredSnapshots = fetchedResultsController.fetchedObjects as! [Snapshot]
-            for shot in unfilteredSnapshots {
-                equityValues[shot] = calculateEquityValue(for: shot)
-            }
-        } catch {}
-        self.selectedSnapshot = unfilteredSnapshots.last
-    }
-    
-    private func calculateEquityValue(for snapshot: Snapshot) -> Double {
-        let totalLiabilityValue = calculateLiabilityValue(for: snapshot)
-        let totalAssetValue = calculateAssetValue(for: snapshot)
-        return totalAssetValue - totalLiabilityValue
-    }
-    private func calculateAssetValue(for snapshot: Snapshot) -> Double {
-        let assetPositions = (try? context.fetch(snapshot.getAssetPositionRequest())) ?? []
-        return assetPositions.map{ $0.value }.reduce(0, +)
-    }
-    private func calculateLiabilityValue(for snapshot: Snapshot) -> Double {
-        let liabilityPositions = (try? context.fetch(snapshot.getLiabilityPositionRequest())) ?? []
-        return liabilityPositions.map{ $0.value }.reduce(0, +)
-    }
-    
-    func equityValue(of snapshot: Snapshot) -> Double {
-        equityValues[snapshot] ?? 0.0
-    }
-    func assetValue(of snapshot: Snapshot) -> Double {
-        if let assetValue = assetValues[snapshot] {
-            return assetValue
-        } else {
-            let assetValue = calculateAssetValue(for: snapshot)
-            assetValues[snapshot] = assetValue
-            return assetValue
-        }
-    }
-    func liabilityValue(of snapshot: Snapshot) -> Double {
-        if let liabilityValue = liabilityValues[snapshot] {
-            return liabilityValue
-        } else {
-            let liabilityValue = calculateLiabilityValue(for: snapshot)
-            liabilityValues[snapshot] = liabilityValue
-            return liabilityValue
-        }
-    }
-    
-    func initializeSelectedSnapshot() {
-        if let selectedSnapshot, !unfilteredSnapshots.contains(selectedSnapshot){
-            self.selectedSnapshot = unfilteredSnapshots.last
-        }
-    }
-    
-    
-    
-    func computeValueByPool(for positionType: PositionType, using snapshot: Snapshot) -> [String:Double] {
-        if positionType == .assets {
-            let assetPositions = (try? context.fetch(snapshot.getAssetPositionRequest())) ?? []
-            return Dictionary(grouping: assetPositions, by: { $0.poolName }).mapValues { array in
-                array.map { $0.value }.reduce(0, +)
-            }
-        } else {
-            let liabilityPositions = (try? context.fetch(snapshot.getLiabilityPositionRequest())) ?? []
-            return Dictionary(grouping: liabilityPositions, by: { $0.poolName }).mapValues { array in
-                array.map { $0.value }.reduce(0, +)
-            }
-        }
-    }
-    
-    // MARK: members NetWorthChart
-    var selectedTimeHorizon: TimeHorizon = .all
-    var unfilteredSnapshots = [Snapshot]()
     var filteredSnapshots: [Snapshot] {
-        return unfilteredSnapshots
+        let calendar = Calendar.current
+        let today = calendar.startOfDay(for: .now)
+        switch selectedTimeHorizon {
+        case .threeMonths:
+            let threeMonthsAgo = calendar.date(byAdding: .month, value: -3, to: today)!
+            return snapshots.filter{ $0.date != nil }.filter{ $0.date! >= threeMonthsAgo }
+        case .sixMonths:
+            let sixMonthsAgo = calendar.date(byAdding: .month, value: -6, to: today)!
+            return snapshots.filter{ $0.date != nil }.filter{ $0.date! >= sixMonthsAgo }
+        case .eighteenMonths:
+            let eighteenMonthsAgo = calendar.date(byAdding: .month, value: -18, to: today)!
+            return snapshots.filter{ $0.date != nil }.filter{ $0.date! >= eighteenMonthsAgo }
+        case .all:
+            return snapshots
+        }
     }
     var selectedDate: Date? {
         get {
@@ -117,36 +38,130 @@ class DashboardViewModel: NSObject {
         }
         set {
             if let newValue {
-                selectedSnapshot = unfilteredSnapshots.min(by: {closestDayPredicate(firstShot: $0, secondShot: $1, selectedDate: newValue)} )
+                selectedSnapshot = snapshots.filter { snapshot in
+                    snapshot.date != nil
+                }.min{ firstSnapshot, secondSnapshot in
+                    firstSnapshot.date!.isCloser(to: newValue, than: secondSnapshot.date!)
+                }
             }
         }
     }
-    
-    func closestDayPredicate(firstShot: Snapshot, secondShot: Snapshot, selectedDate: Date) -> Bool {
-        computeAbsoluteMinuteDifference(first: firstShot.date, second: selectedDate) < computeAbsoluteMinuteDifference(first: secondShot.date, second: selectedDate) ? true : false
+    var selectedSnapshot: Snapshot?
+    var noSnapshotsAvailable: Bool {
+        snapshots.isEmpty
     }
-    func computeAbsoluteMinuteDifference(first: Date, second: Date) -> Int {
-        let components = Calendar.current.dateComponents([.minute], from: first, to: second)
-        return abs(components.minute!)
+    var selectedTimeHorizon: TimeHorizon = .all
+    var selectedSnapshotDetailView: SnapshotDetailView = .balanceDetailView
+    var selectedDetailPage: DetailPage = .changeDetailPage
+    
+    
+    init(context: NSManagedObjectContext = ProductionCoreDataStack.shared.context) {
+        super.init()
+        self.repository = DashboardRepository(context: context, viewModel: self)
+        self.snapshots = repository.fetchSnapshots()
+        for snapshot in snapshots {
+            equityValueCache[snapshot] = calculateEquityValue(for: snapshot)
+        }
+        self.selectedSnapshot = snapshots.last
+    }
+    
+    
+    private func calculateEquityValue(for snapshot: Snapshot) -> Double {
+        let totalLiabilityValue = calculateLiabilityValue(for: snapshot)
+        let totalAssetValue = calculateAssetValue(for: snapshot)
+        return totalAssetValue - totalLiabilityValue
+    }
+    
+    private func calculateAssetValue(for snapshot: Snapshot) -> Double {
+        let assetPositions = repository.fetchAssetPositions(of: snapshot)
+        return assetPositions.map{ $0.value }.reduce(0, +)
+    }
+    
+    private func calculateLiabilityValue(for snapshot: Snapshot) -> Double {
+        let liabilityPositions = repository.fetchLiabilityPositions(of: snapshot)
+        return liabilityPositions.map{ $0.value }.reduce(0, +)
+    }
+    
+    
+    func getEquityValue(of snapshot: Snapshot) -> Double {
+        equityValueCache[snapshot] ?? 0.0
+    }
+    
+    func getAssetValue(of snapshot: Snapshot) -> Double {
+        if let assetValue = assetValueCache[snapshot] {
+            return assetValue
+        } else {
+            let assetValue = calculateAssetValue(for: snapshot)
+            assetValueCache[snapshot] = assetValue
+            return assetValue
+        }
+    }
+    
+    func getLiabilityValue(of snapshot: Snapshot) -> Double {
+        if let liabilityValue = liabilityValueCache[snapshot] {
+            return liabilityValue
+        } else {
+            let liabilityValue = calculateLiabilityValue(for: snapshot)
+            liabilityValueCache[snapshot] = liabilityValue
+            return liabilityValue
+        }
+    }
+    
+    func initializeSelectedSnapshot() {
+        if let selectedSnapshot, !snapshots.contains(selectedSnapshot){
+            self.selectedSnapshot = snapshots.last
+        }
+    }
+    
+    func computeValueByPool(for positionType: PositionType, using snapshot: Snapshot) -> [String:Double] {
+        if positionType == .assets {
+            let assetPositions = repository.fetchAssetPositions(of: snapshot)
+            return Dictionary(grouping: assetPositions, by: { $0.poolName }).mapValues { array in
+                array.map { $0.value }.reduce(0, +)
+            }
+        } else {
+            let liabilityPositions = repository.fetchLiabilityPositions(of: snapshot)
+            return Dictionary(grouping: liabilityPositions, by: { $0.poolName }).mapValues { array in
+                array.map { $0.value }.reduce(0, +)
+            }
+        }
     }
 }
 
+private class DashboardRepository {
+    private let fetchedResultsController: ObservingFetchedResultsController<Snapshot>
+    
+    init(context: NSManagedObjectContext, viewModel: DashboardViewModel) {
+        let request = ObservingFetchRequest<Snapshot>(entityName: "Snapshot")
+        request.sortDescriptors = [NSSortDescriptor(keyPath: \Snapshot.date, ascending: true)]
+        request.observedRelationships = ["liabilities"]
+        fetchedResultsController = .init(fetchRequest: request, managedObjectContext: context, sectionNameKeyPath: nil, cacheName: nil)
+        fetchedResultsController.delegate = viewModel
+    }
+    
+    func fetchSnapshots() -> [Snapshot] {
+        try? fetchedResultsController.performFetch()
+        return fetchedResultsController.fetchedObjects as? [Snapshot] ?? []
+    }
+    
+    func fetchAssetPositions(of snapshot: Snapshot) -> [AssetPosition] {
+        (try? fetchedResultsController.managedObjectContext.fetch(snapshot.getAssetPositionRequest())) ?? []
+    }
+    
+    func fetchLiabilityPositions(of snapshot: Snapshot) -> [LiabilityPosition] {
+        (try? fetchedResultsController.managedObjectContext.fetch(snapshot.getLiabilityPositionRequest())) ?? []
+    }
+}
 
-// MARK: change management
 extension DashboardViewModel: NSFetchedResultsControllerDelegate {
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<any NSFetchRequestResult>) {
-        do {
-            try fetchedResultsController.performFetch()
-            self.unfilteredSnapshots = fetchedResultsController.fetchedObjects as! [Snapshot]
-            for shot in unfilteredSnapshots {
-                equityValues[shot] = calculateEquityValue(for: shot)
-            }
-        } catch {}
+        self.snapshots = repository.fetchSnapshots()
+        for snapshot in snapshots {
+            equityValueCache[snapshot] = calculateEquityValue(for: snapshot)
+        }
     }
 }
 
-
-// MARK: utilities
 enum PositionType {
     case assets
     case liabilities
@@ -173,19 +188,13 @@ enum DetailPage {
     case distributionDetailPage
 }
 
-
-
-struct ColorQueue {
-    private var colors: [Color]
-    private var currentIndex: Int = 0
-    
-    init(colors: [Color]) {
-        self.colors = colors
+extension Date {
+    func isCloser(to referenceDate: Date, than otherDate: Date) -> Bool {
+        self.computeAbsoluteMinuteDifference(to: referenceDate) < otherDate.computeAbsoluteMinuteDifference(to: referenceDate)
     }
     
-    mutating func dequeue() -> Color {
-        let color = colors[currentIndex]
-        currentIndex = (currentIndex + 1) % colors.count
-        return color
+    func computeAbsoluteMinuteDifference(to otherDate: Date) -> Int {
+        let components = Calendar.current.dateComponents([.minute], from: self, to: otherDate)
+        return abs(components.minute!)
     }
 }
