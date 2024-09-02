@@ -4,16 +4,22 @@ import os
 import SwiftUI
 
 @Observable
-class DashboardViewModel: NSObject {
+class DashboardViewModel {
     @ObservationIgnored private static let loggerSubsystem = Bundle.main.bundleIdentifier ?? ""
     @ObservationIgnored private static let loggerCategory = String(describing: DashboardViewModel.self)
     @ObservationIgnored private static let logger = Logger(subsystem: loggerSubsystem, category: loggerCategory)
     
-    @ObservationIgnored private var repository: DashboardRepository!
+    @ObservationIgnored private unowned var repository: SnapshotRepository
     @ObservationIgnored private var equityValueCache = [Snapshot:Double]()
     @ObservationIgnored private var assetValueCache = [Snapshot:Double]()
     @ObservationIgnored private var liabilityValueCache = [Snapshot:Double]()
-    private var snapshots = [Snapshot]()
+    private var snapshots = [Snapshot]() {
+        didSet {
+            for snapshot in snapshots {
+                equityValueCache[snapshot] = calculateEquityValue(for: snapshot)
+            }
+        }
+    }
     
     var filteredSnapshots: [Snapshot] {
         let calendar = Calendar.current
@@ -55,9 +61,9 @@ class DashboardViewModel: NSObject {
     var selectedDetailPage: DetailPage = .changeDetailPage
     
     
-    init(context: NSManagedObjectContext = ProductionCoreDataStack.shared.context) {
-        super.init()
-        self.repository = DashboardRepository(context: context, viewModel: self)
+    init(repository: SnapshotRepository = SnapshotRepository.production) {
+        self.repository = repository
+        self.repository.add(observer: self)
         self.snapshots = repository.fetchSnapshots()
         for snapshot in snapshots {
             equityValueCache[snapshot] = calculateEquityValue(for: snapshot)
@@ -128,37 +134,9 @@ class DashboardViewModel: NSObject {
     }
 }
 
-private class DashboardRepository {
-    private let fetchedResultsController: ObservingFetchedResultsController<Snapshot>
-    
-    init(context: NSManagedObjectContext, viewModel: DashboardViewModel) {
-        let request = ObservingFetchRequest<Snapshot>(entityName: "Snapshot")
-        request.sortDescriptors = [NSSortDescriptor(keyPath: \Snapshot.date, ascending: true)]
-        request.observedRelationships = ["liabilities"]
-        fetchedResultsController = .init(fetchRequest: request, managedObjectContext: context, sectionNameKeyPath: nil, cacheName: nil)
-        fetchedResultsController.delegate = viewModel
-    }
-    
-    func fetchSnapshots() -> [Snapshot] {
-        try? fetchedResultsController.performFetch()
-        return fetchedResultsController.fetchedObjects as? [Snapshot] ?? []
-    }
-    
-    func fetchAssetPositions(of snapshot: Snapshot) -> [AssetPosition] {
-        (try? fetchedResultsController.managedObjectContext.fetch(snapshot.getAssetPositionRequest())) ?? []
-    }
-    
-    func fetchLiabilityPositions(of snapshot: Snapshot) -> [LiabilityPosition] {
-        (try? fetchedResultsController.managedObjectContext.fetch(snapshot.getLiabilityPositionRequest())) ?? []
-    }
-}
-
-extension DashboardViewModel: NSFetchedResultsControllerDelegate {
-    func controllerDidChangeContent(_ controller: NSFetchedResultsController<any NSFetchRequestResult>) {
-        self.snapshots = repository.fetchSnapshots()
-        for snapshot in snapshots {
-            equityValueCache[snapshot] = calculateEquityValue(for: snapshot)
-        }
+extension DashboardViewModel: SnapshotObserver {
+    func updateSnapshots(with newSnapshots: [Snapshot]) {
+        self.snapshots = newSnapshots
     }
 }
 

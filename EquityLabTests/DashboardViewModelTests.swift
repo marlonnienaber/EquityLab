@@ -4,22 +4,24 @@ import CoreData
 
 final class DashboardViewModelTests: XCTestCase {
     private var testingCoreDataStack: TestingCoreDataStack!
-    
+    private var testingSnapshotRepository: SnapshotRepository!
     private let testDataProvider = TestDataProvider()
     
     override func setUpWithError() throws {
         testingCoreDataStack = TestingCoreDataStack()
+        testingSnapshotRepository = SnapshotRepository(context: testingCoreDataStack.context)
     }
 
     override func tearDownWithError() throws {
         testingCoreDataStack = nil
+        testingSnapshotRepository
     }
 
     
     
     /// snapshot with no assetPositions
     func test_assetValue_1() throws {
-        let sut = DashboardViewModel(context: testingCoreDataStack.context)
+        let sut = DashboardViewModel(repository: testingSnapshotRepository)
         let testSnapshot = testDataProvider.createAndPersistTestObjects_assetValue_1(using: testingCoreDataStack.context)
         let expectedResult = 0.0
         let actualResult = sut.getAssetValue(of: testSnapshot)
@@ -28,7 +30,7 @@ final class DashboardViewModelTests: XCTestCase {
     
     /// snapshot with 3 assetPosition of value 0.0
     func test_assetValue_2() throws {
-        let sut = DashboardViewModel(context: testingCoreDataStack.context)
+        let sut = DashboardViewModel(repository: testingSnapshotRepository)
         let testSnapshot = testDataProvider.createAndPersistTestObjects_assetValue_2(using: testingCoreDataStack.context)
         let expectedResult = 0.0
         let actualResult = sut.getAssetValue(of: testSnapshot)
@@ -37,7 +39,7 @@ final class DashboardViewModelTests: XCTestCase {
     
     /// snapshot with 5 assetPosition of value > 0.0
     func test_assetValue_3() throws {
-        let sut = DashboardViewModel(context: testingCoreDataStack.context)
+        let sut = DashboardViewModel(repository: testingSnapshotRepository)
         let testSnapshot = testDataProvider.createAndPersistTestObjects_assetValue_3(using: testingCoreDataStack.context)
         let expectedResult = 279.34
         let actualResult = sut.getAssetValue(of: testSnapshot)
@@ -46,7 +48,7 @@ final class DashboardViewModelTests: XCTestCase {
     
     /// snapshot with 2 assetPositions (one with value 0.0 and one with value > 0.0)
     func test_assetValue_4() throws {
-        let sut = DashboardViewModel(context: testingCoreDataStack.context)
+        let sut = DashboardViewModel(repository: testingSnapshotRepository)
         let testSnapshot = testDataProvider.createAndPersistTestObjects_assetValue_4(using: testingCoreDataStack.context)
         let expectedResult = 10.0
         let actualResult = sut.getAssetValue(of: testSnapshot)
@@ -55,7 +57,7 @@ final class DashboardViewModelTests: XCTestCase {
     
     /// snapshot with 1 assetPositions of value 0.0
     func test_assetValue_5() throws {
-        let sut = DashboardViewModel(context: testingCoreDataStack.context)
+        let sut = DashboardViewModel(repository: testingSnapshotRepository)
         let testSnapshot = testDataProvider.createAndPersistTestObjects_assetValue_5(using: testingCoreDataStack.context)
         let expectedResult = 0.0
         let actualResult = sut.getAssetValue(of: testSnapshot)
@@ -64,7 +66,7 @@ final class DashboardViewModelTests: XCTestCase {
     
     /// snapshot with 1 assetPositions of value > 0.0
     func test_assetValue_6() throws {
-        let sut = DashboardViewModel(context: testingCoreDataStack.context)
+        let sut = DashboardViewModel(repository: testingSnapshotRepository)
         let testSnapshot = testDataProvider.createAndPersistTestObjects_assetValue_6(using: testingCoreDataStack.context)
         let expectedResult = 17.01
         let actualResult = sut.getAssetValue(of: testSnapshot)
@@ -75,7 +77,7 @@ final class DashboardViewModelTests: XCTestCase {
     
     /// snapshot with no liabilityPositions
     func test_liabilityValue_1() throws {
-        let sut = DashboardViewModel(context: testingCoreDataStack.context)
+        let sut = DashboardViewModel(repository: testingSnapshotRepository)
         let testSnapshot = testDataProvider.createAndPersistTestObjects_liabilityValue_1(using: testingCoreDataStack.context)
         let expectedResult = 0.0
         let actualResult = sut.getLiabilityValue(of: testSnapshot)
@@ -84,7 +86,7 @@ final class DashboardViewModelTests: XCTestCase {
     
     /// snapshot with 3 liabilityPositions of value 0.0
     func test_liabilityValue_2() throws {
-        let sut = DashboardViewModel(context: testingCoreDataStack.context)
+        let sut = DashboardViewModel(repository: testingSnapshotRepository)
         let testSnapshot = testDataProvider.createAndPersistTestObjects_liabilityValue_2(using: testingCoreDataStack.context)
         let expectedResult = 0.0
         let actualResult = sut.getLiabilityValue(of: testSnapshot)
@@ -93,7 +95,7 @@ final class DashboardViewModelTests: XCTestCase {
     
     /// snapshot with 5 liabilityPositions of value > 0.0
     func test_liabilityValue_3() throws {
-        let sut = DashboardViewModel(context: testingCoreDataStack.context)
+        let sut = DashboardViewModel(repository: testingSnapshotRepository)
         let testSnapshot = testDataProvider.createAndPersistTestObjects_liabilityValue_3(using: testingCoreDataStack.context)
         let expectedResult = 279.34
         let actualResult = sut.getLiabilityValue(of: testSnapshot)
@@ -102,7 +104,7 @@ final class DashboardViewModelTests: XCTestCase {
     
     /// snapshot with 2 liabilityPositions (one with value 0.0 and one with value > 0.0)
     func test_liabilityValue_4() throws {
-        let sut = DashboardViewModel(context: testingCoreDataStack.context)
+        let sut = DashboardViewModel(repository: testingSnapshotRepository)
         let testSnapshot = testDataProvider.createAndPersistTestObjects_liabilityValue_4(using: testingCoreDataStack.context)
         let expectedResult = 10.0
         let actualResult = sut.getLiabilityValue(of: testSnapshot)
@@ -111,7 +113,7 @@ final class DashboardViewModelTests: XCTestCase {
     
     /// snapshot with 1 liabilityPosition of value 0.0
     func test_liabilityValue_5() throws {
-        let sut = DashboardViewModel(context: testingCoreDataStack.context)
+        let sut = DashboardViewModel(repository: testingSnapshotRepository)
         let testSnapshot = testDataProvider.createAndPersistTestObjects_liabilityValue_5(using: testingCoreDataStack.context)
         let expectedResult = 0.0
         let actualResult = sut.getLiabilityValue(of: testSnapshot)
@@ -120,7 +122,7 @@ final class DashboardViewModelTests: XCTestCase {
     
     /// snapshot with 1 liabilityPosition of value > 0.0
     func test_liabilityValue_6() throws {
-        let sut = DashboardViewModel(context: testingCoreDataStack.context)
+        let sut = DashboardViewModel(repository: testingSnapshotRepository)
         let testSnapshot = testDataProvider.createAndPersistTestObjects_liabilityValue_6(using: testingCoreDataStack.context)
         let expectedResult = 17.01
         let actualResult = sut.getLiabilityValue(of: testSnapshot)
@@ -131,7 +133,7 @@ final class DashboardViewModelTests: XCTestCase {
     
     /// snapshot with no liabilityPositions
     func test_equityValue_1() throws {
-        let sut = DashboardViewModel(context: testingCoreDataStack.context)
+        let sut = DashboardViewModel(repository: testingSnapshotRepository)
         let testSnapshot = testDataProvider.createAndPersistTestObjects_equityValue_1(using: testingCoreDataStack.context)
         let expectedResult = 17.77
         let actualResult = sut.getEquityValue(of: testSnapshot)
@@ -140,7 +142,7 @@ final class DashboardViewModelTests: XCTestCase {
     
     /// snapshot with no assetPositions
     func test_equityValue_2() throws {
-        let sut = DashboardViewModel(context: testingCoreDataStack.context)
+        let sut = DashboardViewModel(repository: testingSnapshotRepository)
         let testSnapshot = testDataProvider.createAndPersistTestObjects_equityValue_2(using: testingCoreDataStack.context)
         let expectedResult = -20.43
         let actualResult = sut.getEquityValue(of: testSnapshot)
@@ -149,7 +151,7 @@ final class DashboardViewModelTests: XCTestCase {
     
     /// snapshot with 5 assetPositions (value >= 0) and 2 liabilityPositions (value > 0)
     func test_equityValue_3() throws {
-        let sut = DashboardViewModel(context: testingCoreDataStack.context)
+        let sut = DashboardViewModel(repository: testingSnapshotRepository)
         let testSnapshot = testDataProvider.createAndPersistTestObjects_equityValue_3(using: testingCoreDataStack.context)
         let expectedResult = 253.91
         let actualResult = sut.getEquityValue(of: testSnapshot)
@@ -158,7 +160,7 @@ final class DashboardViewModelTests: XCTestCase {
     
     /// snapshot with 10 assetPositions (value > 0) and 7 liabilityPositions (value > 0)
     func test_equityValue_4() throws {
-        let sut = DashboardViewModel(context: testingCoreDataStack.context)
+        let sut = DashboardViewModel(repository: testingSnapshotRepository)
         let testSnapshot = testDataProvider.createAndPersistTestObjects_equityValue_4(using: testingCoreDataStack.context)
         let expectedResult = 876.79
         let actualResult = sut.getEquityValue(of: testSnapshot)
@@ -169,7 +171,7 @@ final class DashboardViewModelTests: XCTestCase {
     
     /// several asset-/liabilityPools with multipe members
     func test_computeValueByPool_1() throws {
-        let sut = DashboardViewModel(context: testingCoreDataStack.context)
+        let sut = DashboardViewModel(repository: testingSnapshotRepository)
         let testSnapshot = testDataProvider.createAndPersistTestObjects_computeValueByPool_1(using: testingCoreDataStack.context)
         
         let resultAssetPoolValueDictionary = sut.computeValueByPool(for: .assets, using: testSnapshot)
@@ -216,7 +218,7 @@ final class DashboardViewModelTests: XCTestCase {
     
     /// no asset-/liabilityPools
     func test_computeValueByPool_2() throws {
-        let sut = DashboardViewModel(context: testingCoreDataStack.context)
+        let sut = DashboardViewModel(repository: testingSnapshotRepository)
         let testSnapshot = testDataProvider.createAndPersistTestObjects_computeValueByPool_2(using: testingCoreDataStack.context)
         
         let resultAssetPoolValueDictionary = sut.computeValueByPool(for: .assets, using: testSnapshot)
@@ -232,7 +234,7 @@ final class DashboardViewModelTests: XCTestCase {
     
     /// one asset-/liabilityPools with one position respectively (value > 0)
     func test_computeValueByPool_3() throws {
-        let sut = DashboardViewModel(context: testingCoreDataStack.context)
+        let sut = DashboardViewModel(repository: testingSnapshotRepository)
         let testSnapshot = testDataProvider.createAndPersistTestObjects_computeValueByPool_3(using: testingCoreDataStack.context)
         
         let resultAssetPoolValueDictionary = sut.computeValueByPool(for: .assets, using: testSnapshot)
@@ -264,7 +266,7 @@ final class DashboardViewModelTests: XCTestCase {
     
     /// one asset-/liabilityPools with one position respectively (value == 0)
     func test_computeValueByPool_4() throws {
-        let sut = DashboardViewModel(context: testingCoreDataStack.context)
+        let sut = DashboardViewModel(repository: testingSnapshotRepository)
         let testSnapshot = testDataProvider.createAndPersistTestObjects_computeValueByPool_4(using: testingCoreDataStack.context)
         
         let resultAssetPoolValueDictionary = sut.computeValueByPool(for: .assets, using: testSnapshot)
@@ -296,7 +298,7 @@ final class DashboardViewModelTests: XCTestCase {
     
     /// one asset-/liabilityPools with two positions respectively (value == 0)
     func test_computeValueByPool_5() throws {
-        let sut = DashboardViewModel(context: testingCoreDataStack.context)
+        let sut = DashboardViewModel(repository: testingSnapshotRepository)
         let testSnapshot = testDataProvider.createAndPersistTestObjects_computeValueByPool_5(using: testingCoreDataStack.context)
         
         let resultAssetPoolValueDictionary = sut.computeValueByPool(for: .assets, using: testSnapshot)
@@ -330,7 +332,7 @@ final class DashboardViewModelTests: XCTestCase {
     
     /// many persisted snapshots covering all scopes
     func test_filteredSnapshots_1() throws {
-        let sut = DashboardViewModel(context: testingCoreDataStack.context)
+        let sut = DashboardViewModel(repository: testingSnapshotRepository)
         sut.selectedTimeHorizon = .threeMonths
         let (threeMonthSnapshots, sixMonthSnapshots, eighteenMonthSnapshots, allScopeSnapshots) = testDataProvider.createAndPersistTestObjects_filteredSnapshots_1(using: testingCoreDataStack.context)
         
@@ -357,7 +359,7 @@ final class DashboardViewModelTests: XCTestCase {
     
     /// no snapshots persisted
     func test_filteredSnapshots_2() throws {
-        let sut = DashboardViewModel(context: testingCoreDataStack.context)
+        let sut = DashboardViewModel(repository: testingSnapshotRepository)
         let expectedSnapshots: [Snapshot] = []
         let actualSnapshots = sut.filteredSnapshots
         XCTAssertEqual(expectedSnapshots, actualSnapshots)
@@ -368,7 +370,7 @@ final class DashboardViewModelTests: XCTestCase {
     /// 1 snapshot persisted
     func test_selectedDate_1() throws {
         let snapshot = testDataProvider.createAndPersistTestObjects_selectedDate_1(using: testingCoreDataStack.context)
-        let sut = DashboardViewModel(context: testingCoreDataStack.context)
+        let sut = DashboardViewModel(repository: testingSnapshotRepository)
         let calendar = Calendar.current
         let expectedSelectedSnapshot = snapshot
         
@@ -405,7 +407,7 @@ final class DashboardViewModelTests: XCTestCase {
     /// 2 snapshots persisted one month apart
     func test_selectedDate_2() throws {
         let (snapshot_15_03_2024, snapshot_15_04_2024) = testDataProvider.createAndPersistTestObjects_selectedDate_2(using: testingCoreDataStack.context)
-        let sut = DashboardViewModel(context: testingCoreDataStack.context)
+        let sut = DashboardViewModel(repository: testingSnapshotRepository)
         
         
         let middleDate = DateParser.shared.date(from: "2024-03-30T00:00:00Z")!
@@ -490,7 +492,7 @@ final class DashboardViewModelTests: XCTestCase {
     /// 3 snapshots persisted several days apart
     func test_selectedDate_3() throws {
         let (snapshot_10_05_2023, snapshot_13_05_2023, snapshot_15_05_2023) = testDataProvider.createAndPersistTestObjects_selectedDate_3(using: testingCoreDataStack.context)
-        let sut = DashboardViewModel(context: testingCoreDataStack.context)
+        let sut = DashboardViewModel(repository: testingSnapshotRepository)
         
         sut.selectedDate = snapshot_10_05_2023.date
         var selectedSnapshot = sut.selectedSnapshot
@@ -565,7 +567,7 @@ final class DashboardViewModelTests: XCTestCase {
     /// 3 snapshots persisted several months apart
     func test_selectedDate_4() throws {
         let (snapshot_17_05_2022, snapshot_05_09_2022, snapshot_15_12_2022) = testDataProvider.createAndPersistTestObjects_selectedDate_4(using: testingCoreDataStack.context)
-        let sut = DashboardViewModel(context: testingCoreDataStack.context)
+        let sut = DashboardViewModel(repository: testingSnapshotRepository)
         
         sut.selectedDate = snapshot_17_05_2022.date
         var selectedSnapshot = sut.selectedSnapshot
@@ -640,7 +642,7 @@ final class DashboardViewModelTests: XCTestCase {
     /// 16 snapshots persisted each about 1 month apart (realistic spacing)
     func test_selectedDate_5() throws {
         let snapshots = testDataProvider.createAndPersistTestObjects_selectedDate_5(using: testingCoreDataStack.context)
-        let sut = DashboardViewModel(context: testingCoreDataStack.context)
+        let sut = DashboardViewModel(repository: testingSnapshotRepository)
         
         let snapshot_28_02_2022 = snapshots[0]
         let dateNear_28_02_2022 = DateParser.shared.date(from: "2022-03-06T14:27:19Z")!
