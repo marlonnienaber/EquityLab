@@ -5,9 +5,7 @@ import CoreData
 
 @Observable
 class DistributionChartViewModel {
-    @ObservationIgnored private static let loggerSubsystem = Bundle.main.bundleIdentifier ?? ""
-    @ObservationIgnored private static let loggerCategory = String(describing: DistributionChartViewModel.self)
-    @ObservationIgnored private static let logger = Logger(subsystem: loggerSubsystem, category: loggerCategory)
+    @ObservationIgnored private static let logger = Logger(subsystem: .dashboardTab, component: DistributionChartViewModel.self)
 
     @ObservationIgnored private var repository: SnapshotRepository
     @ObservationIgnored private var distributionChartType: DistributionChartType
@@ -41,6 +39,7 @@ class DistributionChartViewModel {
     init(distributionChartType: DistributionChartType,
          dashboardViewModel: DashboardViewModel,
          repository: SnapshotRepository = SnapshotRepository(context: ProductionCoreDataStack.shared.context)) {
+        Self.logger.debug("DistributionChartViewModel()")
         self.distributionChartType = distributionChartType
         self.dashboardViewModel = dashboardViewModel
         self.repository = repository

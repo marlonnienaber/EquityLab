@@ -5,9 +5,7 @@ import SwiftUI
 
 @Observable
 class DashboardViewModel {
-    @ObservationIgnored private static let loggerSubsystem = Bundle.main.bundleIdentifier ?? ""
-    @ObservationIgnored private static let loggerCategory = String(describing: DashboardViewModel.self)
-    @ObservationIgnored private static let logger = Logger(subsystem: loggerSubsystem, category: loggerCategory)
+    @ObservationIgnored private static let logger = Logger(subsystem: .dashboardTab, component: DashboardViewModel.self)
     
     @ObservationIgnored private var repository: SnapshotRepository
     @ObservationIgnored private var equityValueCache = [Snapshot:Double]()
@@ -62,6 +60,7 @@ class DashboardViewModel {
     
     
     init(repository: SnapshotRepository = SnapshotRepository.production) {
+        Self.logger.debug("DashboardViewModel()")
         self.repository = repository
         self.repository.add(observer: self)
         self.snapshots = repository.fetchSnapshots()
@@ -73,17 +72,20 @@ class DashboardViewModel {
     
     
     private func calculateEquityValue(for snapshot: Snapshot) -> Double {
+        Self.logger.debug("calculateEquityValue()")
         let totalLiabilityValue = calculateLiabilityValue(for: snapshot)
         let totalAssetValue = calculateAssetValue(for: snapshot)
         return totalAssetValue - totalLiabilityValue
     }
     
     private func calculateAssetValue(for snapshot: Snapshot) -> Double {
+        Self.logger.debug("calculateAssetValue()")
         let assetPositions = repository.fetchAssetPositions(of: snapshot)
         return assetPositions.map{ $0.value }.reduce(0, +)
     }
     
     private func calculateLiabilityValue(for snapshot: Snapshot) -> Double {
+        Self.logger.debug("calculateLiabilityValue()")
         let liabilityPositions = repository.fetchLiabilityPositions(of: snapshot)
         return liabilityPositions.map{ $0.value }.reduce(0, +)
     }
