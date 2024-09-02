@@ -46,14 +46,20 @@ class ChangeChartViewModel {
         var changedPoolValues = poolValuesSelectedShot.filter{ beforeShotKeySet.contains($0.key)}
         
         changedPoolValues.forEach{ key,value in
-            changedPoolValues[key] = ((value / poolValuesBeforeShot[key]!) - 1) * 100
+            var changePercentage = ((value / poolValuesBeforeShot[key]!) - 1) * 100
+            if changePercentage.isNaN || changePercentage.isInfinite {
+                changePercentage = 0.0
+            }
+            changedPoolValues[key] = changePercentage
         }
         let changeCategories = changedPoolValues.map{ BarChartCategory(change: $0.value, name: $0.key) }
         return changeCategories
     }
     
     var maxChangePercentage: Double {
-        changeCategories.map{ abs($0.change) }.max() ?? 0.0
+        let maxChange = changeCategories.map{ abs($0.change) }.max()
+        guard let maxChange, !maxChange.isNaN, maxChange.isFinite else { return 0.0 }
+        return maxChange
     }
     
     func computeShotBeforeSelectedShot() -> Snapshot? {
