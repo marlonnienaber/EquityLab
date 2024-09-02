@@ -12,11 +12,11 @@ import CoreData
 
 @Observable
 class DistributionChartViewModel {
-    @ObservationIgnored private static let logger = Logger(
-        subsystem: Bundle.main.bundleIdentifier ?? "",
-        category: String(describing: DistributionChartViewModel.self)
-    )
-    @ObservationIgnored private var context: NSManagedObjectContext
+    @ObservationIgnored private static let loggerSubsystem = Bundle.main.bundleIdentifier ?? ""
+    @ObservationIgnored private static let loggerCategory = String(describing: DistributionChartViewModel.self)
+    @ObservationIgnored private static let logger = Logger(subsystem: loggerSubsystem, category: loggerCategory)
+
+    @ObservationIgnored private unowned var repository: SnapshotRepository
     @ObservationIgnored private var distributionChartType: DistributionChartType
     @ObservationIgnored private var positionType: PositionType {
         switch distributionChartType {
@@ -39,11 +39,12 @@ class DistributionChartViewModel {
     var dashboardViewModel: DashboardViewModel
     var selectedCategory: DonutChartCategory?
     
-    init(distributionChartType: DistributionChartType, dashboardViewModel: DashboardViewModel) {
+    init(distributionChartType: DistributionChartType, 
+         dashboardViewModel: DashboardViewModel,
+         repository: SnapshotRepository = SnapshotRepository(context: ProductionCoreDataStack.shared.context)) {
         self.distributionChartType = distributionChartType
         self.dashboardViewModel = dashboardViewModel
-        let context = ProductionCoreDataStack.shared.context
-        self.context = context
+        self.repository = repository
         self.selectedCategory = distributionCategories.first
     }
     
@@ -74,9 +75,9 @@ class DistributionChartViewModel {
     func computeTotalValue(for snapshot: Snapshot) -> Double {
         let positions: [Position]
         if distributionChartType == .assetDistributionChart {
-            positions = (try? context.fetch(snapshot.getAssetPositionRequest())) ?? []
+            positions = repository.fetchAssetPositions(of: snapshot)
         } else {
-            positions = (try? context.fetch(snapshot.getLiabilityPositionRequest())) ?? []
+            positions = repository.fetchLiabilityPositions(of: snapshot)
         }
         let totalValue = positions.map{ $0.value }.reduce(0, +)
         return totalValue
