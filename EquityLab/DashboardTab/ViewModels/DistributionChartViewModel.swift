@@ -1,10 +1,3 @@
-//
-//  DistributionChartViewModel.swift
-//  EquityLab
-//
-//  Created by Marlon Nienaber on 05.08.24.
-//
-
 import Foundation
 import os
 import SwiftUI
@@ -16,7 +9,7 @@ class DistributionChartViewModel {
     @ObservationIgnored private static let loggerCategory = String(describing: DistributionChartViewModel.self)
     @ObservationIgnored private static let logger = Logger(subsystem: loggerSubsystem, category: loggerCategory)
 
-    @ObservationIgnored private unowned var repository: SnapshotRepository
+    @ObservationIgnored private var repository: SnapshotRepository
     @ObservationIgnored private var distributionChartType: DistributionChartType
     @ObservationIgnored private var positionType: PositionType {
         switch distributionChartType {
@@ -24,22 +17,28 @@ class DistributionChartViewModel {
         case .liabilityDistributionChart: .liabilities
         }
     }
-    var unselectedColor: Color {
+    
+    var color: Color {
         switch distributionChartType {
         case .liabilityDistributionChart: Color("LiabilitiesUnselected")
         case .assetDistributionChart: Color("AssetsUnselected")
         }
     }
-    var selectedColor: Color {
-        switch distributionChartType {
-        case .liabilityDistributionChart: Color("LiabilitiesSelected")
-        case .assetDistributionChart: Color("AssetsSelected")
-        }
-    }
     var dashboardViewModel: DashboardViewModel
     var selectedCategory: DonutChartCategory?
+    var selectedCumulativeValue: Double?
+    var distributionCategories: [DonutChartCategory] {
+        guard let selectedSnapshot = dashboardViewModel.selectedSnapshot else { return [] }
+        let poolValues = dashboardViewModel.computeValueByPool(for: positionType, using: selectedSnapshot)
+        let categories = poolValues.keys.sorted().map{
+            DonutChartCategory(value: poolValues[$0]!, name: $0)
+        }
+        
+        return categories
+    }
     
-    init(distributionChartType: DistributionChartType, 
+    
+    init(distributionChartType: DistributionChartType,
          dashboardViewModel: DashboardViewModel,
          repository: SnapshotRepository = SnapshotRepository(context: ProductionCoreDataStack.shared.context)) {
         self.distributionChartType = distributionChartType
@@ -48,18 +47,6 @@ class DistributionChartViewModel {
         self.selectedCategory = distributionCategories.first
     }
     
-    var selectedCumulativeValue: Double?
-    
-    var distributionCategories: [DonutChartCategory] {
-        guard let selectedSnapshot = dashboardViewModel.selectedSnapshot else { return [] }
-
-        let poolValues = dashboardViewModel.computeValueByPool(for: positionType, using: selectedSnapshot)
-        let categories = poolValues.keys.sorted().map{
-            DonutChartCategory(value: poolValues[$0]!, name: $0)
-        }
-        
-        return categories
-    }
     
     func getSelectedCategoryValueString() -> String {
         guard let selectedCategory else { return "" }
@@ -105,8 +92,7 @@ enum DistributionChartType {
     case assetDistributionChart
 }
 
-struct DonutChartCategory: Identifiable {
+struct DonutChartCategory {
     let value: Double
     let name: String
-    let id = UUID()
 }

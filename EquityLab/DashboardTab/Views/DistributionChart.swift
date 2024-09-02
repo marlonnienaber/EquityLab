@@ -12,12 +12,12 @@ struct DistributionChart: View {
     @State var viewModel: DistributionChartViewModel
     
     var body: some View {
-        Chart(viewModel.distributionCategories) { category in
+        Chart(viewModel.distributionCategories, id: \.name) { category in
             SectorMark(angle: .value("type value", category.value),
                        innerRadius: .ratio(0.65),
                        outerRadius: viewModel.selectedCategory?.name == category.name ? 115 : 95,
                        angularInset: 3)
-            .foregroundStyle(viewModel.unselectedColor)
+            .foregroundStyle(viewModel.color)
             .cornerRadius(5)
         }
         .chartAngleSelection(value: $viewModel.selectedCumulativeValue)
