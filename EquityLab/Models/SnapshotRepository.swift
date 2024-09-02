@@ -3,7 +3,7 @@ import CoreData
 class SnapshotRepository: NSObject {
     public static let production = SnapshotRepository(context: ProductionCoreDataStack.shared.context)
     private let fetchedResultsController: ObservingFetchedResultsController<Snapshot>
-    private var observers: [SnapshotObserver]
+    private var observers: [WeakSnapshotObserver]
     
     init(context: NSManagedObjectContext) {
         let request = ObservingFetchRequest<Snapshot>(entityName: "Snapshot")
@@ -16,8 +16,8 @@ class SnapshotRepository: NSObject {
     }
     
     func add(observer: SnapshotObserver) {
-        guard !observers.contains(where: { $0 === observer }) else { return }
-        observers.append(observer)
+        guard !observers.contains(where: { $0.observer === observer }) else { return }
+        observers.append(WeakSnapshotObserver(observer: observer))
     }
     
     func fetchSnapshots() -> [Snapshot] {
@@ -35,11 +35,19 @@ class SnapshotRepository: NSObject {
 }
 
 extension SnapshotRepository: NSFetchedResultsControllerDelegate {
-    func controllerDidChangeContent(_ controller: NSFetchedResultsController<any NSFetchRequestResult>) {
-        observers.forEach{ $0.updateSnapshots(with: fetchSnapshots())}
+    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        observers = observers.filter { $0.observer != nil }
+        observers.forEach{ $0.observer?.updateSnapshots(with: fetchSnapshots())}
     }
 }
 
 protocol SnapshotObserver: AnyObject {
     func updateSnapshots(with newSnapshots: [Snapshot])
+}
+
+class WeakSnapshotObserver {
+    weak var observer: SnapshotObserver?
+    init(observer: SnapshotObserver?) {
+        self.observer = observer
+    }
 }
