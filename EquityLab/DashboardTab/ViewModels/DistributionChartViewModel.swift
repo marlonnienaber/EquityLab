@@ -2,6 +2,7 @@ import Foundation
 import os
 import SwiftUI
 import CoreData
+import Charts
 
 @Observable
 class DistributionChartViewModel {
@@ -26,6 +27,7 @@ class DistributionChartViewModel {
     var selectedCategory: DonutChartCategory?
     var selectedCumulativeValue: Double?
     var distributionCategories: [DonutChartCategory] {
+        //TODO: make sure no category is below 2% -> else bulk with next smallest category
         guard let selectedSnapshot = dashboardViewModel.selectedSnapshot else { return [] }
         let poolValues = dashboardViewModel.computeValueByPool(for: positionType, using: selectedSnapshot)
         let categories = poolValues.keys.sorted().map{
@@ -55,7 +57,7 @@ class DistributionChartViewModel {
     func getSelectedCategoryPercentageString() -> String {
         guard let selectedCategory, let selectedSnapshot = dashboardViewModel.selectedSnapshot else { return "" }
         let percentage = (selectedCategory.value / computeTotalValue(for: selectedSnapshot)) * 100
-        return String(format: "%.1f", percentage) + "%"
+        return String(format: "%.1f", percentage) + " %"
     }
     
     func computeTotalValue(for snapshot: Snapshot) -> Double {
@@ -84,6 +86,23 @@ class DistributionChartViewModel {
     func setSelectedCategoryForNewSnapshot() {
         selectedCategory = distributionCategories.first(where: {$0.name == selectedCategory?.name})
     }
+    
+    func calculateFrameLength(for geometry: GeometryProxy) -> CGFloat {
+        let maxWidth = geometry.size.width * 0.5
+        let maxHeight = geometry.size.height
+        return min(maxWidth, maxHeight)
+    }
+    
+    func calculateOuterRadius(for geometry: GeometryProxy, and category: DonutChartCategory) -> MarkDimension {
+        let chartSize = calculateFrameLength(for: geometry)
+        if chartSize >= 170 {
+            return selectedCategory?.name == category.name ? 95 : 82
+        } else if chartSize >= 155 {
+            return selectedCategory?.name == category.name ? 80 : 73
+        } else {
+            return selectedCategory?.name == category.name ? 70 : 63
+        }
+    }
 }
 
 enum DistributionChartType {
@@ -92,6 +111,20 @@ enum DistributionChartType {
 }
 
 struct DonutChartCategory {
+    let value: Double
+    let name: String
+}
+
+struct DonutChartCategory2 {
+    private let originalValue: Double
+    var value: Double {
+        includedCategories.isEmpty ? originalValue : originalValue + includedCategories.map{ $0.value }.reduce(0, +)
+    }
+    let name: String
+    let includedCategories: [IncludedDonutChartCategory] = []
+}
+
+struct IncludedDonutChartCategory {
     let value: Double
     let name: String
 }
