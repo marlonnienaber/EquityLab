@@ -8,6 +8,7 @@ class DistributionChartViewModel {
     @ObservationIgnored private static let logger = Logger(subsystem: .dashboardTab, component: .distributionChartViewModel)
 
     @ObservationIgnored private var repository: SnapshotRepository
+    @ObservationIgnored private let distributionChartType: DistributionChartType
     @ObservationIgnored private var positionType: PositionType {
         switch distributionChartType {
         case .assetDistributionChart: .assets
@@ -15,7 +16,6 @@ class DistributionChartViewModel {
         }
     }
     
-    @ObservationIgnored let distributionChartType: DistributionChartType
     var dashboardViewModel: DashboardViewModel
     var selectedCategory: DonutChartCategory?
     var selectedCumulativeValue: Double?
