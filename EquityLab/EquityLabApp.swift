@@ -1,14 +1,8 @@
-//
-//  EquityLabApp.swift
-//  EquityLab
-//
-//  Created by Marlon Nienaber on 14.07.24.
-//
-
 import SwiftUI
 
 @main
 struct EquityLabApp: App {
+    /* TODO: search for divisions and check whether division by zero is treated sufficiently */
     var body: some Scene {
         WindowGroup {
             TabView {

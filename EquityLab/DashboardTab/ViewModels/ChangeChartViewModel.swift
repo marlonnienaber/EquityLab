@@ -1,10 +1,3 @@
-//
-//  ChangeChartViewModel.swift
-//  EquityLab
-//
-//  Created by Marlon Nienaber on 06.08.24.
-//
-
 import Foundation
 import SwiftUI
 import os
