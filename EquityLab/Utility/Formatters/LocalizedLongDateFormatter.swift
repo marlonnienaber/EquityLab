@@ -1,11 +1,4 @@
-//
-//  LocalizedLongDateFormatter.swift
-//  EquityLab
-//
-//  Created by Marlon Nienaber on 04.08.24.
-//
 
-import Foundation
 import UIKit
 
 class LocalizedLongDateFormatter: DateFormatter {
