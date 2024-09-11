@@ -1,4 +1,3 @@
-import Foundation
 import CoreData
 import os
 import SwiftUI
@@ -138,7 +137,10 @@ class DashboardViewModel {
 
 extension DashboardViewModel: SnapshotObserver {
     func updateSnapshots(with newSnapshots: [Snapshot]) {
+        Self.logger.debug("updateSnapshots")
         self.snapshots = newSnapshots
+        guard let selectedSnapshot else { return }
+        self.selectedSnapshot = newSnapshots.first(where: { $0 == selectedSnapshot })
     }
 }
 

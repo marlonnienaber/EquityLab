@@ -1,6 +1,5 @@
 import XCTest
 @testable import EquityLab
-import CoreData
 
 final class DashboardViewModelTests: XCTestCase {
     private var testingCoreDataStack: TestingCoreDataStack!
@@ -10,11 +9,6 @@ final class DashboardViewModelTests: XCTestCase {
     override func setUpWithError() throws {
         testingCoreDataStack = TestingCoreDataStack()
         testingSnapshotRepository = SnapshotRepository(context: testingCoreDataStack.context)
-    }
-
-    override func tearDownWithError() throws {
-        testingCoreDataStack = nil
-        testingSnapshotRepository
     }
 
     

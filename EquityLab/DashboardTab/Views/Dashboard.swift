@@ -61,28 +61,32 @@ struct Dashboard: View {
     
     private var snapshotDetailSection: some View {
         GroupBox {
-            HStack {
-                if let selectedSnapshot = viewModel.selectedSnapshot, let date = selectedSnapshot.date {
+            if let selectedSnapshot = viewModel.selectedSnapshot, let date = selectedSnapshot.date {
+                HStack {
                     Text(LocalizedLongDateFormatter.shared.string(from: date))
                         .bold()
-                }
-                Spacer()
-                Picker("Snapshot Detail View",selection: $viewModel.selectedSnapshotDetailView) {
-                    ForEach(SnapshotDetailView.allCases) { detailView in
-                        Text(detailView.rawValue).tag(detailView)
+                    Spacer()
+                    Picker("Snapshot Detail View",selection: $viewModel.selectedSnapshotDetailView) {
+                        ForEach(SnapshotDetailView.allCases) { detailView in
+                            Text(detailView.rawValue).tag(detailView)
+                        }
                     }
+                    .pickerStyle(MenuPickerStyle())
+                    .accentColor(.primary)
+                    .background(
+                        RoundedRectangle(cornerRadius: 8)
+                            .fill(Color.gray.opacity(0.2))
+                    )
                 }
-                .pickerStyle(MenuPickerStyle())
-                .accentColor(.primary)
-                .background(
-                    RoundedRectangle(cornerRadius: 8)
-                        .fill(Color.gray.opacity(0.2))
-                )
-            }
-            switch viewModel.selectedSnapshotDetailView {
-            case .assetDetailView: assetDetailView
-            case .liabilityDetailView: liabilityDetailView
-            case .balanceDetailView: balanceDetailView
+                switch viewModel.selectedSnapshotDetailView {
+                case .assetDetailView: assetDetailView
+                case .liabilityDetailView: liabilityDetailView
+                case .balanceDetailView: balanceDetailView
+                }
+            } else {
+                Text("Please select a snapshot by taping on a data point in the equity section to display its details.")
+                    .multilineTextAlignment(.center)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
         }
         .groupBoxStyle(PageViewGroupBoxStyle())

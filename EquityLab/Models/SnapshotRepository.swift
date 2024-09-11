@@ -8,7 +8,7 @@ class SnapshotRepository: NSObject {
     init(context: NSManagedObjectContext) {
         let request = ObservingFetchRequest<Snapshot>(entityName: "Snapshot")
         request.sortDescriptors = [NSSortDescriptor(keyPath: \Snapshot.date, ascending: true)]
-        request.observedRelationships = ["liabilities"]
+        request.observedRelationships = ["assets", "liabilities"]
         fetchedResultsController = .init(fetchRequest: request, managedObjectContext: context, sectionNameKeyPath: nil, cacheName: nil)
         self.observers = []
         super.init()

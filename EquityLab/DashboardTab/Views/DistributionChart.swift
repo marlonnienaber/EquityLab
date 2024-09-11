@@ -5,6 +5,8 @@ struct DistributionChart: View {
     @State var viewModel: DistributionChartViewModel
     
     var body: some View {
+        /* TODO: handle selected snapshot with pools -> no categories */
+        /* TODO: positioning should not break if selectedCategory == nil */
         GeometryReader { geometry in
             HStack(spacing: 0) {
                 chart(geometry)
@@ -20,7 +22,7 @@ struct DistributionChart: View {
     }
     
     private func chart(_ geometry: GeometryProxy) -> some View {
-        Chart(viewModel.distributionCategories, id: \.name) { category in
+        Chart(viewModel.distributionCategories, id: \.self) { category in
             SectorMark(angle: .value("type value", category.value),
                        innerRadius: .ratio(0.65),
                        outerRadius: viewModel.calculateOuterRadius(for: geometry, and: category),
@@ -38,8 +40,8 @@ struct DistributionChart: View {
                 }
         }
         .chartBackground { _ in
-            if let selectedCategory = viewModel.selectedCategory {
-                Text(viewModel.getSelectedCategoryPercentageString())
+            if let percentageString = viewModel.getSelectedCategoryPercentageString() {
+                Text(percentageString)
             }
         }
         .onChange(of: viewModel.selectedCumulativeValue) { oldValue, newValue in
@@ -54,11 +56,64 @@ struct DistributionChart: View {
         }
     }
     
+    @ViewBuilder
     private func selectedCategoryDetails(selectedCategory: DonutChartCategory) -> some View {
-        VStack(alignment: .leading) {
-            Text(selectedCategory.name)
-            Text(viewModel.getSelectedCategoryValueString())
-                .font(.system(size: 13))
+        if selectedCategory.pools.count > 3 {
+                VStack(alignment: .leading, spacing: 10) {
+                    ForEach(selectedCategory.pools[0...2], id: \.self) { pool in
+                        VStack(alignment: .leading) {
+                            Text(pool.name)
+                            Text(viewModel.getValueString(for: pool))
+                                .font(.system(size: 13))
+                            Text(viewModel.getPercentageString(for: pool))
+                                .font(.system(size: 13))
+                        }
+                    }
+                    HStack {
+                        Button {
+                            viewModel.showPopover.toggle()
+                        } label: {
+                            Image(systemName: "info.circle")
+                        }
+                        .foregroundColor(.primary)
+                        .popover(isPresented: $viewModel.showPopover) {
+                            ScrollView {
+                                VStack(alignment: .leading, spacing: 10) {
+                                    ForEach(selectedCategory.pools[3..<selectedCategory.pools.count], id: \.self) { hiddenPool in
+                                        VStack(alignment: .leading) {
+                                            Text(hiddenPool.name)
+                                            Text(viewModel.getValueString(for: hiddenPool))
+                                                .font(.system(size: 13))
+                                            Text(viewModel.getPercentageString(for: hiddenPool))
+                                                .font(.system(size: 13))
+                                        }
+                                    }
+                                }
+                            }
+                            .padding()
+                            .presentationCompactAdaptation(.popover)
+                        }
+                        Text("other")
+                    }
+                }
+        } else if selectedCategory.pools.count > 1 {
+            VStack(alignment: .leading, spacing: 10) {
+                ForEach(selectedCategory.pools, id: \.self) { pool in
+                    VStack(alignment: .leading) {
+                        Text(pool.name)
+                        Text(viewModel.getValueString(for: pool))
+                            .font(.system(size: 13))
+                        Text(viewModel.getPercentageString(for: pool))
+                            .font(.system(size: 13))
+                    }
+                }
+            }
+        } else {
+            VStack(alignment: .leading) {
+                Text(selectedCategory.pools.first!.name)
+                Text(viewModel.getValueString(for: selectedCategory.pools.first!))
+                    .font(.system(size: 13))
+            }
         }
     }
     

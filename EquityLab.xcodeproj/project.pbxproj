@@ -10,6 +10,7 @@
 		7314FD682C75106500483835 /* DashboardViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7314FD672C75106500483835 /* DashboardViewModelTests.swift */; };
 		7314FD6F2C7510E100483835 /* TestingCoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7314FD6E2C7510E100483835 /* TestingCoreDataStack.swift */; };
 		7314FD8B2C76696300483835 /* TestDataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7314FD8A2C76696300483835 /* TestDataProvider.swift */; };
+		733473872C8DEC950050C656 /* DistributionChartViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 733473862C8DEC950050C656 /* DistributionChartViewModelTests.swift */; };
 		7342ED272C44750200BA20A4 /* EquityLabApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7342ED262C44750200BA20A4 /* EquityLabApp.swift */; };
 		7342ED2B2C44750300BA20A4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7342ED2A2C44750300BA20A4 /* Assets.xcassets */; };
 		7342ED2E2C44750300BA20A4 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7342ED2D2C44750300BA20A4 /* Preview Assets.xcassets */; };
@@ -85,6 +86,7 @@
 		7314FD672C75106500483835 /* DashboardViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardViewModelTests.swift; sourceTree = "<group>"; };
 		7314FD6E2C7510E100483835 /* TestingCoreDataStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestingCoreDataStack.swift; sourceTree = "<group>"; };
 		7314FD8A2C76696300483835 /* TestDataProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestDataProvider.swift; sourceTree = "<group>"; };
+		733473862C8DEC950050C656 /* DistributionChartViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DistributionChartViewModelTests.swift; sourceTree = "<group>"; };
 		7342ED232C44750200BA20A4 /* EquityLab.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EquityLab.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7342ED262C44750200BA20A4 /* EquityLabApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EquityLabApp.swift; sourceTree = "<group>"; };
 		7342ED2A2C44750300BA20A4 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -169,6 +171,7 @@
 			children = (
 				73A428072C7E3B090086181F /* Utility */,
 				7314FD672C75106500483835 /* DashboardViewModelTests.swift */,
+				733473862C8DEC950050C656 /* DistributionChartViewModelTests.swift */,
 			);
 			path = EquityLabTests;
 			sourceTree = "<group>";
@@ -553,6 +556,7 @@
 				7314FD8B2C76696300483835 /* TestDataProvider.swift in Sources */,
 				7314FD682C75106500483835 /* DashboardViewModelTests.swift in Sources */,
 				73E9DA602C7E60B800601C66 /* NSManagedObjectExtension.swift in Sources */,
+				733473872C8DEC950050C656 /* DistributionChartViewModelTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
