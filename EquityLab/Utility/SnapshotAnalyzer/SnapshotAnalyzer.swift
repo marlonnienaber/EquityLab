@@ -1,3 +1,6 @@
+import Foundation
+
+/* TODO: test */
 struct SnapshotAnalyzer {
     private let repository: SnapshotRepository
     
@@ -19,6 +22,13 @@ struct SnapshotAnalyzer {
     func calculateLiabilityValue(for snapshot: Snapshot) -> Double {
         let liabilityPositions = repository.fetchLiabilityPositions(of: snapshot)
         return liabilityPositions.map{ $0.value }.reduce(0, +)
+    }
+    
+    func getYear(of snapshot: Snapshot) -> Int? {
+        guard let date = snapshot.date else { return nil }
+        let calendar = Calendar.current
+        let components = calendar.dateComponents([.year], from: date)
+        return components.year
     }
 }
 

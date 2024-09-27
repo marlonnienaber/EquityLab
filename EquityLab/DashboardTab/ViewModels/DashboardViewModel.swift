@@ -118,8 +118,8 @@ class DashboardViewModel {
 }
 
 extension DashboardViewModel: SnapshotObserver {
-    func notifyAfterSnapshotUpdate(_ fetchSnapshots: (SnapshotSortingOrder) -> [Snapshot]) {
-        Self.logger.debug("updateSnapshots")
+    func notifyAfterSnapshotUpdate(snapshotRetriever fetchSnapshots: (SnapshotSortingOrder) -> [Snapshot]) {
+        Self.logger.debug("notifyAfterSnapshotUpdate")
         self.snapshots = fetchSnapshots(.ascending)
         guard let selectedSnapshot else { return }
         self.selectedSnapshot = snapshots.first(where: { $0 == selectedSnapshot })

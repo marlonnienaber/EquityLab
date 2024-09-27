@@ -2,47 +2,49 @@ import SwiftUI
 
 struct SnapshotLedger: View {
     @State private var viewModel = SnapshotLedgerViewModel()
-    @State private var activeSheet: SnapshotSheetType? = nil
     
     var body: some View {
         NavigationView {
-            LedgerContent
+            ledgerContent
                 .navigationTitle("Snapshots")
                 .toolbar {
                     ToolbarItem(placement: .navigationBarLeading) {
                         EditButton()
-                            .disabled(viewModel.years.isEmpty)
+                            .disabled(viewModel.hasNoSnapshots)
                     }
                     ToolbarItem(placement: .navigationBarTrailing) {
-                        Button (action: {activeSheet = .addSheet} ){
+                        Button {
+                            viewModel.activeSheet = .addSheet
+                        } label: {
                             Image(systemName: "plus")
                         }
                     }
                 }
-        }.sheet(item: $activeSheet) { activeSheet in
+        }
+        .sheet(item: $viewModel.activeSheet) { activeSheet in
             switch activeSheet {
-            case .addSheet: SnapshotForm(viewModel: SnapshotFormViewModel(), snapshotLedgerActiveSheet: $activeSheet)
-            case .updateSheet(let shot): SnapshotForm(viewModel: SnapshotFormViewModel(snapshot: shot), snapshotLedgerActiveSheet: $activeSheet)
+            case .addSheet: SnapshotForm(viewModel: SnapshotFormViewModel(), snapshotLedgerActiveSheet: $viewModel.activeSheet)
+            case .updateSheet(let shot): SnapshotForm(viewModel: SnapshotFormViewModel(snapshot: shot), snapshotLedgerActiveSheet: $viewModel.activeSheet)
             }
         }
     }
     
     @ViewBuilder 
-    var LedgerContent: some View {
-        if viewModel.years.isEmpty {
-            NoSnapshotDataView
+    var ledgerContent: some View {
+        if viewModel.hasNoSnapshots {
+            noSnapshotDataView
         } else {
             List {
                 ForEach(viewModel.years, id: \.self) { year in
                     Section(String(year)) {
-                        sectionContent(for: year, containing: viewModel.snapshots(fallingInto: year))
+                        sectionContent(for: year, containing: viewModel.getSnapshots(fallingInto: year))
                     }
                 }
             }
         }
     }
     
-    var NoSnapshotDataView: some View {
+    var noSnapshotDataView: some View {
         VStack {
             Image(systemName: "tray.fill")
                 .resizable()
@@ -55,7 +57,7 @@ struct SnapshotLedger: View {
     
     func sectionContent(for year: Int, containing snapshots: [Snapshot]) -> some View {
         ForEach(snapshots) { snapshot in
-            SnapshotListCell(for: snapshot)
+            snapshotListCell(for: snapshot)
         }
         .onDelete{ indexSet in
             viewModel.deleteSnapshots(in: year, for: indexSet)
@@ -63,11 +65,11 @@ struct SnapshotLedger: View {
     }
     
     @ViewBuilder 
-    func SnapshotListCell(for snapshot: Snapshot) -> some View {
+    func snapshotListCell(for snapshot: Snapshot) -> some View {
         if let equityStringRepresentation = LocalizedCurrencyFormatter.shared.string(from: viewModel.getEquityValue(of: snapshot)),
            let date = snapshot.date {
             Button {
-                activeSheet = .updateSheet(snapshot: snapshot)
+                viewModel.activeSheet = .updateSheet(snapshot: snapshot)
             } label: {
                 HStack {
                     Text(LocalizedShortDateFormatter.shared.string(from: date))
@@ -81,12 +83,5 @@ struct SnapshotLedger: View {
         } else {
             Text("something went wrong while loading this snapshot!")
         }
-    }
-    
-    
-    enum SnapshotSheetType: Identifiable {
-        var id: UUID { UUID() }
-        case addSheet
-        case updateSheet(snapshot: Snapshot)
     }
 }

@@ -47,12 +47,13 @@ class SnapshotRepository: NSObject {
 extension SnapshotRepository: NSFetchedResultsControllerDelegate {
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         observers = observers.filter { $0.observer != nil }
-        observers.forEach{ $0.observer?.notifyAfterSnapshotUpdate(fetchSnapshots)}
+        observers.forEach{ $0.observer?.notifyAfterSnapshotUpdate(snapshotRetriever: fetchSnapshots)}
     }
 }
 
 protocol SnapshotObserver: AnyObject {
-    func notifyAfterSnapshotUpdate(_ fetchSnapshots: (SnapshotSortingOrder) -> [Snapshot])
+    /* TODO: will this create a retain cycle or other memory problems */
+    func notifyAfterSnapshotUpdate(snapshotRetriever fetchSnapshots: (SnapshotSortingOrder) -> [Snapshot])
 }
 
 class WeakSnapshotObserver {

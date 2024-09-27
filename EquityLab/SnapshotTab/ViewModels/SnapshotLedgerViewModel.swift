@@ -9,16 +9,21 @@ class SnapshotLedgerViewModel {
     @ObservationIgnored private var snapshotAnalyzer: SnapshotAnalyzer
     @ObservationIgnored private var equityValueCache = [Snapshot:Double]()
     private var snapshots = [Snapshot]()
-    var yearToSnapshotDictionary = [Int:[Snapshot]]()
+    private var yearToSnapshotDictionary = [Int:[Snapshot]]()
     var years = [Int]()
+    var hasNoSnapshots: Bool {
+        years.isEmpty
+    }
+    var activeSheet: SnapshotSheetType? = nil
     
     init(repository: SnapshotRepository = SnapshotRepository.production) {
         self.repository = repository
         self.snapshotAnalyzer = SnapshotAnalyzer(repository: repository)
+        self.repository.add(observer: self)
         snapshots = repository.fetchSnapshots(sortingOrder: .descending)
         for snapshot in snapshots {
             equityValueCache[snapshot] = snapshotAnalyzer.calculateEquityValue(for: snapshot)
-            if let year = extractYear(from: snapshot) {
+            if let year = snapshotAnalyzer.getYear(of: snapshot) {
                 if !yearToSnapshotDictionary.keys.contains(year) {
                     years.append(year)
                 }
@@ -32,14 +37,8 @@ class SnapshotLedgerViewModel {
         }
     }
     
-    private func extractYear(from snapshot: Snapshot) -> Int? {
-        guard let date = snapshot.date else { return nil }
-        let calendar = Calendar.current
-        let components = calendar.dateComponents([.year], from: date)
-        return components.year
-    }
     
-    func snapshots(fallingInto year: Int) -> [Snapshot] {
+    func getSnapshots(fallingInto year: Int) -> [Snapshot] {
         yearToSnapshotDictionary[year] ?? []
     }
     
@@ -56,17 +55,17 @@ class SnapshotLedgerViewModel {
         let equityValue = equityValueCache[snapshot] ?? 0.0
         return NSNumber(value: equityValue)
     }
-    
 }
 
 extension SnapshotLedgerViewModel: SnapshotObserver {
-    func notifyAfterSnapshotUpdate(_ fetchSnapshots: (SnapshotSortingOrder) -> [Snapshot]) {
+    func notifyAfterSnapshotUpdate(snapshotRetriever fetchSnapshots: (SnapshotSortingOrder) -> [Snapshot]) {
+        Self.logger.debug("notifyAfterSnapshotUpdate")
         yearToSnapshotDictionary = [Int:[Snapshot]]()
         years = [Int]()
         self.snapshots = fetchSnapshots(.descending)
         for snapshot in snapshots {
             equityValueCache[snapshot] = snapshotAnalyzer.calculateEquityValue(for: snapshot)
-            if let year = extractYear(from: snapshot) {
+            if let year = snapshotAnalyzer.getYear(of: snapshot) {
                 if !yearToSnapshotDictionary.keys.contains(year) {
                     years.append(year)
                 }
@@ -77,6 +76,19 @@ extension SnapshotLedgerViewModel: SnapshotObserver {
                     yearToSnapshotDictionary[year] = [snapshot]
                 }
             }
+        }
+    }
+}
+
+enum SnapshotSheetType: Identifiable {
+    case addSheet
+    case updateSheet(snapshot: Snapshot)
+    var id: String {
+        switch self {
+        case .addSheet:
+            return "addSheet"
+        case .updateSheet(let snapshot):
+            return "updateSheet-\(snapshot.id)"
         }
     }
 }

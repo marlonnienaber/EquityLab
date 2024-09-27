@@ -7,9 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		7314FD682C75106500483835 /* DashboardViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7314FD672C75106500483835 /* DashboardViewModelTests.swift */; };
 		7314FD6F2C7510E100483835 /* TestingCoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7314FD6E2C7510E100483835 /* TestingCoreDataStack.swift */; };
-		7314FD8B2C76696300483835 /* TestDataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7314FD8A2C76696300483835 /* TestDataProvider.swift */; };
 		733473872C8DEC950050C656 /* DistributionChartViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 733473862C8DEC950050C656 /* DistributionChartViewModelTests.swift */; };
 		7342ED272C44750200BA20A4 /* EquityLabApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7342ED262C44750200BA20A4 /* EquityLabApp.swift */; };
 		7342ED2B2C44750300BA20A4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7342ED2A2C44750300BA20A4 /* Assets.xcassets */; };
@@ -61,12 +59,18 @@
 		7342EDC92C448ABC00BA20A4 /* Dashboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7342EDC82C448ABC00BA20A4 /* Dashboard.swift */; };
 		7363D3D62C85F85200EC9F16 /* SnapshotRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7363D3D52C85F85200EC9F16 /* SnapshotRepository.swift */; };
 		7363D3D92C86416600EC9F16 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7363D3D82C86416600EC9F16 /* Logger.swift */; };
+		7363DDF22CA758D7009F3412 /* DashboardViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7363DDF12CA758D1009F3412 /* DashboardViewModelTests.swift */; };
 		73823CDD2C6154930049D03C /* DistributionChartViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73823CDC2C6154930049D03C /* DistributionChartViewModel.swift */; };
 		73823CDF2C62B2EE0049D03C /* ChangeChartViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73823CDE2C62B2EE0049D03C /* ChangeChartViewModel.swift */; };
 		73823CE12C68023E0049D03C /* BalanceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73823CE02C68023E0049D03C /* BalanceView.swift */; };
 		73980F472AA57A4500CA4849 /* CoreDataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 73980F452AA57A4500CA4849 /* CoreDataModel.xcdatamodeld */; };
 		73A428092C7E3B1F0086181F /* DateParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73A428082C7E3B1F0086181F /* DateParser.swift */; };
 		73B811982CA6CF4B003B1973 /* SnapshotAnalyzer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73B811972CA6CF44003B1973 /* SnapshotAnalyzer.swift */; };
+		73B8119A2CA6D3F4003B1973 /* SnapshotLedgerViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73B811992CA6D3E3003B1973 /* SnapshotLedgerViewModelTests.swift */; };
+		73B8119C2CA72359003B1973 /* DataFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73B8119B2CA72350003B1973 /* DataFactory.swift */; };
+		73B811A22CA7264E003B1973 /* DashboardViewModelTestDataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73B811A12CA72644003B1973 /* DashboardViewModelTestDataProvider.swift */; };
+		73B811A42CA72668003B1973 /* SnapshotLedgerViewModelTestDataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73B811A32CA72655003B1973 /* SnapshotLedgerViewModelTestDataProvider.swift */; };
+		73B811A62CA7267B003B1973 /* DistributionChartViewModelTestDataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73B811A52CA72670003B1973 /* DistributionChartViewModelTestDataProvider.swift */; };
 		73D2C5902C5FBB970019A800 /* ChangeChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73D2C58F2C5FBB970019A800 /* ChangeChart.swift */; };
 		73D2C5922C5FBE3B0019A800 /* LocalizedLongDateFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73D2C5912C5FBE3B0019A800 /* LocalizedLongDateFormatter.swift */; };
 		73E9DA602C7E60B800601C66 /* NSManagedObjectExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73E9DA5F2C7E60B800601C66 /* NSManagedObjectExtension.swift */; };
@@ -84,9 +88,7 @@
 
 /* Begin PBXFileReference section */
 		7314FD652C75106500483835 /* EquityLabTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EquityLabTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		7314FD672C75106500483835 /* DashboardViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardViewModelTests.swift; sourceTree = "<group>"; };
 		7314FD6E2C7510E100483835 /* TestingCoreDataStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestingCoreDataStack.swift; sourceTree = "<group>"; };
-		7314FD8A2C76696300483835 /* TestDataProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestDataProvider.swift; sourceTree = "<group>"; };
 		733473862C8DEC950050C656 /* DistributionChartViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DistributionChartViewModelTests.swift; sourceTree = "<group>"; };
 		7342ED232C44750200BA20A4 /* EquityLab.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EquityLab.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7342ED262C44750200BA20A4 /* EquityLabApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EquityLabApp.swift; sourceTree = "<group>"; };
@@ -139,12 +141,18 @@
 		7342EDC82C448ABC00BA20A4 /* Dashboard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Dashboard.swift; sourceTree = "<group>"; };
 		7363D3D52C85F85200EC9F16 /* SnapshotRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapshotRepository.swift; sourceTree = "<group>"; };
 		7363D3D82C86416600EC9F16 /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
+		7363DDF12CA758D1009F3412 /* DashboardViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardViewModelTests.swift; sourceTree = "<group>"; };
 		73823CDC2C6154930049D03C /* DistributionChartViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DistributionChartViewModel.swift; sourceTree = "<group>"; };
 		73823CDE2C62B2EE0049D03C /* ChangeChartViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangeChartViewModel.swift; sourceTree = "<group>"; };
 		73823CE02C68023E0049D03C /* BalanceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BalanceView.swift; sourceTree = "<group>"; };
 		73980F462AA57A4500CA4849 /* CoreDataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = CoreDataModel.xcdatamodel; sourceTree = "<group>"; };
 		73A428082C7E3B1F0086181F /* DateParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateParser.swift; sourceTree = "<group>"; };
 		73B811972CA6CF44003B1973 /* SnapshotAnalyzer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapshotAnalyzer.swift; sourceTree = "<group>"; };
+		73B811992CA6D3E3003B1973 /* SnapshotLedgerViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapshotLedgerViewModelTests.swift; sourceTree = "<group>"; };
+		73B8119B2CA72350003B1973 /* DataFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataFactory.swift; sourceTree = "<group>"; };
+		73B811A12CA72644003B1973 /* DashboardViewModelTestDataProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardViewModelTestDataProvider.swift; sourceTree = "<group>"; };
+		73B811A32CA72655003B1973 /* SnapshotLedgerViewModelTestDataProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapshotLedgerViewModelTestDataProvider.swift; sourceTree = "<group>"; };
+		73B811A52CA72670003B1973 /* DistributionChartViewModelTestDataProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DistributionChartViewModelTestDataProvider.swift; sourceTree = "<group>"; };
 		73D2C58F2C5FBB970019A800 /* ChangeChart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangeChart.swift; sourceTree = "<group>"; };
 		73D2C5912C5FBE3B0019A800 /* LocalizedLongDateFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalizedLongDateFormatter.swift; sourceTree = "<group>"; };
 		73E9DA5F2C7E60B800601C66 /* NSManagedObjectExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSManagedObjectExtension.swift; sourceTree = "<group>"; };
@@ -171,9 +179,9 @@
 		7314FD662C75106500483835 /* EquityLabTests */ = {
 			isa = PBXGroup;
 			children = (
+				73B811A02CA72624003B1973 /* TestDataProviders */,
+				73B8119F2CA7261D003B1973 /* Tests */,
 				73A428072C7E3B090086181F /* Utility */,
-				7314FD672C75106500483835 /* DashboardViewModelTests.swift */,
-				733473862C8DEC950050C656 /* DistributionChartViewModelTests.swift */,
 			);
 			path = EquityLabTests;
 			sourceTree = "<group>";
@@ -448,7 +456,7 @@
 		73A428072C7E3B090086181F /* Utility */ = {
 			isa = PBXGroup;
 			children = (
-				7314FD8A2C76696300483835 /* TestDataProvider.swift */,
+				73B8119B2CA72350003B1973 /* DataFactory.swift */,
 				73A428082C7E3B1F0086181F /* DateParser.swift */,
 				73E9DA5F2C7E60B800601C66 /* NSManagedObjectExtension.swift */,
 			);
@@ -461,6 +469,26 @@
 				73B811972CA6CF44003B1973 /* SnapshotAnalyzer.swift */,
 			);
 			path = SnapshotAnalyzer;
+			sourceTree = "<group>";
+		};
+		73B8119F2CA7261D003B1973 /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				7363DDF12CA758D1009F3412 /* DashboardViewModelTests.swift */,
+				733473862C8DEC950050C656 /* DistributionChartViewModelTests.swift */,
+				73B811992CA6D3E3003B1973 /* SnapshotLedgerViewModelTests.swift */,
+			);
+			path = Tests;
+			sourceTree = "<group>";
+		};
+		73B811A02CA72624003B1973 /* TestDataProviders */ = {
+			isa = PBXGroup;
+			children = (
+				73B811A12CA72644003B1973 /* DashboardViewModelTestDataProvider.swift */,
+				73B811A52CA72670003B1973 /* DistributionChartViewModelTestDataProvider.swift */,
+				73B811A32CA72655003B1973 /* SnapshotLedgerViewModelTestDataProvider.swift */,
+			);
+			path = TestDataProviders;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -564,8 +592,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				73A428092C7E3B1F0086181F /* DateParser.swift in Sources */,
-				7314FD8B2C76696300483835 /* TestDataProvider.swift in Sources */,
-				7314FD682C75106500483835 /* DashboardViewModelTests.swift in Sources */,
+				73B811A62CA7267B003B1973 /* DistributionChartViewModelTestDataProvider.swift in Sources */,
+				73B8119C2CA72359003B1973 /* DataFactory.swift in Sources */,
+				7363DDF22CA758D7009F3412 /* DashboardViewModelTests.swift in Sources */,
+				73B811A42CA72668003B1973 /* SnapshotLedgerViewModelTestDataProvider.swift in Sources */,
+				73B811A22CA7264E003B1973 /* DashboardViewModelTestDataProvider.swift in Sources */,
+				73B8119A2CA6D3F4003B1973 /* SnapshotLedgerViewModelTests.swift in Sources */,
 				73E9DA602C7E60B800601C66 /* NSManagedObjectExtension.swift in Sources */,
 				733473872C8DEC950050C656 /* DistributionChartViewModelTests.swift in Sources */,
 			);

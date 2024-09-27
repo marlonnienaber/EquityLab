@@ -4,7 +4,7 @@ import XCTest
 final class DistributionChartViewModelTests: XCTestCase {
     private var testingCoreDataStack: TestingCoreDataStack!
     private var testingSnapshotRepository: SnapshotRepository!
-    private let testDataProvider = TestDataProvider()
+    private let testDataProvider = DistributionChartViewModelTestDataProvider()
     
     override func setUpWithError() throws {
         testingCoreDataStack = TestingCoreDataStack()

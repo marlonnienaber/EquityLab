@@ -3,7 +3,7 @@ import CoreData
 
 struct SnapshotForm: View {
     @State var viewModel: SnapshotFormViewModel
-    @Binding var snapshotLedgerActiveSheet: SnapshotLedger.SnapshotSheetType?
+    @Binding var snapshotLedgerActiveSheet: SnapshotSheetType?
     
     var body: some View {
         NavigationView {
