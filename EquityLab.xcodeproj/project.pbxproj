@@ -66,6 +66,7 @@
 		73823CE12C68023E0049D03C /* BalanceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73823CE02C68023E0049D03C /* BalanceView.swift */; };
 		73980F472AA57A4500CA4849 /* CoreDataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 73980F452AA57A4500CA4849 /* CoreDataModel.xcdatamodeld */; };
 		73A428092C7E3B1F0086181F /* DateParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73A428082C7E3B1F0086181F /* DateParser.swift */; };
+		73B811982CA6CF4B003B1973 /* SnapshotAnalyzer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73B811972CA6CF44003B1973 /* SnapshotAnalyzer.swift */; };
 		73D2C5902C5FBB970019A800 /* ChangeChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73D2C58F2C5FBB970019A800 /* ChangeChart.swift */; };
 		73D2C5922C5FBE3B0019A800 /* LocalizedLongDateFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73D2C5912C5FBE3B0019A800 /* LocalizedLongDateFormatter.swift */; };
 		73E9DA602C7E60B800601C66 /* NSManagedObjectExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73E9DA5F2C7E60B800601C66 /* NSManagedObjectExtension.swift */; };
@@ -143,6 +144,7 @@
 		73823CE02C68023E0049D03C /* BalanceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BalanceView.swift; sourceTree = "<group>"; };
 		73980F462AA57A4500CA4849 /* CoreDataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = CoreDataModel.xcdatamodel; sourceTree = "<group>"; };
 		73A428082C7E3B1F0086181F /* DateParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateParser.swift; sourceTree = "<group>"; };
+		73B811972CA6CF44003B1973 /* SnapshotAnalyzer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapshotAnalyzer.swift; sourceTree = "<group>"; };
 		73D2C58F2C5FBB970019A800 /* ChangeChart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangeChart.swift; sourceTree = "<group>"; };
 		73D2C5912C5FBE3B0019A800 /* LocalizedLongDateFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalizedLongDateFormatter.swift; sourceTree = "<group>"; };
 		73E9DA5F2C7E60B800601C66 /* NSManagedObjectExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSManagedObjectExtension.swift; sourceTree = "<group>"; };
@@ -276,6 +278,7 @@
 		7342ED752C447BA300BA20A4 /* Utility */ = {
 			isa = PBXGroup;
 			children = (
+				73B811962CA6CF3A003B1973 /* SnapshotAnalyzer */,
 				7363D3D72C86415900EC9F16 /* Logging */,
 				7342ED802C447D2900BA20A4 /* CircularProgressView */,
 				7342ED792C447C9300BA20A4 /* ObservingFetches */,
@@ -452,6 +455,14 @@
 			path = Utility;
 			sourceTree = "<group>";
 		};
+		73B811962CA6CF3A003B1973 /* SnapshotAnalyzer */ = {
+			isa = PBXGroup;
+			children = (
+				73B811972CA6CF44003B1973 /* SnapshotAnalyzer.swift */,
+			);
+			path = SnapshotAnalyzer;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -619,6 +630,7 @@
 				7342ED522C44789A00BA20A4 /* Liability+CoreDataProperties.swift in Sources */,
 				7342ED7F2C447D0200BA20A4 /* RelationshipObserver.swift in Sources */,
 				7342ED892C447E7000BA20A4 /* LocalizedShortDateFormatter.swift in Sources */,
+				73B811982CA6CF4B003B1973 /* SnapshotAnalyzer.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

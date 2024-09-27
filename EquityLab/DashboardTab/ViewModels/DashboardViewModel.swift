@@ -7,13 +7,14 @@ class DashboardViewModel {
     @ObservationIgnored private static let logger = Logger(subsystem: .dashboardTab, component: .dashboardViewModel)
     
     @ObservationIgnored private var repository: SnapshotRepository
+    @ObservationIgnored private let snapshotAnalyzer: SnapshotAnalyzer
     @ObservationIgnored private var equityValueCache = [Snapshot:Double]()
     @ObservationIgnored private var assetValueCache = [Snapshot:Double]()
     @ObservationIgnored private var liabilityValueCache = [Snapshot:Double]()
     private var snapshots = [Snapshot]() {
         didSet {
             for snapshot in snapshots {
-                equityValueCache[snapshot] = calculateEquityValue(for: snapshot)
+                equityValueCache[snapshot] = snapshotAnalyzer.calculateEquityValue(for: snapshot)
             }
         }
     }
@@ -61,32 +62,13 @@ class DashboardViewModel {
     init(repository: SnapshotRepository = SnapshotRepository.production) {
         Self.logger.debug("DashboardViewModel")
         self.repository = repository
+        self.snapshotAnalyzer = SnapshotAnalyzer(repository: repository)
         self.repository.add(observer: self)
         self.snapshots = repository.fetchSnapshots()
         for snapshot in snapshots {
-            equityValueCache[snapshot] = calculateEquityValue(for: snapshot)
+            equityValueCache[snapshot] = snapshotAnalyzer.calculateEquityValue(for: snapshot)
         }
         self.selectedSnapshot = snapshots.last
-    }
-    
-    
-    private func calculateEquityValue(for snapshot: Snapshot) -> Double {
-        Self.logger.debug("calculateEquityValue")
-        let totalLiabilityValue = calculateLiabilityValue(for: snapshot)
-        let totalAssetValue = calculateAssetValue(for: snapshot)
-        return totalAssetValue - totalLiabilityValue
-    }
-    
-    private func calculateAssetValue(for snapshot: Snapshot) -> Double {
-        Self.logger.debug("calculateAssetValue")
-        let assetPositions = repository.fetchAssetPositions(of: snapshot)
-        return assetPositions.map{ $0.value }.reduce(0, +)
-    }
-    
-    private func calculateLiabilityValue(for snapshot: Snapshot) -> Double {
-        Self.logger.debug("calculateLiabilityValue")
-        let liabilityPositions = repository.fetchLiabilityPositions(of: snapshot)
-        return liabilityPositions.map{ $0.value }.reduce(0, +)
     }
     
     
@@ -98,7 +80,7 @@ class DashboardViewModel {
         if let assetValue = assetValueCache[snapshot] {
             return assetValue
         } else {
-            let assetValue = calculateAssetValue(for: snapshot)
+            let assetValue = snapshotAnalyzer.calculateAssetValue(for: snapshot)
             assetValueCache[snapshot] = assetValue
             return assetValue
         }
@@ -108,7 +90,7 @@ class DashboardViewModel {
         if let liabilityValue = liabilityValueCache[snapshot] {
             return liabilityValue
         } else {
-            let liabilityValue = calculateLiabilityValue(for: snapshot)
+            let liabilityValue = snapshotAnalyzer.calculateLiabilityValue(for: snapshot)
             liabilityValueCache[snapshot] = liabilityValue
             return liabilityValue
         }
@@ -136,11 +118,11 @@ class DashboardViewModel {
 }
 
 extension DashboardViewModel: SnapshotObserver {
-    func updateSnapshots(with newSnapshots: [Snapshot]) {
+    func notifyAfterSnapshotUpdate(_ fetchSnapshots: (SnapshotSortingOrder) -> [Snapshot]) {
         Self.logger.debug("updateSnapshots")
-        self.snapshots = newSnapshots
+        self.snapshots = fetchSnapshots(.ascending)
         guard let selectedSnapshot else { return }
-        self.selectedSnapshot = newSnapshots.first(where: { $0 == selectedSnapshot })
+        self.selectedSnapshot = snapshots.first(where: { $0 == selectedSnapshot })
     }
 }
 

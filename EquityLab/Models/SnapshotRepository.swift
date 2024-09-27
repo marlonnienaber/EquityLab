@@ -20,9 +20,13 @@ class SnapshotRepository: NSObject {
         observers.append(WeakSnapshotObserver(observer: observer))
     }
     
-    func fetchSnapshots() -> [Snapshot] {
+    func fetchSnapshots(sortingOrder: SnapshotSortingOrder = .ascending) -> [Snapshot] {
         try? fetchedResultsController.performFetch()
-        return fetchedResultsController.fetchedObjects as? [Snapshot] ?? []
+        let snapshots = fetchedResultsController.fetchedObjects as? [Snapshot] ?? []
+        switch sortingOrder {
+        case .ascending: return snapshots
+        case .descending: return snapshots.reversed()
+        }
     }
     
     func fetchAssetPositions(of snapshot: Snapshot) -> [AssetPosition] {
@@ -32,17 +36,23 @@ class SnapshotRepository: NSObject {
     func fetchLiabilityPositions(of snapshot: Snapshot) -> [LiabilityPosition] {
         (try? fetchedResultsController.managedObjectContext.fetch(snapshot.getLiabilityPositionRequest())) ?? []
     }
+    
+    func delete(snapshot: Snapshot) {
+        let context = fetchedResultsController.managedObjectContext
+        context.delete(snapshot)
+        try? context.save()
+    }
 }
 
 extension SnapshotRepository: NSFetchedResultsControllerDelegate {
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         observers = observers.filter { $0.observer != nil }
-        observers.forEach{ $0.observer?.updateSnapshots(with: fetchSnapshots())}
+        observers.forEach{ $0.observer?.notifyAfterSnapshotUpdate(fetchSnapshots)}
     }
 }
 
 protocol SnapshotObserver: AnyObject {
-    func updateSnapshots(with newSnapshots: [Snapshot])
+    func notifyAfterSnapshotUpdate(_ fetchSnapshots: (SnapshotSortingOrder) -> [Snapshot])
 }
 
 class WeakSnapshotObserver {
@@ -50,4 +60,9 @@ class WeakSnapshotObserver {
     init(observer: SnapshotObserver?) {
         self.observer = observer
     }
+}
+
+enum SnapshotSortingOrder {
+    case ascending
+    case descending
 }

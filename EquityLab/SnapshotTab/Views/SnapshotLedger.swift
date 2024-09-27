@@ -64,7 +64,7 @@ struct SnapshotLedger: View {
     
     @ViewBuilder 
     func SnapshotListCell(for snapshot: Snapshot) -> some View {
-        if let equityStringRepresentation = LocalizedCurrencyFormatter.shared.string(from: viewModel.equityValue(of: snapshot)),
+        if let equityStringRepresentation = LocalizedCurrencyFormatter.shared.string(from: viewModel.getEquityValue(of: snapshot)),
            let date = snapshot.date {
             Button {
                 activeSheet = .updateSheet(snapshot: snapshot)
