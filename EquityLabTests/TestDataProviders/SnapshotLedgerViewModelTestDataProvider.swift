@@ -34,11 +34,160 @@ struct SnapshotLedgerViewModelTestDataProvider {
         let date_23_04_1970 = DateParser.shared.date(from: "1970-04-23T00:00:00Z")!
         let date_21_10_1966 = DateParser.shared.date(from: "1966-10-21T00:00:00Z")!
         let date_31_01_2004 = DateParser.shared.date(from: "2004-01-31T00:00:00Z")!
+        let _ = DataFactory.createSnapshotWithoutPositions(for: date_31_01_2004, in: context)
         let _ = DataFactory.createSnapshotWithoutPositions(for: date_23_04_1970, in: context)
         let _ = DataFactory.createSnapshotWithoutPositions(for: date_21_10_1966, in: context)
-        let _ = DataFactory.createSnapshotWithoutPositions(for: date_31_01_2004, in: context)
         return []
     }
+    
+    
+    
+    func createAndPersistTestObjects_deleteSnapshotsInYear_1(using context: NSManagedObjectContext) -> (Int,IndexSet,[Snapshot]) {
+        let date_23_04_1970 = DateParser.shared.date(from: "1970-04-23T00:00:00Z")!
+        let date_21_10_1966 = DateParser.shared.date(from: "1966-10-21T00:00:00Z")!
+        let date_26_04_2002 = DateParser.shared.date(from: "2002-04-26T00:00:00Z")!
+        let date_01_01_2002 = DateParser.shared.date(from: "2002-01-01T00:00:00Z")!
+        let date_31_12_2002 = DateParser.shared.date(from: "2002-12-31T00:00:00Z")!
+        let date_31_01_2004 = DateParser.shared.date(from: "2004-01-31T00:00:00Z")!
+        let snapshot1 = DataFactory.createSnapshotWithoutPositions(for: date_31_01_2004, in: context)
+        let _ = DataFactory.createSnapshotWithoutPositions(for: date_31_12_2002, in: context)
+        let _ = DataFactory.createSnapshotWithoutPositions(for: date_26_04_2002, in: context)
+        let snapshot4 = DataFactory.createSnapshotWithoutPositions(for: date_01_01_2002, in: context)
+        let snapshot5 = DataFactory.createSnapshotWithoutPositions(for: date_23_04_1970, in: context)
+        let snapshot6 = DataFactory.createSnapshotWithoutPositions(for: date_21_10_1966, in: context)
+        return (2002,IndexSet(0...1),[snapshot1,snapshot4,snapshot5,snapshot6])
+    }
+    
+    func createAndPersistTestObjects_deleteSnapshotsInYear_2(using context: NSManagedObjectContext) -> (Int,IndexSet,[Snapshot]) {
+        let date_23_04_1970 = DateParser.shared.date(from: "1970-04-23T00:00:00Z")!
+        let date_21_10_1966 = DateParser.shared.date(from: "1966-10-21T00:00:00Z")!
+        let date_26_04_2002 = DateParser.shared.date(from: "2002-04-26T00:00:00Z")!
+        let date_01_01_2002 = DateParser.shared.date(from: "2002-01-01T00:00:00Z")!
+        let date_31_12_2002 = DateParser.shared.date(from: "2002-12-31T00:00:00Z")!
+        let date_31_01_2004 = DateParser.shared.date(from: "2004-01-31T00:00:00Z")!
+        let snapshot1 = DataFactory.createSnapshotWithoutPositions(for: date_31_01_2004, in: context)
+        let snapshot2 = DataFactory.createSnapshotWithoutPositions(for: date_31_12_2002, in: context)
+        let snapshot3 = DataFactory.createSnapshotWithoutPositions(for: date_26_04_2002, in: context)
+        let snapshot4 = DataFactory.createSnapshotWithoutPositions(for: date_01_01_2002, in: context)
+        let snapshot5 = DataFactory.createSnapshotWithoutPositions(for: date_23_04_1970, in: context)
+        let snapshot6 = DataFactory.createSnapshotWithoutPositions(for: date_21_10_1966, in: context)
+        return (2002,IndexSet(),[snapshot1,snapshot2,snapshot3,snapshot4,snapshot5,snapshot6])
+    }
+    
+    func createAndPersistTestObjects_deleteSnapshotsInYear_3(using context: NSManagedObjectContext) -> (Int,IndexSet,[Snapshot]) {
+        let date_23_04_1970 = DateParser.shared.date(from: "1970-04-23T00:00:00Z")!
+        let date_21_10_1966 = DateParser.shared.date(from: "1966-10-21T00:00:00Z")!
+        let date_26_04_2002 = DateParser.shared.date(from: "2002-04-26T00:00:00Z")!
+        let date_01_01_2002 = DateParser.shared.date(from: "2002-01-01T00:00:00Z")!
+        let date_31_12_2002 = DateParser.shared.date(from: "2002-12-31T00:00:00Z")!
+        let date_31_01_2004 = DateParser.shared.date(from: "2004-01-31T00:00:00Z")!
+        let snapshot1 = DataFactory.createSnapshotWithoutPositions(for: date_31_01_2004, in: context)
+        let _ = DataFactory.createSnapshotWithoutPositions(for: date_31_12_2002, in: context)
+        let _ = DataFactory.createSnapshotWithoutPositions(for: date_26_04_2002, in: context)
+        let _ = DataFactory.createSnapshotWithoutPositions(for: date_01_01_2002, in: context)
+        let snapshot5 = DataFactory.createSnapshotWithoutPositions(for: date_23_04_1970, in: context)
+        let snapshot6 = DataFactory.createSnapshotWithoutPositions(for: date_21_10_1966, in: context)
+        return (2002,IndexSet(0...2),[snapshot1,snapshot5,snapshot6])
+    }
+    
+    
+    
+    func createAndPersistTestObjects_deleteSnapshotsWithIndices_1(using context: NSManagedObjectContext) -> (IndexSet,[Snapshot]) {
+        let date_23_04_1970 = DateParser.shared.date(from: "1970-04-23T00:00:00Z")!
+        let date_21_10_1966 = DateParser.shared.date(from: "1966-10-21T00:00:00Z")!
+        let date_26_04_2002 = DateParser.shared.date(from: "2002-04-26T00:00:00Z")!
+        let date_01_01_2002 = DateParser.shared.date(from: "2002-01-01T00:00:00Z")!
+        let date_31_12_2002 = DateParser.shared.date(from: "2002-12-31T00:00:00Z")!
+        let date_31_01_2004 = DateParser.shared.date(from: "2004-01-31T00:00:00Z")!
+        let snapshot1 = DataFactory.createSnapshotWithoutPositions(for: date_31_01_2004, in: context)
+        let snapshot2 = DataFactory.createSnapshotWithoutPositions(for: date_31_12_2002, in: context)
+        let snapshot3 = DataFactory.createSnapshotWithoutPositions(for: date_26_04_2002, in: context)
+        let snapshot4 = DataFactory.createSnapshotWithoutPositions(for: date_01_01_2002, in: context)
+        let snapshot5 = DataFactory.createSnapshotWithoutPositions(for: date_23_04_1970, in: context)
+        let snapshot6 = DataFactory.createSnapshotWithoutPositions(for: date_21_10_1966, in: context)
+        return (IndexSet(),[snapshot1,snapshot2,snapshot3,snapshot4,snapshot5,snapshot6])
+    }
+    
+    func createAndPersistTestObjects_deleteSnapshotsWithIndices_2(using context: NSManagedObjectContext) -> (IndexSet,[Snapshot]) {
+        let date_23_04_1970 = DateParser.shared.date(from: "1970-04-23T00:00:00Z")!
+        let date_21_10_1966 = DateParser.shared.date(from: "1966-10-21T00:00:00Z")!
+        let date_26_04_2002 = DateParser.shared.date(from: "2002-04-26T00:00:00Z")!
+        let date_01_01_2002 = DateParser.shared.date(from: "2002-01-01T00:00:00Z")!
+        let date_31_12_2002 = DateParser.shared.date(from: "2002-12-31T00:00:00Z")!
+        let date_31_01_2004 = DateParser.shared.date(from: "2004-01-31T00:00:00Z")!
+        let _ = DataFactory.createSnapshotWithoutPositions(for: date_31_01_2004, in: context)
+        let snapshot2 = DataFactory.createSnapshotWithoutPositions(for: date_31_12_2002, in: context)
+        let snapshot3 = DataFactory.createSnapshotWithoutPositions(for: date_26_04_2002, in: context)
+        let snapshot4 = DataFactory.createSnapshotWithoutPositions(for: date_01_01_2002, in: context)
+        let snapshot5 = DataFactory.createSnapshotWithoutPositions(for: date_23_04_1970, in: context)
+        let snapshot6 = DataFactory.createSnapshotWithoutPositions(for: date_21_10_1966, in: context)
+        return (IndexSet(integer: 0),[snapshot2,snapshot3,snapshot4,snapshot5,snapshot6])
+    }
+    
+    func createAndPersistTestObjects_deleteSnapshotsWithIndices_3(using context: NSManagedObjectContext) -> (IndexSet,[Snapshot]) {
+        let date_23_04_1970 = DateParser.shared.date(from: "1970-04-23T00:00:00Z")!
+        let date_21_10_1966 = DateParser.shared.date(from: "1966-10-21T00:00:00Z")!
+        let date_26_04_2002 = DateParser.shared.date(from: "2002-04-26T00:00:00Z")!
+        let date_01_01_2002 = DateParser.shared.date(from: "2002-01-01T00:00:00Z")!
+        let date_31_12_2002 = DateParser.shared.date(from: "2002-12-31T00:00:00Z")!
+        let date_31_01_2004 = DateParser.shared.date(from: "2004-01-31T00:00:00Z")!
+        let snapshot1 = DataFactory.createSnapshotWithoutPositions(for: date_31_01_2004, in: context)
+        let snapshot2 = DataFactory.createSnapshotWithoutPositions(for: date_31_12_2002, in: context)
+        let snapshot3 = DataFactory.createSnapshotWithoutPositions(for: date_26_04_2002, in: context)
+        let snapshot4 = DataFactory.createSnapshotWithoutPositions(for: date_01_01_2002, in: context)
+        let snapshot5 = DataFactory.createSnapshotWithoutPositions(for: date_23_04_1970, in: context)
+        let _ = DataFactory.createSnapshotWithoutPositions(for: date_21_10_1966, in: context)
+        return (IndexSet(integer: 5),[snapshot1,snapshot2,snapshot3,snapshot4,snapshot5])
+    }
+    
+    func createAndPersistTestObjects_deleteSnapshotsWithIndices_4(using context: NSManagedObjectContext) -> (IndexSet,[Snapshot]) {
+        let date_23_04_1970 = DateParser.shared.date(from: "1970-04-23T00:00:00Z")!
+        let date_21_10_1966 = DateParser.shared.date(from: "1966-10-21T00:00:00Z")!
+        let date_26_04_2002 = DateParser.shared.date(from: "2002-04-26T00:00:00Z")!
+        let date_01_01_2002 = DateParser.shared.date(from: "2002-01-01T00:00:00Z")!
+        let date_31_12_2002 = DateParser.shared.date(from: "2002-12-31T00:00:00Z")!
+        let date_31_01_2004 = DateParser.shared.date(from: "2004-01-31T00:00:00Z")!
+        let snapshot1 = DataFactory.createSnapshotWithoutPositions(for: date_31_01_2004, in: context)
+        let snapshot2 = DataFactory.createSnapshotWithoutPositions(for: date_31_12_2002, in: context)
+        let snapshot3 = DataFactory.createSnapshotWithoutPositions(for: date_26_04_2002, in: context)
+        let _ = DataFactory.createSnapshotWithoutPositions(for: date_01_01_2002, in: context)
+        let snapshot5 = DataFactory.createSnapshotWithoutPositions(for: date_23_04_1970, in: context)
+        let snapshot6 = DataFactory.createSnapshotWithoutPositions(for: date_21_10_1966, in: context)
+        return (IndexSet(integer: 3),[snapshot1,snapshot2,snapshot3,snapshot5,snapshot6])
+    }
+    
+    func createAndPersistTestObjects_deleteSnapshotsWithIndices_5(using context: NSManagedObjectContext) -> (IndexSet,[Snapshot]) {
+        let date_23_04_1970 = DateParser.shared.date(from: "1970-04-23T00:00:00Z")!
+        let date_21_10_1966 = DateParser.shared.date(from: "1966-10-21T00:00:00Z")!
+        let date_26_04_2002 = DateParser.shared.date(from: "2002-04-26T00:00:00Z")!
+        let date_01_01_2002 = DateParser.shared.date(from: "2002-01-01T00:00:00Z")!
+        let date_31_12_2002 = DateParser.shared.date(from: "2002-12-31T00:00:00Z")!
+        let date_31_01_2004 = DateParser.shared.date(from: "2004-01-31T00:00:00Z")!
+        let snapshot1 = DataFactory.createSnapshotWithoutPositions(for: date_31_01_2004, in: context)
+        let _ = DataFactory.createSnapshotWithoutPositions(for: date_31_12_2002, in: context)
+        let _ = DataFactory.createSnapshotWithoutPositions(for: date_26_04_2002, in: context)
+        let snapshot4 = DataFactory.createSnapshotWithoutPositions(for: date_01_01_2002, in: context)
+        let _ = DataFactory.createSnapshotWithoutPositions(for: date_23_04_1970, in: context)
+        let snapshot6 = DataFactory.createSnapshotWithoutPositions(for: date_21_10_1966, in: context)
+        return (IndexSet([1,2,4]),[snapshot1,snapshot4,snapshot6])
+    }
+    
+    func createAndPersistTestObjects_deleteSnapshotsWithIndices_6(using context: NSManagedObjectContext) -> (IndexSet,[Snapshot]) {
+        let date_23_04_1970 = DateParser.shared.date(from: "1970-04-23T00:00:00Z")!
+        let date_21_10_1966 = DateParser.shared.date(from: "1966-10-21T00:00:00Z")!
+        let date_26_04_2002 = DateParser.shared.date(from: "2002-04-26T00:00:00Z")!
+        let date_01_01_2002 = DateParser.shared.date(from: "2002-01-01T00:00:00Z")!
+        let date_31_12_2002 = DateParser.shared.date(from: "2002-12-31T00:00:00Z")!
+        let date_31_01_2004 = DateParser.shared.date(from: "2004-01-31T00:00:00Z")!
+        let _ = DataFactory.createSnapshotWithoutPositions(for: date_31_01_2004, in: context)
+        let _ = DataFactory.createSnapshotWithoutPositions(for: date_31_12_2002, in: context)
+        let _ = DataFactory.createSnapshotWithoutPositions(for: date_26_04_2002, in: context)
+        let _ = DataFactory.createSnapshotWithoutPositions(for: date_01_01_2002, in: context)
+        let _ = DataFactory.createSnapshotWithoutPositions(for: date_23_04_1970, in: context)
+        let _ = DataFactory.createSnapshotWithoutPositions(for: date_21_10_1966, in: context)
+        return (IndexSet(0...5),[])
+    }
+    
     
     
     func createAndPersistTestObjects_getEquityValue_1(using context: NSManagedObjectContext) -> Snapshot {

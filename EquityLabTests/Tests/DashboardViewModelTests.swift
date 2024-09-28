@@ -333,22 +333,22 @@ final class DashboardViewModelTests: XCTestCase {
         sut.selectedTimeHorizon = .threeMonths
         var expectedSnapshots = threeMonthSnapshots
         var actualSnapshots = sut.filteredSnapshots
-        XCTAssertEqual(Set(expectedSnapshots), Set(actualSnapshots))
+        XCTAssertTrue(expectedSnapshots ≡ actualSnapshots)
         
         sut.selectedTimeHorizon = .sixMonths
         expectedSnapshots = threeMonthSnapshots + sixMonthSnapshots
         actualSnapshots = sut.filteredSnapshots
-        XCTAssertEqual(Set(expectedSnapshots), Set(actualSnapshots))
+        XCTAssertTrue(expectedSnapshots ≡ actualSnapshots)
         
         sut.selectedTimeHorizon = .eighteenMonths
         expectedSnapshots = threeMonthSnapshots + sixMonthSnapshots + eighteenMonthSnapshots
         actualSnapshots = sut.filteredSnapshots
-        XCTAssertEqual(Set(expectedSnapshots), Set(actualSnapshots))
+        XCTAssertTrue(expectedSnapshots ≡ actualSnapshots)
         
         sut.selectedTimeHorizon = .all
         expectedSnapshots = threeMonthSnapshots + sixMonthSnapshots + eighteenMonthSnapshots + allScopeSnapshots
         actualSnapshots = sut.filteredSnapshots
-        XCTAssertEqual(Set(expectedSnapshots), Set(actualSnapshots))
+        XCTAssertTrue(expectedSnapshots ≡ actualSnapshots)
     }
     
     /// no snapshots persisted

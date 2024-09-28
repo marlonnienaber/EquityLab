@@ -60,6 +60,7 @@
 		7363D3D62C85F85200EC9F16 /* SnapshotRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7363D3D52C85F85200EC9F16 /* SnapshotRepository.swift */; };
 		7363D3D92C86416600EC9F16 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7363D3D82C86416600EC9F16 /* Logger.swift */; };
 		7363DDF22CA758D7009F3412 /* DashboardViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7363DDF12CA758D1009F3412 /* DashboardViewModelTests.swift */; };
+		7363DDF42CA81A53009F3412 /* ArrayEquivalence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7363DDF32CA81A48009F3412 /* ArrayEquivalence.swift */; };
 		73823CDD2C6154930049D03C /* DistributionChartViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73823CDC2C6154930049D03C /* DistributionChartViewModel.swift */; };
 		73823CDF2C62B2EE0049D03C /* ChangeChartViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73823CDE2C62B2EE0049D03C /* ChangeChartViewModel.swift */; };
 		73823CE12C68023E0049D03C /* BalanceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73823CE02C68023E0049D03C /* BalanceView.swift */; };
@@ -142,6 +143,7 @@
 		7363D3D52C85F85200EC9F16 /* SnapshotRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapshotRepository.swift; sourceTree = "<group>"; };
 		7363D3D82C86416600EC9F16 /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 		7363DDF12CA758D1009F3412 /* DashboardViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardViewModelTests.swift; sourceTree = "<group>"; };
+		7363DDF32CA81A48009F3412 /* ArrayEquivalence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArrayEquivalence.swift; sourceTree = "<group>"; };
 		73823CDC2C6154930049D03C /* DistributionChartViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DistributionChartViewModel.swift; sourceTree = "<group>"; };
 		73823CDE2C62B2EE0049D03C /* ChangeChartViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangeChartViewModel.swift; sourceTree = "<group>"; };
 		73823CE02C68023E0049D03C /* BalanceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BalanceView.swift; sourceTree = "<group>"; };
@@ -456,6 +458,7 @@
 		73A428072C7E3B090086181F /* Utility */ = {
 			isa = PBXGroup;
 			children = (
+				7363DDF32CA81A48009F3412 /* ArrayEquivalence.swift */,
 				73B8119B2CA72350003B1973 /* DataFactory.swift */,
 				73A428082C7E3B1F0086181F /* DateParser.swift */,
 				73E9DA5F2C7E60B800601C66 /* NSManagedObjectExtension.swift */,
@@ -596,6 +599,7 @@
 				73B8119C2CA72359003B1973 /* DataFactory.swift in Sources */,
 				7363DDF22CA758D7009F3412 /* DashboardViewModelTests.swift in Sources */,
 				73B811A42CA72668003B1973 /* SnapshotLedgerViewModelTestDataProvider.swift in Sources */,
+				7363DDF42CA81A53009F3412 /* ArrayEquivalence.swift in Sources */,
 				73B811A22CA7264E003B1973 /* DashboardViewModelTestDataProvider.swift in Sources */,
 				73B8119A2CA6D3F4003B1973 /* SnapshotLedgerViewModelTests.swift in Sources */,
 				73E9DA602C7E60B800601C66 /* NSManagedObjectExtension.swift in Sources */,
