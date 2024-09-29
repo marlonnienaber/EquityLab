@@ -23,8 +23,8 @@ struct SnapshotLedger: View {
         }
         .sheet(item: $viewModel.activeSheet) { activeSheet in
             switch activeSheet {
-            case .addSheet: SnapshotForm(viewModel: SnapshotFormViewModel(), snapshotLedgerActiveSheet: $viewModel.activeSheet)
-            case .updateSheet(let shot): SnapshotForm(viewModel: SnapshotFormViewModel(snapshot: shot), snapshotLedgerActiveSheet: $viewModel.activeSheet)
+            case .addSheet: SnapshotForm(viewModel: SnapshotFormViewModel{ viewModel.activeSheet = nil })
+            case .updateSheet(let shot): SnapshotForm(viewModel: SnapshotFormViewModel(snapshot: shot) { viewModel.activeSheet = nil })
             }
         }
     }
