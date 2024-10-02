@@ -38,7 +38,7 @@ struct AssetLedger: View {
                     viewModel.createAssetPool()
                 }
             }
-            .alert("Edit \(viewModel.pool?.name ?? "")", isPresented: $viewModel.showEditPoolAlert) {
+            .alert("Edit \(viewModel.alertPool?.name ?? "")", isPresented: $viewModel.showEditPoolAlert) {
                 TextField("Value", text: $viewModel.poolName)
                 Button("Cancel", role: .cancel) {
                     viewModel.showEditPoolAlert = false
@@ -53,8 +53,8 @@ struct AssetLedger: View {
         }
         .sheet(item: $viewModel.activeSheet) { activeSheet in
             switch activeSheet {
-            case .addSheetAsset(let pool): AssetForm(viewModel: AssetFormViewModel(pool: pool, allAssets: viewModel.allAssets()), assetLedgerActiveSheet: $viewModel.activeSheet)
-            case .updateSheetAsset(let asset): AssetForm(viewModel: AssetFormViewModel(asset: asset, allAssets: viewModel.allAssets()), assetLedgerActiveSheet: $viewModel.activeSheet)
+            case .addSheetAsset(let pool): AssetForm(viewModel: AssetFormViewModel(pool: pool, allAssets: viewModel.assets()), assetLedgerActiveSheet: $viewModel.activeSheet)
+            case .updateSheetAsset(let asset): AssetForm(viewModel: AssetFormViewModel(asset: asset, allAssets: viewModel.assets()), assetLedgerActiveSheet: $viewModel.activeSheet)
             }
         }
     }
@@ -104,7 +104,7 @@ struct AssetLedger: View {
             .buttonStyle(BorderlessButtonStyle())
             Spacer()
             Button {
-                viewModel.pool = pool
+                viewModel.alertPool = pool
                 viewModel.poolName = pool.name
                 viewModel.showEditPoolAlert = true
             } label: {

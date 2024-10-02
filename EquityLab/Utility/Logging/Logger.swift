@@ -8,11 +8,13 @@ extension Logger {
     enum Subsystem: String {
         case dashboardTab = "dashboard tab"
         case snapshotTab = "snapshot tab"
+        case assetTab = "asset tab"
     }
     
     enum Component: String {
         case dashboardViewModel = "DashboardViewModel"
         case distributionChartViewModel = "DistributionChartViewModel"
         case snapshotLedgerViewModel = "SnapshotLedgerViewModel"
+        case assetLedgerViewModel = "AssetLedgerViewModel"
     }
 }

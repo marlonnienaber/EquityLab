@@ -1,5 +1,6 @@
 import CoreData
 
+/* TODO: create Protocol 'ObservableRepository' which generalizes the observer logic (currently there is duplicate code here and in AssetRepository */
 class SnapshotRepository: NSObject {
     public static let production = SnapshotRepository(context: ProductionCoreDataStack.shared.context)
     private let fetchedResultsController: ObservingFetchedResultsController<Snapshot>
@@ -100,13 +101,13 @@ class SnapshotRepository: NSObject {
 extension SnapshotRepository: NSFetchedResultsControllerDelegate {
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         observers = observers.filter { $0.observer != nil }
-        observers.forEach{ $0.observer?.notifyAfterSnapshotUpdate(snapshotRetriever: fetchSnapshots)}
+        observers.forEach{ $0.observer?.notifyAfterSnapshotUpdate()}
     }
 }
 
 protocol SnapshotObserver: AnyObject {
     /* TODO: will this create a retain cycle or other memory problems */
-    func notifyAfterSnapshotUpdate(snapshotRetriever fetchSnapshots: (SnapshotSortingOrder) -> [Snapshot])
+    func notifyAfterSnapshotUpdate()
 }
 
 class WeakSnapshotObserver {

@@ -126,7 +126,7 @@ class DistributionChartViewModel {
 }
 
 extension DistributionChartViewModel: SnapshotObserver {
-    func notifyAfterSnapshotUpdate(snapshotRetriever fetchSnapshots: (SnapshotSortingOrder) -> [Snapshot]) {
+    func notifyAfterSnapshotUpdate() {
         Self.logger.debug("notifyAfterSnapshotUpdate")
         selectedCategory = distributionCategories.first
     }

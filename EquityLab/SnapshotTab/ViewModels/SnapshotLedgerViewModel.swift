@@ -58,11 +58,11 @@ class SnapshotLedgerViewModel {
 }
 
 extension SnapshotLedgerViewModel: SnapshotObserver {
-    func notifyAfterSnapshotUpdate(snapshotRetriever fetchSnapshots: (SnapshotSortingOrder) -> [Snapshot]) {
+    func notifyAfterSnapshotUpdate() {
         Self.logger.debug("notifyAfterSnapshotUpdate")
         yearToSnapshotDictionary = [Int:[Snapshot]]()
         years = [Int]()
-        self.snapshots = fetchSnapshots(.descending)
+        self.snapshots = repository.fetchSnapshots(sortingOrder: .descending)
         for snapshot in snapshots {
             equityValueCache[snapshot] = snapshotAnalyzer.calculateEquityValue(for: snapshot)
             if let year = snapshotAnalyzer.getYear(of: snapshot) {
