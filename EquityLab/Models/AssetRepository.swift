@@ -20,14 +20,14 @@ class AssetRepository: NSObject {
         observers.append(WeakAssetObserver(observer: observer))
     }
     
+    func fetchAssetPools() -> [AssetPool] {
+        try? fetchedResultsController.performFetch()
+        return fetchedResultsController.fetchedObjects as? [AssetPool] ?? []
+    }
+    
     func fetchAssets() -> [Asset] {
         let assetFetchRequest = NSFetchRequest<Asset>(entityName: String(describing: "Asset"))
         return (try? fetchedResultsController.managedObjectContext.fetch(assetFetchRequest)) ?? []
-    }
-    
-    func fetchAssetPools() -> [AssetPool] {
-        let assetPoolFetchRequest = NSFetchRequest<AssetPool>(entityName: String(describing: "AssetPool"))
-        return (try? fetchedResultsController.managedObjectContext.fetch(assetPoolFetchRequest)) ?? []
     }
     
     func fetchAssets(for pool: AssetPool) -> [Asset] {
@@ -62,7 +62,6 @@ class AssetRepository: NSObject {
 
 extension AssetRepository: NSFetchedResultsControllerDelegate {
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-        print("Asset Model changed")
         observers = observers.filter { $0.observer != nil }
         observers.forEach{ $0.observer?.notifyAfterAssetUpdate()}
     }
