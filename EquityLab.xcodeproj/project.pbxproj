@@ -60,7 +60,13 @@
 		7363D3D62C85F85200EC9F16 /* SnapshotRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7363D3D52C85F85200EC9F16 /* SnapshotRepository.swift */; };
 		7363D3D92C86416600EC9F16 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7363D3D82C86416600EC9F16 /* Logger.swift */; };
 		7363DDF22CA758D7009F3412 /* DashboardViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7363DDF12CA758D1009F3412 /* DashboardViewModelTests.swift */; };
-		7363DDF42CA81A53009F3412 /* ArrayEquivalence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7363DDF32CA81A48009F3412 /* ArrayEquivalence.swift */; };
+		7363DDF62CA89758009F3412 /* AssetRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7363DDF52CA89752009F3412 /* AssetRepository.swift */; };
+		7363DDF82CA89CDE009F3412 /* LiabilityRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7363DDF72CA89CD2009F3412 /* LiabilityRepository.swift */; };
+		7363DDFA2CA99562009F3412 /* SnapshotFormViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7363DDF92CA99557009F3412 /* SnapshotFormViewModelTests.swift */; };
+		7363DDFC2CA9F0B7009F3412 /* SnapshotFormViewModelTestDataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7363DDFB2CA9F0A9009F3412 /* SnapshotFormViewModelTestDataProvider.swift */; };
+		7363DDFE2CA9FD6C009F3412 /* Array+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7363DDFD2CA9FD67009F3412 /* Array+Extension.swift */; };
+		7363DE002CAB1C52009F3412 /* Date+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7363DDFF2CAB1C4B009F3412 /* Date+Extension.swift */; };
+		7363DE022CAC74AC009F3412 /* NSManagedObject+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7363DE012CAC74A4009F3412 /* NSManagedObject+Extension.swift */; };
 		73823CDD2C6154930049D03C /* DistributionChartViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73823CDC2C6154930049D03C /* DistributionChartViewModel.swift */; };
 		73823CDF2C62B2EE0049D03C /* ChangeChartViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73823CDE2C62B2EE0049D03C /* ChangeChartViewModel.swift */; };
 		73823CE12C68023E0049D03C /* BalanceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73823CE02C68023E0049D03C /* BalanceView.swift */; };
@@ -74,7 +80,6 @@
 		73B811A62CA7267B003B1973 /* DistributionChartViewModelTestDataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73B811A52CA72670003B1973 /* DistributionChartViewModelTestDataProvider.swift */; };
 		73D2C5902C5FBB970019A800 /* ChangeChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73D2C58F2C5FBB970019A800 /* ChangeChart.swift */; };
 		73D2C5922C5FBE3B0019A800 /* LocalizedLongDateFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73D2C5912C5FBE3B0019A800 /* LocalizedLongDateFormatter.swift */; };
-		73E9DA602C7E60B800601C66 /* NSManagedObjectExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73E9DA5F2C7E60B800601C66 /* NSManagedObjectExtension.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -143,7 +148,13 @@
 		7363D3D52C85F85200EC9F16 /* SnapshotRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapshotRepository.swift; sourceTree = "<group>"; };
 		7363D3D82C86416600EC9F16 /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 		7363DDF12CA758D1009F3412 /* DashboardViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardViewModelTests.swift; sourceTree = "<group>"; };
-		7363DDF32CA81A48009F3412 /* ArrayEquivalence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArrayEquivalence.swift; sourceTree = "<group>"; };
+		7363DDF52CA89752009F3412 /* AssetRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetRepository.swift; sourceTree = "<group>"; };
+		7363DDF72CA89CD2009F3412 /* LiabilityRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiabilityRepository.swift; sourceTree = "<group>"; };
+		7363DDF92CA99557009F3412 /* SnapshotFormViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapshotFormViewModelTests.swift; sourceTree = "<group>"; };
+		7363DDFB2CA9F0A9009F3412 /* SnapshotFormViewModelTestDataProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapshotFormViewModelTestDataProvider.swift; sourceTree = "<group>"; };
+		7363DDFD2CA9FD67009F3412 /* Array+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+Extension.swift"; sourceTree = "<group>"; };
+		7363DDFF2CAB1C4B009F3412 /* Date+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Extension.swift"; sourceTree = "<group>"; };
+		7363DE012CAC74A4009F3412 /* NSManagedObject+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSManagedObject+Extension.swift"; sourceTree = "<group>"; };
 		73823CDC2C6154930049D03C /* DistributionChartViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DistributionChartViewModel.swift; sourceTree = "<group>"; };
 		73823CDE2C62B2EE0049D03C /* ChangeChartViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangeChartViewModel.swift; sourceTree = "<group>"; };
 		73823CE02C68023E0049D03C /* BalanceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BalanceView.swift; sourceTree = "<group>"; };
@@ -157,7 +168,6 @@
 		73B811A52CA72670003B1973 /* DistributionChartViewModelTestDataProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DistributionChartViewModelTestDataProvider.swift; sourceTree = "<group>"; };
 		73D2C58F2C5FBB970019A800 /* ChangeChart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangeChart.swift; sourceTree = "<group>"; };
 		73D2C5912C5FBE3B0019A800 /* LocalizedLongDateFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalizedLongDateFormatter.swift; sourceTree = "<group>"; };
-		73E9DA5F2C7E60B800601C66 /* NSManagedObjectExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSManagedObjectExtension.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -240,6 +250,8 @@
 				7342ED732C447B7200BA20A4 /* ProductionCoreDataStack.swift */,
 				7314FD6E2C7510E100483835 /* TestingCoreDataStack.swift */,
 				7363D3D52C85F85200EC9F16 /* SnapshotRepository.swift */,
+				7363DDF52CA89752009F3412 /* AssetRepository.swift */,
+				7363DDF72CA89CD2009F3412 /* LiabilityRepository.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -288,6 +300,9 @@
 		7342ED752C447BA300BA20A4 /* Utility */ = {
 			isa = PBXGroup;
 			children = (
+				7363DE012CAC74A4009F3412 /* NSManagedObject+Extension.swift */,
+				7363DDFF2CAB1C4B009F3412 /* Date+Extension.swift */,
+				7363DDFD2CA9FD67009F3412 /* Array+Extension.swift */,
 				73B811962CA6CF3A003B1973 /* SnapshotAnalyzer */,
 				7363D3D72C86415900EC9F16 /* Logging */,
 				7342ED802C447D2900BA20A4 /* CircularProgressView */,
@@ -458,10 +473,8 @@
 		73A428072C7E3B090086181F /* Utility */ = {
 			isa = PBXGroup;
 			children = (
-				7363DDF32CA81A48009F3412 /* ArrayEquivalence.swift */,
 				73B8119B2CA72350003B1973 /* DataFactory.swift */,
 				73A428082C7E3B1F0086181F /* DateParser.swift */,
-				73E9DA5F2C7E60B800601C66 /* NSManagedObjectExtension.swift */,
 			);
 			path = Utility;
 			sourceTree = "<group>";
@@ -477,6 +490,7 @@
 		73B8119F2CA7261D003B1973 /* Tests */ = {
 			isa = PBXGroup;
 			children = (
+				7363DDF92CA99557009F3412 /* SnapshotFormViewModelTests.swift */,
 				7363DDF12CA758D1009F3412 /* DashboardViewModelTests.swift */,
 				733473862C8DEC950050C656 /* DistributionChartViewModelTests.swift */,
 				73B811992CA6D3E3003B1973 /* SnapshotLedgerViewModelTests.swift */,
@@ -487,6 +501,7 @@
 		73B811A02CA72624003B1973 /* TestDataProviders */ = {
 			isa = PBXGroup;
 			children = (
+				7363DDFB2CA9F0A9009F3412 /* SnapshotFormViewModelTestDataProvider.swift */,
 				73B811A12CA72644003B1973 /* DashboardViewModelTestDataProvider.swift */,
 				73B811A52CA72670003B1973 /* DistributionChartViewModelTestDataProvider.swift */,
 				73B811A32CA72655003B1973 /* SnapshotLedgerViewModelTestDataProvider.swift */,
@@ -597,12 +612,12 @@
 				73A428092C7E3B1F0086181F /* DateParser.swift in Sources */,
 				73B811A62CA7267B003B1973 /* DistributionChartViewModelTestDataProvider.swift in Sources */,
 				73B8119C2CA72359003B1973 /* DataFactory.swift in Sources */,
+				7363DDFA2CA99562009F3412 /* SnapshotFormViewModelTests.swift in Sources */,
 				7363DDF22CA758D7009F3412 /* DashboardViewModelTests.swift in Sources */,
 				73B811A42CA72668003B1973 /* SnapshotLedgerViewModelTestDataProvider.swift in Sources */,
-				7363DDF42CA81A53009F3412 /* ArrayEquivalence.swift in Sources */,
+				7363DDFC2CA9F0B7009F3412 /* SnapshotFormViewModelTestDataProvider.swift in Sources */,
 				73B811A22CA7264E003B1973 /* DashboardViewModelTestDataProvider.swift in Sources */,
 				73B8119A2CA6D3F4003B1973 /* SnapshotLedgerViewModelTests.swift in Sources */,
-				73E9DA602C7E60B800601C66 /* NSManagedObjectExtension.swift in Sources */,
 				733473872C8DEC950050C656 /* DistributionChartViewModelTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -616,10 +631,12 @@
 				7342EDBE2C4487DA00BA20A4 /* SnapshotForm.swift in Sources */,
 				7342ED7B2C447CAF00BA20A4 /* ObservingFetchRequest.swift in Sources */,
 				73823CDF2C62B2EE0049D03C /* ChangeChartViewModel.swift in Sources */,
+				7363DE002CAB1C52009F3412 /* Date+Extension.swift in Sources */,
 				7342ED982C447FF500BA20A4 /* AssetFormViewModel.swift in Sources */,
 				7342ED7D2C447CD700BA20A4 /* ObservingFetchedResultsController.swift in Sources */,
 				73980F472AA57A4500CA4849 /* CoreDataModel.xcdatamodeld in Sources */,
 				73D2C5902C5FBB970019A800 /* ChangeChart.swift in Sources */,
+				7363DE022CAC74AC009F3412 /* NSManagedObject+Extension.swift in Sources */,
 				7342EDB52C44842100BA20A4 /* AssetPosition+CoreDataClass.swift in Sources */,
 				73823CE12C68023E0049D03C /* BalanceView.swift in Sources */,
 				7342EDB62C44842100BA20A4 /* AssetPosition+CoreDataProperties.swift in Sources */,
@@ -660,10 +677,13 @@
 				7342ED502C44789A00BA20A4 /* LiabilityPool+CoreDataProperties.swift in Sources */,
 				7342EDC32C4489AC00BA20A4 /* DashboardViewModel.swift in Sources */,
 				7342EDBC2C44868900BA20A4 /* SnapshotLedger.swift in Sources */,
+				7363DDF82CA89CDE009F3412 /* LiabilityRepository.swift in Sources */,
 				7342ED9F2C44818100BA20A4 /* LiabilityFormViewModel.swift in Sources */,
 				7342ED822C447D4F00BA20A4 /* CircularProgressView.swift in Sources */,
 				7342ED512C44789A00BA20A4 /* Liability+CoreDataClass.swift in Sources */,
+				7363DDF62CA89758009F3412 /* AssetRepository.swift in Sources */,
 				7342ED522C44789A00BA20A4 /* Liability+CoreDataProperties.swift in Sources */,
+				7363DDFE2CA9FD6C009F3412 /* Array+Extension.swift in Sources */,
 				7342ED7F2C447D0200BA20A4 /* RelationshipObserver.swift in Sources */,
 				7342ED892C447E7000BA20A4 /* LocalizedShortDateFormatter.swift in Sources */,
 				73B811982CA6CF4B003B1973 /* SnapshotAnalyzer.swift in Sources */,

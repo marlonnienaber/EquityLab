@@ -9,17 +9,17 @@ struct EquityChart: View {
             if let date = snapshot.date {
                 let curColor = Color("EquityPrimary")
                 let curGradient = LinearGradient(gradient: Gradient(colors: [curColor.opacity(0.1), curColor.opacity(0.2), curColor.opacity(0.5), curColor.opacity(0.6)]), startPoint: .bottom, endPoint: .top)
-                let startOfDay = Calendar.current.startOfDay(for: date)
+                let startOfDay = date.startOfDay
                 let equityValue = viewModel.getEquityValue(of: snapshot)
                 AreaMark(
-                    x: .value("date", Calendar.current.startOfDay(for: date)),
+                    x: .value("date", startOfDay),
                     y: .value("net worth", equityValue)
                 )
                 .interpolationMethod(.monotone)
                 .foregroundStyle(curGradient)
                 
                 LineMark(
-                    x: .value("date", Calendar.current.startOfDay(for: date)),
+                    x: .value("date", startOfDay),
                     y: .value("net worth", equityValue)
                 )
                 .symbol(.circle)

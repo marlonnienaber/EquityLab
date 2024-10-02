@@ -1,5 +1,6 @@
 import CoreData
 
+/// necessary for working with CoreData
 public extension NSManagedObject {
     convenience init(usedContext: NSManagedObjectContext) {
         let name = String(describing: type(of: self))

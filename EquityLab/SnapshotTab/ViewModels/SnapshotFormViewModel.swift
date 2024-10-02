@@ -3,65 +3,106 @@ import CoreData
 
 @Observable
 class SnapshotFormViewModel {
-    let context: NSManagedObjectContext
-    var snapshot: Snapshot?
+    @ObservationIgnored private var snapshotRepository: SnapshotRepository
+    @ObservationIgnored private let snapshot: Snapshot?
+    var date: Date
+    let assetPoolNames: [String]
+    let liabilityPoolNames: [String]
     var assetProxies: [PositionProxy]
     var liabilityProxies: [PositionProxy]
-    var date: Date
+    let dismissSheet: () -> ()
     
-    
-    init(snapshot: Snapshot? = nil) {
-        let context = ProductionCoreDataStack.shared.context
-        self.context = context
+    init(
+            snapshot: Snapshot? = nil,
+            snapshotRepository: SnapshotRepository = SnapshotRepository.production,
+            assetRepository: AssetRepository = AssetRepository.production,
+            liabilityRepository: LiabilityRepository = LiabilityRepository.production,
+            dismissSheet: @escaping () -> ()
+        )
+    {
+        self.snapshotRepository = snapshotRepository
         self.snapshot = snapshot
-        if let snapshot, let date = snapshot.date {
-            let assetPositions = (try? context.fetch(snapshot.getAssetPositionRequest())) ?? []
-            self.assetProxies = assetPositions.map{ PositionProxy(name: $0.name, value: $0.value, pool: $0.poolName) }
-            let liabilityPositions = (try? context.fetch(snapshot.getLiabilityPositionRequest())) ?? []
-            self.liabilityProxies = liabilityPositions.map{ PositionProxy(name: $0.name, value: $0.value, pool: $0.poolName) }
-            self.date = date
+        self.dismissSheet = dismissSheet
+        
+        let assetProxies: [PositionProxy]
+        let liabilityProxies: [PositionProxy]
+        if let snapshot {
+            (assetProxies, liabilityProxies) = Self.createProxies(for: snapshot, using: snapshotRepository)
+            self.date = snapshot.date ?? Date.now
+            self.assetPoolNames = assetProxies.map{ $0.poolName }.uniqued()
+            self.liabilityPoolNames = liabilityProxies.map{ $0.poolName }.uniqued()
         } else {
-            self.date = Date.now
-            let assetFetchRequest = NSFetchRequest<Asset>(entityName: String(describing: "Asset"))
-            let assets = (try? context.fetch(assetFetchRequest)) ?? []
-            self.assetProxies = assets.map{ asset in
-                if let possession = asset as? Possession {
-                    if !possession.volatile {
-                        let request = NSFetchRequest<AssetPosition>(entityName: "AssetPosition")
-                        request.predicate = NSPredicate(format: "name == %@", possession.name)
-                        let positions = (try? context.fetch(request)) ?? []
-                        let valuesAndDates = positions.map{ (date: $0.snapshot!.date, value: $0.value) }
-                        let latestValue = valuesAndDates.filter {
-                            $0.date != nil
-                        }.max {
-                            $0.date! < $1.date!
-                        }?.value ?? 0.0
-                        return PositionProxy(name: possession.name, value: latestValue, pool: possession.pool?.name ?? "unknown pool")
-                    } else {
-                        return PositionProxy(name: possession.name, value: 0.0, pool: possession.pool?.name ?? "unknown pool")
-                    }
-                } else if let receivable = asset as? Receivable {
-                    return PositionProxy(name: receivable.name, value: receivable.openAmount, pool: receivable.pool?.name ?? "unknown pool")
+            (assetProxies, liabilityProxies) = Self.createProxies(using: snapshotRepository, and: assetRepository, and: liabilityRepository)
+            self.date = Date.now.startOfDay
+            self.assetPoolNames = assetRepository.fetchAssetPools().map{ $0.name }
+            self.liabilityPoolNames = liabilityRepository.fetchLiabilityPools().map{ $0.name }
+        }
+        self.assetProxies = assetProxies
+        self.liabilityProxies = liabilityProxies
+    }
+    
+    private static func createProxies(for snapshot: Snapshot,
+                                      using snapshotRepository: SnapshotRepository) -> ([PositionProxy],[PositionProxy]) {
+        let assetPositions = snapshotRepository.fetchAssetPositions(of: snapshot)
+        let assetProxies = assetPositions.map{ PositionProxy(name: $0.name, value: $0.value, pool: $0.poolName) }
+        let liabilityPositions = snapshotRepository.fetchLiabilityPositions(of: snapshot)
+        let liabilityProxies = liabilityPositions.map{ PositionProxy(name: $0.name, value: $0.value, pool: $0.poolName) }
+        return (assetProxies,liabilityProxies)
+    }
+    
+    private static func createProxies(using snapshotRepository: SnapshotRepository,
+                                      and assetRepository: AssetRepository,
+                                      and liabilityRepository: LiabilityRepository) -> ([PositionProxy],[PositionProxy]) {
+        let assets = assetRepository.fetchAssets()
+        let assetProxies = assets.map{ asset in
+            if let possession = asset as? Possession, let pool = possession.pool {
+                if possession.volatile {
+                    return PositionProxy(name: possession.name, value: 0.0, pool: pool.name)
                 } else {
-                    fatalError("Unexpected asset type: \(type(of: asset))")
+                    let positions = snapshotRepository.fetchAssetPositions(with: possession.name)
+                    let datesAndValues: [(date:Date,value:Double)] = positions.map{
+                        if let date = $0.snapshot?.date {
+                            return (date: date, value: $0.value)
+                        } else {
+                            return nil
+                        }
+                    }.compactMap{ $0 }
+                    let latestValue = datesAndValues.max{ $0.date < $1.date }?.value ?? 0.0
+                    return PositionProxy(name: possession.name, value: latestValue, pool: pool.name)
                 }
+            } else if let receivable = asset as? Receivable, let pool = receivable.pool {
+                return PositionProxy(name: receivable.name, value: receivable.openAmount, pool: pool.name)
+            } else {
+                return nil
             }
-            
-            let liabilityFetchRequest = NSFetchRequest<Liability>(entityName: String(describing: "Liability"))
-            self.liabilityProxies = (try? context.fetch(liabilityFetchRequest).map{ PositionProxy(name: $0.name, value: $0.openAmount, pool: $0.pool?.name ?? "unknown pool") }) ?? []
-            
-            
+        }.compactMap{ $0 }
+        let liabilities = liabilityRepository.fetchLiabilities()
+        let liabilityProxies = liabilities.map{
+            if let pool = $0.pool {
+                return PositionProxy(name: $0.name, value: $0.openAmount, pool: pool.name)
+            } else {
+                return nil
+            }
+        }.compactMap{ $0 }
+        return (assetProxies,liabilityProxies)
+    }
+    
+    private func createSnapshot() {
+        snapshotRepository.createSnapshot(with: date, assetProxies, and: liabilityProxies)
+    }
+    
+    private func updateSnapshot() {
+        if let snapshot {
+            snapshotRepository.updateSnapshot(snapshot, using: date, assetProxies, and: liabilityProxies)
         }
     }
     
-    func getLiabilityPositions(for snapshot: Snapshot) -> [LiabilityPosition] {
-        let request = snapshot.getLiabilityPositionRequest()
-        return (try? context.fetch(request)) ?? []
-    }
-    
-    func getAssetPositions(for snapshot: Snapshot) -> [AssetPosition] {
-        let request = snapshot.getAssetPositionRequest()
-        return (try? context.fetch(request)) ?? []
+    func saveSnapshot() {
+        if snapshot != nil {
+            updateSnapshot()
+        } else {
+            createSnapshot()
+        }
     }
     
     func getAssetProxies(for poolName: String) -> [PositionProxy] {
@@ -71,74 +112,9 @@ class SnapshotFormViewModel {
     func getLiabilityProxies(for poolName: String) -> [PositionProxy] {
         liabilityProxies.filter{ $0.poolName == poolName}
     }
-    
-    func getAssetPoolNames() -> [String] {
-        let assetPoolFetchRequest = NSFetchRequest<AssetPool>(entityName: String(describing: "AssetPool"))
-        return (try? context.fetch(assetPoolFetchRequest).map{ $0.name }) ?? []
-    }
-    
-    func getLiabilityPoolNames() -> [String] {
-        let liabilityPoolFetchRequest = NSFetchRequest<LiabilityPool>(entityName: String(describing: "LiabilityPool"))
-        return (try? context.fetch(liabilityPoolFetchRequest).map{ $0.name }) ?? []
-    }
-    
-    func createSnapshot() {
-        //TODO: only allow creation of date if snapshot with date does not exist already
-        let snapshot = Snapshot(context: context)
-        snapshot.date = Calendar.current.startOfDay(for: date)
-        
-        var assetPositions = [AssetPosition]()
-        assetProxies.forEach { proxy in
-            let position = AssetPosition(context: context)
-            position.name = proxy.name
-            position.value = proxy.value
-            position.poolName = proxy.poolName
-            position.snapshot = snapshot
-            assetPositions.append(position)
-        }
-        
-        var liabilityPositions = [LiabilityPosition]()
-        liabilityProxies.forEach { proxy in
-            let position = LiabilityPosition(context: context)
-            position.name = proxy.name
-            position.value = proxy.value
-            position.poolName = proxy.poolName
-            position.snapshot = snapshot
-            liabilityPositions.append(position)
-        }
-        try? context.save()
-    }
-    
-    func updateSnapshot() {
-        //TODO: only allow updates of date if snapshot with date does not exist already
-        if let snapshot {
-            snapshot.date = Calendar.current.startOfDay(for: date)
-            let assetPositions = getAssetPositions(for: snapshot)
-            assetProxies.forEach { proxy in
-                if let position = assetPositions.first(where: { $0.name == proxy.name} ) {
-                    position.value = proxy.value
-                }
-            }
-            let liabilityPositions = getLiabilityPositions(for: snapshot)
-            liabilityProxies.forEach { proxy in
-                if let position = liabilityPositions.first(where: { $0.name == proxy.name} ) {
-                    position.value = proxy.value
-                }
-            }
-            try? context.save()
-        }
-    }
-    
-    func saveSnapshot() {
-        if let _ = snapshot {
-            updateSnapshot()
-        } else {
-            createSnapshot()
-        }
-    }
 }
 
-struct PositionProxy {
+class PositionProxy: Equatable {
     var name: String
     var value: Double
     var poolName: String
@@ -147,5 +123,9 @@ struct PositionProxy {
         self.name = name
         self.value = value
         self.poolName = pool
+    }
+    
+    static func == (lhs: PositionProxy, rhs: PositionProxy) -> Bool {
+        lhs.name == rhs.name && lhs.value == rhs.value && lhs.poolName == rhs.poolName
     }
 }

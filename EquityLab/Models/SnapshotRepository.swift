@@ -20,6 +20,7 @@ class SnapshotRepository: NSObject {
         observers.append(WeakSnapshotObserver(observer: observer))
     }
     
+    
     func fetchSnapshots(sortingOrder: SnapshotSortingOrder = .ascending) -> [Snapshot] {
         try? fetchedResultsController.performFetch()
         let snapshots = fetchedResultsController.fetchedObjects as? [Snapshot] ?? []
@@ -33,6 +34,12 @@ class SnapshotRepository: NSObject {
         (try? fetchedResultsController.managedObjectContext.fetch(snapshot.getAssetPositionRequest())) ?? []
     }
     
+    func fetchAssetPositions(with name: String) -> [AssetPosition] {
+        let request = NSFetchRequest<AssetPosition>(entityName: "AssetPosition")
+        request.predicate = NSPredicate(format: "name == %@", name)
+        return (try? fetchedResultsController.managedObjectContext.fetch(request)) ?? []
+    }
+    
     func fetchLiabilityPositions(of snapshot: Snapshot) -> [LiabilityPosition] {
         (try? fetchedResultsController.managedObjectContext.fetch(snapshot.getLiabilityPositionRequest())) ?? []
     }
@@ -41,6 +48,52 @@ class SnapshotRepository: NSObject {
         let context = fetchedResultsController.managedObjectContext
         context.delete(snapshot)
         try? context.save()
+    }
+    
+    func createSnapshot(with date: Date, _ assetProxies: [PositionProxy], and liabilityProxies: [PositionProxy]) {
+        /* TODO: only allow creation of date if snapshot with date does not exist already */
+        let context = fetchedResultsController.managedObjectContext
+        let snapshot = Snapshot(usedContext: context)
+        snapshot.date = date.startOfDay
+        
+        var assetPositions = [AssetPosition]()
+        assetProxies.forEach { proxy in
+            let position = AssetPosition(usedContext: context)
+            position.name = proxy.name
+            position.value = proxy.value
+            position.poolName = proxy.poolName
+            position.snapshot = snapshot
+            assetPositions.append(position)
+        }
+        
+        var liabilityPositions = [LiabilityPosition]()
+        liabilityProxies.forEach { proxy in
+            let position = LiabilityPosition(usedContext: context)
+            position.name = proxy.name
+            position.value = proxy.value
+            position.poolName = proxy.poolName
+            position.snapshot = snapshot
+            liabilityPositions.append(position)
+        }
+        try? context.save()
+    }
+    
+    func updateSnapshot(_ snapshot: Snapshot, using date: Date, _ assetProxies: [PositionProxy], and liabilityProxies: [PositionProxy]) {
+        /* TODO: only allow updates of date if snapshot with date does not exist already */
+        snapshot.date = date.startOfDay
+        let assetPositions = fetchAssetPositions(of: snapshot)
+        assetProxies.forEach { proxy in
+            if let position = assetPositions.first(where: { $0.name == proxy.name} ) {
+                position.value = proxy.value
+            }
+        }
+        let liabilityPositions = fetchLiabilityPositions(of: snapshot)
+        liabilityProxies.forEach { proxy in
+            if let position = liabilityPositions.first(where: { $0.name == proxy.name} ) {
+                position.value = proxy.value
+            }
+        }
+        try? fetchedResultsController.managedObjectContext.save()
     }
 }
 

@@ -3,10 +3,10 @@ import CoreData
 
 struct SnapshotLedgerViewModelTestDataProvider {
     func createAndPersistTestObjects_getSnapshots_1(using context: NSManagedObjectContext) -> [Snapshot] {
-        let date_23_04_1970 = DateParser.shared.date(from: "1970-04-23T00:00:00Z")!
-        let date_21_10_1966 = DateParser.shared.date(from: "1966-10-21T00:00:00Z")!
-        let date_26_04_2002 = DateParser.shared.date(from: "2002-04-26T00:00:00Z")!
-        let date_31_01_2004 = DateParser.shared.date(from: "2004-01-31T00:00:00Z")!
+        let date_23_04_1970 = DateParser.shared.date(from: "1970-04-23T00:00:00")!
+        let date_21_10_1966 = DateParser.shared.date(from: "1966-10-21T00:00:00")!
+        let date_26_04_2002 = DateParser.shared.date(from: "2002-04-26T00:00:00")!
+        let date_31_01_2004 = DateParser.shared.date(from: "2004-01-31T00:00:00")!
         let _ = DataFactory.createSnapshotWithoutPositions(for: date_23_04_1970, in: context)
         let _ = DataFactory.createSnapshotWithoutPositions(for: date_21_10_1966, in: context)
         let snapshot3 = DataFactory.createSnapshotWithoutPositions(for: date_26_04_2002, in: context)
@@ -15,12 +15,12 @@ struct SnapshotLedgerViewModelTestDataProvider {
     }
     
     func createAndPersistTestObjects_getSnapshots_2(using context: NSManagedObjectContext) -> [Snapshot] {
-        let date_23_04_1970 = DateParser.shared.date(from: "1970-04-23T00:00:00Z")!
-        let date_21_10_1966 = DateParser.shared.date(from: "1966-10-21T00:00:00Z")!
-        let date_26_04_2002 = DateParser.shared.date(from: "2002-04-26T00:00:00Z")!
-        let date_01_01_2002 = DateParser.shared.date(from: "2002-01-01T00:00:00Z")!
-        let date_31_12_2002 = DateParser.shared.date(from: "2002-12-31T00:00:00Z")!
-        let date_31_01_2004 = DateParser.shared.date(from: "2004-01-31T00:00:00Z")!
+        let date_23_04_1970 = DateParser.shared.date(from: "1970-04-23T00:00:00")!
+        let date_21_10_1966 = DateParser.shared.date(from: "1966-10-21T00:00:00")!
+        let date_26_04_2002 = DateParser.shared.date(from: "2002-04-26T00:00:00")!
+        let date_01_01_2002 = DateParser.shared.date(from: "2002-01-01T00:00:00")!
+        let date_31_12_2002 = DateParser.shared.date(from: "2002-12-31T00:00:00")!
+        let date_31_01_2004 = DateParser.shared.date(from: "2004-01-31T00:00:00")!
         let _ = DataFactory.createSnapshotWithoutPositions(for: date_23_04_1970, in: context)
         let _ = DataFactory.createSnapshotWithoutPositions(for: date_21_10_1966, in: context)
         let snapshot3 = DataFactory.createSnapshotWithoutPositions(for: date_26_04_2002, in: context)
@@ -31,9 +31,9 @@ struct SnapshotLedgerViewModelTestDataProvider {
     }
     
     func createAndPersistTestObjects_getSnapshots_3(using context: NSManagedObjectContext) -> [Snapshot] {
-        let date_23_04_1970 = DateParser.shared.date(from: "1970-04-23T00:00:00Z")!
-        let date_21_10_1966 = DateParser.shared.date(from: "1966-10-21T00:00:00Z")!
-        let date_31_01_2004 = DateParser.shared.date(from: "2004-01-31T00:00:00Z")!
+        let date_23_04_1970 = DateParser.shared.date(from: "1970-04-23T00:00:00")!
+        let date_21_10_1966 = DateParser.shared.date(from: "1966-10-21T00:00:00")!
+        let date_31_01_2004 = DateParser.shared.date(from: "2004-01-31T00:00:00")!
         let _ = DataFactory.createSnapshotWithoutPositions(for: date_31_01_2004, in: context)
         let _ = DataFactory.createSnapshotWithoutPositions(for: date_23_04_1970, in: context)
         let _ = DataFactory.createSnapshotWithoutPositions(for: date_21_10_1966, in: context)
@@ -43,12 +43,12 @@ struct SnapshotLedgerViewModelTestDataProvider {
     
     
     func createAndPersistTestObjects_deleteSnapshotsInYear_1(using context: NSManagedObjectContext) -> (Int,IndexSet,[Snapshot]) {
-        let date_23_04_1970 = DateParser.shared.date(from: "1970-04-23T00:00:00Z")!
-        let date_21_10_1966 = DateParser.shared.date(from: "1966-10-21T00:00:00Z")!
-        let date_26_04_2002 = DateParser.shared.date(from: "2002-04-26T00:00:00Z")!
-        let date_01_01_2002 = DateParser.shared.date(from: "2002-01-01T00:00:00Z")!
-        let date_31_12_2002 = DateParser.shared.date(from: "2002-12-31T00:00:00Z")!
-        let date_31_01_2004 = DateParser.shared.date(from: "2004-01-31T00:00:00Z")!
+        let date_23_04_1970 = DateParser.shared.date(from: "1970-04-23T00:00:00")!
+        let date_21_10_1966 = DateParser.shared.date(from: "1966-10-21T00:00:00")!
+        let date_26_04_2002 = DateParser.shared.date(from: "2002-04-26T00:00:00")!
+        let date_01_01_2002 = DateParser.shared.date(from: "2002-01-01T00:00:00")!
+        let date_31_12_2002 = DateParser.shared.date(from: "2002-12-31T00:00:00")!
+        let date_31_01_2004 = DateParser.shared.date(from: "2004-01-31T00:00:00")!
         let snapshot1 = DataFactory.createSnapshotWithoutPositions(for: date_31_01_2004, in: context)
         let _ = DataFactory.createSnapshotWithoutPositions(for: date_31_12_2002, in: context)
         let _ = DataFactory.createSnapshotWithoutPositions(for: date_26_04_2002, in: context)
@@ -59,12 +59,12 @@ struct SnapshotLedgerViewModelTestDataProvider {
     }
     
     func createAndPersistTestObjects_deleteSnapshotsInYear_2(using context: NSManagedObjectContext) -> (Int,IndexSet,[Snapshot]) {
-        let date_23_04_1970 = DateParser.shared.date(from: "1970-04-23T00:00:00Z")!
-        let date_21_10_1966 = DateParser.shared.date(from: "1966-10-21T00:00:00Z")!
-        let date_26_04_2002 = DateParser.shared.date(from: "2002-04-26T00:00:00Z")!
-        let date_01_01_2002 = DateParser.shared.date(from: "2002-01-01T00:00:00Z")!
-        let date_31_12_2002 = DateParser.shared.date(from: "2002-12-31T00:00:00Z")!
-        let date_31_01_2004 = DateParser.shared.date(from: "2004-01-31T00:00:00Z")!
+        let date_23_04_1970 = DateParser.shared.date(from: "1970-04-23T00:00:00")!
+        let date_21_10_1966 = DateParser.shared.date(from: "1966-10-21T00:00:00")!
+        let date_26_04_2002 = DateParser.shared.date(from: "2002-04-26T00:00:00")!
+        let date_01_01_2002 = DateParser.shared.date(from: "2002-01-01T00:00:00")!
+        let date_31_12_2002 = DateParser.shared.date(from: "2002-12-31T00:00:00")!
+        let date_31_01_2004 = DateParser.shared.date(from: "2004-01-31T00:00:00")!
         let snapshot1 = DataFactory.createSnapshotWithoutPositions(for: date_31_01_2004, in: context)
         let snapshot2 = DataFactory.createSnapshotWithoutPositions(for: date_31_12_2002, in: context)
         let snapshot3 = DataFactory.createSnapshotWithoutPositions(for: date_26_04_2002, in: context)
@@ -75,12 +75,12 @@ struct SnapshotLedgerViewModelTestDataProvider {
     }
     
     func createAndPersistTestObjects_deleteSnapshotsInYear_3(using context: NSManagedObjectContext) -> (Int,IndexSet,[Snapshot]) {
-        let date_23_04_1970 = DateParser.shared.date(from: "1970-04-23T00:00:00Z")!
-        let date_21_10_1966 = DateParser.shared.date(from: "1966-10-21T00:00:00Z")!
-        let date_26_04_2002 = DateParser.shared.date(from: "2002-04-26T00:00:00Z")!
-        let date_01_01_2002 = DateParser.shared.date(from: "2002-01-01T00:00:00Z")!
-        let date_31_12_2002 = DateParser.shared.date(from: "2002-12-31T00:00:00Z")!
-        let date_31_01_2004 = DateParser.shared.date(from: "2004-01-31T00:00:00Z")!
+        let date_23_04_1970 = DateParser.shared.date(from: "1970-04-23T00:00:00")!
+        let date_21_10_1966 = DateParser.shared.date(from: "1966-10-21T00:00:00")!
+        let date_26_04_2002 = DateParser.shared.date(from: "2002-04-26T00:00:00")!
+        let date_01_01_2002 = DateParser.shared.date(from: "2002-01-01T00:00:00")!
+        let date_31_12_2002 = DateParser.shared.date(from: "2002-12-31T00:00:00")!
+        let date_31_01_2004 = DateParser.shared.date(from: "2004-01-31T00:00:00")!
         let snapshot1 = DataFactory.createSnapshotWithoutPositions(for: date_31_01_2004, in: context)
         let _ = DataFactory.createSnapshotWithoutPositions(for: date_31_12_2002, in: context)
         let _ = DataFactory.createSnapshotWithoutPositions(for: date_26_04_2002, in: context)
@@ -93,12 +93,12 @@ struct SnapshotLedgerViewModelTestDataProvider {
     
     
     func createAndPersistTestObjects_deleteSnapshotsWithIndices_1(using context: NSManagedObjectContext) -> (IndexSet,[Snapshot]) {
-        let date_23_04_1970 = DateParser.shared.date(from: "1970-04-23T00:00:00Z")!
-        let date_21_10_1966 = DateParser.shared.date(from: "1966-10-21T00:00:00Z")!
-        let date_26_04_2002 = DateParser.shared.date(from: "2002-04-26T00:00:00Z")!
-        let date_01_01_2002 = DateParser.shared.date(from: "2002-01-01T00:00:00Z")!
-        let date_31_12_2002 = DateParser.shared.date(from: "2002-12-31T00:00:00Z")!
-        let date_31_01_2004 = DateParser.shared.date(from: "2004-01-31T00:00:00Z")!
+        let date_23_04_1970 = DateParser.shared.date(from: "1970-04-23T00:00:00")!
+        let date_21_10_1966 = DateParser.shared.date(from: "1966-10-21T00:00:00")!
+        let date_26_04_2002 = DateParser.shared.date(from: "2002-04-26T00:00:00")!
+        let date_01_01_2002 = DateParser.shared.date(from: "2002-01-01T00:00:00")!
+        let date_31_12_2002 = DateParser.shared.date(from: "2002-12-31T00:00:00")!
+        let date_31_01_2004 = DateParser.shared.date(from: "2004-01-31T00:00:00")!
         let snapshot1 = DataFactory.createSnapshotWithoutPositions(for: date_31_01_2004, in: context)
         let snapshot2 = DataFactory.createSnapshotWithoutPositions(for: date_31_12_2002, in: context)
         let snapshot3 = DataFactory.createSnapshotWithoutPositions(for: date_26_04_2002, in: context)
@@ -109,12 +109,12 @@ struct SnapshotLedgerViewModelTestDataProvider {
     }
     
     func createAndPersistTestObjects_deleteSnapshotsWithIndices_2(using context: NSManagedObjectContext) -> (IndexSet,[Snapshot]) {
-        let date_23_04_1970 = DateParser.shared.date(from: "1970-04-23T00:00:00Z")!
-        let date_21_10_1966 = DateParser.shared.date(from: "1966-10-21T00:00:00Z")!
-        let date_26_04_2002 = DateParser.shared.date(from: "2002-04-26T00:00:00Z")!
-        let date_01_01_2002 = DateParser.shared.date(from: "2002-01-01T00:00:00Z")!
-        let date_31_12_2002 = DateParser.shared.date(from: "2002-12-31T00:00:00Z")!
-        let date_31_01_2004 = DateParser.shared.date(from: "2004-01-31T00:00:00Z")!
+        let date_23_04_1970 = DateParser.shared.date(from: "1970-04-23T00:00:00")!
+        let date_21_10_1966 = DateParser.shared.date(from: "1966-10-21T00:00:00")!
+        let date_26_04_2002 = DateParser.shared.date(from: "2002-04-26T00:00:00")!
+        let date_01_01_2002 = DateParser.shared.date(from: "2002-01-01T00:00:00")!
+        let date_31_12_2002 = DateParser.shared.date(from: "2002-12-31T00:00:00")!
+        let date_31_01_2004 = DateParser.shared.date(from: "2004-01-31T00:00:00")!
         let _ = DataFactory.createSnapshotWithoutPositions(for: date_31_01_2004, in: context)
         let snapshot2 = DataFactory.createSnapshotWithoutPositions(for: date_31_12_2002, in: context)
         let snapshot3 = DataFactory.createSnapshotWithoutPositions(for: date_26_04_2002, in: context)
@@ -125,12 +125,12 @@ struct SnapshotLedgerViewModelTestDataProvider {
     }
     
     func createAndPersistTestObjects_deleteSnapshotsWithIndices_3(using context: NSManagedObjectContext) -> (IndexSet,[Snapshot]) {
-        let date_23_04_1970 = DateParser.shared.date(from: "1970-04-23T00:00:00Z")!
-        let date_21_10_1966 = DateParser.shared.date(from: "1966-10-21T00:00:00Z")!
-        let date_26_04_2002 = DateParser.shared.date(from: "2002-04-26T00:00:00Z")!
-        let date_01_01_2002 = DateParser.shared.date(from: "2002-01-01T00:00:00Z")!
-        let date_31_12_2002 = DateParser.shared.date(from: "2002-12-31T00:00:00Z")!
-        let date_31_01_2004 = DateParser.shared.date(from: "2004-01-31T00:00:00Z")!
+        let date_23_04_1970 = DateParser.shared.date(from: "1970-04-23T00:00:00")!
+        let date_21_10_1966 = DateParser.shared.date(from: "1966-10-21T00:00:00")!
+        let date_26_04_2002 = DateParser.shared.date(from: "2002-04-26T00:00:00")!
+        let date_01_01_2002 = DateParser.shared.date(from: "2002-01-01T00:00:00")!
+        let date_31_12_2002 = DateParser.shared.date(from: "2002-12-31T00:00:00")!
+        let date_31_01_2004 = DateParser.shared.date(from: "2004-01-31T00:00:00")!
         let snapshot1 = DataFactory.createSnapshotWithoutPositions(for: date_31_01_2004, in: context)
         let snapshot2 = DataFactory.createSnapshotWithoutPositions(for: date_31_12_2002, in: context)
         let snapshot3 = DataFactory.createSnapshotWithoutPositions(for: date_26_04_2002, in: context)
@@ -141,12 +141,12 @@ struct SnapshotLedgerViewModelTestDataProvider {
     }
     
     func createAndPersistTestObjects_deleteSnapshotsWithIndices_4(using context: NSManagedObjectContext) -> (IndexSet,[Snapshot]) {
-        let date_23_04_1970 = DateParser.shared.date(from: "1970-04-23T00:00:00Z")!
-        let date_21_10_1966 = DateParser.shared.date(from: "1966-10-21T00:00:00Z")!
-        let date_26_04_2002 = DateParser.shared.date(from: "2002-04-26T00:00:00Z")!
-        let date_01_01_2002 = DateParser.shared.date(from: "2002-01-01T00:00:00Z")!
-        let date_31_12_2002 = DateParser.shared.date(from: "2002-12-31T00:00:00Z")!
-        let date_31_01_2004 = DateParser.shared.date(from: "2004-01-31T00:00:00Z")!
+        let date_23_04_1970 = DateParser.shared.date(from: "1970-04-23T00:00:00")!
+        let date_21_10_1966 = DateParser.shared.date(from: "1966-10-21T00:00:00")!
+        let date_26_04_2002 = DateParser.shared.date(from: "2002-04-26T00:00:00")!
+        let date_01_01_2002 = DateParser.shared.date(from: "2002-01-01T00:00:00")!
+        let date_31_12_2002 = DateParser.shared.date(from: "2002-12-31T00:00:00")!
+        let date_31_01_2004 = DateParser.shared.date(from: "2004-01-31T00:00:00")!
         let snapshot1 = DataFactory.createSnapshotWithoutPositions(for: date_31_01_2004, in: context)
         let snapshot2 = DataFactory.createSnapshotWithoutPositions(for: date_31_12_2002, in: context)
         let snapshot3 = DataFactory.createSnapshotWithoutPositions(for: date_26_04_2002, in: context)
@@ -157,12 +157,12 @@ struct SnapshotLedgerViewModelTestDataProvider {
     }
     
     func createAndPersistTestObjects_deleteSnapshotsWithIndices_5(using context: NSManagedObjectContext) -> (IndexSet,[Snapshot]) {
-        let date_23_04_1970 = DateParser.shared.date(from: "1970-04-23T00:00:00Z")!
-        let date_21_10_1966 = DateParser.shared.date(from: "1966-10-21T00:00:00Z")!
-        let date_26_04_2002 = DateParser.shared.date(from: "2002-04-26T00:00:00Z")!
-        let date_01_01_2002 = DateParser.shared.date(from: "2002-01-01T00:00:00Z")!
-        let date_31_12_2002 = DateParser.shared.date(from: "2002-12-31T00:00:00Z")!
-        let date_31_01_2004 = DateParser.shared.date(from: "2004-01-31T00:00:00Z")!
+        let date_23_04_1970 = DateParser.shared.date(from: "1970-04-23T00:00:00")!
+        let date_21_10_1966 = DateParser.shared.date(from: "1966-10-21T00:00:00")!
+        let date_26_04_2002 = DateParser.shared.date(from: "2002-04-26T00:00:00")!
+        let date_01_01_2002 = DateParser.shared.date(from: "2002-01-01T00:00:00")!
+        let date_31_12_2002 = DateParser.shared.date(from: "2002-12-31T00:00:00")!
+        let date_31_01_2004 = DateParser.shared.date(from: "2004-01-31T00:00:00")!
         let snapshot1 = DataFactory.createSnapshotWithoutPositions(for: date_31_01_2004, in: context)
         let _ = DataFactory.createSnapshotWithoutPositions(for: date_31_12_2002, in: context)
         let _ = DataFactory.createSnapshotWithoutPositions(for: date_26_04_2002, in: context)
@@ -173,12 +173,12 @@ struct SnapshotLedgerViewModelTestDataProvider {
     }
     
     func createAndPersistTestObjects_deleteSnapshotsWithIndices_6(using context: NSManagedObjectContext) -> (IndexSet,[Snapshot]) {
-        let date_23_04_1970 = DateParser.shared.date(from: "1970-04-23T00:00:00Z")!
-        let date_21_10_1966 = DateParser.shared.date(from: "1966-10-21T00:00:00Z")!
-        let date_26_04_2002 = DateParser.shared.date(from: "2002-04-26T00:00:00Z")!
-        let date_01_01_2002 = DateParser.shared.date(from: "2002-01-01T00:00:00Z")!
-        let date_31_12_2002 = DateParser.shared.date(from: "2002-12-31T00:00:00Z")!
-        let date_31_01_2004 = DateParser.shared.date(from: "2004-01-31T00:00:00Z")!
+        let date_23_04_1970 = DateParser.shared.date(from: "1970-04-23T00:00:00")!
+        let date_21_10_1966 = DateParser.shared.date(from: "1966-10-21T00:00:00")!
+        let date_26_04_2002 = DateParser.shared.date(from: "2002-04-26T00:00:00")!
+        let date_01_01_2002 = DateParser.shared.date(from: "2002-01-01T00:00:00")!
+        let date_31_12_2002 = DateParser.shared.date(from: "2002-12-31T00:00:00")!
+        let date_31_01_2004 = DateParser.shared.date(from: "2004-01-31T00:00:00")!
         let _ = DataFactory.createSnapshotWithoutPositions(for: date_31_01_2004, in: context)
         let _ = DataFactory.createSnapshotWithoutPositions(for: date_31_12_2002, in: context)
         let _ = DataFactory.createSnapshotWithoutPositions(for: date_26_04_2002, in: context)
