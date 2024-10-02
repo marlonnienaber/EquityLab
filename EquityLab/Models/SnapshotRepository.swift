@@ -53,12 +53,12 @@ class SnapshotRepository: NSObject {
     func createSnapshot(with date: Date, _ assetProxies: [PositionProxy], and liabilityProxies: [PositionProxy]) {
         /* TODO: only allow creation of date if snapshot with date does not exist already */
         let context = fetchedResultsController.managedObjectContext
-        let snapshot = Snapshot(context: context)
-        snapshot.date = Calendar.current.startOfDay(for: date)
+        let snapshot = Snapshot(usedContext: context)
+        snapshot.date = date.startOfDay
         
         var assetPositions = [AssetPosition]()
         assetProxies.forEach { proxy in
-            let position = AssetPosition(context: context)
+            let position = AssetPosition(usedContext: context)
             position.name = proxy.name
             position.value = proxy.value
             position.poolName = proxy.poolName
@@ -68,7 +68,7 @@ class SnapshotRepository: NSObject {
         
         var liabilityPositions = [LiabilityPosition]()
         liabilityProxies.forEach { proxy in
-            let position = LiabilityPosition(context: context)
+            let position = LiabilityPosition(usedContext: context)
             position.name = proxy.name
             position.value = proxy.value
             position.poolName = proxy.poolName
@@ -80,7 +80,7 @@ class SnapshotRepository: NSObject {
     
     func updateSnapshot(_ snapshot: Snapshot, using date: Date, _ assetProxies: [PositionProxy], and liabilityProxies: [PositionProxy]) {
         /* TODO: only allow updates of date if snapshot with date does not exist already */
-        snapshot.date = Calendar.current.startOfDay(for: date)
+        snapshot.date = date.startOfDay
         let assetPositions = fetchAssetPositions(of: snapshot)
         assetProxies.forEach { proxy in
             if let position = assetPositions.first(where: { $0.name == proxy.name} ) {

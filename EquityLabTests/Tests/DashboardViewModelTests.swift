@@ -399,49 +399,49 @@ final class DashboardViewModelTests: XCTestCase {
         let sut = DashboardViewModel(repository: testingSnapshotRepository)
         
         
-        let middleDate = DateParser.shared.date(from: "2024-03-30T00:00:00Z")!
+        let middleDate = DateParser.shared.date(from: "2024-03-30T00:00:00")!
         sut.selectedDate = middleDate
         var expectedSelectedSnapshot = snapshot_15_03_2024
         var actualSelectedSnapshot = try XCTUnwrap(sut.selectedSnapshot)
         XCTAssertEqual(expectedSelectedSnapshot, actualSelectedSnapshot)
         
         
-        let dateCloseToMiddleNear_15_03_2024 = DateParser.shared.date(from: "2024-03-29T00:00:00Z")!
+        let dateCloseToMiddleNear_15_03_2024 = DateParser.shared.date(from: "2024-03-29T00:00:00")!
         sut.selectedDate = dateCloseToMiddleNear_15_03_2024
         expectedSelectedSnapshot = snapshot_15_03_2024
         actualSelectedSnapshot = try XCTUnwrap(sut.selectedSnapshot)
         XCTAssertEqual(expectedSelectedSnapshot, actualSelectedSnapshot)
         
         
-        let dateCloseToMiddleNear_15_04_2024 = DateParser.shared.date(from: "2024-03-31T00:00:00Z")!
+        let dateCloseToMiddleNear_15_04_2024 = DateParser.shared.date(from: "2024-03-31T00:00:00")!
         sut.selectedDate = dateCloseToMiddleNear_15_04_2024
         expectedSelectedSnapshot = snapshot_15_04_2024
         actualSelectedSnapshot = try XCTUnwrap(sut.selectedSnapshot)
         XCTAssertEqual(expectedSelectedSnapshot, actualSelectedSnapshot)
         
         
-        let dateNear_15_03_2024 = DateParser.shared.date(from: "2024-03-21T00:00:00Z")!
+        let dateNear_15_03_2024 = DateParser.shared.date(from: "2024-03-21T00:00:00")!
         sut.selectedDate = dateNear_15_03_2024
         expectedSelectedSnapshot = snapshot_15_03_2024
         actualSelectedSnapshot = try XCTUnwrap(sut.selectedSnapshot)
         XCTAssertEqual(expectedSelectedSnapshot, actualSelectedSnapshot)
         
         
-        let dateNear_15_04_2024 = DateParser.shared.date(from: "2024-04-08T00:00:00Z")!
+        let dateNear_15_04_2024 = DateParser.shared.date(from: "2024-04-08T00:00:00")!
         sut.selectedDate = dateNear_15_04_2024
         expectedSelectedSnapshot = snapshot_15_04_2024
         actualSelectedSnapshot = try XCTUnwrap(sut.selectedSnapshot)
         XCTAssertEqual(expectedSelectedSnapshot, actualSelectedSnapshot)
         
         
-        let dateVeryNear_15_03_2024 = DateParser.shared.date(from: "2024-03-16T00:00:00Z")!
+        let dateVeryNear_15_03_2024 = DateParser.shared.date(from: "2024-03-16T00:00:00")!
         sut.selectedDate = dateVeryNear_15_03_2024
         expectedSelectedSnapshot = snapshot_15_03_2024
         actualSelectedSnapshot = try XCTUnwrap(sut.selectedSnapshot)
         XCTAssertEqual(expectedSelectedSnapshot, actualSelectedSnapshot)
         
         
-        let dateVeryNear_15_04_2024 = DateParser.shared.date(from: "2024-04-14T00:00:00Z")!
+        let dateVeryNear_15_04_2024 = DateParser.shared.date(from: "2024-04-14T00:00:00")!
         sut.selectedDate = dateVeryNear_15_04_2024
         expectedSelectedSnapshot = snapshot_15_04_2024
         actualSelectedSnapshot = try XCTUnwrap(sut.selectedSnapshot)
@@ -470,19 +470,19 @@ final class DashboardViewModelTests: XCTestCase {
         var actualSelectedSnapshot = try XCTUnwrap(sut.selectedSnapshot)
         XCTAssertEqual(expectedSelectedSnapshot, actualSelectedSnapshot)
         
-        let dateNear_10_05_2023 = DateParser.shared.date(from: "2023-05-10T03:30:12Z")!
+        let dateNear_10_05_2023 = DateParser.shared.date(from: "2023-05-10T03:30:12")!
         sut.selectedDate = dateNear_10_05_2023
         expectedSelectedSnapshot = snapshot_10_05_2023
         actualSelectedSnapshot = try XCTUnwrap(sut.selectedSnapshot)
         XCTAssertEqual(expectedSelectedSnapshot, actualSelectedSnapshot)
         
-        let dateMiddle_10_05_2023_and_13_05_2023 = DateParser.shared.date(from: "2023-05-11T12:00:00Z")!
+        let dateMiddle_10_05_2023_and_13_05_2023 = DateParser.shared.date(from: "2023-05-11T12:00:00")!
         sut.selectedDate = dateMiddle_10_05_2023_and_13_05_2023
         expectedSelectedSnapshot = snapshot_10_05_2023
         actualSelectedSnapshot = try XCTUnwrap(sut.selectedSnapshot)
         XCTAssertEqual(expectedSelectedSnapshot, actualSelectedSnapshot)
         
-        let dateNear1_13_05_2023 = DateParser.shared.date(from: "2023-05-12T10:55:27Z")!
+        let dateNear1_13_05_2023 = DateParser.shared.date(from: "2023-05-12T10:55:27")!
         sut.selectedDate = dateNear1_13_05_2023
         expectedSelectedSnapshot = snapshot_13_05_2023
         actualSelectedSnapshot = try XCTUnwrap(sut.selectedSnapshot)
@@ -493,19 +493,19 @@ final class DashboardViewModelTests: XCTestCase {
         actualSelectedSnapshot = try XCTUnwrap(sut.selectedSnapshot)
         XCTAssertEqual(expectedSelectedSnapshot, actualSelectedSnapshot)
         
-        let dateNear2_13_05_2023 = DateParser.shared.date(from: "2023-05-13T07:37:42Z")!
+        let dateNear2_13_05_2023 = DateParser.shared.date(from: "2023-05-13T07:37:42")!
         sut.selectedDate = dateNear2_13_05_2023
         expectedSelectedSnapshot = snapshot_13_05_2023
         actualSelectedSnapshot = try XCTUnwrap(sut.selectedSnapshot)
         XCTAssertEqual(expectedSelectedSnapshot, actualSelectedSnapshot)
         
-        let dateMiddle_13_05_2023_and_15_05_2023 = DateParser.shared.date(from: "2023-05-14T00:00:00Z")!
+        let dateMiddle_13_05_2023_and_15_05_2023 = DateParser.shared.date(from: "2023-05-14T00:00:00")!
         sut.selectedDate = dateMiddle_13_05_2023_and_15_05_2023
         expectedSelectedSnapshot = snapshot_13_05_2023
         actualSelectedSnapshot = try XCTUnwrap(sut.selectedSnapshot)
         XCTAssertEqual(expectedSelectedSnapshot, actualSelectedSnapshot)
         
-        let dateNear_15_05_2023 = DateParser.shared.date(from: "2023-05-14T16:16:01Z")!
+        let dateNear_15_05_2023 = DateParser.shared.date(from: "2023-05-14T16:16:01")!
         sut.selectedDate = dateNear_15_05_2023
         expectedSelectedSnapshot = snapshot_15_05_2023
         actualSelectedSnapshot = try XCTUnwrap(sut.selectedSnapshot)
@@ -527,19 +527,19 @@ final class DashboardViewModelTests: XCTestCase {
         var actualSelectedSnapshot = try XCTUnwrap(sut.selectedSnapshot)
         XCTAssertEqual(expectedSelectedSnapshot, actualSelectedSnapshot)
         
-        let dateNear_17_05_2022 = DateParser.shared.date(from: "2022-06-27T14:27:19Z")!
+        let dateNear_17_05_2022 = DateParser.shared.date(from: "2022-06-27T14:27:19")!
         sut.selectedDate = dateNear_17_05_2022
         expectedSelectedSnapshot = snapshot_17_05_2022
         actualSelectedSnapshot = try XCTUnwrap(sut.selectedSnapshot)
         XCTAssertEqual(expectedSelectedSnapshot, actualSelectedSnapshot)
         
-        let dateMiddle_17_05_2022_and_05_09_2022 = DateParser.shared.date(from: "2022-07-06T00:00:00Z")!
+        let dateMiddle_17_05_2022_and_05_09_2022 = DateParser.shared.date(from: "2022-07-06T00:00:00")!
         sut.selectedDate = dateMiddle_17_05_2022_and_05_09_2022
         expectedSelectedSnapshot = snapshot_17_05_2022
         actualSelectedSnapshot = try XCTUnwrap(sut.selectedSnapshot)
         XCTAssertEqual(expectedSelectedSnapshot, actualSelectedSnapshot)
         
-        let dateNear1_05_09_2022 = DateParser.shared.date(from: "2022-07-25T23:47:29Z")!
+        let dateNear1_05_09_2022 = DateParser.shared.date(from: "2022-07-25T23:47:29")!
         sut.selectedDate = dateNear1_05_09_2022
         expectedSelectedSnapshot = snapshot_05_09_2022
         actualSelectedSnapshot = try XCTUnwrap(sut.selectedSnapshot)
@@ -550,19 +550,19 @@ final class DashboardViewModelTests: XCTestCase {
         actualSelectedSnapshot = try XCTUnwrap(sut.selectedSnapshot)
         XCTAssertEqual(expectedSelectedSnapshot, actualSelectedSnapshot)
         
-        let dateNear2_05_09_2022 = DateParser.shared.date(from: "2022-09-29T07:37:42Z")!
+        let dateNear2_05_09_2022 = DateParser.shared.date(from: "2022-09-29T07:37:42")!
         sut.selectedDate = dateNear2_05_09_2022
         expectedSelectedSnapshot = snapshot_05_09_2022
         actualSelectedSnapshot = try XCTUnwrap(sut.selectedSnapshot)
         XCTAssertEqual(expectedSelectedSnapshot, actualSelectedSnapshot)
         
-        let dateMiddle_05_09_2022_and_15_12_2022 = DateParser.shared.date(from: "2022-10-25T00:00:00Z")!
+        let dateMiddle_05_09_2022_and_15_12_2022 = DateParser.shared.date(from: "2022-10-25T00:00:00")!
         sut.selectedDate = dateMiddle_05_09_2022_and_15_12_2022
         expectedSelectedSnapshot = snapshot_05_09_2022
         actualSelectedSnapshot = try XCTUnwrap(sut.selectedSnapshot)
         XCTAssertEqual(expectedSelectedSnapshot, actualSelectedSnapshot)
         
-        let dateNear_15_12_2022 = DateParser.shared.date(from: "2022-11-17T13:37:11Z")!
+        let dateNear_15_12_2022 = DateParser.shared.date(from: "2022-11-17T13:37:11")!
         sut.selectedDate = dateNear_15_12_2022
         expectedSelectedSnapshot = snapshot_15_12_2022
         actualSelectedSnapshot = try XCTUnwrap(sut.selectedSnapshot)
@@ -580,21 +580,21 @@ final class DashboardViewModelTests: XCTestCase {
         let sut = DashboardViewModel(repository: testingSnapshotRepository)
         
         let snapshot_28_02_2022 = snapshots[0]
-        let dateNear_28_02_2022 = DateParser.shared.date(from: "2022-03-06T14:27:19Z")!
+        let dateNear_28_02_2022 = DateParser.shared.date(from: "2022-03-06T14:27:19")!
         sut.selectedDate = dateNear_28_02_2022
         var expectedSelectedSnapshot = snapshot_28_02_2022
         var actualSelectedSnapshot = try XCTUnwrap(sut.selectedSnapshot)
         XCTAssertEqual(expectedSelectedSnapshot, actualSelectedSnapshot)
         
         let snapshot_31_05_2023 = snapshots[15]
-        let dateNear_31_05_2023 = DateParser.shared.date(from: "2023-05-20T22:02:33Z")!
+        let dateNear_31_05_2023 = DateParser.shared.date(from: "2023-05-20T22:02:33")!
         sut.selectedDate = dateNear_31_05_2023
         expectedSelectedSnapshot = snapshot_31_05_2023
         actualSelectedSnapshot = try XCTUnwrap(sut.selectedSnapshot)
         XCTAssertEqual(expectedSelectedSnapshot, actualSelectedSnapshot)
         
         let snapshot_01_12_2022 = snapshots[9]
-        let dateNear_01_12_2022 = DateParser.shared.date(from: "2022-12-13T07:13:51Z")!
+        let dateNear_01_12_2022 = DateParser.shared.date(from: "2022-12-13T07:13:51")!
         sut.selectedDate = dateNear_01_12_2022
         expectedSelectedSnapshot = snapshot_01_12_2022
         actualSelectedSnapshot = try XCTUnwrap(sut.selectedSnapshot)
