@@ -42,7 +42,7 @@ class AssetRepository: NSObject {
     
     func createAssetPool(named name: String) {
         let context = fetchedResultsController.managedObjectContext
-        let pool = AssetPool(context: context)
+        let pool = AssetPool(usedContext: context)
         pool.name = name
         try? context.save()
     }
