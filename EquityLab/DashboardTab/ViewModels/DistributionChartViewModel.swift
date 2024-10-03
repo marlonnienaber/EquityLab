@@ -27,7 +27,7 @@ class DistributionChartViewModel {
     }
     var showPopover: Bool = false
     var distributionCategories: [DonutChartCategory] {
-        Self.logger.debug("DistributionChartViewModel")
+        Self.logger.debug("distributionCategories")
         guard let selectedSnapshot = dashboardViewModel.selectedSnapshot else { return [] }
         let totalValue = computeTotalValue(for: selectedSnapshot)
         let poolValues = dashboardViewModel.computeValueByPool(for: positionType, using: selectedSnapshot)
@@ -51,7 +51,7 @@ class DistributionChartViewModel {
             repository: SnapshotRepository = SnapshotRepository.production
         )
     {
-        Self.logger.debug("DistributionChartViewModel")
+        Self.logger.debug("DistributionChartViewModel()")
         self.distributionChartType = distributionChartType
         self.dashboardViewModel = dashboardViewModel
         self.repository = repository
@@ -61,30 +61,30 @@ class DistributionChartViewModel {
     
     
     func getValueString(for pool: Pool) -> String {
-        Self.logger.debug("getValueString")
+        Self.logger.debug("getValueString(for pool)")
         return LocalizedCurrencyFormatter.shared.string(from: pool.value as NSNumber) ?? ""
     }
     
     func getPercentageString(for pool: Pool) -> String {
-        Self.logger.debug("getPercentageString")
+        Self.logger.debug("getPercentageString(for pool)")
         return String(format: "%.1f", pool.percentage) + " %"
     }
     
     func getSelectedCategoryPercentageString() -> String? {
-        Self.logger.debug("getSelectedCategoryPercentageString")
+        Self.logger.debug("getSelectedCategoryPercentageString()")
         guard let selectedCategory else { return nil }
         return String(format: "%.1f", selectedCategory.percentage) + " %"
     }
     
     func calculateFrameLength(for geometry: GeometryProxy) -> CGFloat {
-        Self.logger.debug("calculateFrameLength")
+        Self.logger.debug("calculateFrameLength(for geometry)")
         let maxWidth = geometry.size.width * 0.5
         let maxHeight = geometry.size.height
         return min(maxWidth, maxHeight)
     }
     
     func calculateOuterRadius(for geometry: GeometryProxy, and category: DonutChartCategory) -> MarkDimension {
-        Self.logger.debug("calculateOuterRadius")
+        Self.logger.debug("calculateOuterRadius(for geometry)")
         let chartSize = calculateFrameLength(for: geometry)
         if chartSize >= 170 {
             return selectedCategory == category ? 95 : 82
@@ -97,7 +97,7 @@ class DistributionChartViewModel {
     
     
     func computeTotalValue(for snapshot: Snapshot) -> Double {
-        Self.logger.debug("computeTotalValue")
+        Self.logger.debug("computeTotalValue(for snapshot)")
         let positions: [Position]
         switch distributionChartType {
         case .assetDistributionChart: positions = repository.fetchAssetPositions(of: snapshot)
@@ -108,7 +108,7 @@ class DistributionChartViewModel {
     }
     
     func setSelectedCategoryForNewCumulativeValue(cumulativeValue: Double) {
-        Self.logger.debug("setSelectedCategoryForNewCumulativeValue")
+        Self.logger.debug("setSelectedCategoryForNewCumulativeValue(cumulativeValue)")
         var distributionCategories = distributionCategories
         var cumulativeTotal = 0.0
         var category: DonutChartCategory
@@ -120,14 +120,14 @@ class DistributionChartViewModel {
     }
     
     func setSelectedCategoryForNewSnapshot() {
-        Self.logger.debug("setSelectedCategoryForNewSnapshot")
+        Self.logger.debug("setSelectedCategoryForNewSnapshot()")
         selectedCategory = distributionCategories.first(where: {$0 == selectedCategory}) ?? distributionCategories.first
     }
 }
 
 extension DistributionChartViewModel: SnapshotObserver {
     func notifyAfterSnapshotUpdate() {
-        Self.logger.debug("notifyAfterSnapshotUpdate")
+        Self.logger.debug("notifyAfterSnapshotUpdate()")
         selectedCategory = distributionCategories.first
     }
 }

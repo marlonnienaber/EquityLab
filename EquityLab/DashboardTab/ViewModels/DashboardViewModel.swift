@@ -60,7 +60,7 @@ class DashboardViewModel {
     
     
     init(repository: SnapshotRepository = SnapshotRepository.production) {
-        Self.logger.debug("DashboardViewModel")
+        Self.logger.debug("DashboardViewModel()")
         self.repository = repository
         self.snapshotAnalyzer = SnapshotAnalyzer(repository: repository)
         self.repository.add(observer: self)
@@ -119,7 +119,7 @@ class DashboardViewModel {
 
 extension DashboardViewModel: SnapshotObserver {
     func notifyAfterSnapshotUpdate() {
-        Self.logger.debug("notifyAfterSnapshotUpdate")
+        Self.logger.debug("notifyAfterSnapshotUpdate()")
         self.snapshots = repository.fetchSnapshots(sortingOrder: .ascending)
         guard let selectedSnapshot else { return }
         self.selectedSnapshot = snapshots.first(where: { $0 == selectedSnapshot })
