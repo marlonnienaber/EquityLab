@@ -1,6 +1,7 @@
 import XCTest
 @testable import EquityLab
 
+/* TODO: test interface providing data to view after CRUD operation on model (ATM it is only tested whether persisted data is correct, not whether the change is reflected in the viewModels data) */
 final class SnapshotLedgerViewModelTests: XCTestCase {
     private var testingCoreDataStack: TestingCoreDataStack!
     private var testingSnapshotRepository: SnapshotRepository!
