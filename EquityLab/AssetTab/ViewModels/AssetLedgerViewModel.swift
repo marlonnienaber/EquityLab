@@ -8,7 +8,7 @@ class AssetLedgerViewModel {
     @ObservationIgnored private let repository: AssetRepository
     @ObservationIgnored private var poolToAssetsDictionary = [AssetPool:[Asset]]()
     var pools = [AssetPool]()
-    var poolName = ""
+    var alertPoolName = ""
     var alertPool: AssetPool? = nil
     var showCreatePoolAlert = false
     var showEditPoolAlert = false
@@ -42,7 +42,7 @@ class AssetLedgerViewModel {
     
     func createAssetPool() {
         Self.logger.debug("createAssetPool()")
-        repository.createAssetPool(named: poolName)
+        repository.createAssetPool(named: alertPoolName)
     }
     
     func deleteAssetPool() {
@@ -54,13 +54,13 @@ class AssetLedgerViewModel {
     func updateAssetPool() {
         Self.logger.debug("updateAssetPool()")
         guard let alertPool else { return }
-        repository.update(assetPool: alertPool, newName: poolName)
+        repository.update(assetPool: alertPool, newName: alertPoolName)
     }
     
     func resetPoolVariables() {
         Self.logger.debug("resetPoolVariables()")
         alertPool = nil
-        poolName = ""
+        alertPoolName = ""
     }
 }
 
@@ -68,6 +68,7 @@ extension AssetLedgerViewModel: AssetObserver {
     func notifyAfterAssetUpdate() {
         Self.logger.debug("notifyAfterAssetUpdate()")
         pools = repository.fetchAssetPools()
+        poolToAssetsDictionary = .init()
         for pool in pools {
             poolToAssetsDictionary[pool] = repository.fetchAssets(for: pool)
         }

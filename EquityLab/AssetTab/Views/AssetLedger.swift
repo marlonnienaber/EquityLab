@@ -1,6 +1,7 @@
 import SwiftUI
 import CoreData
 
+/* TODO: create a custom .alert modifier which only takes in an optional AssetPool -> get rid of alert-flags in viewModel */
 struct AssetLedger: View {
     @State private var viewModel = AssetLedgerViewModel()
     
@@ -30,7 +31,7 @@ struct AssetLedger: View {
                 }
             }
             .alert("What should the name of the new pool be?", isPresented: $viewModel.showCreatePoolAlert) {
-                TextField("Value", text: $viewModel.poolName)
+                TextField("Value", text: $viewModel.alertPoolName)
                 Button("Cancel") {
                     viewModel.showCreatePoolAlert = false
                 }
@@ -39,7 +40,7 @@ struct AssetLedger: View {
                 }
             }
             .alert("Edit \(viewModel.alertPool?.name ?? "")", isPresented: $viewModel.showEditPoolAlert) {
-                TextField("Value", text: $viewModel.poolName)
+                TextField("Value", text: $viewModel.alertPoolName)
                 Button("Cancel", role: .cancel) {
                     viewModel.showEditPoolAlert = false
                 }
@@ -105,7 +106,7 @@ struct AssetLedger: View {
             Spacer()
             Button {
                 viewModel.alertPool = pool
-                viewModel.poolName = pool.name
+                viewModel.alertPoolName = pool.name
                 viewModel.showEditPoolAlert = true
             } label: {
                 Image(systemName: "slider.horizontal.3")

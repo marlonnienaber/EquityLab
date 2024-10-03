@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		730273312CAE85E0001EE236 /* AssetLedgerViewModelTestDataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 730273302CAE85D2001EE236 /* AssetLedgerViewModelTestDataProvider.swift */; };
+		730273332CAE85ED001EE236 /* AssetLedgerViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 730273322CAE85E7001EE236 /* AssetLedgerViewModelTests.swift */; };
 		7314FD6F2C7510E100483835 /* TestingCoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7314FD6E2C7510E100483835 /* TestingCoreDataStack.swift */; };
 		733473872C8DEC950050C656 /* DistributionChartViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 733473862C8DEC950050C656 /* DistributionChartViewModelTests.swift */; };
 		7342ED272C44750200BA20A4 /* EquityLabApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7342ED262C44750200BA20A4 /* EquityLabApp.swift */; };
@@ -93,6 +95,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		730273302CAE85D2001EE236 /* AssetLedgerViewModelTestDataProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetLedgerViewModelTestDataProvider.swift; sourceTree = "<group>"; };
+		730273322CAE85E7001EE236 /* AssetLedgerViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetLedgerViewModelTests.swift; sourceTree = "<group>"; };
 		7314FD652C75106500483835 /* EquityLabTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EquityLabTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		7314FD6E2C7510E100483835 /* TestingCoreDataStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestingCoreDataStack.swift; sourceTree = "<group>"; };
 		733473862C8DEC950050C656 /* DistributionChartViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DistributionChartViewModelTests.swift; sourceTree = "<group>"; };
@@ -490,6 +494,7 @@
 		73B8119F2CA7261D003B1973 /* Tests */ = {
 			isa = PBXGroup;
 			children = (
+				730273322CAE85E7001EE236 /* AssetLedgerViewModelTests.swift */,
 				7363DDF92CA99557009F3412 /* SnapshotFormViewModelTests.swift */,
 				7363DDF12CA758D1009F3412 /* DashboardViewModelTests.swift */,
 				733473862C8DEC950050C656 /* DistributionChartViewModelTests.swift */,
@@ -501,6 +506,7 @@
 		73B811A02CA72624003B1973 /* TestDataProviders */ = {
 			isa = PBXGroup;
 			children = (
+				730273302CAE85D2001EE236 /* AssetLedgerViewModelTestDataProvider.swift */,
 				7363DDFB2CA9F0A9009F3412 /* SnapshotFormViewModelTestDataProvider.swift */,
 				73B811A12CA72644003B1973 /* DashboardViewModelTestDataProvider.swift */,
 				73B811A52CA72670003B1973 /* DistributionChartViewModelTestDataProvider.swift */,
@@ -616,6 +622,8 @@
 				7363DDF22CA758D7009F3412 /* DashboardViewModelTests.swift in Sources */,
 				73B811A42CA72668003B1973 /* SnapshotLedgerViewModelTestDataProvider.swift in Sources */,
 				7363DDFC2CA9F0B7009F3412 /* SnapshotFormViewModelTestDataProvider.swift in Sources */,
+				730273312CAE85E0001EE236 /* AssetLedgerViewModelTestDataProvider.swift in Sources */,
+				730273332CAE85ED001EE236 /* AssetLedgerViewModelTests.swift in Sources */,
 				73B811A22CA7264E003B1973 /* DashboardViewModelTestDataProvider.swift in Sources */,
 				73B8119A2CA6D3F4003B1973 /* SnapshotLedgerViewModelTests.swift in Sources */,
 				733473872C8DEC950050C656 /* DistributionChartViewModelTests.swift in Sources */,

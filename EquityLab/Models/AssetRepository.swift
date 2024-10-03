@@ -10,6 +10,7 @@ class AssetRepository: NSObject {
         request.sortDescriptors = [NSSortDescriptor(keyPath: \AssetPool.name, ascending: true)]
         request.observedRelationships = ["assets"]
         fetchedResultsController = .init(fetchRequest: request, managedObjectContext: context, sectionNameKeyPath: nil, cacheName: nil)
+        try? fetchedResultsController.performFetch()
         self.observers = []
         super.init()
         fetchedResultsController.delegate = self

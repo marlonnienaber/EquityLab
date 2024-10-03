@@ -11,6 +11,7 @@ class SnapshotRepository: NSObject {
         request.sortDescriptors = [NSSortDescriptor(keyPath: \Snapshot.date, ascending: true)]
         request.observedRelationships = ["assets", "liabilities"]
         fetchedResultsController = .init(fetchRequest: request, managedObjectContext: context, sectionNameKeyPath: nil, cacheName: nil)
+        try? fetchedResultsController.performFetch()
         self.observers = []
         super.init()
         fetchedResultsController.delegate = self
