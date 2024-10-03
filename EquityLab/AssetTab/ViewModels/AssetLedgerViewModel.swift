@@ -25,33 +25,40 @@ class AssetLedgerViewModel {
     }
     
     func assets(for pool: AssetPool) -> [Asset] {
-        poolToAssetsDictionary[pool] ?? []
+        Self.logger.debug("assetsForPool")
+        return poolToAssetsDictionary[pool] ?? []
     }
     
     func assets() -> [Asset] {
-        Array(poolToAssetsDictionary.values.flatMap { $0 })
+        Self.logger.debug("assets")
+        return Array(poolToAssetsDictionary.values.flatMap { $0 })
     }
     
     func deleteAssets(in pool: AssetPool, forIndexSet indexSet: IndexSet) {
+        Self.logger.debug("deleteAssets")
         guard let sectionAssets = poolToAssetsDictionary[pool] else { return }
         indexSet.map{sectionAssets[$0]}.forEach{ repository.delete(asset: $0) }
     }
     
     func createAssetPool() {
+        Self.logger.debug("createAssetPool")
         repository.createAssetPool(named: poolName)
     }
     
     func deleteAssetPool() {
+        Self.logger.debug("deleteAssetPool")
         guard let alertPool else { return }
         repository.delete(assetPool: alertPool)
     }
     
     func updateAssetPool() {
+        Self.logger.debug("updateAssetPool")
         guard let alertPool else { return }
         repository.update(assetPool: alertPool, newName: poolName)
     }
     
     func resetPoolVariables() {
+        Self.logger.debug("resetPoolVariables")
         alertPool = nil
         poolName = ""
     }
@@ -68,7 +75,14 @@ extension AssetLedgerViewModel: AssetObserver {
 }
 
 enum AssetLedgerSheetType: Identifiable {
-    var id: UUID { UUID() }
     case addSheetAsset(pool: AssetPool)
     case updateSheetAsset(asset: Asset)
+    var id: String {
+        switch self {
+        case .addSheetAsset(let pool):
+            return "addSheetAsset-\(pool.id)"
+        case .updateSheetAsset(let asset):
+            return "updateSheet-\(asset.id)"
+        }
+    }
 }
