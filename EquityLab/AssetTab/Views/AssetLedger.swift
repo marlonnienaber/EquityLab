@@ -54,8 +54,8 @@ struct AssetLedger: View {
         }
         .sheet(item: $viewModel.activeSheet) { activeSheet in
             switch activeSheet {
-            case .addSheetAsset(let pool): AssetForm(viewModel: AssetFormViewModel(pool: pool, allAssets: viewModel.assets()), assetLedgerActiveSheet: $viewModel.activeSheet)
-            case .updateSheetAsset(let asset): AssetForm(viewModel: AssetFormViewModel(asset: asset, allAssets: viewModel.assets()), assetLedgerActiveSheet: $viewModel.activeSheet)
+            case .addSheetAsset(let pool): AssetForm(viewModel: AssetFormViewModel(pool: pool) { viewModel.activeSheet = nil })
+            case .updateSheetAsset(let asset): AssetForm(viewModel: AssetFormViewModel(asset: asset) { viewModel.activeSheet = nil })
             }
         }
     }

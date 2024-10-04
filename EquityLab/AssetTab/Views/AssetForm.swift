@@ -3,16 +3,14 @@ import CoreData
 
 struct AssetForm: View {
     @State public var viewModel: AssetFormViewModel
-    @Binding public var assetLedgerActiveSheet: AssetLedgerSheetType?
-    @State private var showPopover: Bool = false
     
     var body: some View {
         NavigationView{
             VStack {
                 if viewModel.asset == nil {
                     Picker(selection: $viewModel.selectedAssetType) {
-                        Text("possession").tag("possession")
-                        Text("receivable").tag("receivable")
+                        Text("possession").tag(AssetType.possession)
+                        Text("receivable").tag(AssetType.receivable)
                     } label: {
                         Text("picker")
                     }
@@ -20,15 +18,17 @@ struct AssetForm: View {
                     .frame(width: 180)
                     .padding(.top)
                 }
-                FormSection
+                formSection
                     .toolbar {
                         ToolbarItem(placement: .navigationBarLeading) {
-                            Button("Cancel", action: { assetLedgerActiveSheet = nil } )
+                            Button("Cancel") {
+                                viewModel.dismissSheet()
+                            }
                         }
                         ToolbarItem(placement: .navigationBarTrailing) {
                             Button("Save") {
                                 viewModel.saveAsset()
-                                assetLedgerActiveSheet = nil
+                                viewModel.dismissSheet()
                             }
                         }
                     }
@@ -40,33 +40,35 @@ struct AssetForm: View {
         }
     }
     
-    @ViewBuilder var FormSection: some View {
+    @ViewBuilder
+    var formSection: some View {
         if viewModel.asset == nil {
-            if viewModel.selectedAssetType == "possession" {
-                NormalFormSection
-            } else {
-                ReceivableFormSection
+            switch viewModel.selectedAssetType {
+                case .possession: possessionFormSection
+                case .receivable: receivableFormSection
             }
         } else {
             if let _ = viewModel.asset as? Possession {
-                NormalFormSection
+                possessionFormSection
             } else {
-                ReceivableFormSection
+                receivableFormSection
             }
         }
     }
     
-    @ViewBuilder var NormalFormSection: some View {
+    var possessionFormSection: some View {
         Form {
             TextField("name", text: $viewModel.assetName)
             Toggle(isOn: $viewModel.possessionIsVolatile) {
                 HStack{
                     Text("volatile asset?")
                     Spacer()
-                    Button(action: { showPopover.toggle() }) {
+                    Button{
+                        viewModel.showPopover.toggle()
+                    } label: {
                         Image(systemName: "info.circle")
                     }
-                    .popover(isPresented: $showPopover) {
+                    .popover(isPresented: $viewModel.showPopover) {
                         Text("the latest value of non-volatile assets will be reused when taking a new snapshot")
                             .presentationCompactAdaptation(.popover)
                     }
@@ -77,7 +79,7 @@ struct AssetForm: View {
         }
     }
     
-    @ViewBuilder var ReceivableFormSection: some View {
+    var receivableFormSection: some View {
         Form {
             Section {
                 TextField("debtor", text: $viewModel.receivableDebtor)
@@ -107,7 +109,6 @@ struct AssetForm: View {
                 DatePicker("date", selection: $viewModel.receivableGrantDate, in: ...Date(), displayedComponents: .date)
             }
         }
-        
     }
     
 }

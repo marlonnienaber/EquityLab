@@ -59,6 +59,54 @@ class AssetRepository: NSObject {
         assetPool.name = newName
         try? context.save()
     }
+    
+    func updateReceivable(receivable: Receivable,
+                          newName: String,
+                          newDebtor: String,
+                          newInitialAmount: Double,
+                          newRepaidAmount: Double,
+                          newGrantDate: Date) {
+        let context = fetchedResultsController.managedObjectContext
+        receivable.name = newName
+        receivable.debtor = newDebtor
+        receivable.initialAmount = newInitialAmount
+        receivable.repaidAmount = newRepaidAmount
+        receivable.grantDate = newGrantDate
+        try? context.save()
+    }
+    
+    func updatePossession(possession: Possession, newName: String, newIsVolatile: Bool) {
+        let context = fetchedResultsController.managedObjectContext
+        possession.name = newName
+        possession.volatile = newIsVolatile
+        try? context.save()
+    }
+    
+    func createReceivable(name: String,
+                          pool: AssetPool,
+                          debtor: String,
+                          initialAmount: Double,
+                          repaidAmount: Double,
+                          grantDate: Date) {
+        let context = fetchedResultsController.managedObjectContext
+        let receivable = Receivable(usedContext: context)
+        receivable.name = name
+        receivable.pool = pool
+        receivable.debtor = debtor
+        receivable.initialAmount = initialAmount
+        receivable.repaidAmount = repaidAmount
+        receivable.grantDate = grantDate
+        try? context.save()
+    }
+    
+    func createPossession(name: String, pool: AssetPool, isVolatile: Bool) {
+        let context = fetchedResultsController.managedObjectContext
+        let possession = Possession(context: context)
+        possession.name = name
+        possession.volatile = isVolatile
+        possession.pool = pool
+        try? context.save()
+    }
 }
 
 extension AssetRepository: NSFetchedResultsControllerDelegate {

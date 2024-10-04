@@ -1,26 +1,25 @@
-
 import CoreData
 
 @Observable
 class AssetFormViewModel {
-    private let context: NSManagedObjectContext
-    private let assets: [Asset]
-    public var assetPool: AssetPool?
-    public var asset: Asset?
-    public var selectedAssetType: String
-    public var assetName: String
-    public var receivableGrantDate: Date
-    public var receivableDebtor: String
-    public var receivableInitialAmount: Double
-    public var receivableRepaidAmount: Double
-    public var possessionIsVolatile: Bool
+    private let repository: AssetRepository
+    var assetPool: AssetPool?
+    var asset: Asset?
+    var selectedAssetType: AssetType
+    var assetName: String
+    var receivableGrantDate: Date
+    var receivableDebtor: String
+    var receivableInitialAmount: Double
+    var receivableRepaidAmount: Double
+    var possessionIsVolatile: Bool
+    let dismissSheet: () -> ()
+    var showPopover: Bool = false
     
-    init(asset: Asset? = nil, pool: AssetPool? = nil, allAssets: [Asset]) {
-        self.context = ProductionCoreDataStack.shared.context
-        self.assets = allAssets
+    init(asset: Asset? = nil, pool: AssetPool? = nil, repository: AssetRepository = .production, dismissSheet: @escaping () -> ()) {
+        self.repository = repository
         self.assetPool = pool
         self.asset = asset
-        self.selectedAssetType = "possession"
+        self.selectedAssetType = .possession
         self.assetName = asset?.name ?? ""
         if let receivable = asset as? Receivable {
             self.receivableGrantDate = receivable.grantDate
@@ -38,6 +37,12 @@ class AssetFormViewModel {
         } else {
             self.possessionIsVolatile = true
         }
+        self.dismissSheet = dismissSheet
+    }
+    
+    private func assetWithSameNameDoesNotExist() -> Bool {
+        let assets = repository.fetchAssets()
+        return !assets.contains(where: {$0.name == assetName})
     }
     
     func saveAsset() {
@@ -45,46 +50,44 @@ class AssetFormViewModel {
             updateReceivable(receivable: receivable)
         } else if let possession = asset as? Possession {
             updatePossession(possession: possession)
-        } else if !assets.contains(where: {$0.name == assetName}) {
-            if selectedAssetType == "receivable" {
-                createReceivable()
-            } else {
-                createPossession()
+        } else if assetWithSameNameDoesNotExist() {
+            switch selectedAssetType {
+                case .receivable: createReceivable()
+                case .possession: createPossession()
             }
         }
     }
     
     func updateReceivable(receivable: Receivable) {
-        receivable.name = assetName
-        receivable.debtor = receivableDebtor
-        receivable.initialAmount = receivableInitialAmount
-        receivable.repaidAmount = receivableRepaidAmount
-        receivable.grantDate = receivableGrantDate
-        try? context.save()
+        repository.updateReceivable(receivable: receivable,
+                                    newName: assetName,
+                                    newDebtor: receivableDebtor,
+                                    newInitialAmount: receivableInitialAmount,
+                                    newRepaidAmount: receivableRepaidAmount,
+                                    newGrantDate: receivableGrantDate)
     }
     
     func updatePossession(possession: Possession) {
-        possession.name = assetName
-        possession.volatile = possessionIsVolatile
-        try? context.save()
+        repository.updatePossession(possession: possession, newName: assetName, newIsVolatile: possessionIsVolatile)
     }
     
     func createReceivable() {
-        let receivable = Receivable(context: context)
-        receivable.name = assetName
-        receivable.pool = assetPool
-        receivable.debtor = receivableDebtor
-        receivable.initialAmount = receivableInitialAmount
-        receivable.repaidAmount = receivableRepaidAmount
-        receivable.grantDate = receivableGrantDate
-        try? context.save()
+        guard let assetPool else { return }
+        repository.createReceivable(name: assetName,
+                                    pool: assetPool,
+                                    debtor: receivableDebtor,
+                                    initialAmount: receivableInitialAmount,
+                                    repaidAmount: receivableRepaidAmount,
+                                    grantDate: receivableGrantDate)
     }
     
     func createPossession() {
-        let possession = Possession(context: context)
-        possession.name = assetName
-        possession.volatile = possessionIsVolatile
-        possession.pool = assetPool
-        try? context.save()
+        guard let assetPool else { return }
+        repository.createPossession(name: assetName, pool: assetPool, isVolatile: possessionIsVolatile)
     }
+}
+
+enum AssetType: Hashable {
+    case receivable
+    case possession
 }
