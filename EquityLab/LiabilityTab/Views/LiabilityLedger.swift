@@ -10,8 +10,8 @@ struct LiabilityLedger: View {
             List {
                 ForEach(viewModel.pools) { pool in
                     Section(pool.name) {
-                        SectionContent(pool: pool, sectionLiabilities: viewModel.liabilities(for: pool))
-                        SectionControls(for: pool)
+                        sectionContent(pool: pool, sectionLiabilities: viewModel.liabilities(for: pool))
+                        sectionControls(for: pool)
                     }
                 }
             }
@@ -40,7 +40,7 @@ struct LiabilityLedger: View {
         
     }
     
-    @ViewBuilder func SectionContent(pool: LiabilityPool, sectionLiabilities: [Liability]) -> some View {
+    func sectionContent(pool: LiabilityPool, sectionLiabilities: [Liability]) -> some View {
         ForEach(sectionLiabilities) { liability in
             Button {
                 viewModel.activeSheet = .updateSheetLiability(liability: liability)
@@ -63,12 +63,13 @@ struct LiabilityLedger: View {
                     }
                 }
             }
-        }.onDelete{ indexSet in
+        }
+        .onDelete{ indexSet in
             viewModel.deleteLiabilities(in: pool, for: indexSet)
         }
     }
         
-    @ViewBuilder func SectionControls(for pool: LiabilityPool) -> some View {
+    func sectionControls(for pool: LiabilityPool) -> some View {
         HStack{
             Button {
                 viewModel.activeSheet = LiabilityLedgerSheetType.addSheetLiability(pool: pool)
@@ -111,7 +112,4 @@ struct LiabilityLedger: View {
             }
         }
     }
-    
-    
-    
 }
