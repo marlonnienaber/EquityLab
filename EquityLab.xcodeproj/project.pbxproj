@@ -69,6 +69,8 @@
 		7363DDFE2CA9FD6C009F3412 /* Array+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7363DDFD2CA9FD67009F3412 /* Array+Extension.swift */; };
 		7363DE002CAB1C52009F3412 /* Date+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7363DDFF2CAB1C4B009F3412 /* Date+Extension.swift */; };
 		7363DE022CAC74AC009F3412 /* NSManagedObject+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7363DE012CAC74A4009F3412 /* NSManagedObject+Extension.swift */; };
+		7371458B2CB0293B009578C8 /* AssetFormViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7371458A2CB02930009578C8 /* AssetFormViewModelTests.swift */; };
+		7371458D2CB02977009578C8 /* AssetFormViewModelTestDataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7371458C2CB02967009578C8 /* AssetFormViewModelTestDataProvider.swift */; };
 		73823CDD2C6154930049D03C /* DistributionChartViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73823CDC2C6154930049D03C /* DistributionChartViewModel.swift */; };
 		73823CDF2C62B2EE0049D03C /* ChangeChartViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73823CDE2C62B2EE0049D03C /* ChangeChartViewModel.swift */; };
 		73823CE12C68023E0049D03C /* BalanceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73823CE02C68023E0049D03C /* BalanceView.swift */; };
@@ -159,6 +161,8 @@
 		7363DDFD2CA9FD67009F3412 /* Array+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+Extension.swift"; sourceTree = "<group>"; };
 		7363DDFF2CAB1C4B009F3412 /* Date+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Extension.swift"; sourceTree = "<group>"; };
 		7363DE012CAC74A4009F3412 /* NSManagedObject+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSManagedObject+Extension.swift"; sourceTree = "<group>"; };
+		7371458A2CB02930009578C8 /* AssetFormViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetFormViewModelTests.swift; sourceTree = "<group>"; };
+		7371458C2CB02967009578C8 /* AssetFormViewModelTestDataProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetFormViewModelTestDataProvider.swift; sourceTree = "<group>"; };
 		73823CDC2C6154930049D03C /* DistributionChartViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DistributionChartViewModel.swift; sourceTree = "<group>"; };
 		73823CDE2C62B2EE0049D03C /* ChangeChartViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangeChartViewModel.swift; sourceTree = "<group>"; };
 		73823CE02C68023E0049D03C /* BalanceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BalanceView.swift; sourceTree = "<group>"; };
@@ -494,6 +498,7 @@
 		73B8119F2CA7261D003B1973 /* Tests */ = {
 			isa = PBXGroup;
 			children = (
+				7371458A2CB02930009578C8 /* AssetFormViewModelTests.swift */,
 				730273322CAE85E7001EE236 /* AssetLedgerViewModelTests.swift */,
 				7363DDF92CA99557009F3412 /* SnapshotFormViewModelTests.swift */,
 				7363DDF12CA758D1009F3412 /* DashboardViewModelTests.swift */,
@@ -506,6 +511,7 @@
 		73B811A02CA72624003B1973 /* TestDataProviders */ = {
 			isa = PBXGroup;
 			children = (
+				7371458C2CB02967009578C8 /* AssetFormViewModelTestDataProvider.swift */,
 				730273302CAE85D2001EE236 /* AssetLedgerViewModelTestDataProvider.swift */,
 				7363DDFB2CA9F0A9009F3412 /* SnapshotFormViewModelTestDataProvider.swift */,
 				73B811A12CA72644003B1973 /* DashboardViewModelTestDataProvider.swift */,
@@ -625,8 +631,10 @@
 				730273312CAE85E0001EE236 /* AssetLedgerViewModelTestDataProvider.swift in Sources */,
 				730273332CAE85ED001EE236 /* AssetLedgerViewModelTests.swift in Sources */,
 				73B811A22CA7264E003B1973 /* DashboardViewModelTestDataProvider.swift in Sources */,
+				7371458D2CB02977009578C8 /* AssetFormViewModelTestDataProvider.swift in Sources */,
 				73B8119A2CA6D3F4003B1973 /* SnapshotLedgerViewModelTests.swift in Sources */,
 				733473872C8DEC950050C656 /* DistributionChartViewModelTests.swift in Sources */,
+				7371458B2CB0293B009578C8 /* AssetFormViewModelTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

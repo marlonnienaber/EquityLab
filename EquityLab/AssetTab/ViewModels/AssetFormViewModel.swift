@@ -5,7 +5,6 @@ class AssetFormViewModel {
     private let repository: AssetRepository
     var assetPool: AssetPool?
     var asset: Asset?
-    var selectedAssetType: AssetType
     var assetName: String
     var receivableGrantDate: Date
     var receivableDebtor: String
@@ -14,6 +13,7 @@ class AssetFormViewModel {
     var possessionIsVolatile: Bool
     let dismissSheet: () -> ()
     var showPopover: Bool = false
+    var selectedAssetType: AssetType
     
     init(asset: Asset? = nil, pool: AssetPool? = nil, repository: AssetRepository = .production, dismissSheet: @escaping () -> ()) {
         self.repository = repository
@@ -45,6 +45,34 @@ class AssetFormViewModel {
         return !assets.contains(where: {$0.name == assetName})
     }
     
+    private func updateReceivable(receivable: Receivable) {
+        repository.updateReceivable(receivable: receivable,
+                                    newName: assetName,
+                                    newDebtor: receivableDebtor,
+                                    newInitialAmount: receivableInitialAmount,
+                                    newRepaidAmount: receivableRepaidAmount,
+                                    newGrantDate: receivableGrantDate)
+    }
+    
+    private func updatePossession(possession: Possession) {
+        repository.updatePossession(possession: possession, newName: assetName, newIsVolatile: possessionIsVolatile)
+    }
+    
+    private func createReceivable() {
+        guard let assetPool else { return }
+        repository.createReceivable(name: assetName,
+                                    pool: assetPool,
+                                    debtor: receivableDebtor,
+                                    initialAmount: receivableInitialAmount,
+                                    repaidAmount: receivableRepaidAmount,
+                                    grantDate: receivableGrantDate)
+    }
+    
+    private func createPossession() {
+        guard let assetPool else { return }
+        repository.createPossession(name: assetName, pool: assetPool, isVolatile: possessionIsVolatile)
+    }
+    
     func saveAsset() {
         if let receivable = asset as? Receivable {
             updateReceivable(receivable: receivable)
@@ -56,34 +84,7 @@ class AssetFormViewModel {
                 case .possession: createPossession()
             }
         }
-    }
-    
-    func updateReceivable(receivable: Receivable) {
-        repository.updateReceivable(receivable: receivable,
-                                    newName: assetName,
-                                    newDebtor: receivableDebtor,
-                                    newInitialAmount: receivableInitialAmount,
-                                    newRepaidAmount: receivableRepaidAmount,
-                                    newGrantDate: receivableGrantDate)
-    }
-    
-    func updatePossession(possession: Possession) {
-        repository.updatePossession(possession: possession, newName: assetName, newIsVolatile: possessionIsVolatile)
-    }
-    
-    func createReceivable() {
-        guard let assetPool else { return }
-        repository.createReceivable(name: assetName,
-                                    pool: assetPool,
-                                    debtor: receivableDebtor,
-                                    initialAmount: receivableInitialAmount,
-                                    repaidAmount: receivableRepaidAmount,
-                                    grantDate: receivableGrantDate)
-    }
-    
-    func createPossession() {
-        guard let assetPool else { return }
-        repository.createPossession(name: assetName, pool: assetPool, isVolatile: possessionIsVolatile)
+        /* TODO: give some feedback to the user in case an asset with the same name does exist */
     }
 }
 
