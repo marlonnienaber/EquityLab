@@ -1,116 +1,89 @@
-
+import os
 import CoreData
 
 @Observable
-class LiabilityLedgerViewModel: NSObject {
-    private let context: NSManagedObjectContext
-    private let fetchedResultsController: ObservingFetchedResultsController<LiabilityPool>
-    private var liabilities = [LiabilityPool:[Liability]]()
+class LiabilityLedgerViewModel {
+    @ObservationIgnored private static let logger = Logger(subsystem: .liabilityTab, component: .liabilityLedgerViewModel)
+    
+    @ObservationIgnored private let repository: LiabilityRepository
+    @ObservationIgnored private var poolToLiabilitiesDictionary = [LiabilityPool:[Liability]]()
     var pools = [LiabilityPool]()
-    var showCreatePoolAlert = false
-    var showEditPoolAlert = false
     var pool: LiabilityPool? = nil
     var poolName = ""
+    var showCreatePoolAlert = false
+    var showEditPoolAlert = false
     var activeSheet: LiabilityLedgerSheetType? = nil
     
-    override init() {
-        let context = ProductionCoreDataStack.shared.context
-        self.context = context
-        let request = ObservingFetchRequest<LiabilityPool>(entityName: "LiabilityPool")
-        request.sortDescriptors = [NSSortDescriptor(keyPath: \Liability.name, ascending: true)]
-        request.observedRelationships = ["liabilities"]
-        fetchedResultsController = ObservingFetchedResultsController(fetchRequest: request, managedObjectContext: context, sectionNameKeyPath: nil, cacheName: nil)
-        super.init()
-        fetchedResultsController.delegate = self
-        do {
-            try fetchedResultsController.performFetch()
-            self.pools = fetchedResultsController.fetchedObjects as! [LiabilityPool]
-            for pool in pools {
-                liabilities[pool] = (try? context.fetch(pool.getLiabilityRequest())) ?? []
-            }
-        } catch {}
+    init(repository: LiabilityRepository = .production) {
+        Self.logger.debug("LiabilityLedgerViewModel()")
+        self.repository = repository
+        self.pools = repository.fetchLiabilityPools()
+        self.repository.add(observer: self)
+        for pool in pools {
+            poolToLiabilitiesDictionary[pool] = repository.fetchLiabilities(for: pool)
+        }
     }
     
     func liabilities(for pool: LiabilityPool) -> [Liability] {
-        liabilities[pool] ?? []
+        Self.logger.debug("liabilities(for pool)")
+        return poolToLiabilitiesDictionary[pool] ?? []
     }
     
-    func allLiabilities() -> [Liability] {
-        Array(liabilities.values.flatMap { $0 })
+    func liabilities() -> [Liability] {
+        Self.logger.debug("liabilities()")
+        return Array(poolToLiabilitiesDictionary.values.flatMap { $0 })
     }
     
     func deleteLiabilities(in pool: LiabilityPool, for indexSet: IndexSet) {
-        guard let sectionLiabilities = liabilities[pool] else { return }
-        indexSet.map{sectionLiabilities[$0]}.forEach{context.delete($0)}
-        try? context.save()
+        Self.logger.debug("deleteLiabilities(in pool, for indexSet)")
+        guard let sectionLiabilities = poolToLiabilitiesDictionary[pool] else { return }
+        indexSet.map{sectionLiabilities[$0]}.forEach{ repository.delete(liability: $0) }
     }
     
     func deleteLiabilityPool() {
+        Self.logger.debug("deleteLiabilityPool()")
         guard let pool else { return }
-        context.delete(pool)
-        try? context.save()
+        repository.delete(liabilityPool: pool)
     }
     
     func createLiabilityPool() {
-        let pool = LiabilityPool(context: context)
-        pool.name = poolName
-        try? context.save()
+        Self.logger.debug("createLiabilityPool()")
+        repository.createLiabilityPool(named: poolName)
     }
     
     func updateLiabilityPool() {
+        Self.logger.debug("updateLiabilityPool()")
         guard let pool else { return }
-        pool.name = poolName
-        try? context.save()
+        repository.update(liabilityPool: pool, newName: poolName)
     }
     
     func resetPoolVariables() {
+        Self.logger.debug("resetPoolVariables()")
         pool = nil
         poolName = ""
     }
 }
 
-extension LiabilityLedgerViewModel: NSFetchedResultsControllerDelegate {
-    
-    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
-        do {
-            try fetchedResultsController.performFetch()
-            self.pools = fetchedResultsController.fetchedObjects as! [LiabilityPool]
-            for pool in pools {
-                liabilities[pool] = (try? context.fetch(pool.getLiabilityRequest())) ?? []
-            }
-        } catch {}
-//        guard let pool = anObject as? LiabilityPool else { return }
-//        switch type {
-//        case .update:
-//            if let indexPath = indexPath, pools[indexPath.row] == pool {
-//                pools[indexPath.row] = pool
-//                liabilities[pool] = (try? context.fetch(pool.getLiabilityRequest())) ?? []
-//            }
-//        case .move:
-//            /// necessary in case FetchRequests without SortDescriptors are involved (repeated fetching might cause changes in indexPath)
-//            if let indexPath = indexPath, let newIndexPath = newIndexPath {
-//                pools.remove(at: indexPath.row)
-//                pools.insert(pool, at: newIndexPath.row)
-//                liabilities[pool] = (try? context.fetch(pool.getLiabilityRequest())) ?? []
-//            }
-//        case .delete:
-//            if let indexPath = indexPath {
-//                pools.remove(at: indexPath.row)
-//            }
-//        case .insert:
-//            if !pools.contains(pool) {
-//                pools.append(pool)
-//                liabilities[pool] = []
-//            }
-//        default:
-//            break
-//        }
+extension LiabilityLedgerViewModel: LiabilityObserver {
+    func notifyAfterLiabilityUpdate() {
+        Self.logger.debug("notifyAfterLiabilityUpdate()")
+        pools = repository.fetchLiabilityPools()
+        poolToLiabilitiesDictionary = .init()
+        for pool in pools {
+            poolToLiabilitiesDictionary[pool] = repository.fetchLiabilities(for: pool)
+        }
     }
-    
 }
 
 enum LiabilityLedgerSheetType: Identifiable {
-    var id: UUID { UUID() }
     case addSheetLiability(pool: LiabilityPool)
     case updateSheetLiability(liability: Liability)
+    var id: String {
+        switch self {
+        case .addSheetLiability(let pool):
+            return "addSheetLiability-\(pool.id)"
+        case .updateSheetLiability(let liability):
+            return "updateSheetLiability-\(liability.id)"
+        }
+    }
 }

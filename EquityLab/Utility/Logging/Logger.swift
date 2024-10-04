@@ -9,6 +9,7 @@ extension Logger {
         case dashboardTab = "dashboard tab"
         case snapshotTab = "snapshot tab"
         case assetTab = "asset tab"
+        case liabilityTab = "liability tab"
     }
     
     enum Component: String {
@@ -16,5 +17,6 @@ extension Logger {
         case distributionChartViewModel = "DistributionChartViewModel"
         case snapshotLedgerViewModel = "SnapshotLedgerViewModel"
         case assetLedgerViewModel = "AssetLedgerViewModel"
+        case liabilityLedgerViewModel = "LiabilityLedgerViewModel"
     }
 }
