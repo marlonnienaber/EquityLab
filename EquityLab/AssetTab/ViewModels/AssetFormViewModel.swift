@@ -1,8 +1,11 @@
+import os
 import CoreData
 
 @Observable
 class AssetFormViewModel {
-    private let repository: AssetRepository
+    @ObservationIgnored private static let logger = Logger(subsystem: .assetTab, component: .assetFormViewModel)
+    
+    @ObservationIgnored private let repository: AssetRepository
     var assetPool: AssetPool?
     var asset: Asset?
     var assetName: String
@@ -11,11 +14,12 @@ class AssetFormViewModel {
     var receivableInitialAmount: Double
     var receivableRepaidAmount: Double
     var possessionIsVolatile: Bool
-    let dismissSheet: () -> ()
     var showPopover: Bool = false
     var selectedAssetType: AssetType
+    let dismissSheet: () -> ()
     
     init(asset: Asset? = nil, pool: AssetPool? = nil, repository: AssetRepository = .production, dismissSheet: @escaping () -> ()) {
+        Self.logger.debug("AssetFormViewModel()")
         self.repository = repository
         self.assetPool = pool
         self.asset = asset
@@ -41,11 +45,13 @@ class AssetFormViewModel {
     }
     
     private func assetWithSameNameDoesNotExist() -> Bool {
+        Self.logger.debug("assetWithSameNameDoesNotExist()")
         let assets = repository.fetchAssets()
         return !assets.contains(where: {$0.name == assetName})
     }
     
     private func updateReceivable(receivable: Receivable) {
+        Self.logger.debug("updateReceivable(receivable)")
         repository.updateReceivable(receivable: receivable,
                                     newName: assetName,
                                     newDebtor: receivableDebtor,
@@ -55,10 +61,12 @@ class AssetFormViewModel {
     }
     
     private func updatePossession(possession: Possession) {
+        Self.logger.debug("updatePossession(possession)")
         repository.updatePossession(possession: possession, newName: assetName, newIsVolatile: possessionIsVolatile)
     }
     
     private func createReceivable() {
+        Self.logger.debug("createReceivable()")
         guard let assetPool else { return }
         repository.createReceivable(name: assetName,
                                     pool: assetPool,
@@ -69,11 +77,13 @@ class AssetFormViewModel {
     }
     
     private func createPossession() {
+        Self.logger.debug("createPossession()")
         guard let assetPool else { return }
         repository.createPossession(name: assetName, pool: assetPool, isVolatile: possessionIsVolatile)
     }
     
     func saveAsset() {
+        Self.logger.debug("saveAsset()")
         if let receivable = asset as? Receivable {
             updateReceivable(receivable: receivable)
         } else if let possession = asset as? Possession {
