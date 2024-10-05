@@ -8,8 +8,8 @@ class LiabilityLedgerViewModel {
     @ObservationIgnored private let repository: LiabilityRepository
     @ObservationIgnored private var poolToLiabilitiesDictionary = [LiabilityPool:[Liability]]()
     var pools = [LiabilityPool]()
-    var pool: LiabilityPool? = nil
-    var poolName = ""
+    var alertPoolName = ""
+    var alertPool: LiabilityPool? = nil
     var showCreatePoolAlert = false
     var showEditPoolAlert = false
     var activeSheet: LiabilityLedgerSheetType? = nil
@@ -42,25 +42,25 @@ class LiabilityLedgerViewModel {
     
     func deleteLiabilityPool() {
         Self.logger.debug("deleteLiabilityPool()")
-        guard let pool else { return }
-        repository.delete(liabilityPool: pool)
+        guard let alertPool else { return }
+        repository.delete(liabilityPool: alertPool)
     }
     
     func createLiabilityPool() {
         Self.logger.debug("createLiabilityPool()")
-        repository.createLiabilityPool(named: poolName)
+        repository.createLiabilityPool(named: alertPoolName)
     }
     
     func updateLiabilityPool() {
         Self.logger.debug("updateLiabilityPool()")
-        guard let pool else { return }
-        repository.update(liabilityPool: pool, newName: poolName)
+        guard let alertPool else { return }
+        repository.update(liabilityPool: alertPool, newName: alertPoolName)
     }
     
     func resetPoolVariables() {
         Self.logger.debug("resetPoolVariables()")
-        pool = nil
-        poolName = ""
+        alertPool = nil
+        alertPoolName = ""
     }
 }
 

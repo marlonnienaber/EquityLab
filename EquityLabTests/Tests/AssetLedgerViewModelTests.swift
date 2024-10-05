@@ -11,7 +11,7 @@ final class AssetLedgerViewModelTests: XCTestCase {
         testingAssetRepository = AssetRepository(context: testingCoreDataStack.context)
     }
     
-    /// create multiple assetPools with multiple Assets and test  pools/assets()/assets(for pool)
+    /// create multiple assetPools with multiple Assets and test pools/assets()/assets(for pool)
     func test_assetsAndPools_1() throws {
         let (expectedPools, poolToAssetDictionary, expectedAssets) = testDataProvider.createAndPersistTestObjects_assetsAndPools_1(using: testingCoreDataStack.context)
         
