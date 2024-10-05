@@ -83,7 +83,7 @@ enum AssetLedgerSheetType: Identifiable {
         case .addSheetAsset(let pool):
             return "addSheetAsset-\(pool.id)"
         case .updateSheetAsset(let asset):
-            return "updateSheet-\(asset.id)"
+            return "updateSheetAsset-\(asset.id)"
         }
     }
 }

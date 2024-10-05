@@ -45,7 +45,7 @@ struct AssetLedgerViewModelTestDataProvider {
         return (expectedAssetPools,poolToAssetDictionary,expectedAssets)
     }
     
-    func createAndPersistTestObjects_deleteAssets_1(using context: NSManagedObjectContext) -> ([AssetPool],[AssetPool:[Asset]],[Asset]) {
+    func createAndPersistTestObjects_deleteAssets_1(using context: NSManagedObjectContext) -> (AssetPool,[AssetPool],[AssetPool:[Asset]],[Asset]) {
         let asset1 = DataFactory.createReceivable(name: "Blitz",
                                                   date: DateParser.shared.date(from: "2024-04-15T00:00:00")!,
                                                   debtor: "Lenni",
@@ -68,12 +68,12 @@ struct AssetLedgerViewModelTestDataProvider {
         
         let expectedAssetPools = [assetPool1,assetPool2,assetPool3,assetPool4]
         var poolToAssetDictionary = [AssetPool:[Asset]]()
-        poolToAssetDictionary[assetPool1] = []
+        poolToAssetDictionary[assetPool1] = [asset2]
         poolToAssetDictionary[assetPool2] = [asset3,asset4]
         poolToAssetDictionary[assetPool3] = [asset5]
-        poolToAssetDictionary[assetPool4] = [asset1]
+        poolToAssetDictionary[assetPool4] = []
         let expectedAssets = [asset2,asset3,asset4,asset5]
-        return (expectedAssetPools,poolToAssetDictionary,expectedAssets)
+        return (assetPool4,expectedAssetPools,poolToAssetDictionary,expectedAssets)
     }
     
     func createAndPersistTestObjects_deleteAssetPool_1(using context: NSManagedObjectContext) -> (AssetPool,[AssetPool],[AssetPool:[Asset]],[Asset]) {

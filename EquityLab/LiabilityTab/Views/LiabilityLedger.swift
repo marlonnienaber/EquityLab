@@ -30,11 +30,32 @@ struct LiabilityLedger: View {
                     }
                 }
             }
+            .alert("What should the name of the new pool be?", isPresented: $viewModel.showCreatePoolAlert) {
+                TextField("Value", text: $viewModel.alertPoolName)
+                Button("Cancel") {
+                    viewModel.showCreatePoolAlert = false
+                }
+                Button("Save") {
+                    viewModel.createLiabilityPool()
+                }
+            }
+            .alert("Edit \(viewModel.alertPool?.name ?? "")", isPresented: $viewModel.showEditPoolAlert) {
+                TextField("Value", text: $viewModel.alertPoolName)
+                Button("Cancel", role: .cancel) {
+                    viewModel.showEditPoolAlert = false
+                }
+                Button("Save") {
+                    viewModel.updateLiabilityPool()
+                }
+                Button("Delete", role: .destructive) {
+                    viewModel.deleteLiabilityPool()
+                }
+            }
         }
         .sheet(item: $viewModel.activeSheet) { activeSheet in
             switch activeSheet {
-            case .addSheetLiability(let pool): LiabilityForm(viewModel: LiabilityFormViewModel(pool: pool, allLiabilities: viewModel.allLiabilities()), liabilityLedgerActiveSheet: $viewModel.activeSheet)
-            case .updateSheetLiability(let liability): LiabilityForm(viewModel: LiabilityFormViewModel(liability: liability, allLiabilities: viewModel.allLiabilities()), liabilityLedgerActiveSheet: $viewModel.activeSheet)
+            case .addSheetLiability(let pool): LiabilityForm(viewModel: LiabilityFormViewModel(pool: pool, allLiabilities: viewModel.liabilities()), liabilityLedgerActiveSheet: $viewModel.activeSheet)
+            case .updateSheetLiability(let liability): LiabilityForm(viewModel: LiabilityFormViewModel(liability: liability, allLiabilities: viewModel.liabilities()), liabilityLedgerActiveSheet: $viewModel.activeSheet)
             }
         }
         
@@ -82,34 +103,13 @@ struct LiabilityLedger: View {
             .buttonStyle(BorderlessButtonStyle())
             Spacer()
             Button {
-                viewModel.pool = pool
-                viewModel.poolName = pool.name
+                viewModel.alertPool = pool
+                viewModel.alertPoolName = pool.name
                 viewModel.showEditPoolAlert = true
             } label: {
                 Image(systemName: "slider.horizontal.3")
             }
             .buttonStyle(BorderlessButtonStyle())
-        }
-        .alert("What should the name of the new pool be?", isPresented: $viewModel.showCreatePoolAlert) {
-            TextField("Value", text: $viewModel.poolName)
-            Button("Cancel") {
-                viewModel.showCreatePoolAlert = false
-            }
-            Button("Save") {
-                viewModel.createLiabilityPool()
-            }
-        }
-        .alert("Edit \(viewModel.pool?.name ?? "")", isPresented: $viewModel.showEditPoolAlert) {
-            TextField("Value", text: $viewModel.poolName)
-            Button("Cancel", role: .cancel) {
-                viewModel.showEditPoolAlert = false
-            }
-            Button("Save") {
-                viewModel.updateLiabilityPool()
-            }
-            Button("Delete", role: .destructive) {
-                viewModel.deleteLiabilityPool()
-            }
         }
     }
 }

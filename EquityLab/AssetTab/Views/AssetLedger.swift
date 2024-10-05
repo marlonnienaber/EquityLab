@@ -10,8 +10,8 @@ struct AssetLedger: View {
             List {
                 ForEach(viewModel.pools) { pool in
                     Section(pool.name) {
-                        SectionContent(pool: pool, sectionAssets: viewModel.assets(for: pool))
-                        SectionControls(for: pool)
+                        sectionContent(pool: pool, sectionAssets: viewModel.assets(for: pool))
+                        sectionControls(for: pool)
                     }
                 }
             }
@@ -60,7 +60,7 @@ struct AssetLedger: View {
         }
     }
     
-    @ViewBuilder func SectionContent(pool: AssetPool, sectionAssets: [Asset]) -> some View {
+    func sectionContent(pool: AssetPool, sectionAssets: [Asset]) -> some View {
         ForEach(sectionAssets, id: \.name) { asset in
             Button {
                 viewModel.activeSheet = AssetLedgerSheetType.updateSheetAsset(asset: asset)
@@ -92,7 +92,7 @@ struct AssetLedger: View {
         }
     }
         
-    @ViewBuilder func SectionControls(for pool: AssetPool) -> some View {
+    func sectionControls(for pool: AssetPool) -> some View {
         HStack{
             Button {
                 viewModel.activeSheet = .addSheetAsset(pool: pool)
