@@ -54,8 +54,8 @@ struct LiabilityLedger: View {
         }
         .sheet(item: $viewModel.activeSheet) { activeSheet in
             switch activeSheet {
-            case .addSheetLiability(let pool): LiabilityForm(viewModel: LiabilityFormViewModel(pool: pool, allLiabilities: viewModel.liabilities()), liabilityLedgerActiveSheet: $viewModel.activeSheet)
-            case .updateSheetLiability(let liability): LiabilityForm(viewModel: LiabilityFormViewModel(liability: liability, allLiabilities: viewModel.liabilities()), liabilityLedgerActiveSheet: $viewModel.activeSheet)
+            case .addSheetLiability(let pool): LiabilityForm(viewModel: LiabilityFormViewModel(pool: pool) { viewModel.activeSheet = nil })
+            case .updateSheetLiability(let liability): LiabilityForm(viewModel: LiabilityFormViewModel(liability: liability) { viewModel.activeSheet = nil })
             }
         }
         

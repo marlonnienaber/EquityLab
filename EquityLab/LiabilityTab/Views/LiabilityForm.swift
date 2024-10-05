@@ -3,17 +3,19 @@ import SwiftUI
 
 struct LiabilityForm: View {
     @State var viewModel: LiabilityFormViewModel
-    @Binding public var liabilityLedgerActiveSheet: LiabilityLedgerSheetType?
     
     var body: some View {
         NavigationView {
             Form {
-                DescriptionSection
-                AmountSection
-                DateSection
-            }.toolbar {
+                descriptionSection
+                amountSection
+                dateSection
+            }
+            .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
-                    Button("Cancel", action: { liabilityLedgerActiveSheet = nil } )
+                    Button("Cancel") {
+                        viewModel.dismissSheet()
+                    }
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button("Save") {
@@ -22,16 +24,18 @@ struct LiabilityForm: View {
                         } else {
                             viewModel.createLiability()
                         }
-                        liabilityLedgerActiveSheet = nil
+                        viewModel.dismissSheet()
                     }
                 }
-            }.onTapGesture {
+            }
+            .onTapGesture {
                 hideKeyboard()
-            }.navigationTitle(viewModel.liability == nil ? "new Liability" : "edit Liability")
+            }
+            .navigationTitle(viewModel.liability == nil ? "new Liability" : "edit Liability")
         }
     }
     
-    @ViewBuilder fileprivate var DescriptionSection: some View {
+    private var descriptionSection: some View {
         Section {
             TextField("creditor", text: $viewModel.liabilityCreditor)
             TextField("purpose", text: $viewModel.liabilityName)
@@ -44,7 +48,7 @@ struct LiabilityForm: View {
         }
     }
     
-    @ViewBuilder fileprivate var AmountSection: some View {
+    private var amountSection: some View {
         Section {
             HStack {
                 Text("initial amount")
@@ -61,10 +65,9 @@ struct LiabilityForm: View {
         }
     }
     
-    @ViewBuilder fileprivate var DateSection: some View {
+    private var dateSection: some View {
         Section {
             DatePicker("date", selection: $viewModel.liabilityGrantDate, in: ...Date(), displayedComponents: .date)
         }
     }
-
 }

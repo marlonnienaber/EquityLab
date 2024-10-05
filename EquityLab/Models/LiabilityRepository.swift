@@ -59,6 +59,39 @@ class LiabilityRepository: NSObject {
         liabilityPool.name = newName
         try? context.save()
     }
+    
+    func createLiability(name: String,
+                         pool: LiabilityPool,
+                         creditor: String,
+                         initialAmount: Double,
+                         repaidAmount: Double,
+                         grantDate: Date) {
+        let context = fetchedResultsController.managedObjectContext
+        let liability = Liability(usedContext: context)
+        liability.grantDate = grantDate
+        liability.creditor = creditor
+        liability.initialAmount = initialAmount
+        liability.repaidAmount = repaidAmount
+        liability.name = name
+        liability.pool = pool
+        try? context.save()
+    }
+    
+    func updateLiability(liability: Liability,
+                         newName: String,
+                         newPool: LiabilityPool,
+                         newCreditor: String,
+                         newInitialAmount: Double,
+                         newRepaidAmount: Double,
+                         newGrantDate: Date) {
+        let context = fetchedResultsController.managedObjectContext
+        liability.grantDate = newGrantDate.startOfDay
+        liability.creditor = newCreditor
+        liability.initialAmount = newInitialAmount
+        liability.repaidAmount = newRepaidAmount
+        liability.name = newName
+        try? context.save()
+    }
 }
 
 extension LiabilityRepository: NSFetchedResultsControllerDelegate {

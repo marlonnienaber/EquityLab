@@ -1,21 +1,23 @@
-
+import os
 import CoreData
 
 @Observable
 class LiabilityFormViewModel {
-    private let context: NSManagedObjectContext
-    private var liabilities: [Liability]
-    public var liabilityPool: LiabilityPool?
-    public var liability: Liability?
-    public var liabilityName: String
-    public var liabilityGrantDate: Date
-    public var liabilityInitialAmount: Double
-    public var liabilityRepaidAmount: Double
-    public var liabilityCreditor: String
+    @ObservationIgnored private static let logger = Logger(subsystem: .liabilityTab, component: .liabilityFormViewModel)
     
-    init(liability: Liability? = nil, pool: LiabilityPool? = nil, allLiabilities: [Liability]) {
-        self.context = ProductionCoreDataStack.shared.context
-        self.liabilities = allLiabilities
+    @ObservationIgnored private let repository: LiabilityRepository
+    var liabilityPool: LiabilityPool?
+    var liability: Liability?
+    var liabilityName: String
+    var liabilityGrantDate: Date
+    var liabilityInitialAmount: Double
+    var liabilityRepaidAmount: Double
+    var liabilityCreditor: String
+    let dismissSheet: () -> ()
+    
+    init(liability: Liability? = nil, pool: LiabilityPool? = nil, repository: LiabilityRepository = .production, dismissSheet: @escaping () -> ()) {
+        Self.logger.debug("LiabilityFormViewModel()")
+        self.repository = repository
         self.liabilityPool = pool
         self.liability = liability
         if let liability {
@@ -31,26 +33,29 @@ class LiabilityFormViewModel {
             self.liabilityRepaidAmount = 0.0
             self.liabilityCreditor = ""
         }
+        self.dismissSheet = dismissSheet
     }
     
     func createLiability() {
-        let liability = Liability(context: context)
-        liability.grantDate = liabilityGrantDate
-        liability.creditor = liabilityCreditor
-        liability.initialAmount = liabilityInitialAmount
-        liability.repaidAmount = liabilityRepaidAmount
-        liability.name = liabilityName
-        liability.pool = liabilityPool
-        try? context.save()
+        Self.logger.debug("createLiability()")
+        guard let liabilityPool else { return }
+        repository.createLiability(name: liabilityName,
+                                   pool: liabilityPool,
+                                   creditor: liabilityCreditor,
+                                   initialAmount: liabilityInitialAmount,
+                                   repaidAmount: liabilityRepaidAmount,
+                                   grantDate: liabilityGrantDate)
     }
     
     func updateLiability(liability: Liability) {
-        let calendar = Calendar.current
-        liability.grantDate = calendar.date(from: calendar.dateComponents([.year, .month, .day], from: liabilityGrantDate)) ?? liability.grantDate
-        liability.creditor = liabilityCreditor
-        liability.initialAmount = liabilityInitialAmount
-        liability.repaidAmount = liabilityRepaidAmount
-        liability.name = liabilityName
-        try? context.save()
+        Self.logger.debug("updateLiability(liability)")
+        guard let liabilityPool else { return }
+        repository.updateLiability(liability: liability,
+                                   newName: liabilityName,
+                                   newPool: liabilityPool,
+                                   newCreditor: liabilityCreditor,
+                                   newInitialAmount: liabilityInitialAmount,
+                                   newRepaidAmount: liabilityRepaidAmount,
+                                   newGrantDate: liabilityGrantDate)
     }
 }

@@ -17,6 +17,8 @@ extension Logger {
         case distributionChartViewModel = "DistributionChartViewModel"
         case snapshotLedgerViewModel = "SnapshotLedgerViewModel"
         case assetLedgerViewModel = "AssetLedgerViewModel"
+        case assetFormViewModel = "AssetFormViewModel"
         case liabilityLedgerViewModel = "LiabilityLedgerViewModel"
+        case liabilityFormViewModel = "LiabilityFormViewModel"
     }
 }
