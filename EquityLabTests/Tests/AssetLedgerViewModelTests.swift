@@ -34,7 +34,7 @@ final class AssetLedgerViewModelTests: XCTestCase {
     
     /// create one assetPool with no Assets and test  pools/assets()/assets(for pool)
     func test_assetsAndPools_2() throws {
-        let (expectedPools, poolToAssetDictionary, expectedAssets) = testDataProvider.createAndPersistTestObjects_assetsAndPools_1(using: testingCoreDataStack.context)
+        let (expectedPools, poolToAssetDictionary, expectedAssets) = testDataProvider.createAndPersistTestObjects_assetsAndPools_2(using: testingCoreDataStack.context)
         
         let sut = AssetLedgerViewModel(repository: testingAssetRepository)
         
@@ -55,9 +55,10 @@ final class AssetLedgerViewModelTests: XCTestCase {
     
     /// delete one asset and test viewModel interface providing data to view as well as persisted data
     func test_deleteAsset_1() throws {
-        let (expectedPools, poolToAssetDictionary, expectedAssets) = testDataProvider.createAndPersistTestObjects_assetsAndPools_1(using: testingCoreDataStack.context)
+        let (deletionPool,expectedPools, poolToAssetDictionary, expectedAssets) = testDataProvider.createAndPersistTestObjects_deleteAssets_1(using: testingCoreDataStack.context)
         
         let sut = AssetLedgerViewModel(repository: testingAssetRepository)
+        sut.deleteAssets(in: deletionPool, forIndexSet: IndexSet(integer: 0))
         
         let actualPools = sut.pools
         XCTAssertTrue(expectedPools ≡ actualPools)
