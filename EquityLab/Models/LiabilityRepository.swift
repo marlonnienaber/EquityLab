@@ -79,7 +79,6 @@ class LiabilityRepository: NSObject {
     
     func updateLiability(liability: Liability,
                          newName: String,
-                         newPool: LiabilityPool,
                          newCreditor: String,
                          newInitialAmount: Double,
                          newRepaidAmount: Double,

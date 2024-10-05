@@ -49,10 +49,8 @@ class LiabilityFormViewModel {
     
     func updateLiability(liability: Liability) {
         Self.logger.debug("updateLiability(liability)")
-        guard let liabilityPool else { return }
         repository.updateLiability(liability: liability,
                                    newName: liabilityName,
-                                   newPool: liabilityPool,
                                    newCreditor: liabilityCreditor,
                                    newInitialAmount: liabilityInitialAmount,
                                    newRepaidAmount: liabilityRepaidAmount,

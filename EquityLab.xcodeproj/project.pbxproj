@@ -71,6 +71,8 @@
 		7363DE022CAC74AC009F3412 /* NSManagedObject+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7363DE012CAC74A4009F3412 /* NSManagedObject+Extension.swift */; };
 		7366CD1A2CB1C2500066ACC3 /* LiabilityLedgerViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7366CD192CB1C2410066ACC3 /* LiabilityLedgerViewModelTests.swift */; };
 		7366CD1C2CB1C2650066ACC3 /* LiabilityLedgerViewModelTestDataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7366CD1B2CB1C2580066ACC3 /* LiabilityLedgerViewModelTestDataProvider.swift */; };
+		7366CD1E2CB1EB000066ACC3 /* LiabilityFormViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7366CD1D2CB1EAEF0066ACC3 /* LiabilityFormViewModelTests.swift */; };
+		7366CD202CB1EB1E0066ACC3 /* LiabilityFormViewModelTestDataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7366CD1F2CB1EB0C0066ACC3 /* LiabilityFormViewModelTestDataProvider.swift */; };
 		7371458B2CB0293B009578C8 /* AssetFormViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7371458A2CB02930009578C8 /* AssetFormViewModelTests.swift */; };
 		7371458D2CB02977009578C8 /* AssetFormViewModelTestDataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7371458C2CB02967009578C8 /* AssetFormViewModelTestDataProvider.swift */; };
 		73823CDD2C6154930049D03C /* DistributionChartViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73823CDC2C6154930049D03C /* DistributionChartViewModel.swift */; };
@@ -165,6 +167,8 @@
 		7363DE012CAC74A4009F3412 /* NSManagedObject+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSManagedObject+Extension.swift"; sourceTree = "<group>"; };
 		7366CD192CB1C2410066ACC3 /* LiabilityLedgerViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiabilityLedgerViewModelTests.swift; sourceTree = "<group>"; };
 		7366CD1B2CB1C2580066ACC3 /* LiabilityLedgerViewModelTestDataProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiabilityLedgerViewModelTestDataProvider.swift; sourceTree = "<group>"; };
+		7366CD1D2CB1EAEF0066ACC3 /* LiabilityFormViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiabilityFormViewModelTests.swift; sourceTree = "<group>"; };
+		7366CD1F2CB1EB0C0066ACC3 /* LiabilityFormViewModelTestDataProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiabilityFormViewModelTestDataProvider.swift; sourceTree = "<group>"; };
 		7371458A2CB02930009578C8 /* AssetFormViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetFormViewModelTests.swift; sourceTree = "<group>"; };
 		7371458C2CB02967009578C8 /* AssetFormViewModelTestDataProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetFormViewModelTestDataProvider.swift; sourceTree = "<group>"; };
 		73823CDC2C6154930049D03C /* DistributionChartViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DistributionChartViewModel.swift; sourceTree = "<group>"; };
@@ -502,6 +506,7 @@
 		73B8119F2CA7261D003B1973 /* Tests */ = {
 			isa = PBXGroup;
 			children = (
+				7366CD1D2CB1EAEF0066ACC3 /* LiabilityFormViewModelTests.swift */,
 				7366CD192CB1C2410066ACC3 /* LiabilityLedgerViewModelTests.swift */,
 				7371458A2CB02930009578C8 /* AssetFormViewModelTests.swift */,
 				730273322CAE85E7001EE236 /* AssetLedgerViewModelTests.swift */,
@@ -516,6 +521,7 @@
 		73B811A02CA72624003B1973 /* TestDataProviders */ = {
 			isa = PBXGroup;
 			children = (
+				7366CD1F2CB1EB0C0066ACC3 /* LiabilityFormViewModelTestDataProvider.swift */,
 				7366CD1B2CB1C2580066ACC3 /* LiabilityLedgerViewModelTestDataProvider.swift */,
 				7371458C2CB02967009578C8 /* AssetFormViewModelTestDataProvider.swift */,
 				730273302CAE85D2001EE236 /* AssetLedgerViewModelTestDataProvider.swift */,
@@ -627,6 +633,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7366CD1E2CB1EB000066ACC3 /* LiabilityFormViewModelTests.swift in Sources */,
 				7366CD1C2CB1C2650066ACC3 /* LiabilityLedgerViewModelTestDataProvider.swift in Sources */,
 				73A428092C7E3B1F0086181F /* DateParser.swift in Sources */,
 				73B811A62CA7267B003B1973 /* DistributionChartViewModelTestDataProvider.swift in Sources */,
@@ -635,6 +642,7 @@
 				7363DDF22CA758D7009F3412 /* DashboardViewModelTests.swift in Sources */,
 				73B811A42CA72668003B1973 /* SnapshotLedgerViewModelTestDataProvider.swift in Sources */,
 				7363DDFC2CA9F0B7009F3412 /* SnapshotFormViewModelTestDataProvider.swift in Sources */,
+				7366CD202CB1EB1E0066ACC3 /* LiabilityFormViewModelTestDataProvider.swift in Sources */,
 				730273312CAE85E0001EE236 /* AssetLedgerViewModelTestDataProvider.swift in Sources */,
 				730273332CAE85ED001EE236 /* AssetLedgerViewModelTests.swift in Sources */,
 				7366CD1A2CB1C2500066ACC3 /* LiabilityLedgerViewModelTests.swift in Sources */,
