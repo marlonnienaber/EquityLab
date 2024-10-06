@@ -16,7 +16,7 @@ class SnapshotLedgerViewModel {
     }
     var activeSheet: SnapshotSheetType? = nil
     
-    init(repository: SnapshotRepository = SnapshotRepository.production) {
+    init(repository: SnapshotRepository = .production) {
         Self.logger.debug("SnapshotLedgerViewModel()")
         self.repository = repository
         self.snapshotAnalyzer = SnapshotAnalyzer(repository: repository)

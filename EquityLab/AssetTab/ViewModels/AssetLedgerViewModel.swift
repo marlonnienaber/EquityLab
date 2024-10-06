@@ -14,7 +14,7 @@ class AssetLedgerViewModel {
     var showEditPoolAlert = false
     var activeSheet: AssetLedgerSheetType? = nil
     
-    init(repository: AssetRepository = AssetRepository.production) {
+    init(repository: AssetRepository = .production) {
         Self.logger.debug("AssetLedgerViewModel()")
         self.repository = repository
         self.pools = repository.fetchAssetPools()

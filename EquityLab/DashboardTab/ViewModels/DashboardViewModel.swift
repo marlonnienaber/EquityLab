@@ -59,7 +59,7 @@ class DashboardViewModel {
     var selectedDetailPage: DetailPage = .changeDetailPage
     
     
-    init(repository: SnapshotRepository = SnapshotRepository.production) {
+    init(repository: SnapshotRepository = .production) {
         Self.logger.debug("DashboardViewModel()")
         self.repository = repository
         self.snapshotAnalyzer = SnapshotAnalyzer(repository: repository)

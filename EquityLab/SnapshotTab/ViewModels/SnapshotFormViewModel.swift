@@ -14,9 +14,9 @@ class SnapshotFormViewModel {
     
     init(
             snapshot: Snapshot? = nil,
-            snapshotRepository: SnapshotRepository = SnapshotRepository.production,
-            assetRepository: AssetRepository = AssetRepository.production,
-            liabilityRepository: LiabilityRepository = LiabilityRepository.production,
+            snapshotRepository: SnapshotRepository = .production,
+            assetRepository: AssetRepository = .production,
+            liabilityRepository: LiabilityRepository = .production,
             dismissSheet: @escaping () -> ()
         )
     {

@@ -48,7 +48,7 @@ class DistributionChartViewModel {
     init(
             distributionChartType: DistributionChartType,
             dashboardViewModel: DashboardViewModel,
-            repository: SnapshotRepository = SnapshotRepository.production
+            repository: SnapshotRepository = .production
         )
     {
         Self.logger.debug("DistributionChartViewModel()")
