@@ -204,7 +204,7 @@ struct ExportPathPicker: UIViewControllerRepresentable {
     let temporaryFileUrl: URL
     
     func makeCoordinator() -> Coordinator {
-        Coordinator()
+        Coordinator(temporaryFileUrl: temporaryFileUrl)
     }
     
     func makeUIViewController(context: Context) -> UIDocumentPickerViewController {
@@ -216,14 +216,14 @@ struct ExportPathPicker: UIViewControllerRepresentable {
     func updateUIViewController(_ uiViewController: UIDocumentPickerViewController, context: Context) {}
     
     class Coordinator: NSObject, UIDocumentPickerDelegate {
-        func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
-            guard let selectedURL = urls.first else { return }
-            print("File saved to: \(selectedURL)")
-            /* TODO: delete temporary file after final file was created at selected location */
+        let temporaryFileUrl: URL
+        
+        init(temporaryFileUrl: URL) {
+            self.temporaryFileUrl = temporaryFileUrl
         }
         
-        func documentPickerWasCancelled(_ controller: UIDocumentPickerViewController) {
-            print("Document picker was cancelled")
+        func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
+            try? FileManager.default.removeItem(at: temporaryFileUrl)
         }
     }
 }
