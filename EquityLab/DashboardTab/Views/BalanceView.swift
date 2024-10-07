@@ -6,11 +6,11 @@ struct BalanceView: View {
     var body: some View {
         VStack(spacing: 8) {
             assetsLine
-                .foregroundColor(Color("AssetsUnselected"))
+                .foregroundColor(.assetsUnselected)
                 .padding()
                 .frame(maxWidth: .infinity)
             liabilitiesLine
-                .foregroundColor(Color("LiabilitiesUnselected"))
+                .foregroundColor(.liabilitiesUnselected)
                 .padding()
                 .frame(maxWidth: .infinity)
             equityLine

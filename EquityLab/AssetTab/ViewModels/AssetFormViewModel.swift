@@ -15,7 +15,7 @@ class AssetFormViewModel {
     var receivableRepaidAmount: Double
     var possessionIsVolatile: Bool
     var showPopover: Bool = false
-    var selectedAssetType: AssetType
+    var selectedAssetType: Asset.SubType
     let dismissSheet: () -> ()
     
     init(asset: Asset? = nil, pool: AssetPool? = nil, repository: AssetRepository = .production, dismissSheet: @escaping () -> ()) {
@@ -93,12 +93,9 @@ class AssetFormViewModel {
                 case .receivable: createReceivable()
                 case .possession: createPossession()
             }
+        } else {
+            print("error")
         }
         /* TODO: give some feedback to the user in case an asset with the same name does exist */
     }
-}
-
-enum AssetType: Hashable {
-    case receivable
-    case possession
 }

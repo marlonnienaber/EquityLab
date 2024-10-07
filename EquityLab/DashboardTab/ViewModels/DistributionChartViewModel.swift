@@ -21,8 +21,8 @@ class DistributionChartViewModel {
     var selectedCumulativeValue: Double?
     var color: Color {
         switch distributionChartType {
-        case .liabilityDistributionChart: Color("LiabilitiesUnselected")
-        case .assetDistributionChart: Color("AssetsUnselected")
+        case .liabilityDistributionChart: .liabilitiesUnselected
+        case .assetDistributionChart: .assetsUnselected
         }
     }
     var showPopover: Bool = false

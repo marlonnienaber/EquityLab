@@ -6,7 +6,9 @@ import SwiftUI
 class DashboardViewModel {
     @ObservationIgnored private static let logger = Logger(subsystem: .dashboardTab, component: .dashboardViewModel)
     
-    @ObservationIgnored private var repository: SnapshotRepository
+    @ObservationIgnored private var snapshotRepository: SnapshotRepository
+    @ObservationIgnored private var assetRepository: AssetRepository
+    @ObservationIgnored private var liabilityRepository: LiabilityRepository
     @ObservationIgnored private let snapshotAnalyzer: SnapshotAnalyzer
     @ObservationIgnored private var equityValueCache = [Snapshot:Double]()
     @ObservationIgnored private var assetValueCache = [Snapshot:Double]()
@@ -20,8 +22,9 @@ class DashboardViewModel {
     }
     
     var filteredSnapshots: [Snapshot] {
+        Self.logger.debug("filteredSnapshots")
         let calendar = Calendar.current
-        let today = calendar.startOfDay(for: .now)
+        let today = Date.now.startOfDay
         switch selectedTimeHorizon {
         case .threeMonths:
             let threeMonthsAgo = calendar.date(byAdding: .month, value: -3, to: today)!
@@ -52,19 +55,29 @@ class DashboardViewModel {
     }
     var selectedSnapshot: Snapshot?
     var noSnapshotsAvailable: Bool {
-        snapshots.isEmpty
+        Self.logger.debug("noSnapshotsAvailable")
+        return snapshots.isEmpty
     }
     var selectedTimeHorizon: TimeHorizon = .all
     var selectedSnapshotDetailView: SnapshotDetailView = .balanceDetailView
     var selectedDetailPage: DetailPage = .changeDetailPage
+    var temporaryBackupFileUrl: URL?
+    var isSerializingState = false
+    var presentImportPathPickerSheet = false
     
     
-    init(repository: SnapshotRepository = .production) {
+    init(
+        snapshotRepository: SnapshotRepository = .production,
+        assetRepository: AssetRepository = .production,
+        liabilityRepository: LiabilityRepository = .production
+    ) {
         Self.logger.debug("DashboardViewModel()")
-        self.repository = repository
-        self.snapshotAnalyzer = SnapshotAnalyzer(repository: repository)
-        self.repository.add(observer: self)
-        self.snapshots = repository.fetchSnapshots()
+        self.snapshotRepository = snapshotRepository
+        self.assetRepository = assetRepository
+        self.liabilityRepository = liabilityRepository
+        self.snapshotAnalyzer = SnapshotAnalyzer(repository: snapshotRepository)
+        self.snapshotRepository.add(observer: self)
+        self.snapshots = snapshotRepository.fetchSnapshots()
         for snapshot in snapshots {
             equityValueCache[snapshot] = snapshotAnalyzer.calculateEquityValue(for: snapshot)
         }
@@ -73,10 +86,12 @@ class DashboardViewModel {
     
     
     func getEquityValue(of snapshot: Snapshot) -> Double {
-        equityValueCache[snapshot] ?? 0.0
+        Self.logger.debug("getEquityValue(of snapshot)")
+        return equityValueCache[snapshot] ?? 0.0
     }
     
     func getAssetValue(of snapshot: Snapshot) -> Double {
+        Self.logger.debug("getAssetValue(of snapshot)")
         if let assetValue = assetValueCache[snapshot] {
             return assetValue
         } else {
@@ -87,6 +102,7 @@ class DashboardViewModel {
     }
     
     func getLiabilityValue(of snapshot: Snapshot) -> Double {
+        Self.logger.debug("getLiabilityValue(of snapshot)")
         if let liabilityValue = liabilityValueCache[snapshot] {
             return liabilityValue
         } else {
@@ -97,30 +113,87 @@ class DashboardViewModel {
     }
     
     func initializeSelectedSnapshot() {
+        Self.logger.debug("")
         if let selectedSnapshot, !snapshots.contains(selectedSnapshot){
             self.selectedSnapshot = snapshots.last
         }
     }
     
     func computeValueByPool(for positionType: PositionType, using snapshot: Snapshot) -> [String:Double] {
+        Self.logger.debug("computeValueByPool(for positionType, using snapshot)")
         if positionType == .assets {
-            let assetPositions = repository.fetchAssetPositions(of: snapshot)
+            let assetPositions = snapshotRepository.fetchAssetPositions(of: snapshot)
             return Dictionary(grouping: assetPositions, by: { $0.poolName }).mapValues { array in
                 array.map { $0.value }.reduce(0, +)
             }
         } else {
-            let liabilityPositions = repository.fetchLiabilityPositions(of: snapshot)
+            let liabilityPositions = snapshotRepository.fetchLiabilityPositions(of: snapshot)
             return Dictionary(grouping: liabilityPositions, by: { $0.poolName }).mapValues { array in
                 array.map { $0.value }.reduce(0, +)
             }
         }
+    }
+    
+    func serializeStateAndShowFileLocationPicker() async {
+        Self.logger.debug("serializeStateAndShowFileLocationPicker()")
+        await MainActor.run {
+            isSerializingState = true
+        }
+        do {
+            /* TODO: parallelize fetches */
+            let snapshots = snapshotRepository.fetchSnapshots()
+            let liabilityPools = liabilityRepository.fetchLiabilityPools()
+            let assetPools = assetRepository.fetchAssetPools()
+            let jsonBackup = JsonBackup(snapshots: snapshots, liabilityPools: liabilityPools, assetPools: assetPools)
+            let encoder = JSONEncoder()
+            encoder.outputFormatting = .prettyPrinted
+            let jsonData = try encoder.encode(jsonBackup)
+            
+            let formatter = DateFormatter()
+            formatter.dateFormat = "dd-MM-yyyy|HH-mm"
+            let timestamp = formatter.string(from: Date())
+            let fileName = "\(timestamp).json"
+            
+            let temporaryDirectory = FileManager.default.temporaryDirectory
+            let temporaryFileURL = temporaryDirectory.appendingPathComponent(fileName)
+            try jsonData.write(to: temporaryFileURL)
+            
+            await MainActor.run {
+                self.isSerializingState = false
+                self.temporaryBackupFileUrl = temporaryFileURL
+            }
+        } catch {
+            await MainActor.run {
+                self.isSerializingState = false
+                /* TODO: handle */
+            }
+        }
+    }
+    
+    func deserializeJsonFile(at url: URL) {
+        Self.logger.debug("deserializeJsonFile(at url)")
+        let context = ProductionCoreDataStack.shared.context
+        
+        let entityTypes = [Snapshot.self,Position.self,AssetPool.self, Asset.self,LiabilityPool.self,Liability.self]
+        for entityType in entityTypes {
+            let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: String(describing: entityType))
+            let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
+            guard let _ = try? context.execute(deleteRequest) else { return }
+        }
+        guard let _ = try? context.save() else { return }
+        
+
+        guard let data = try? Data(contentsOf: url), !data.isEmpty else { return }
+        let decoder = JSONDecoder()
+        guard let _ = try? decoder.decode(JsonBackup.self, from: data) else { return }
+        try? context.save()
     }
 }
 
 extension DashboardViewModel: SnapshotObserver {
     func notifyAfterSnapshotUpdate() {
         Self.logger.debug("notifyAfterSnapshotUpdate()")
-        self.snapshots = repository.fetchSnapshots(sortingOrder: .ascending)
+        self.snapshots = snapshotRepository.fetchSnapshots(sortingOrder: .ascending)
         guard let selectedSnapshot else { return }
         self.selectedSnapshot = snapshots.first(where: { $0 == selectedSnapshot })
     }
@@ -160,5 +233,17 @@ extension Date {
     func computeAbsoluteMinuteDifference(to otherDate: Date) -> Int {
         let components = Calendar.current.dateComponents([.minute], from: self, to: otherDate)
         return abs(components.minute!)
+    }
+}
+
+struct JsonBackup: Codable {
+    let snapshots: [Snapshot]
+    let liabilityPools: [LiabilityPool]
+    let assetPools: [AssetPool]
+}
+
+extension URL: Identifiable {
+    public var id: String {
+        absoluteString
     }
 }

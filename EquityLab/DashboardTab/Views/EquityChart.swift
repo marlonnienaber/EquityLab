@@ -7,7 +7,7 @@ struct EquityChart: View {
     var body: some View {
         Chart(viewModel.filteredSnapshots) { snapshot in
             if let date = snapshot.date {
-                let curColor = Color("EquityPrimary")
+                let curColor: Color = .equityPrimary
                 let curGradient = LinearGradient(gradient: Gradient(colors: [curColor.opacity(0.1), curColor.opacity(0.2), curColor.opacity(0.5), curColor.opacity(0.6)]), startPoint: .bottom, endPoint: .top)
                 let startOfDay = date.startOfDay
                 let equityValue = viewModel.getEquityValue(of: snapshot)
@@ -26,7 +26,7 @@ struct EquityChart: View {
                 .symbolSize(100)
                 .interpolationMethod(.monotone)
                 .lineStyle(StrokeStyle(lineWidth: 5))
-                .foregroundStyle(Color("EquityPrimary"))
+                .foregroundStyle(.equityPrimary)
                 
                 if let currentSelectedSnapshot = viewModel.selectedSnapshot, currentSelectedSnapshot.date == snapshot.date {
                     RuleMark(x: .value("Selected", startOfDay))

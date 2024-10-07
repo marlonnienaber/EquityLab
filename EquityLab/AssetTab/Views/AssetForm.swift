@@ -9,8 +9,8 @@ struct AssetForm: View {
             VStack {
                 if viewModel.asset == nil {
                     Picker(selection: $viewModel.selectedAssetType) {
-                        Text("possession").tag(AssetType.possession)
-                        Text("receivable").tag(AssetType.receivable)
+                        Text("possession").tag(Asset.SubType.possession)
+                        Text("receivable").tag(Asset.SubType.receivable)
                     } label: {
                         Text("picker")
                     }
@@ -110,5 +110,4 @@ struct AssetForm: View {
             }
         }
     }
-    
 }

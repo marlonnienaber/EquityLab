@@ -18,8 +18,8 @@ class ChangeChartViewModel {
     var dashboardViewModel: DashboardViewModel
     var changeChartColor: Color {
         switch changeChartType {
-        case .liabilityChangeChart: Color("LiabilitiesUnselected")
-        case .assetChangeChart: Color("AssetsUnselected")
+        case .liabilityChangeChart: .liabilitiesUnselected
+        case .assetChangeChart: .assetsUnselected
         }
     }
     
