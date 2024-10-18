@@ -14,6 +14,9 @@
 		73037F542CC00ED7005DD105 /* SnapshotStructureViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73037F532CC00ECE005DD105 /* SnapshotStructureViewModel.swift */; };
 		73037F5C2CC06A9A005DD105 /* ReceivableForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73037F5B2CC06A89005DD105 /* ReceivableForm.swift */; };
 		73037F5E2CC12101005DD105 /* PossessionForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73037F5D2CC120FC005DD105 /* PossessionForm.swift */; };
+		73037F602CC2CF79005DD105 /* Optional+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73037F5F2CC2CF71005DD105 /* Optional+Extension.swift */; };
+		73037F622CC2E1AB005DD105 /* SnapshotStructureViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73037F612CC2E19E005DD105 /* SnapshotStructureViewModelTests.swift */; };
+		73037F642CC2E233005DD105 /* SnapshotStructureViewModelTestDataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73037F632CC2E230005DD105 /* SnapshotStructureViewModelTestDataProvider.swift */; };
 		7314FD6F2C7510E100483835 /* TestingCoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7314FD6E2C7510E100483835 /* TestingCoreDataStack.swift */; };
 		733473872C8DEC950050C656 /* DistributionChartViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 733473862C8DEC950050C656 /* DistributionChartViewModelTests.swift */; };
 		7342ED272C44750200BA20A4 /* EquityLabApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7342ED262C44750200BA20A4 /* EquityLabApp.swift */; };
@@ -113,6 +116,9 @@
 		73037F532CC00ECE005DD105 /* SnapshotStructureViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapshotStructureViewModel.swift; sourceTree = "<group>"; };
 		73037F5B2CC06A89005DD105 /* ReceivableForm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceivableForm.swift; sourceTree = "<group>"; };
 		73037F5D2CC120FC005DD105 /* PossessionForm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PossessionForm.swift; sourceTree = "<group>"; };
+		73037F5F2CC2CF71005DD105 /* Optional+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Optional+Extension.swift"; sourceTree = "<group>"; };
+		73037F612CC2E19E005DD105 /* SnapshotStructureViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapshotStructureViewModelTests.swift; sourceTree = "<group>"; };
+		73037F632CC2E230005DD105 /* SnapshotStructureViewModelTestDataProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapshotStructureViewModelTestDataProvider.swift; sourceTree = "<group>"; };
 		7314FD652C75106500483835 /* EquityLabTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EquityLabTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		7314FD6E2C7510E100483835 /* TestingCoreDataStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestingCoreDataStack.swift; sourceTree = "<group>"; };
 		733473862C8DEC950050C656 /* DistributionChartViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DistributionChartViewModelTests.swift; sourceTree = "<group>"; };
@@ -358,6 +364,7 @@
 		7342ED752C447BA300BA20A4 /* Utility */ = {
 			isa = PBXGroup;
 			children = (
+				73037F5F2CC2CF71005DD105 /* Optional+Extension.swift */,
 				7363DE012CAC74A4009F3412 /* NSManagedObject+Extension.swift */,
 				7363DDFF2CAB1C4B009F3412 /* Date+Extension.swift */,
 				7363DDFD2CA9FD67009F3412 /* Array+Extension.swift */,
@@ -545,6 +552,7 @@
 		73B8119F2CA7261D003B1973 /* Tests */ = {
 			isa = PBXGroup;
 			children = (
+				73037F612CC2E19E005DD105 /* SnapshotStructureViewModelTests.swift */,
 				7366CD1D2CB1EAEF0066ACC3 /* LiabilityFormViewModelTests.swift */,
 				7366CD192CB1C2410066ACC3 /* LiabilityLedgerViewModelTests.swift */,
 				7371458A2CB02930009578C8 /* AssetFormViewModelTests.swift */,
@@ -560,6 +568,7 @@
 		73B811A02CA72624003B1973 /* TestDataProviders */ = {
 			isa = PBXGroup;
 			children = (
+				73037F632CC2E230005DD105 /* SnapshotStructureViewModelTestDataProvider.swift */,
 				7366CD1F2CB1EB0C0066ACC3 /* LiabilityFormViewModelTestDataProvider.swift */,
 				7366CD1B2CB1C2580066ACC3 /* LiabilityLedgerViewModelTestDataProvider.swift */,
 				7371458C2CB02967009578C8 /* AssetFormViewModelTestDataProvider.swift */,
@@ -680,10 +689,12 @@
 				7363DDFA2CA99562009F3412 /* SnapshotFormViewModelTests.swift in Sources */,
 				7363DDF22CA758D7009F3412 /* DashboardViewModelTests.swift in Sources */,
 				73B811A42CA72668003B1973 /* SnapshotLedgerViewModelTestDataProvider.swift in Sources */,
+				73037F622CC2E1AB005DD105 /* SnapshotStructureViewModelTests.swift in Sources */,
 				7363DDFC2CA9F0B7009F3412 /* SnapshotFormViewModelTestDataProvider.swift in Sources */,
 				7366CD202CB1EB1E0066ACC3 /* LiabilityFormViewModelTestDataProvider.swift in Sources */,
 				730273312CAE85E0001EE236 /* AssetLedgerViewModelTestDataProvider.swift in Sources */,
 				730273332CAE85ED001EE236 /* AssetLedgerViewModelTests.swift in Sources */,
+				73037F642CC2E233005DD105 /* SnapshotStructureViewModelTestDataProvider.swift in Sources */,
 				7366CD1A2CB1C2500066ACC3 /* LiabilityLedgerViewModelTests.swift in Sources */,
 				73B811A22CA7264E003B1973 /* DashboardViewModelTestDataProvider.swift in Sources */,
 				7371458D2CB02977009578C8 /* AssetFormViewModelTestDataProvider.swift in Sources */,
@@ -737,6 +748,7 @@
 				7342ED6E2C447A0C00BA20A4 /* AssetPool+CoreDataProperties.swift in Sources */,
 				7342ED6F2C447A0C00BA20A4 /* Asset+CoreDataClass.swift in Sources */,
 				7342ED942C447FAF00BA20A4 /* AssetLedgerViewModel.swift in Sources */,
+				73037F602CC2CF79005DD105 /* Optional+Extension.swift in Sources */,
 				7342ED702C447A0C00BA20A4 /* Asset+CoreDataProperties.swift in Sources */,
 				7342EDA32C4481D200BA20A4 /* LiabilityLedger.swift in Sources */,
 				7342ED872C447E5000BA20A4 /* LocalizedCurrencyFormatter.swift in Sources */,

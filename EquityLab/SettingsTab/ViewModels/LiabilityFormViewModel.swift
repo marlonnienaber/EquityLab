@@ -36,6 +36,15 @@ class LiabilityFormViewModel {
         self.dismissSheet = dismissSheet
     }
     
+    func getLiabilityPools() -> [LiabilityPool] {
+        print("getLiabilityPools()")
+        let liabilityPools = repository.fetchLiabilityPools()
+        for pool in liabilityPools {
+            print(pool.name)
+        }
+        return liabilityPools
+    }
+    
     func createLiability() {
         Self.logger.debug("createLiability()")
         guard let liabilityPool else { return }
@@ -55,15 +64,6 @@ class LiabilityFormViewModel {
                                    newInitialAmount: liabilityInitialAmount,
                                    newRepaidAmount: liabilityRepaidAmount,
                                    newGrantDate: liabilityGrantDate)
-    }
-    
-    func getLiabilityPools() -> [LiabilityPool] {
-        print("getLiabilityPools()")
-        let liabilityPools = repository.fetchLiabilityPools()
-        for pool in liabilityPools {
-            print(pool.name)
-        }
-        return liabilityPools
     }
     
     func deleteLiability() {

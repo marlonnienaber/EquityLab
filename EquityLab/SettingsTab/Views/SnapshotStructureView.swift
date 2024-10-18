@@ -19,19 +19,19 @@ struct SnapshotStructureView: View {
                                 viewModel.assetPoolToEdit = pool
                                 viewModel.showEditAssetPoolAlert = true
                             },
-                            itemEditButtonAction: { viewModel.activeItemSheet = .updateSheetAsset(asset: $0) }
+                            itemEditButtonAction: { viewModel.activeBalanceItemSheet = .updateSheetAsset(asset: $0) }
                         )
                         BalanceSide<LiabilityPool,Liability>(
                             title: "Liabilities",
                             headerBackgroundColor: .liabilitiesUnselected,
                             pools: viewModel.liabilityPools,
-                            itemRetriever: viewModel.getliabilitiesForLiabilityPool,
+                            itemRetriever: viewModel.getLiabilitiesForLiabilityPool,
                             poolEditButtonAction: { pool in
                                 viewModel.alertPoolName = pool.name
                                 viewModel.liabilityPoolToEdit = pool
                                 viewModel.showEditLiabilityPoolAlert = true
                             },
-                            itemEditButtonAction: { viewModel.activeItemSheet = .updateSheetLiability(liability: $0) }
+                            itemEditButtonAction: { viewModel.activeBalanceItemSheet = .updateSheetLiability(liability: $0) }
                         )
                     }
                     .padding(.top)
@@ -64,11 +64,11 @@ struct SnapshotStructureView: View {
                 textFieldContent: $viewModel.alertPoolName,
                 saveAction: { viewModel.createLiabilityPool() }
             )
-            .sheet(isPresented: $viewModel.showAddSheetPickerSheet) {
-                addSheetPickerMenu
+            .sheet(isPresented: $viewModel.showBalanceItemPickerSheet) {
+                balanceItemSelectionMenu
                     .presentationDetents([.fraction(0.25)])
             }
-            .sheet(item: $viewModel.activeItemSheet) { activeSheet in
+            .sheet(item: $viewModel.activeBalanceItemSheet) { activeSheet in
                 sheetContent(for: activeSheet)
                     .presentationDetents([.fraction(0.8)])
             }
@@ -76,7 +76,7 @@ struct SnapshotStructureView: View {
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button {
-                    viewModel.showAddSheetPickerSheet = true
+                    viewModel.showBalanceItemPickerSheet = true
                 } label: {
                     Image(systemName: "plus")
                 }
@@ -87,24 +87,24 @@ struct SnapshotStructureView: View {
     @ViewBuilder
     func sheetContent(for sheetType: BalanceItemSheet) -> some View {
         switch sheetType {
-        case .createSheetPossession: PossessionForm(viewModel: AssetFormViewModel{ viewModel.activeItemSheet = nil } )
-        case .createSheetReceivable: ReceivableForm(viewModel: AssetFormViewModel{ viewModel.activeItemSheet = nil } )
-        case .createSheetLiability: LiabilityForm(viewModel: LiabilityFormViewModel{ viewModel.activeItemSheet = nil } )
+        case .createSheetPossession: PossessionForm(viewModel: AssetFormViewModel{ viewModel.activeBalanceItemSheet = nil } )
+        case .createSheetReceivable: ReceivableForm(viewModel: AssetFormViewModel{ viewModel.activeBalanceItemSheet = nil } )
+        case .createSheetLiability: LiabilityForm(viewModel: LiabilityFormViewModel{ viewModel.activeBalanceItemSheet = nil } )
         case .updateSheetAsset(let asset):
             if let possession = asset as? Possession {
-                PossessionForm(viewModel: AssetFormViewModel(asset: possession) { viewModel.activeItemSheet = nil })
+                PossessionForm(viewModel: AssetFormViewModel(asset: possession) { viewModel.activeBalanceItemSheet = nil })
             } else if let receivable = asset as? Receivable {
-                ReceivableForm(viewModel: AssetFormViewModel(asset: receivable) { viewModel.activeItemSheet = nil })
+                ReceivableForm(viewModel: AssetFormViewModel(asset: receivable) { viewModel.activeBalanceItemSheet = nil })
             }
-        case .updateSheetLiability(let liability): LiabilityForm(viewModel: LiabilityFormViewModel(liability: liability) { viewModel.activeItemSheet = nil })
+        case .updateSheetLiability(let liability): LiabilityForm(viewModel: LiabilityFormViewModel(liability: liability) { viewModel.activeBalanceItemSheet = nil })
         }
     }
     
-    var addSheetPickerMenu: some View {
+    var balanceItemSelectionMenu: some View {
         NavigationView {
             VStack {
                 Text("Which snapshot item you like to add?")
-                Picker("", selection: $viewModel.selectedAddItem) {
+                Picker("", selection: $viewModel.selectedBalanceItem) {
                     Text("AssetPool").tag(BalanceItemType.assetPool)
                     Text("Possession").tag(BalanceItemType.possession)
                     Text("Receivable").tag(BalanceItemType.receivable)
@@ -116,94 +116,23 @@ struct SnapshotStructureView: View {
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button("Cancel"){
-                        viewModel.activeItemSheet = nil
+                        viewModel.activeBalanceItemSheet = nil
                     }
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button("OK") {
-                        viewModel.showAddSheetPickerSheet = false
-                        switch viewModel.selectedAddItem {
+                        viewModel.showBalanceItemPickerSheet = false
+                        switch viewModel.selectedBalanceItem {
                         case .assetPool: viewModel.showCreateAssetPoolAlert = true
-                        case .possession: viewModel.activeItemSheet = .createSheetPossession
-                        case .receivable: viewModel.activeItemSheet = .createSheetReceivable
+                        case .possession: viewModel.activeBalanceItemSheet = .createSheetPossession
+                        case .receivable: viewModel.activeBalanceItemSheet = .createSheetReceivable
                         case .liabilityPool: viewModel.showCreateLiabilityPoolAlert = true
-                        case .liability: viewModel.activeItemSheet = .createSheetLiability
+                        case .liability: viewModel.activeBalanceItemSheet = .createSheetLiability
                         }
                     }
                 }
             }
         }
-    }
-}
-
-struct BalanceSide<PoolType:Named&Hashable,ItemType:Named>: View {
-    let title: String
-    let headerBackgroundColor: Color
-    let pools: [PoolType]
-    let itemRetriever: (PoolType) -> ([ItemType])
-    let poolEditButtonAction: (PoolType) -> ()
-    let itemEditButtonAction: (ItemType) -> ()
-    
-    var body: some View {
-        VStack(alignment: .leading) {
-            header
-            ForEach(pools, id: \.name) { balancePool in
-                Spacer()
-                    .frame(height: 20)
-                poolBox(for: balancePool)
-            }
-        }
-    }
-    
-    var header: some View {
-        HStack {
-            Text(title)
-                .font(.headline)
-                .foregroundStyle(.primary)
-                .padding(.vertical,3)
-            Spacer()
-        }
-        .padding(.horizontal)
-        .foregroundStyle(.primaryInverted)
-        .background(
-            Rectangle()
-                .cornerRadius(12)
-                .foregroundStyle(headerBackgroundColor)
-                .opacity(0.5)
-        )
-    }
-    
-    func poolBox(for balancePool: PoolType) -> some View {
-        VStack(alignment: .leading, spacing: 8) {
-            HStack {
-                Text(balancePool.name)
-                    .font(.subheadline)
-                    .padding(.horizontal)
-                    .underline()
-                Spacer()
-                Button {
-                    poolEditButtonAction(balancePool)
-                } label: {
-                    Image(systemName: "slider.horizontal.3")
-                        .font(.subheadline)
-                        .padding(.trailing)
-                }
-            }
-            ForEach(itemRetriever(balancePool), id: \.name) { item in
-                HStack(spacing: 2) {
-                    Text(item.name)
-                        .font(.caption)
-                        .padding(.leading)
-                    Button {
-                        itemEditButtonAction(item)
-                    } label: {
-                        Image(systemName: "chevron.right.circle")
-                            .font(.caption2)
-                    }
-                }
-            }
-        }
-        .padding(.vertical, 6)
     }
 }
 
@@ -246,3 +175,76 @@ extension View {
         }
     }
 }
+
+struct BalanceSide<PoolType:Named&Hashable,ItemType:Named>: View {
+    let title: String
+    let headerBackgroundColor: Color
+    let pools: [PoolType]
+    let itemRetriever: (PoolType) -> ([ItemType])
+    let poolEditButtonAction: (PoolType) -> ()
+    let itemEditButtonAction: (ItemType) -> ()
+    
+    var body: some View {
+        VStack(alignment: .leading) {
+            header
+            ForEach(pools, id: \.name) { balancePool in
+                Spacer()
+                    .frame(height: 20)
+                poolSection(for: balancePool)
+            }
+        }
+    }
+    
+    var header: some View {
+        HStack {
+            Text(title)
+                .font(.headline)
+                .foregroundStyle(.primary)
+                .padding(.vertical,3)
+            Spacer()
+        }
+        .padding(.horizontal)
+        .foregroundStyle(.primaryInverted)
+        .background(
+            Rectangle()
+                .cornerRadius(12)
+                .foregroundStyle(headerBackgroundColor)
+                .opacity(0.5)
+        )
+    }
+    
+    func poolSection(for balancePool: PoolType) -> some View {
+        VStack(alignment: .leading, spacing: 8) {
+            HStack {
+                Text(balancePool.name)
+                    .font(.subheadline)
+                    .padding(.horizontal)
+                    .underline()
+                Spacer()
+                Button {
+                    poolEditButtonAction(balancePool)
+                } label: {
+                    Image(systemName: "slider.horizontal.3")
+                        .font(.subheadline)
+                        .padding(.trailing)
+                }
+            }
+            ForEach(itemRetriever(balancePool), id: \.name) { item in
+                HStack(spacing: 2) {
+                    Text(item.name)
+                        .font(.caption)
+                        .padding(.leading)
+                    Button {
+                        itemEditButtonAction(item)
+                    } label: {
+                        Image(systemName: "chevron.right.circle")
+                            .font(.caption2)
+                    }
+                }
+            }
+        }
+        .padding(.vertical, 6)
+    }
+}
+
+

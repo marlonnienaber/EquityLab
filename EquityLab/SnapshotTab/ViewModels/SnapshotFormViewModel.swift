@@ -98,7 +98,7 @@ class SnapshotFormViewModel {
     }
     
     func saveSnapshot() {
-        if snapshot != nil {
+        if snapshot.isNotNil {
             updateSnapshot()
         } else {
             createSnapshot()

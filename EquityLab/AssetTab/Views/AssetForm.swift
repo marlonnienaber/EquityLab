@@ -7,7 +7,7 @@ struct AssetForm: View {
     var body: some View {
         NavigationView{
             VStack {
-                if viewModel.asset == nil {
+                if viewModel.asset.isNil {
                     Picker(selection: $viewModel.selectedAssetType) {
                         Text("possession").tag(Asset.SubType.possession)
                         Text("receivable").tag(Asset.SubType.receivable)
@@ -36,13 +36,13 @@ struct AssetForm: View {
                         hideKeyboard()
                     }
             }
-            .navigationTitle(viewModel.asset == nil ? "new Asset" : "edit Asset")
+            .navigationTitle(viewModel.asset.isNil ? "new Asset" : "edit Asset")
         }
     }
     
     @ViewBuilder
     var formSection: some View {
-        if viewModel.asset == nil {
+        if viewModel.asset.isNil {
             switch viewModel.selectedAssetType {
                 case .possession: possessionFormSection
                 case .receivable: receivableFormSection

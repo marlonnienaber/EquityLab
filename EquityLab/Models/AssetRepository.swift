@@ -111,7 +111,7 @@ class AssetRepository: NSObject {
 
 extension AssetRepository: NSFetchedResultsControllerDelegate {
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-        observers = observers.filter { $0.observer != nil }
+        observers = observers.filter { $0.observer.isNotNil }
         observers.forEach{ $0.observer?.notifyAfterAssetUpdate()}
     }
 }

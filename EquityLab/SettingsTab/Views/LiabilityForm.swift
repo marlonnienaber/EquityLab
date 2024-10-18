@@ -13,45 +13,23 @@ struct LiabilityForm: View {
                     descriptionSection
                     amountSection
                     dateSection
-                    if viewModel.liability != nil {
-                        Section {
-                            HStack(alignment: .center) {
-                                Spacer()
-                                Button {
-                                    viewModel.deleteLiability()
-                                    viewModel.dismissSheet()
-                                } label: {
-                                    Text("Delete")
-                                        .foregroundStyle(.red)
-                                }
-                                Spacer()
-                            }
-                        }
+                    if viewModel.liability.isNotNil {
+                        deleteSection
                     }
                 }
             }
+            .navigationTitle(viewModel.liability.isNil ? "New Liability" : "Edit Liability")
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
-                    Button("Cancel") {
-                        viewModel.dismissSheet()
-                    }
+                    cancelButton
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Save") {
-                        if let liability = viewModel.liability {
-                            viewModel.updateLiability(liability: liability)
-                        } else {
-                            viewModel.createLiability()
-                        }
-                        viewModel.dismissSheet()
-                    }
-                    .disabled(viewModel.liabilityPool == nil)
+                    saveButton
                 }
             }
             .onTapGesture {
                 hideKeyboard()
             }
-            .navigationTitle(viewModel.liability == nil ? "New Liability" : "Edit Liability")
         }
     }
     
@@ -89,5 +67,39 @@ struct LiabilityForm: View {
         Section {
             DatePicker("date", selection: $viewModel.liabilityGrantDate, in: ...Date(), displayedComponents: .date)
         }
+    }
+    
+    private var deleteSection: some View {
+        Section {
+            HStack(alignment: .center) {
+                Spacer()
+                Button {
+                    viewModel.deleteLiability()
+                    viewModel.dismissSheet()
+                } label: {
+                    Text("Delete")
+                        .foregroundStyle(.red)
+                }
+                Spacer()
+            }
+        }
+    }
+    
+    private var cancelButton: some View {
+        Button("Cancel") {
+            viewModel.dismissSheet()
+        }
+    }
+    
+    private var saveButton: some View {
+        Button("Save") {
+            if let liability = viewModel.liability {
+                viewModel.updateLiability(liability: liability)
+            } else {
+                viewModel.createLiability()
+            }
+            viewModel.dismissSheet()
+        }
+        .disabled(viewModel.liabilityPool.isNil)
     }
 }

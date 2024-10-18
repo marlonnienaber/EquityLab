@@ -18,9 +18,9 @@ class SnapshotStructureViewModel {
     var showEditLiabilityPoolAlert = false
     var liabilityPoolToEdit: LiabilityPool?
     
-    var activeItemSheet: BalanceItemSheet? = nil
-    var showAddSheetPickerSheet = false
-    var selectedAddItem: BalanceItemType = .assetPool
+    var activeBalanceItemSheet: BalanceItemSheet? = nil
+    var showBalanceItemPickerSheet = false
+    var selectedBalanceItem: BalanceItemType = .assetPool
     
     var showCreateAssetPoolAlert = false
     var showCreateLiabilityPoolAlert = false
@@ -49,12 +49,12 @@ class SnapshotStructureViewModel {
     }
     
     func getAssetsForAssetPool(_ pool: AssetPool) -> [Asset] {
-        Self.logger.debug("assets(_ pool)")
+        Self.logger.debug("getAssetsForAssetPool(_ pool)")
         return assetPoolToAssetsDictionary[pool] ?? []
     }
     
-    func getliabilitiesForLiabilityPool(_ pool: LiabilityPool) -> [Liability] {
-        Self.logger.debug("liabilities(_ pool)")
+    func getLiabilitiesForLiabilityPool(_ pool: LiabilityPool) -> [Liability] {
+        Self.logger.debug("getliabilitiesForLiabilityPool(_ pool)")
         return liabilityPoolToLiabilitiesDictionary[pool] ?? []
     }
     
@@ -63,12 +63,8 @@ class SnapshotStructureViewModel {
         assetRepository.createAssetPool(named: alertPoolName)
     }
     
-    func createLiabilityPool() {
-        Self.logger.debug("createLiabilityPool()")
-        liabilityRepository.createLiabilityPool(named: alertPoolName)
-    }
-    
     func delete(assetPool: AssetPool) {
+        Self.logger.debug("delete(assetPool)")
         assetRepository.delete(assetPool: assetPool)
     }
     
@@ -78,7 +74,13 @@ class SnapshotStructureViewModel {
         assetRepository.update(assetPool: assetPoolToEdit, newName: alertPoolName)
     }
     
+    func createLiabilityPool() {
+        Self.logger.debug("createLiabilityPool()")
+        liabilityRepository.createLiabilityPool(named: alertPoolName)
+    }
+    
     func delete(liabilityPool: LiabilityPool) {
+        Self.logger.debug("delete()liabilityPool")
         liabilityRepository.delete(liabilityPool: liabilityPool)
     }
     
@@ -91,14 +93,18 @@ class SnapshotStructureViewModel {
 
 extension SnapshotStructureViewModel: AssetObserver, LiabilityObserver {
     func notifyAfterLiabilityUpdate() {
+        Self.logger.debug("notifyAfterLiabilityUpdate()")
         self.liabilityPools = liabilityRepository.fetchLiabilityPools()
+        self.liabilityPoolToLiabilitiesDictionary = [:]
         for pool in liabilityPools {
             liabilityPoolToLiabilitiesDictionary[pool] = liabilityRepository.fetchLiabilities(for: pool)
         }
     }
     
     func notifyAfterAssetUpdate() {
+        Self.logger.debug("notifyAfterAssetUpdate()")
         self.assetPools = assetRepository.fetchAssetPools()
+        self.assetPoolToAssetsDictionary = [:]
         for pool in assetPools {
             assetPoolToAssetsDictionary[pool] = assetRepository.fetchAssets(for: pool)
         }

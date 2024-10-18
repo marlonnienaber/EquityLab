@@ -101,7 +101,7 @@ class SnapshotRepository: NSObject {
 
 extension SnapshotRepository: NSFetchedResultsControllerDelegate {
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-        observers = observers.filter { $0.observer != nil }
+        observers = observers.filter { $0.observer.isNotNil }
         observers.forEach{ $0.observer?.notifyAfterSnapshotUpdate()}
     }
 }

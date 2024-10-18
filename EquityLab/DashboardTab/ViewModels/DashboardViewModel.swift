@@ -28,13 +28,13 @@ class DashboardViewModel {
         switch selectedTimeHorizon {
         case .threeMonths:
             let threeMonthsAgo = calendar.date(byAdding: .month, value: -3, to: today)!
-            return snapshots.filter{ $0.date != nil }.filter{ $0.date! >= threeMonthsAgo }
+            return snapshots.filter{ $0.date.isNotNil }.filter{ $0.date! >= threeMonthsAgo }
         case .sixMonths:
             let sixMonthsAgo = calendar.date(byAdding: .month, value: -6, to: today)!
-            return snapshots.filter{ $0.date != nil }.filter{ $0.date! >= sixMonthsAgo }
+            return snapshots.filter{ $0.date.isNotNil }.filter{ $0.date! >= sixMonthsAgo }
         case .eighteenMonths:
             let eighteenMonthsAgo = calendar.date(byAdding: .month, value: -18, to: today)!
-            return snapshots.filter{ $0.date != nil }.filter{ $0.date! >= eighteenMonthsAgo }
+            return snapshots.filter{ $0.date.isNotNil }.filter{ $0.date! >= eighteenMonthsAgo }
         case .all:
             return snapshots
         }
@@ -46,7 +46,7 @@ class DashboardViewModel {
         set {
             if let newValue {
                 selectedSnapshot = snapshots.filter { snapshot in
-                    snapshot.date != nil
+                    snapshot.date.isNotNil
                 }.min{ firstSnapshot, secondSnapshot in
                     firstSnapshot.date!.isCloser(to: newValue, than: secondSnapshot.date!)
                 }

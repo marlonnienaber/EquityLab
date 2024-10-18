@@ -32,13 +32,7 @@ class LiabilityRepository: NSObject {
     
     func fetchLiabilityPools() -> [LiabilityPool] {
         try? fetchedResultsController.performFetch()
-        let liabilityPools = fetchedResultsController.fetchedObjects as? [LiabilityPool] ?? []
-        if liabilityPools.isEmpty{
-            print("no liabilityPools could be fetched")
-        } else {
-            print("\(liabilityPools.count) liabilityPools were fetched")
-        }
-        return liabilityPools
+        return fetchedResultsController.fetchedObjects as? [LiabilityPool] ?? []
     }
     
     func delete(liability: Liability) {
@@ -101,7 +95,7 @@ class LiabilityRepository: NSObject {
 
 extension LiabilityRepository: NSFetchedResultsControllerDelegate {
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-        observers = observers.filter { $0.observer != nil }
+        observers = observers.filter { $0.observer.isNotNil }
         observers.forEach{ $0.observer?.notifyAfterLiabilityUpdate()}
     }
 }
