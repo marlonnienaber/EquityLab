@@ -29,5 +29,7 @@ extension LiabilityPool {
 }
 
 extension LiabilityPool : Identifiable {
-
+    public var id: String {
+        name
+    }
 }

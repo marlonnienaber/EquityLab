@@ -18,6 +18,9 @@ struct EquityLabApp: App {
                 SnapshotLedger().tabItem {
                     Image(systemName: "camera.aperture")
                 }
+                SettingsView().tabItem {
+                    Image(systemName: "gear")
+                }
             }
         }
     }

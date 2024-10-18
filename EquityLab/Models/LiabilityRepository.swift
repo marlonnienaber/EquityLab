@@ -32,7 +32,13 @@ class LiabilityRepository: NSObject {
     
     func fetchLiabilityPools() -> [LiabilityPool] {
         try? fetchedResultsController.performFetch()
-        return fetchedResultsController.fetchedObjects as? [LiabilityPool] ?? []
+        let liabilityPools = fetchedResultsController.fetchedObjects as? [LiabilityPool] ?? []
+        if liabilityPools.isEmpty{
+            print("no liabilityPools could be fetched")
+        } else {
+            print("\(liabilityPools.count) liabilityPools were fetched")
+        }
+        return liabilityPools
     }
     
     func delete(liability: Liability) {

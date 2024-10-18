@@ -25,6 +25,7 @@ class AssetFormViewModel {
         self.asset = asset
         self.selectedAssetType = .possession
         self.assetName = asset?.name ?? ""
+        self.assetPool = asset?.pool
         if let receivable = asset as? Receivable {
             self.receivableGrantDate = receivable.grantDate
             self.receivableDebtor = receivable.debtor
@@ -50,8 +51,9 @@ class AssetFormViewModel {
         return !assets.contains(where: {$0.name == assetName})
     }
     
-    private func updateReceivable(receivable: Receivable) {
+    func updateReceivable() {
         Self.logger.debug("updateReceivable(receivable)")
+        guard let receivable = asset as? Receivable else { return }
         repository.updateReceivable(receivable: receivable,
                                     newName: assetName,
                                     newDebtor: receivableDebtor,
@@ -60,34 +62,39 @@ class AssetFormViewModel {
                                     newGrantDate: receivableGrantDate)
     }
     
-    private func updatePossession(possession: Possession) {
+    func updatePossession() {
         Self.logger.debug("updatePossession(possession)")
+        guard let possession = asset as? Possession else { return }
         repository.updatePossession(possession: possession, newName: assetName, newIsVolatile: possessionIsVolatile)
     }
     
-    private func createReceivable() {
+    func createReceivable() {
         Self.logger.debug("createReceivable()")
-        guard let assetPool else { return }
-        repository.createReceivable(name: assetName,
-                                    pool: assetPool,
-                                    debtor: receivableDebtor,
-                                    initialAmount: receivableInitialAmount,
-                                    repaidAmount: receivableRepaidAmount,
-                                    grantDate: receivableGrantDate)
+        if let assetPool, assetWithSameNameDoesNotExist() {
+            repository.createReceivable(name: assetName,
+                                        pool: assetPool,
+                                        debtor: receivableDebtor,
+                                        initialAmount: receivableInitialAmount,
+                                        repaidAmount: receivableRepaidAmount,
+                                        grantDate: receivableGrantDate)
+        }
+        /* TODO: give some feedback to the user in case an asset with the same name does exist */
     }
     
-    private func createPossession() {
+    func createPossession() {
         Self.logger.debug("createPossession()")
-        guard let assetPool else { return }
-        repository.createPossession(name: assetName, pool: assetPool, isVolatile: possessionIsVolatile)
+        if let assetPool, assetWithSameNameDoesNotExist() {
+            repository.createPossession(name: assetName, pool: assetPool, isVolatile: possessionIsVolatile)
+        }
+        /* TODO: give some feedback to the user in case an asset with the same name does exist */
     }
     
     func saveAsset() {
         Self.logger.debug("saveAsset()")
         if let receivable = asset as? Receivable {
-            updateReceivable(receivable: receivable)
+            updateReceivable()
         } else if let possession = asset as? Possession {
-            updatePossession(possession: possession)
+            updatePossession()
         } else if assetWithSameNameDoesNotExist() {
             switch selectedAssetType {
                 case .receivable: createReceivable()
@@ -96,6 +103,15 @@ class AssetFormViewModel {
         } else {
             print("error")
         }
-        /* TODO: give some feedback to the user in case an asset with the same name does exist */
+    }
+    
+    func deleteAsset() {
+        Self.logger.debug("deleteAsset()")
+        guard let asset else { return }
+        repository.delete(asset: asset)
+    }
+    
+    func getAssetPools() -> [AssetPool] {
+        repository.fetchAssetPools()
     }
 }

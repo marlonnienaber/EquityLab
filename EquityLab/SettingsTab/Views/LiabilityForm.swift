@@ -6,10 +6,29 @@ struct LiabilityForm: View {
     
     var body: some View {
         NavigationView {
-            Form {
-                descriptionSection
-                amountSection
-                dateSection
+            VStack {
+                Spacer()
+                    .frame(maxHeight: 16)
+                Form {
+                    descriptionSection
+                    amountSection
+                    dateSection
+                    if viewModel.liability != nil {
+                        Section {
+                            HStack(alignment: .center) {
+                                Spacer()
+                                Button {
+                                    viewModel.deleteLiability()
+                                    viewModel.dismissSheet()
+                                } label: {
+                                    Text("Delete")
+                                        .foregroundStyle(.red)
+                                }
+                                Spacer()
+                            }
+                        }
+                    }
+                }
             }
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
@@ -26,12 +45,13 @@ struct LiabilityForm: View {
                         }
                         viewModel.dismissSheet()
                     }
+                    .disabled(viewModel.liabilityPool == nil)
                 }
             }
             .onTapGesture {
                 hideKeyboard()
             }
-            .navigationTitle(viewModel.liability == nil ? "new Liability" : "edit Liability")
+            .navigationTitle(viewModel.liability == nil ? "New Liability" : "Edit Liability")
         }
     }
     
@@ -39,11 +59,11 @@ struct LiabilityForm: View {
         Section {
             TextField("creditor", text: $viewModel.liabilityCreditor)
             TextField("purpose", text: $viewModel.liabilityName)
-            HStack {
-                Spacer()
-                Text("(20 characters max)")
-                    .font(.footnote)
-                    .foregroundColor(Color.gray)
+            Picker("LiabilityPool", selection: $viewModel.liabilityPool) {
+                ForEach(viewModel.getLiabilityPools()) { pool in
+                    Text(pool.name).tag(pool)
+                }
+                Text("none selected").tag(LiabilityPool?.none)
             }
         }
     }

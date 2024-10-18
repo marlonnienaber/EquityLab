@@ -56,4 +56,19 @@ class LiabilityFormViewModel {
                                    newRepaidAmount: liabilityRepaidAmount,
                                    newGrantDate: liabilityGrantDate)
     }
+    
+    func getLiabilityPools() -> [LiabilityPool] {
+        print("getLiabilityPools()")
+        let liabilityPools = repository.fetchLiabilityPools()
+        for pool in liabilityPools {
+            print(pool.name)
+        }
+        return liabilityPools
+    }
+    
+    func deleteLiability() {
+        Self.logger.debug("deleteLiability()")
+        guard let liability else { return }
+        repository.delete(liability: liability)
+    }
 }

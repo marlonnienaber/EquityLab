@@ -2,7 +2,7 @@
 import CoreData
 
 @objc(AssetPool)
-public class AssetPool: NSManagedObject, Codable {
+public class AssetPool: NSManagedObject, Codable, Named {
 
     func getAssetRequest() -> NSFetchRequest<Asset> {
         let request = Asset.fetchRequest()
@@ -50,3 +50,4 @@ public class AssetPool: NSManagedObject, Codable {
         }
     }
 }
+
