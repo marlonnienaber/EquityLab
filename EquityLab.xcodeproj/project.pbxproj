@@ -43,9 +43,7 @@
 		7342ED842C447D7E00BA20A4 /* UIColorArrayExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7342ED832C447D7E00BA20A4 /* UIColorArrayExtension.swift */; };
 		7342ED872C447E5000BA20A4 /* LocalizedCurrencyFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7342ED862C447E5000BA20A4 /* LocalizedCurrencyFormatter.swift */; };
 		7342ED892C447E7000BA20A4 /* LocalizedShortDateFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7342ED882C447E7000BA20A4 /* LocalizedShortDateFormatter.swift */; };
-		7342ED942C447FAF00BA20A4 /* AssetLedgerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7342ED932C447FAF00BA20A4 /* AssetLedgerViewModel.swift */; };
 		7342ED982C447FF500BA20A4 /* AssetFormViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7342ED972C447FF500BA20A4 /* AssetFormViewModel.swift */; };
-		7342ED9D2C44815D00BA20A4 /* LiabilityLedgerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7342ED9C2C44815D00BA20A4 /* LiabilityLedgerViewModel.swift */; };
 		7342ED9F2C44818100BA20A4 /* LiabilityFormViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7342ED9E2C44818100BA20A4 /* LiabilityFormViewModel.swift */; };
 		7342EDA72C44821200BA20A4 /* LiabilityForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7342EDA62C44821200BA20A4 /* LiabilityForm.swift */; };
 		7342EDAC2C4482C700BA20A4 /* SnapshotLedgerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7342EDAB2C4482C700BA20A4 /* SnapshotLedgerViewModel.swift */; };
@@ -140,9 +138,7 @@
 		7342ED832C447D7E00BA20A4 /* UIColorArrayExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColorArrayExtension.swift; sourceTree = "<group>"; };
 		7342ED862C447E5000BA20A4 /* LocalizedCurrencyFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalizedCurrencyFormatter.swift; sourceTree = "<group>"; };
 		7342ED882C447E7000BA20A4 /* LocalizedShortDateFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalizedShortDateFormatter.swift; sourceTree = "<group>"; };
-		7342ED932C447FAF00BA20A4 /* AssetLedgerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetLedgerViewModel.swift; sourceTree = "<group>"; };
 		7342ED972C447FF500BA20A4 /* AssetFormViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetFormViewModel.swift; sourceTree = "<group>"; };
-		7342ED9C2C44815D00BA20A4 /* LiabilityLedgerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiabilityLedgerViewModel.swift; sourceTree = "<group>"; };
 		7342ED9E2C44818100BA20A4 /* LiabilityFormViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiabilityFormViewModel.swift; sourceTree = "<group>"; };
 		7342EDA62C44821200BA20A4 /* LiabilityForm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiabilityForm.swift; sourceTree = "<group>"; };
 		7342EDAB2C4482C700BA20A4 /* SnapshotLedgerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapshotLedgerViewModel.swift; sourceTree = "<group>"; };
@@ -272,8 +268,6 @@
 				73037F4C2CC00E36005DD105 /* SettingsTab */,
 				7342EDBF2C44897700BA20A4 /* DashboardTab */,
 				7342EDA82C44828B00BA20A4 /* SnapshotTab */,
-				7342ED992C44812500BA20A4 /* LiabilityTab */,
-				7342ED8A2C447EB400BA20A4 /* AssetTab */,
 				7342ED342C44754E00BA20A4 /* Models */,
 				7342ED752C447BA300BA20A4 /* Utility */,
 				7342ED2A2C44750300BA20A4 /* Assets.xcassets */,
@@ -399,38 +393,6 @@
 				73D2C5912C5FBE3B0019A800 /* LocalizedLongDateFormatter.swift */,
 			);
 			path = Formatters;
-			sourceTree = "<group>";
-		};
-		7342ED8A2C447EB400BA20A4 /* AssetTab */ = {
-			isa = PBXGroup;
-			children = (
-				7342ED8B2C447EBF00BA20A4 /* ViewModels */,
-			);
-			path = AssetTab;
-			sourceTree = "<group>";
-		};
-		7342ED8B2C447EBF00BA20A4 /* ViewModels */ = {
-			isa = PBXGroup;
-			children = (
-				7342ED932C447FAF00BA20A4 /* AssetLedgerViewModel.swift */,
-			);
-			path = ViewModels;
-			sourceTree = "<group>";
-		};
-		7342ED992C44812500BA20A4 /* LiabilityTab */ = {
-			isa = PBXGroup;
-			children = (
-				7342ED9A2C44813400BA20A4 /* ViewModels */,
-			);
-			path = LiabilityTab;
-			sourceTree = "<group>";
-		};
-		7342ED9A2C44813400BA20A4 /* ViewModels */ = {
-			isa = PBXGroup;
-			children = (
-				7342ED9C2C44815D00BA20A4 /* LiabilityLedgerViewModel.swift */,
-			);
-			path = ViewModels;
 			sourceTree = "<group>";
 		};
 		7342EDA82C44828B00BA20A4 /* SnapshotTab */ = {
@@ -697,14 +659,12 @@
 				7342EDA72C44821200BA20A4 /* LiabilityForm.swift in Sources */,
 				7342ED782C447BDC00BA20A4 /* CurrencyInputField.swift in Sources */,
 				73037F502CC00EC2005DD105 /* SettingsView.swift in Sources */,
-				7342ED9D2C44815D00BA20A4 /* LiabilityLedgerViewModel.swift in Sources */,
 				7342ED842C447D7E00BA20A4 /* UIColorArrayExtension.swift in Sources */,
 				7342ED6B2C447A0C00BA20A4 /* Possession+CoreDataClass.swift in Sources */,
 				7342ED6C2C447A0C00BA20A4 /* Possession+CoreDataProperties.swift in Sources */,
 				7342ED6D2C447A0C00BA20A4 /* AssetPool+CoreDataClass.swift in Sources */,
 				7342ED6E2C447A0C00BA20A4 /* AssetPool+CoreDataProperties.swift in Sources */,
 				7342ED6F2C447A0C00BA20A4 /* Asset+CoreDataClass.swift in Sources */,
-				7342ED942C447FAF00BA20A4 /* AssetLedgerViewModel.swift in Sources */,
 				73037F602CC2CF79005DD105 /* Optional+Extension.swift in Sources */,
 				7342ED702C447A0C00BA20A4 /* Asset+CoreDataProperties.swift in Sources */,
 				7342ED872C447E5000BA20A4 /* LocalizedCurrencyFormatter.swift in Sources */,
