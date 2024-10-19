@@ -18,10 +18,9 @@ class AssetFormViewModel {
     var selectedAssetType: Asset.SubType
     let dismissSheet: () -> ()
     
-    init(asset: Asset? = nil, pool: AssetPool? = nil, repository: AssetRepository = .production, dismissSheet: @escaping () -> ()) {
+    init(asset: Asset? = nil, repository: AssetRepository = .production, dismissSheet: @escaping () -> ()) {
         Self.logger.debug("AssetFormViewModel()")
         self.repository = repository
-        self.assetPool = pool
         self.asset = asset
         self.selectedAssetType = .possession
         self.assetName = asset?.name ?? ""
@@ -98,21 +97,5 @@ class AssetFormViewModel {
         Self.logger.debug("deleteAsset()")
         guard let asset else { return }
         repository.delete(asset: asset)
-    }
-    
-    func saveAsset() {
-        Self.logger.debug("saveAsset()")
-        if let receivable = asset as? Receivable {
-            updateReceivable()
-        } else if let possession = asset as? Possession {
-            updatePossession()
-        } else if assetWithSameNameDoesNotExist() {
-            switch selectedAssetType {
-                case .receivable: createReceivable()
-                case .possession: createPossession()
-            }
-        } else {
-            print("error")
-        }
     }
 }

@@ -11,8 +11,17 @@ final class AssetFormViewModelTests: XCTestCase {
         testingAssetRepository = AssetRepository(context: testingCoreDataStack.context)
     }
     
+    func test_getAssetPools_1() throws {
+        let expectedPools = testDataProvider.createAndPersitsTestObjects_getAssetPools_1(using: testingCoreDataStack.context)
+        
+        let sut = AssetFormViewModel(repository: testingAssetRepository, dismissSheet: {})
+        
+        let actualPools = sut.getAssetPools()
+        XCTAssertTrue(expectedPools ≡ actualPools)
+    }
+    
     /// update a Receivable
-    func test_saveAsset_1() throws {
+    func test_updateReceivable_1() throws {
         var receivable = testDataProvider.createAndPersistTestObjects_saveAsset_1(context: testingCoreDataStack.context)
         
         let sut = AssetFormViewModel(asset: receivable, repository: testingAssetRepository, dismissSheet: {})
@@ -28,7 +37,7 @@ final class AssetFormViewModelTests: XCTestCase {
         sut.receivableGrantDate = expectedGrantDate
         sut.receivableInitialAmount = expectedInitialAmount
         sut.receivableRepaidAmount = expectedRepaidAmount
-        sut.saveAsset()
+        sut.updateReceivable()
         
         let persistedAssets = testingAssetRepository.fetchAssets()
         XCTAssertTrue(persistedAssets.count == 1)
@@ -48,7 +57,7 @@ final class AssetFormViewModelTests: XCTestCase {
     }
     
     /// update a Possession
-    func test_saveAsset_2() throws {
+    func test_updatePossession_1() throws {
         var possession = testDataProvider.createAndPersistTestObjects_saveAsset_2(context: testingCoreDataStack.context)
         
         let sut = AssetFormViewModel(asset: possession, repository: testingAssetRepository, dismissSheet: {})
@@ -58,7 +67,7 @@ final class AssetFormViewModelTests: XCTestCase {
         
         sut.assetName = expectedName
         sut.possessionIsVolatile = expectedIsVolatile
-        sut.saveAsset()
+        sut.updatePossession()
         
         let persistedAssets = testingAssetRepository.fetchAssets()
         XCTAssertTrue(persistedAssets.count == 1)
@@ -72,10 +81,10 @@ final class AssetFormViewModelTests: XCTestCase {
     }
     
     /// create a Receivable
-    func test_saveAsset_3() throws {
+    func test_createReceivable_1() throws {
         let assetPool = testDataProvider.createAndPersistTestObjects_multiPurpose_1(context: testingCoreDataStack.context)
         
-        let sut = AssetFormViewModel(pool: assetPool, repository: testingAssetRepository, dismissSheet: {})
+        let sut = AssetFormViewModel(repository: testingAssetRepository, dismissSheet: {})
         
         let expectedName = "Rote Sonne"
         let expectedDebtor = "Philipp"
@@ -88,8 +97,9 @@ final class AssetFormViewModelTests: XCTestCase {
         sut.receivableGrantDate = expectedGrantDate
         sut.receivableInitialAmount = expectedInitialAmount
         sut.receivableRepaidAmount = expectedRepaidAmount
+        sut.assetPool = assetPool
         sut.selectedAssetType = .receivable
-        sut.saveAsset()
+        sut.createReceivable()
         
         let persistedAssets = testingAssetRepository.fetchAssets()
         XCTAssertTrue(persistedAssets.count == 1)
@@ -109,18 +119,19 @@ final class AssetFormViewModelTests: XCTestCase {
     }
     
     /// create a Possession
-    func test_saveAsset_4() throws {
+    func test_createPossession_1() throws {
         let assetPool = testDataProvider.createAndPersistTestObjects_multiPurpose_1(context: testingCoreDataStack.context)
         
-        let sut = AssetFormViewModel(pool: assetPool, repository: testingAssetRepository, dismissSheet: {})
+        let sut = AssetFormViewModel(repository: testingAssetRepository, dismissSheet: {})
         
         let expectedName = "Commerzbank Konto"
         let expectedIsVolatile = false
         
         sut.assetName = expectedName
         sut.possessionIsVolatile = expectedIsVolatile
+        sut.assetPool = assetPool
         sut.selectedAssetType = .possession
-        sut.saveAsset()
+        sut.createPossession()
         
         let persistedAssets = testingAssetRepository.fetchAssets()
         XCTAssertTrue(persistedAssets.count == 1)
@@ -134,10 +145,10 @@ final class AssetFormViewModelTests: XCTestCase {
     }
     
     /// create 2 Receivables of the same name. Only the first one should be persisted
-    func test_saveAsset_5() throws {
+    func test_createAssetsWithSameName_1() throws {
         let assetPool = testDataProvider.createAndPersistTestObjects_multiPurpose_1(context: testingCoreDataStack.context)
         
-        let sut = AssetFormViewModel(pool: assetPool, repository: testingAssetRepository, dismissSheet: {})
+        let sut = AssetFormViewModel(repository: testingAssetRepository, dismissSheet: {})
         
         let firstExpectedName = "Rote Sonne"
         let firstExpectedDebtor = "Philipp"
@@ -150,8 +161,9 @@ final class AssetFormViewModelTests: XCTestCase {
         sut.receivableGrantDate = firstExpectedGrantDate
         sut.receivableInitialAmount = firstExpectedInitialAmount
         sut.receivableRepaidAmount = firstExpectedRepaidAmount
+        sut.assetPool = assetPool
         sut.selectedAssetType = .receivable
-        sut.saveAsset()
+        sut.createReceivable()
         
         let secondExpectedName = "Rote Sonne"
         let secondExpectedDebtor = "Lenni"
@@ -164,8 +176,9 @@ final class AssetFormViewModelTests: XCTestCase {
         sut.receivableGrantDate = secondExpectedGrantDate
         sut.receivableInitialAmount = secondExpectedInitialAmount
         sut.receivableRepaidAmount = secondExpectedRepaidAmount
+        sut.assetPool = assetPool
         sut.selectedAssetType = .receivable
-        sut.saveAsset()
+        sut.createReceivable()
         
         let persistedAssets = testingAssetRepository.fetchAssets()
         XCTAssertTrue(persistedAssets.count == 1)
@@ -185,26 +198,28 @@ final class AssetFormViewModelTests: XCTestCase {
     }
     
     /// create 2 Possessions of the same name. Only the first one should be persisted
-    func test_saveAsset_6() throws {
+    func test_createAssetsWithSameName_2() throws {
         let assetPool = testDataProvider.createAndPersistTestObjects_multiPurpose_1(context: testingCoreDataStack.context)
         
-        let sut = AssetFormViewModel(pool: assetPool, repository: testingAssetRepository, dismissSheet: {})
+        let sut = AssetFormViewModel(repository: testingAssetRepository, dismissSheet: {})
         
         let firstExpectedName = "Commerzbank Konto"
         let firstExpectedIsVolatile = false
         
         sut.assetName = firstExpectedName
         sut.possessionIsVolatile = firstExpectedIsVolatile
+        sut.assetPool = assetPool
         sut.selectedAssetType = .possession
-        sut.saveAsset()
+        sut.createPossession()
         
         let secondExpectedName = "Commerzbank Konto"
         let secondExpectedIsVolatile = true
         
         sut.assetName = secondExpectedName
         sut.possessionIsVolatile = secondExpectedIsVolatile
+        sut.assetPool = assetPool
         sut.selectedAssetType = .possession
-        sut.saveAsset()
+        sut.createPossession()
         
         let persistedAssets = testingAssetRepository.fetchAssets()
         XCTAssertTrue(persistedAssets.count == 1)
@@ -218,10 +233,10 @@ final class AssetFormViewModelTests: XCTestCase {
     }
     
     /// create 1 Receivables and then 1 Possession of the same name. Only the first one created should be persisted
-    func test_saveAsset_7() throws {
+    func test_createAssetsWithSameName_3() throws {
         let assetPool = testDataProvider.createAndPersistTestObjects_multiPurpose_1(context: testingCoreDataStack.context)
         
-        let sut = AssetFormViewModel(pool: assetPool, repository: testingAssetRepository, dismissSheet: {})
+        let sut = AssetFormViewModel(repository: testingAssetRepository, dismissSheet: {})
         
         let firstExpectedName = "Rote Sonne"
         let firstExpectedDebtor = "Philipp"
@@ -234,16 +249,18 @@ final class AssetFormViewModelTests: XCTestCase {
         sut.receivableGrantDate = firstExpectedGrantDate
         sut.receivableInitialAmount = firstExpectedInitialAmount
         sut.receivableRepaidAmount = firstExpectedRepaidAmount
+        sut.assetPool = assetPool
         sut.selectedAssetType = .receivable
-        sut.saveAsset()
+        sut.createReceivable()
         
         let secondExpectedName = "Rote Sonne"
         let secondExpectedIsVolatile = true
         
         sut.assetName = secondExpectedName
         sut.possessionIsVolatile = secondExpectedIsVolatile
+        sut.assetPool = assetPool
         sut.selectedAssetType = .possession
-        sut.saveAsset()
+        sut.createPossession()
         
         let persistedAssets = testingAssetRepository.fetchAssets()
         XCTAssertTrue(persistedAssets.count == 1)
@@ -263,18 +280,19 @@ final class AssetFormViewModelTests: XCTestCase {
     }
     
     /// create 1 Possession and then 1 Receivable of the same name. Only the first one created should be persisted
-    func test_saveAsset_8() throws {
+    func test_createAssetsWithSameName_4() throws {
         let assetPool = testDataProvider.createAndPersistTestObjects_multiPurpose_1(context: testingCoreDataStack.context)
         
-        let sut = AssetFormViewModel(pool: assetPool, repository: testingAssetRepository, dismissSheet: {})
+        let sut = AssetFormViewModel(repository: testingAssetRepository, dismissSheet: {})
         
         let firstExpectedName = "Commerzbank Konto"
         let firstExpectedIsVolatile = false
         
         sut.assetName = firstExpectedName
         sut.possessionIsVolatile = firstExpectedIsVolatile
+        sut.assetPool = assetPool
         sut.selectedAssetType = .possession
-        sut.saveAsset()
+        sut.createPossession()
         
         let secondExpectedName = "Commerzbank Konto"
         let secondExpectedDebtor = "Lenni"
@@ -287,8 +305,9 @@ final class AssetFormViewModelTests: XCTestCase {
         sut.receivableGrantDate = secondExpectedGrantDate
         sut.receivableInitialAmount = secondExpectedInitialAmount
         sut.receivableRepaidAmount = secondExpectedRepaidAmount
+        sut.assetPool = assetPool
         sut.selectedAssetType = .receivable
-        sut.saveAsset()
+        sut.createReceivable()
         
         let persistedAssets = testingAssetRepository.fetchAssets()
         XCTAssertTrue(persistedAssets.count == 1)
@@ -299,6 +318,18 @@ final class AssetFormViewModelTests: XCTestCase {
         
         XCTAssertEqual(firstExpectedName, actualName)
         XCTAssertEqual(firstExpectedIsVolatile, actualIsVolatile)
+    }
+    
+    /// delete one asset and test viewModel interface providing data to view as well as persisted data
+    func test_deleteAsset_1() throws {
+        let (assetToDelete, expectedAssets) = testDataProvider.createAndPersistTestObjects_deleteAssets_1(using: testingCoreDataStack.context)
+        
+        let sut = AssetFormViewModel(repository: testingAssetRepository, dismissSheet: {})
+        sut.asset = assetToDelete
+        sut.deleteAsset()
+        
+        let actualAssets = testingAssetRepository.fetchAssets()
+        XCTAssertTrue(expectedAssets ≡ actualAssets)
     }
 
 }

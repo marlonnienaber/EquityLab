@@ -11,12 +11,6 @@ struct EquityLabApp: App {
                 Dashboard().tabItem{
                     Image(systemName: "chart.bar.xaxis")
                 }
-                AssetLedger().tabItem {
-                    Image(systemName: "dollarsign.circle")
-                }
-                LiabilityLedger().tabItem {
-                    Image(systemName: "person.line.dotted.person.fill")
-                }
                 SnapshotLedger().tabItem {
                     Image(systemName: "camera.aperture")
                 }

@@ -7,8 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		730273312CAE85E0001EE236 /* AssetLedgerViewModelTestDataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 730273302CAE85D2001EE236 /* AssetLedgerViewModelTestDataProvider.swift */; };
-		730273332CAE85ED001EE236 /* AssetLedgerViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 730273322CAE85E7001EE236 /* AssetLedgerViewModelTests.swift */; };
 		73037F502CC00EC2005DD105 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73037F4F2CC00EBE005DD105 /* SettingsView.swift */; };
 		73037F522CC00ECB005DD105 /* SnapshotStructureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73037F512CC00EC5005DD105 /* SnapshotStructureView.swift */; };
 		73037F542CC00ED7005DD105 /* SnapshotStructureViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73037F532CC00ECE005DD105 /* SnapshotStructureViewModel.swift */; };
@@ -45,13 +43,10 @@
 		7342ED842C447D7E00BA20A4 /* UIColorArrayExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7342ED832C447D7E00BA20A4 /* UIColorArrayExtension.swift */; };
 		7342ED872C447E5000BA20A4 /* LocalizedCurrencyFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7342ED862C447E5000BA20A4 /* LocalizedCurrencyFormatter.swift */; };
 		7342ED892C447E7000BA20A4 /* LocalizedShortDateFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7342ED882C447E7000BA20A4 /* LocalizedShortDateFormatter.swift */; };
-		7342ED8E2C447EDF00BA20A4 /* AssetLedger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7342ED8D2C447EDF00BA20A4 /* AssetLedger.swift */; };
-		7342ED922C447F6300BA20A4 /* AssetForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7342ED912C447F6300BA20A4 /* AssetForm.swift */; };
 		7342ED942C447FAF00BA20A4 /* AssetLedgerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7342ED932C447FAF00BA20A4 /* AssetLedgerViewModel.swift */; };
 		7342ED982C447FF500BA20A4 /* AssetFormViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7342ED972C447FF500BA20A4 /* AssetFormViewModel.swift */; };
 		7342ED9D2C44815D00BA20A4 /* LiabilityLedgerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7342ED9C2C44815D00BA20A4 /* LiabilityLedgerViewModel.swift */; };
 		7342ED9F2C44818100BA20A4 /* LiabilityFormViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7342ED9E2C44818100BA20A4 /* LiabilityFormViewModel.swift */; };
-		7342EDA32C4481D200BA20A4 /* LiabilityLedger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7342EDA22C4481D200BA20A4 /* LiabilityLedger.swift */; };
 		7342EDA72C44821200BA20A4 /* LiabilityForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7342EDA62C44821200BA20A4 /* LiabilityForm.swift */; };
 		7342EDAC2C4482C700BA20A4 /* SnapshotLedgerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7342EDAB2C4482C700BA20A4 /* SnapshotLedgerViewModel.swift */; };
 		7342EDAF2C44838C00BA20A4 /* Snapshot+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7342EDAD2C44838C00BA20A4 /* Snapshot+CoreDataClass.swift */; };
@@ -77,8 +72,6 @@
 		7363DDFE2CA9FD6C009F3412 /* Array+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7363DDFD2CA9FD67009F3412 /* Array+Extension.swift */; };
 		7363DE002CAB1C52009F3412 /* Date+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7363DDFF2CAB1C4B009F3412 /* Date+Extension.swift */; };
 		7363DE022CAC74AC009F3412 /* NSManagedObject+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7363DE012CAC74A4009F3412 /* NSManagedObject+Extension.swift */; };
-		7366CD1A2CB1C2500066ACC3 /* LiabilityLedgerViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7366CD192CB1C2410066ACC3 /* LiabilityLedgerViewModelTests.swift */; };
-		7366CD1C2CB1C2650066ACC3 /* LiabilityLedgerViewModelTestDataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7366CD1B2CB1C2580066ACC3 /* LiabilityLedgerViewModelTestDataProvider.swift */; };
 		7366CD1E2CB1EB000066ACC3 /* LiabilityFormViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7366CD1D2CB1EAEF0066ACC3 /* LiabilityFormViewModelTests.swift */; };
 		7366CD202CB1EB1E0066ACC3 /* LiabilityFormViewModelTestDataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7366CD1F2CB1EB0C0066ACC3 /* LiabilityFormViewModelTestDataProvider.swift */; };
 		7371458B2CB0293B009578C8 /* AssetFormViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7371458A2CB02930009578C8 /* AssetFormViewModelTests.swift */; };
@@ -109,8 +102,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		730273302CAE85D2001EE236 /* AssetLedgerViewModelTestDataProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetLedgerViewModelTestDataProvider.swift; sourceTree = "<group>"; };
-		730273322CAE85E7001EE236 /* AssetLedgerViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetLedgerViewModelTests.swift; sourceTree = "<group>"; };
 		73037F4F2CC00EBE005DD105 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		73037F512CC00EC5005DD105 /* SnapshotStructureView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapshotStructureView.swift; sourceTree = "<group>"; };
 		73037F532CC00ECE005DD105 /* SnapshotStructureViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapshotStructureViewModel.swift; sourceTree = "<group>"; };
@@ -149,13 +140,10 @@
 		7342ED832C447D7E00BA20A4 /* UIColorArrayExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColorArrayExtension.swift; sourceTree = "<group>"; };
 		7342ED862C447E5000BA20A4 /* LocalizedCurrencyFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalizedCurrencyFormatter.swift; sourceTree = "<group>"; };
 		7342ED882C447E7000BA20A4 /* LocalizedShortDateFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalizedShortDateFormatter.swift; sourceTree = "<group>"; };
-		7342ED8D2C447EDF00BA20A4 /* AssetLedger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetLedger.swift; sourceTree = "<group>"; };
-		7342ED912C447F6300BA20A4 /* AssetForm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetForm.swift; sourceTree = "<group>"; };
 		7342ED932C447FAF00BA20A4 /* AssetLedgerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetLedgerViewModel.swift; sourceTree = "<group>"; };
 		7342ED972C447FF500BA20A4 /* AssetFormViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetFormViewModel.swift; sourceTree = "<group>"; };
 		7342ED9C2C44815D00BA20A4 /* LiabilityLedgerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiabilityLedgerViewModel.swift; sourceTree = "<group>"; };
 		7342ED9E2C44818100BA20A4 /* LiabilityFormViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiabilityFormViewModel.swift; sourceTree = "<group>"; };
-		7342EDA22C4481D200BA20A4 /* LiabilityLedger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiabilityLedger.swift; sourceTree = "<group>"; };
 		7342EDA62C44821200BA20A4 /* LiabilityForm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiabilityForm.swift; sourceTree = "<group>"; };
 		7342EDAB2C4482C700BA20A4 /* SnapshotLedgerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapshotLedgerViewModel.swift; sourceTree = "<group>"; };
 		7342EDAD2C44838C00BA20A4 /* Snapshot+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Snapshot+CoreDataClass.swift"; sourceTree = SOURCE_ROOT; };
@@ -181,8 +169,6 @@
 		7363DDFD2CA9FD67009F3412 /* Array+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+Extension.swift"; sourceTree = "<group>"; };
 		7363DDFF2CAB1C4B009F3412 /* Date+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Extension.swift"; sourceTree = "<group>"; };
 		7363DE012CAC74A4009F3412 /* NSManagedObject+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSManagedObject+Extension.swift"; sourceTree = "<group>"; };
-		7366CD192CB1C2410066ACC3 /* LiabilityLedgerViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiabilityLedgerViewModelTests.swift; sourceTree = "<group>"; };
-		7366CD1B2CB1C2580066ACC3 /* LiabilityLedgerViewModelTestDataProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiabilityLedgerViewModelTestDataProvider.swift; sourceTree = "<group>"; };
 		7366CD1D2CB1EAEF0066ACC3 /* LiabilityFormViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiabilityFormViewModelTests.swift; sourceTree = "<group>"; };
 		7366CD1F2CB1EB0C0066ACC3 /* LiabilityFormViewModelTestDataProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiabilityFormViewModelTestDataProvider.swift; sourceTree = "<group>"; };
 		7371458A2CB02930009578C8 /* AssetFormViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetFormViewModelTests.swift; sourceTree = "<group>"; };
@@ -418,7 +404,6 @@
 		7342ED8A2C447EB400BA20A4 /* AssetTab */ = {
 			isa = PBXGroup;
 			children = (
-				7342ED8C2C447EC700BA20A4 /* Views */,
 				7342ED8B2C447EBF00BA20A4 /* ViewModels */,
 			);
 			path = AssetTab;
@@ -432,19 +417,9 @@
 			path = ViewModels;
 			sourceTree = "<group>";
 		};
-		7342ED8C2C447EC700BA20A4 /* Views */ = {
-			isa = PBXGroup;
-			children = (
-				7342ED912C447F6300BA20A4 /* AssetForm.swift */,
-				7342ED8D2C447EDF00BA20A4 /* AssetLedger.swift */,
-			);
-			path = Views;
-			sourceTree = "<group>";
-		};
 		7342ED992C44812500BA20A4 /* LiabilityTab */ = {
 			isa = PBXGroup;
 			children = (
-				7342ED9B2C44813B00BA20A4 /* Views */,
 				7342ED9A2C44813400BA20A4 /* ViewModels */,
 			);
 			path = LiabilityTab;
@@ -456,14 +431,6 @@
 				7342ED9C2C44815D00BA20A4 /* LiabilityLedgerViewModel.swift */,
 			);
 			path = ViewModels;
-			sourceTree = "<group>";
-		};
-		7342ED9B2C44813B00BA20A4 /* Views */ = {
-			isa = PBXGroup;
-			children = (
-				7342EDA22C4481D200BA20A4 /* LiabilityLedger.swift */,
-			);
-			path = Views;
 			sourceTree = "<group>";
 		};
 		7342EDA82C44828B00BA20A4 /* SnapshotTab */ = {
@@ -554,9 +521,7 @@
 			children = (
 				73037F612CC2E19E005DD105 /* SnapshotStructureViewModelTests.swift */,
 				7366CD1D2CB1EAEF0066ACC3 /* LiabilityFormViewModelTests.swift */,
-				7366CD192CB1C2410066ACC3 /* LiabilityLedgerViewModelTests.swift */,
 				7371458A2CB02930009578C8 /* AssetFormViewModelTests.swift */,
-				730273322CAE85E7001EE236 /* AssetLedgerViewModelTests.swift */,
 				7363DDF92CA99557009F3412 /* SnapshotFormViewModelTests.swift */,
 				7363DDF12CA758D1009F3412 /* DashboardViewModelTests.swift */,
 				733473862C8DEC950050C656 /* DistributionChartViewModelTests.swift */,
@@ -570,9 +535,7 @@
 			children = (
 				73037F632CC2E230005DD105 /* SnapshotStructureViewModelTestDataProvider.swift */,
 				7366CD1F2CB1EB0C0066ACC3 /* LiabilityFormViewModelTestDataProvider.swift */,
-				7366CD1B2CB1C2580066ACC3 /* LiabilityLedgerViewModelTestDataProvider.swift */,
 				7371458C2CB02967009578C8 /* AssetFormViewModelTestDataProvider.swift */,
-				730273302CAE85D2001EE236 /* AssetLedgerViewModelTestDataProvider.swift */,
 				7363DDFB2CA9F0A9009F3412 /* SnapshotFormViewModelTestDataProvider.swift */,
 				73B811A12CA72644003B1973 /* DashboardViewModelTestDataProvider.swift */,
 				73B811A52CA72670003B1973 /* DistributionChartViewModelTestDataProvider.swift */,
@@ -682,7 +645,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				7366CD1E2CB1EB000066ACC3 /* LiabilityFormViewModelTests.swift in Sources */,
-				7366CD1C2CB1C2650066ACC3 /* LiabilityLedgerViewModelTestDataProvider.swift in Sources */,
 				73A428092C7E3B1F0086181F /* DateParser.swift in Sources */,
 				73B811A62CA7267B003B1973 /* DistributionChartViewModelTestDataProvider.swift in Sources */,
 				73B8119C2CA72359003B1973 /* DataFactory.swift in Sources */,
@@ -692,10 +654,7 @@
 				73037F622CC2E1AB005DD105 /* SnapshotStructureViewModelTests.swift in Sources */,
 				7363DDFC2CA9F0B7009F3412 /* SnapshotFormViewModelTestDataProvider.swift in Sources */,
 				7366CD202CB1EB1E0066ACC3 /* LiabilityFormViewModelTestDataProvider.swift in Sources */,
-				730273312CAE85E0001EE236 /* AssetLedgerViewModelTestDataProvider.swift in Sources */,
-				730273332CAE85ED001EE236 /* AssetLedgerViewModelTests.swift in Sources */,
 				73037F642CC2E233005DD105 /* SnapshotStructureViewModelTestDataProvider.swift in Sources */,
-				7366CD1A2CB1C2500066ACC3 /* LiabilityLedgerViewModelTests.swift in Sources */,
 				73B811A22CA7264E003B1973 /* DashboardViewModelTestDataProvider.swift in Sources */,
 				7371458D2CB02977009578C8 /* AssetFormViewModelTestDataProvider.swift in Sources */,
 				73B8119A2CA6D3F4003B1973 /* SnapshotLedgerViewModelTests.swift in Sources */,
@@ -708,7 +667,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7342ED8E2C447EDF00BA20A4 /* AssetLedger.swift in Sources */,
 				73823CDD2C6154930049D03C /* DistributionChartViewModel.swift in Sources */,
 				7342EDBE2C4487DA00BA20A4 /* SnapshotForm.swift in Sources */,
 				7342ED7B2C447CAF00BA20A4 /* ObservingFetchRequest.swift in Sources */,
@@ -736,7 +694,6 @@
 				73037F5C2CC06A9A005DD105 /* ReceivableForm.swift in Sources */,
 				73D2C5922C5FBE3B0019A800 /* LocalizedLongDateFormatter.swift in Sources */,
 				7342EDBA2C4484FC00BA20A4 /* SnapshotFormViewModel.swift in Sources */,
-				7342ED922C447F6300BA20A4 /* AssetForm.swift in Sources */,
 				7342EDA72C44821200BA20A4 /* LiabilityForm.swift in Sources */,
 				7342ED782C447BDC00BA20A4 /* CurrencyInputField.swift in Sources */,
 				73037F502CC00EC2005DD105 /* SettingsView.swift in Sources */,
@@ -750,7 +707,6 @@
 				7342ED942C447FAF00BA20A4 /* AssetLedgerViewModel.swift in Sources */,
 				73037F602CC2CF79005DD105 /* Optional+Extension.swift in Sources */,
 				7342ED702C447A0C00BA20A4 /* Asset+CoreDataProperties.swift in Sources */,
-				7342EDA32C4481D200BA20A4 /* LiabilityLedger.swift in Sources */,
 				7342ED872C447E5000BA20A4 /* LocalizedCurrencyFormatter.swift in Sources */,
 				7342ED712C447A0C00BA20A4 /* Receivable+CoreDataClass.swift in Sources */,
 				7342ED742C447B7200BA20A4 /* ProductionCoreDataStack.swift in Sources */,

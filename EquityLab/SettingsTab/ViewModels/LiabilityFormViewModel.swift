@@ -15,10 +15,9 @@ class LiabilityFormViewModel {
     var liabilityCreditor: String
     let dismissSheet: () -> ()
     
-    init(liability: Liability? = nil, pool: LiabilityPool? = nil, repository: LiabilityRepository = .production, dismissSheet: @escaping () -> ()) {
+    init(liability: Liability? = nil, repository: LiabilityRepository = .production, dismissSheet: @escaping () -> ()) {
         Self.logger.debug("LiabilityFormViewModel()")
         self.repository = repository
-        self.liabilityPool = pool
         self.liability = liability
         if let liability {
             self.liabilityName = liability.name
@@ -37,12 +36,8 @@ class LiabilityFormViewModel {
     }
     
     func getLiabilityPools() -> [LiabilityPool] {
-        print("getLiabilityPools()")
-        let liabilityPools = repository.fetchLiabilityPools()
-        for pool in liabilityPools {
-            print(pool.name)
-        }
-        return liabilityPools
+        Self.logger.debug("getLiabilityPools()")
+        return repository.fetchLiabilityPools()
     }
     
     func createLiability() {

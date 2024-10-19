@@ -11,10 +11,20 @@ final class LiabilityFormViewModelTests: XCTestCase {
         testingLiabilityRepository = LiabilityRepository(context: testingCoreDataStack.context)
     }
     
+    
+    func test_getLiabilityPools_1() throws {
+        let expectedPools = testDataProvider.createAndPersistTestObjects_getLiabilityPools_1(using: testingCoreDataStack.context)
+        
+        let sut = LiabilityFormViewModel(repository: testingLiabilityRepository, dismissSheet: {})
+        
+        let actualPools = sut.getLiabilityPools()
+        XCTAssertTrue(expectedPools ≡ actualPools)
+    }
+    
     func test_createLiability_1() throws {
         let liabilityPool = testDataProvider.createAndPersistTestObjects_createLiability_1(context: testingCoreDataStack.context)
         
-        let sut = LiabilityFormViewModel(pool: liabilityPool, repository: testingLiabilityRepository, dismissSheet: {})
+        let sut = LiabilityFormViewModel(repository: testingLiabilityRepository, dismissSheet: {})
         
         let expectedName = "Auto"
         let expectedDate = DateParser.shared.date(from: "2024-04-15T00:00:00")!
@@ -27,6 +37,7 @@ final class LiabilityFormViewModelTests: XCTestCase {
         sut.liabilityCreditor = expectedCreditor
         sut.liabilityInitialAmount = expectedInitialAmount
         sut.liabilityRepaidAmount = expectedRepaidAmount
+        sut.liabilityPool = liabilityPool
         sut.createLiability()
         
         let liabilities = testingLiabilityRepository.fetchLiabilities()
@@ -77,5 +88,17 @@ final class LiabilityFormViewModelTests: XCTestCase {
         XCTAssertEqual(expectedCreditor, actualCreditor)
         XCTAssertEqual(expectedInitialAmount, actualInitialAmount)
         XCTAssertEqual(expectedRepaidAmount, actualRepaidAmount)
+    }
+    
+    /// delete one asset and test viewModel interface providing data to view as well as persisted data
+    func test_deleteLiability_1() throws {
+        let (liabilityToDelete, expectedLiabilities) = testDataProvider.createAndPersistTestObjects_deleteLiabilities_1(using: testingCoreDataStack.context)
+        
+        let sut = LiabilityFormViewModel(repository: testingLiabilityRepository, dismissSheet: {})
+        sut.liability = liabilityToDelete
+        sut.deleteLiability()
+        
+        let actualLiabilities = testingLiabilityRepository.fetchLiabilities()
+        XCTAssertTrue(expectedLiabilities ≡ actualLiabilities)
     }
 }
