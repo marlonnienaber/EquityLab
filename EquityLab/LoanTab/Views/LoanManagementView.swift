@@ -41,9 +41,20 @@ struct LoanManagementView: View {
                     EditButton()
                         .disabled(viewModel.hasNoLoans)
                 }
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button {
+                        viewModel.showLoanUpdatePickerSheet = true
+                    } label: {
+                        Image(systemName: "plus")
+                    }
+                }
             }
             .sheet(item: $viewModel.activeLoanUpdateSheet) { activeSheet in
-                sheetContent(for: activeSheet)
+                updateSheetContent(for: activeSheet)
+            }
+            .sheet(isPresented: $viewModel.showLoanUpdatePickerSheet) {
+                loanUpdatePickerMenu
+                    .presentationDetents([.fraction(0.25)])
             }
         }
     }
@@ -68,7 +79,7 @@ struct LoanManagementView: View {
         }
     }
     
-    func liabilityCell(for liability: Liability) -> some View {
+    private func liabilityCell(for liability: Liability) -> some View {
         HStack {
             if let initialAmountStringRepresentation = LocalizedCurrencyFormatter.shared.string(from: NSNumber(value: liability.initialAmount)) {
                 VStack(alignment: .leading) {
@@ -89,10 +100,44 @@ struct LoanManagementView: View {
     }
     
     @ViewBuilder
-    func sheetContent(for sheetType: LoanUpdateSheet) -> some View {
+    private func updateSheetContent(for sheetType: LoanUpdateSheet) -> some View {
         switch sheetType {
+        case .receivableCreateSheet: ReceivableForm(viewModel: AssetFormViewModel{ viewModel.activeLoanUpdateSheet = nil } )
+        case .liabilityCreateSheet: LiabilityForm(viewModel: LiabilityFormViewModel{ viewModel.activeLoanUpdateSheet = nil } )
         case .liabilityUpdateSheet(let liability): LiabilityForm(viewModel: LiabilityFormViewModel(liability: liability){ viewModel.activeLoanUpdateSheet = nil } )
         case .receivableUpdateSheet(let receivable): ReceivableForm(viewModel: AssetFormViewModel(asset: receivable){ viewModel.activeLoanUpdateSheet = nil } )
+        }
+    }
+    
+    private var loanUpdatePickerMenu: some View {
+        NavigationView {
+            VStack {
+                Text("Which kind of loan would you like to add?")
+                Picker("", selection: $viewModel.selectedLoanType) {
+                    Text("Receivable").tag(LoanType.receivable)
+                    Text("Liability").tag(LoanType.liability)
+                    Text("none selected").tag(LoanType?.none)
+                }
+                .pickerStyle(MenuPickerStyle())
+            }
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button("Cancel"){
+                        viewModel.activeLoanUpdateSheet = nil
+                    }
+                }
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button("OK") {
+                        viewModel.showLoanUpdatePickerSheet = false
+                        guard let selectedLoanType = viewModel.selectedLoanType else { return }
+                        switch selectedLoanType {
+                        case .receivable: viewModel.activeLoanUpdateSheet = .receivableCreateSheet
+                        case .liability: viewModel.activeLoanUpdateSheet = .liabilityCreateSheet
+                        }
+                    }
+                    .disabled(viewModel.selectedLoanType.isNil)
+                }
+            }
         }
     }
 }

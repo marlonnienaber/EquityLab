@@ -10,6 +10,8 @@ class LoanManagementViewModel {
     var liabilities: [Liability]
     var receivables: [Receivable]
     var activeLoanUpdateSheet: LoanUpdateSheet?
+    var selectedLoanType: LoanType?
+    var showLoanUpdatePickerSheet = false
     var hasNoLoans: Bool {
         liabilities.isEmpty && receivables.isEmpty
     }
@@ -51,12 +53,21 @@ extension LoanManagementViewModel: AssetObserver, LiabilityObserver {
 }
 
 enum LoanUpdateSheet: Identifiable {
+    case receivableCreateSheet
+    case liabilityCreateSheet
     case receivableUpdateSheet(Receivable)
     case liabilityUpdateSheet(Liability)
     var id: String {
         switch self {
+        case .receivableCreateSheet: return "receivableCreateSheet"
+        case .liabilityCreateSheet: return "liabilityCreateSheet"
         case .liabilityUpdateSheet(let liability): return "liabilityUpdateSheet-\(liability)"
         case .receivableUpdateSheet(let receivable): return "receivableUpdateSheet\(receivable)"
         }
     }
+}
+
+enum LoanType {
+    case receivable
+    case liability
 }
