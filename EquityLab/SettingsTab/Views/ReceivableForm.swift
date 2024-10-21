@@ -26,6 +26,11 @@ struct ReceivableForm: View {
                     saveButton
                 }
             }
+            .alert(isPresented: $viewModel.showValidationErrorAlert, error: viewModel.validationError) { _ in
+                Button("OK", role: .cancel) {
+                    viewModel.validationError = nil
+                }
+            } message: { _ in }
             .onTapGesture {
                 hideKeyboard()
             }
@@ -34,8 +39,8 @@ struct ReceivableForm: View {
     
     private var descriptionSection: some View {
         Section {
+            TextField("name", text: $viewModel.assetName)
             TextField("debtor", text: $viewModel.receivableDebtor)
-            TextField("purpose", text: $viewModel.assetName)
             Picker("AssetPool", selection: $viewModel.assetPool) {
                 ForEach(viewModel.getAssetPools()) { pool in
                     Text(pool.name).tag(pool)
@@ -93,12 +98,22 @@ struct ReceivableForm: View {
     private var saveButton: some View {
         Button("Save") {
             if viewModel.asset.isNil {
-                viewModel.createReceivable()
+                do {
+                    try viewModel.createReceivable()
+                    viewModel.dismissSheet()
+                } catch let error as ReceivableValidationError  {
+                    viewModel.validationError = error
+                    viewModel.showValidationErrorAlert = true
+                } catch {}
             } else {
-                viewModel.updateReceivable()
+                do {
+                    try viewModel.updateReceivable()
+                    viewModel.dismissSheet()
+                } catch let error as ReceivableValidationError  {
+                    viewModel.validationError = error
+                    viewModel.showValidationErrorAlert = true
+                } catch {}
             }
-            viewModel.dismissSheet()
         }
-        .disabled(viewModel.assetPool.isNil)
     }
 }
