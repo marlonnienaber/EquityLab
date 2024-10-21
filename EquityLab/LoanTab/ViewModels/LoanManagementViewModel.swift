@@ -15,6 +15,8 @@ class LoanManagementViewModel {
     }
     
     init(assetRepository: AssetRepository = .production, liabilityRepository: LiabilityRepository = .production) {
+        Self.logger.debug("LoanManagementViewModel()")
+        
         self.assetRepository = assetRepository
         self.liabilityRepository = liabilityRepository
         
@@ -26,20 +28,24 @@ class LoanManagementViewModel {
     }
     
     func deleteReceivables(for indexSet: IndexSet) {
+        Self.logger.debug("deleteReceivables(for indexSet:)")
         indexSet.map{receivables[$0]}.forEach{assetRepository.delete(asset: $0)}
     }
     
     func deleteLiabilities(for indexSet: IndexSet) {
+        Self.logger.debug("deleteLiabilities(for indexSet:)")
         indexSet.map{liabilities[$0]}.forEach{liabilityRepository.delete(liability: $0)}
     }
 }
 
 extension LoanManagementViewModel: AssetObserver, LiabilityObserver {
     func notifyAfterAssetUpdate() {
+        Self.logger.debug("notifyAfterAssetUpdate()")
         self.receivables = assetRepository.fetchReceivables()
     }
     
     func notifyAfterLiabilityUpdate() {
+        Self.logger.debug("notifyAfterLiabilityUpdate()")
         self.liabilities = liabilityRepository.fetchLiabilities()
     }
 }

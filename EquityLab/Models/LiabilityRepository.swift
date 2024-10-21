@@ -23,6 +23,7 @@ class LiabilityRepository: NSObject {
     
     func fetchLiabilities() -> [Liability] {
         let liabilityFetchRequest = NSFetchRequest<Liability>(entityName: String(describing: "Liability"))
+        liabilityFetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Liability.grantDate, ascending: true)]
         return (try? fetchedResultsController.managedObjectContext.fetch(liabilityFetchRequest)) ?? []
     }
     
