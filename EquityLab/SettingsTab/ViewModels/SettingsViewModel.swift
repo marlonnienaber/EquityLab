@@ -1,0 +1,81 @@
+import os
+import SwiftUI
+import CoreData
+
+@Observable
+class SettingsViewModel {
+    @ObservationIgnored private static let logger = Logger(subsystem: .settingsTab, component: .settingsViewModel)
+    
+    @ObservationIgnored private var snapshotRepository: SnapshotRepository
+    @ObservationIgnored private var assetRepository: AssetRepository
+    @ObservationIgnored private var liabilityRepository: LiabilityRepository
+    var isSerializingState = false
+    var temporaryBackupFileUrl: URL?
+    var presentImportPathPickerSheet = false
+    
+    init(
+        snapshotRepository: SnapshotRepository = .production,
+        assetRepository: AssetRepository = .production,
+        liabilityRepository: LiabilityRepository = .production
+    ) {
+        Self.logger.debug("DashboardViewModel()")
+        self.snapshotRepository = snapshotRepository
+        self.assetRepository = assetRepository
+        self.liabilityRepository = liabilityRepository
+    }
+    
+    func serializeStateAndShowFileLocationPicker() async {
+        Self.logger.debug("serializeStateAndShowFileLocationPicker()")
+        await MainActor.run {
+            isSerializingState = true
+        }
+        do {
+            /* TODO: parallelize fetches */
+            let snapshots = snapshotRepository.fetchSnapshots()
+            let liabilityPools = liabilityRepository.fetchLiabilityPools()
+            let assetPools = assetRepository.fetchAssetPools()
+            let jsonBackup = JsonBackup(snapshots: snapshots, liabilityPools: liabilityPools, assetPools: assetPools)
+            let encoder = JSONEncoder()
+            encoder.outputFormatting = .prettyPrinted
+            let jsonData = try encoder.encode(jsonBackup)
+            
+            let formatter = DateFormatter()
+            formatter.dateFormat = "dd-MM-yyyy|HH-mm"
+            let timestamp = formatter.string(from: Date())
+            let fileName = "\(timestamp).json"
+            
+            let temporaryDirectory = FileManager.default.temporaryDirectory
+            let temporaryFileURL = temporaryDirectory.appendingPathComponent(fileName)
+            try jsonData.write(to: temporaryFileURL)
+            
+            await MainActor.run {
+                self.isSerializingState = false
+                self.temporaryBackupFileUrl = temporaryFileURL
+            }
+        } catch {
+            await MainActor.run {
+                self.isSerializingState = false
+                /* TODO: handle */
+            }
+        }
+    }
+    
+    func deserializeJsonFile(at url: URL) {
+        Self.logger.debug("deserializeJsonFile(at url)")
+        let context = ProductionCoreDataStack.shared.context
+        
+        let entityTypes = [Snapshot.self,Position.self,AssetPool.self, Asset.self,LiabilityPool.self,Liability.self]
+        for entityType in entityTypes {
+            let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: String(describing: entityType))
+            let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
+            guard let _ = try? context.execute(deleteRequest) else { return }
+        }
+        guard let _ = try? context.save() else { return }
+        
+
+        guard let data = try? Data(contentsOf: url), !data.isEmpty else { return }
+        let decoder = JSONDecoder()
+        guard let _ = try? decoder.decode(JsonBackup.self, from: data) else { return }
+        try? context.save()
+    }
+}

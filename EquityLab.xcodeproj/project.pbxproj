@@ -15,7 +15,13 @@
 		73037F602CC2CF79005DD105 /* Optional+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73037F5F2CC2CF71005DD105 /* Optional+Extension.swift */; };
 		73037F622CC2E1AB005DD105 /* SnapshotStructureViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73037F612CC2E19E005DD105 /* SnapshotStructureViewModelTests.swift */; };
 		73037F642CC2E233005DD105 /* SnapshotStructureViewModelTestDataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73037F632CC2E230005DD105 /* SnapshotStructureViewModelTestDataProvider.swift */; };
+		73037F6C2CC3B23F005DD105 /* LoanManagementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73037F6B2CC3B23C005DD105 /* LoanManagementView.swift */; };
+		73037F6E2CC3B24B005DD105 /* LoanManagementViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73037F6D2CC3B244005DD105 /* LoanManagementViewModel.swift */; };
+		73037F702CC3BAE8005DD105 /* Collection+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73037F6F2CC3BADB005DD105 /* Collection+Extension.swift */; };
+		73037F722CC59414005DD105 /* SettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73037F712CC5940E005DD105 /* SettingsViewModel.swift */; };
 		7314FD6F2C7510E100483835 /* TestingCoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7314FD6E2C7510E100483835 /* TestingCoreDataStack.swift */; };
+		73332B962CC67E860020839D /* LoanManagementViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73332B952CC67E7D0020839D /* LoanManagementViewModelTests.swift */; };
+		73332B982CC67EA70020839D /* LoanManagementViewModelTestDataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73332B972CC67E980020839D /* LoanManagementViewModelTestDataProvider.swift */; };
 		733473872C8DEC950050C656 /* DistributionChartViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 733473862C8DEC950050C656 /* DistributionChartViewModelTests.swift */; };
 		7342ED272C44750200BA20A4 /* EquityLabApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7342ED262C44750200BA20A4 /* EquityLabApp.swift */; };
 		7342ED2B2C44750300BA20A4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7342ED2A2C44750300BA20A4 /* Assets.xcassets */; };
@@ -108,8 +114,14 @@
 		73037F5F2CC2CF71005DD105 /* Optional+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Optional+Extension.swift"; sourceTree = "<group>"; };
 		73037F612CC2E19E005DD105 /* SnapshotStructureViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapshotStructureViewModelTests.swift; sourceTree = "<group>"; };
 		73037F632CC2E230005DD105 /* SnapshotStructureViewModelTestDataProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapshotStructureViewModelTestDataProvider.swift; sourceTree = "<group>"; };
+		73037F6B2CC3B23C005DD105 /* LoanManagementView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoanManagementView.swift; sourceTree = "<group>"; };
+		73037F6D2CC3B244005DD105 /* LoanManagementViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoanManagementViewModel.swift; sourceTree = "<group>"; };
+		73037F6F2CC3BADB005DD105 /* Collection+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Collection+Extension.swift"; sourceTree = "<group>"; };
+		73037F712CC5940E005DD105 /* SettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewModel.swift; sourceTree = "<group>"; };
 		7314FD652C75106500483835 /* EquityLabTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EquityLabTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		7314FD6E2C7510E100483835 /* TestingCoreDataStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestingCoreDataStack.swift; sourceTree = "<group>"; };
+		73332B952CC67E7D0020839D /* LoanManagementViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoanManagementViewModelTests.swift; sourceTree = "<group>"; };
+		73332B972CC67E980020839D /* LoanManagementViewModelTestDataProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoanManagementViewModelTestDataProvider.swift; sourceTree = "<group>"; };
 		733473862C8DEC950050C656 /* DistributionChartViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DistributionChartViewModelTests.swift; sourceTree = "<group>"; };
 		7342ED232C44750200BA20A4 /* EquityLab.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EquityLab.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7342ED262C44750200BA20A4 /* EquityLabApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EquityLabApp.swift; sourceTree = "<group>"; };
@@ -226,11 +238,37 @@
 		73037F4E2CC00EAC005DD105 /* ViewModels */ = {
 			isa = PBXGroup;
 			children = (
+				73037F712CC5940E005DD105 /* SettingsViewModel.swift */,
 				73037F532CC00ECE005DD105 /* SnapshotStructureViewModel.swift */,
 				7342ED972C447FF500BA20A4 /* AssetFormViewModel.swift */,
 				7342ED9E2C44818100BA20A4 /* LiabilityFormViewModel.swift */,
 			);
 			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		73037F672CC3B18C005DD105 /* LoanTab */ = {
+			isa = PBXGroup;
+			children = (
+				73037F6A2CC3B230005DD105 /* Views */,
+				73037F682CC3B223005DD105 /* ViewModels */,
+			);
+			path = LoanTab;
+			sourceTree = "<group>";
+		};
+		73037F682CC3B223005DD105 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				73037F6D2CC3B244005DD105 /* LoanManagementViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		73037F6A2CC3B230005DD105 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				73037F6B2CC3B23C005DD105 /* LoanManagementView.swift */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 		7314FD662C75106500483835 /* EquityLabTests */ = {
@@ -265,9 +303,10 @@
 			isa = PBXGroup;
 			children = (
 				7342ED262C44750200BA20A4 /* EquityLabApp.swift */,
-				73037F4C2CC00E36005DD105 /* SettingsTab */,
 				7342EDBF2C44897700BA20A4 /* DashboardTab */,
 				7342EDA82C44828B00BA20A4 /* SnapshotTab */,
+				73037F672CC3B18C005DD105 /* LoanTab */,
+				73037F4C2CC00E36005DD105 /* SettingsTab */,
 				7342ED342C44754E00BA20A4 /* Models */,
 				7342ED752C447BA300BA20A4 /* Utility */,
 				7342ED2A2C44750300BA20A4 /* Assets.xcassets */,
@@ -344,6 +383,7 @@
 		7342ED752C447BA300BA20A4 /* Utility */ = {
 			isa = PBXGroup;
 			children = (
+				73037F6F2CC3BADB005DD105 /* Collection+Extension.swift */,
 				73037F5F2CC2CF71005DD105 /* Optional+Extension.swift */,
 				7363DE012CAC74A4009F3412 /* NSManagedObject+Extension.swift */,
 				7363DDFF2CAB1C4B009F3412 /* Date+Extension.swift */,
@@ -481,6 +521,7 @@
 		73B8119F2CA7261D003B1973 /* Tests */ = {
 			isa = PBXGroup;
 			children = (
+				73332B952CC67E7D0020839D /* LoanManagementViewModelTests.swift */,
 				73037F612CC2E19E005DD105 /* SnapshotStructureViewModelTests.swift */,
 				7366CD1D2CB1EAEF0066ACC3 /* LiabilityFormViewModelTests.swift */,
 				7371458A2CB02930009578C8 /* AssetFormViewModelTests.swift */,
@@ -495,6 +536,7 @@
 		73B811A02CA72624003B1973 /* TestDataProviders */ = {
 			isa = PBXGroup;
 			children = (
+				73332B972CC67E980020839D /* LoanManagementViewModelTestDataProvider.swift */,
 				73037F632CC2E230005DD105 /* SnapshotStructureViewModelTestDataProvider.swift */,
 				7366CD1F2CB1EB0C0066ACC3 /* LiabilityFormViewModelTestDataProvider.swift */,
 				7371458C2CB02967009578C8 /* AssetFormViewModelTestDataProvider.swift */,
@@ -606,6 +648,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				73332B962CC67E860020839D /* LoanManagementViewModelTests.swift in Sources */,
 				7366CD1E2CB1EB000066ACC3 /* LiabilityFormViewModelTests.swift in Sources */,
 				73A428092C7E3B1F0086181F /* DateParser.swift in Sources */,
 				73B811A62CA7267B003B1973 /* DistributionChartViewModelTestDataProvider.swift in Sources */,
@@ -613,6 +656,7 @@
 				7363DDFA2CA99562009F3412 /* SnapshotFormViewModelTests.swift in Sources */,
 				7363DDF22CA758D7009F3412 /* DashboardViewModelTests.swift in Sources */,
 				73B811A42CA72668003B1973 /* SnapshotLedgerViewModelTestDataProvider.swift in Sources */,
+				73332B982CC67EA70020839D /* LoanManagementViewModelTestDataProvider.swift in Sources */,
 				73037F622CC2E1AB005DD105 /* SnapshotStructureViewModelTests.swift in Sources */,
 				7363DDFC2CA9F0B7009F3412 /* SnapshotFormViewModelTestDataProvider.swift in Sources */,
 				7366CD202CB1EB1E0066ACC3 /* LiabilityFormViewModelTestDataProvider.swift in Sources */,
@@ -633,6 +677,7 @@
 				7342EDBE2C4487DA00BA20A4 /* SnapshotForm.swift in Sources */,
 				7342ED7B2C447CAF00BA20A4 /* ObservingFetchRequest.swift in Sources */,
 				73823CDF2C62B2EE0049D03C /* ChangeChartViewModel.swift in Sources */,
+				73037F6E2CC3B24B005DD105 /* LoanManagementViewModel.swift in Sources */,
 				7363DE002CAB1C52009F3412 /* Date+Extension.swift in Sources */,
 				7342ED982C447FF500BA20A4 /* AssetFormViewModel.swift in Sources */,
 				7342ED7D2C447CD700BA20A4 /* ObservingFetchedResultsController.swift in Sources */,
@@ -640,6 +685,7 @@
 				73D2C5902C5FBB970019A800 /* ChangeChart.swift in Sources */,
 				7363DE022CAC74AC009F3412 /* NSManagedObject+Extension.swift in Sources */,
 				7342EDB52C44842100BA20A4 /* AssetPosition+CoreDataClass.swift in Sources */,
+				73037F6C2CC3B23F005DD105 /* LoanManagementView.swift in Sources */,
 				73823CE12C68023E0049D03C /* BalanceView.swift in Sources */,
 				7342EDB62C44842100BA20A4 /* AssetPosition+CoreDataProperties.swift in Sources */,
 				7342EDB72C44842100BA20A4 /* LiabilityPosition+CoreDataClass.swift in Sources */,
@@ -661,12 +707,14 @@
 				73037F502CC00EC2005DD105 /* SettingsView.swift in Sources */,
 				7342ED842C447D7E00BA20A4 /* UIColorArrayExtension.swift in Sources */,
 				7342ED6B2C447A0C00BA20A4 /* Possession+CoreDataClass.swift in Sources */,
+				73037F702CC3BAE8005DD105 /* Collection+Extension.swift in Sources */,
 				7342ED6C2C447A0C00BA20A4 /* Possession+CoreDataProperties.swift in Sources */,
 				7342ED6D2C447A0C00BA20A4 /* AssetPool+CoreDataClass.swift in Sources */,
 				7342ED6E2C447A0C00BA20A4 /* AssetPool+CoreDataProperties.swift in Sources */,
 				7342ED6F2C447A0C00BA20A4 /* Asset+CoreDataClass.swift in Sources */,
 				73037F602CC2CF79005DD105 /* Optional+Extension.swift in Sources */,
 				7342ED702C447A0C00BA20A4 /* Asset+CoreDataProperties.swift in Sources */,
+				73037F722CC59414005DD105 /* SettingsViewModel.swift in Sources */,
 				7342ED872C447E5000BA20A4 /* LocalizedCurrencyFormatter.swift in Sources */,
 				7342ED712C447A0C00BA20A4 /* Receivable+CoreDataClass.swift in Sources */,
 				7342ED742C447B7200BA20A4 /* ProductionCoreDataStack.swift in Sources */,

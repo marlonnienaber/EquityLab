@@ -3,7 +3,7 @@ import CoreData
 
 @Observable
 class LiabilityFormViewModel {
-    @ObservationIgnored private static let logger = Logger(subsystem: .liabilityTab, component: .liabilityFormViewModel)
+    @ObservationIgnored private static let logger = Logger(subsystem: .settingsTab, component: .liabilityFormViewModel)
     
     @ObservationIgnored private let repository: LiabilityRepository
     var liabilityPool: LiabilityPool?

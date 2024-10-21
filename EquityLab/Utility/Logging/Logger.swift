@@ -8,19 +8,18 @@ extension Logger {
     enum Subsystem: String {
         case dashboardTab = "dashboard tab"
         case snapshotTab = "snapshot tab"
-        case assetTab = "asset tab"
-        case liabilityTab = "liability tab"
-        case settingsTab = "settingsTab"
+        case loanManagementTab = "loan management tab"
+        case settingsTab = "settings tab"
     }
     
     enum Component: String {
         case dashboardViewModel = "DashboardViewModel"
         case distributionChartViewModel = "DistributionChartViewModel"
         case snapshotLedgerViewModel = "SnapshotLedgerViewModel"
-        case assetLedgerViewModel = "AssetLedgerViewModel"
+        case loanManagementViewModel = "LoanManagementViewModel"
         case assetFormViewModel = "AssetFormViewModel"
-        case liabilityLedgerViewModel = "LiabilityLedgerViewModel"
         case liabilityFormViewModel = "LiabilityFormViewModel"
+        case settingsViewModel = "SettingsViewModel"
         case snapshotStructureViewModel = "SnapshotStructureViewModel"
     }
 }

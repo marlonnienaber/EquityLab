@@ -3,7 +3,7 @@ import CoreData
 
 @Observable
 class AssetFormViewModel {
-    @ObservationIgnored private static let logger = Logger(subsystem: .assetTab, component: .assetFormViewModel)
+    @ObservationIgnored private static let logger = Logger(subsystem: .settingsTab, component: .assetFormViewModel)
     
     @ObservationIgnored private let repository: AssetRepository
     var assetPool: AssetPool?

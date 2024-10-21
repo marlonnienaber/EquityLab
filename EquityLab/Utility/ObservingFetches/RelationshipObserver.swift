@@ -29,8 +29,8 @@ public class RelationshipObserver<ResultType: NSFetchRequestResult> {
     }
     
     @objc private func contextDidSaveNotification(notification: NSNotification) {
-        guard !updatedObjectIDs.isEmpty else { return }
-        guard let fetchedObjects = fetchedResultsController.fetchedObjects as? [NSManagedObject], !fetchedObjects.isEmpty else { return }
+        guard updatedObjectIDs.isNotEmpty else { return }
+        guard let fetchedObjects = fetchedResultsController.fetchedObjects as? [NSManagedObject], fetchedObjects.isNotEmpty else { return }
         fetchedObjects.forEach { object in
             guard updatedObjectIDs.contains(object.objectID) else { return }
             fetchedResultsController.managedObjectContext.refresh(object, mergeChanges: true)

@@ -31,6 +31,12 @@ class AssetRepository: NSObject {
         return (try? fetchedResultsController.managedObjectContext.fetch(assetFetchRequest)) ?? []
     }
     
+    func fetchReceivables() -> [Receivable] {
+        let receivableFetchRequest = NSFetchRequest<Receivable>(entityName: String(describing: "Receivable"))
+        receivableFetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Receivable.grantDate, ascending: true)]
+        return (try? fetchedResultsController.managedObjectContext.fetch(receivableFetchRequest)) ?? []
+    }
+    
     func fetchAssets(for pool: AssetPool) -> [Asset] {
         (try? fetchedResultsController.managedObjectContext.fetch(pool.getAssetRequest())) ?? []
     }

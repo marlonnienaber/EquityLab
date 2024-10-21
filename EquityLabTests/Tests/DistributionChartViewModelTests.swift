@@ -21,7 +21,7 @@ final class DistributionChartViewModelTests: XCTestCase {
     func test_distributionCategories_1() throws {
         let (assetCategories, liabilityCategories) = testDataProvider.createAndPersistTestObjects_distributionCategories_1(using: testingCoreDataStack.context)
         
-        let dashboardViewModel = DashboardViewModel(snapshotRepository: testingSnapshotRepository, assetRepository: testingAssetRepository, liabilityRepository: testingLiabilityRepository)
+        let dashboardViewModel = DashboardViewModel(snapshotRepository: testingSnapshotRepository)
         var sut = DistributionChartViewModel(distributionChartType: .assetDistributionChart,
                                              dashboardViewModel: dashboardViewModel,
                                              repository: testingSnapshotRepository)
@@ -51,7 +51,7 @@ final class DistributionChartViewModelTests: XCTestCase {
     func test_distributionCategories_2() throws {
         let (assetCategories, liabilityCategories) = testDataProvider.createAndPersistTestObjects_distributionCategories_2(using: testingCoreDataStack.context)
         
-        let dashboardViewModel = DashboardViewModel(snapshotRepository: testingSnapshotRepository, assetRepository: testingAssetRepository, liabilityRepository: testingLiabilityRepository)
+        let dashboardViewModel = DashboardViewModel(snapshotRepository: testingSnapshotRepository)
         var sut = DistributionChartViewModel(distributionChartType: .assetDistributionChart,
                                              dashboardViewModel: dashboardViewModel,
                                              repository: testingSnapshotRepository)
@@ -81,7 +81,7 @@ final class DistributionChartViewModelTests: XCTestCase {
     func test_distributionCategories_3() throws {
         let (assetCategories, liabilityCategories) = testDataProvider.createAndPersistTestObjects_distributionCategories_3(using: testingCoreDataStack.context)
         
-        let dashboardViewModel = DashboardViewModel(snapshotRepository: testingSnapshotRepository, assetRepository: testingAssetRepository, liabilityRepository: testingLiabilityRepository)
+        let dashboardViewModel = DashboardViewModel(snapshotRepository: testingSnapshotRepository)
         var sut = DistributionChartViewModel(distributionChartType: .assetDistributionChart,
                                              dashboardViewModel: dashboardViewModel,
                                              repository: testingSnapshotRepository)
@@ -111,7 +111,7 @@ final class DistributionChartViewModelTests: XCTestCase {
     func test_distributionCategories_4() throws {
         let (assetCategories, liabilityCategories) = testDataProvider.createAndPersistTestObjects_distributionCategories_4(using: testingCoreDataStack.context)
         
-        let dashboardViewModel = DashboardViewModel(snapshotRepository: testingSnapshotRepository, assetRepository: testingAssetRepository, liabilityRepository: testingLiabilityRepository)
+        let dashboardViewModel = DashboardViewModel(snapshotRepository: testingSnapshotRepository)
         var sut = DistributionChartViewModel(distributionChartType: .assetDistributionChart,
                                              dashboardViewModel: dashboardViewModel,
                                              repository: testingSnapshotRepository)
@@ -141,7 +141,7 @@ final class DistributionChartViewModelTests: XCTestCase {
     func test_distributionCategories_5() throws {
         let (assetCategories, liabilityCategories) = testDataProvider.createAndPersistTestObjects_distributionCategories_5(using: testingCoreDataStack.context)
         
-        let dashboardViewModel = DashboardViewModel(snapshotRepository: testingSnapshotRepository, assetRepository: testingAssetRepository, liabilityRepository: testingLiabilityRepository)
+        let dashboardViewModel = DashboardViewModel(snapshotRepository: testingSnapshotRepository)
         var sut = DistributionChartViewModel(distributionChartType: .assetDistributionChart,
                                              dashboardViewModel: dashboardViewModel,
                                              repository: testingSnapshotRepository)
@@ -173,7 +173,7 @@ final class DistributionChartViewModelTests: XCTestCase {
     func test_computeTotalValue_1() throws {
         let (snapshot, expectedTotalAssetValue, expectedTotalLiabilityValue) = testDataProvider.createAndPersistTestObjects_computeTotalValue_1(using: testingCoreDataStack.context)
         
-        let dashboardViewModel = DashboardViewModel(snapshotRepository: testingSnapshotRepository, assetRepository: testingAssetRepository, liabilityRepository: testingLiabilityRepository)
+        let dashboardViewModel = DashboardViewModel(snapshotRepository: testingSnapshotRepository)
         
         var sut = DistributionChartViewModel(distributionChartType: .assetDistributionChart,
                                              dashboardViewModel: dashboardViewModel,
@@ -192,7 +192,7 @@ final class DistributionChartViewModelTests: XCTestCase {
     func test_computeTotalValue_2() throws {
         let (snapshot, expectedTotalAssetValue, expectedTotalLiabilityValue) = testDataProvider.createAndPersistTestObjects_computeTotalValue_2(using: testingCoreDataStack.context)
         
-        let dashboardViewModel = DashboardViewModel(snapshotRepository: testingSnapshotRepository, assetRepository: testingAssetRepository, liabilityRepository: testingLiabilityRepository)
+        let dashboardViewModel = DashboardViewModel(snapshotRepository: testingSnapshotRepository)
         
         var sut = DistributionChartViewModel(distributionChartType: .assetDistributionChart,
                                              dashboardViewModel: dashboardViewModel,
@@ -211,7 +211,7 @@ final class DistributionChartViewModelTests: XCTestCase {
     func test_computeTotalValue_3() throws {
         let (snapshot, expectedTotalAssetValue, expectedTotalLiabilityValue) = testDataProvider.createAndPersistTestObjects_computeTotalValue_3(using: testingCoreDataStack.context)
         
-        let dashboardViewModel = DashboardViewModel(snapshotRepository: testingSnapshotRepository, assetRepository: testingAssetRepository, liabilityRepository: testingLiabilityRepository)
+        let dashboardViewModel = DashboardViewModel(snapshotRepository: testingSnapshotRepository)
         
         var sut = DistributionChartViewModel(distributionChartType: .assetDistributionChart,
                                              dashboardViewModel: dashboardViewModel,
@@ -230,7 +230,7 @@ final class DistributionChartViewModelTests: XCTestCase {
     func test_computeTotalValue_4() throws {
         let (snapshot, expectedTotalAssetValue, expectedTotalLiabilityValue) = testDataProvider.createAndPersistTestObjects_computeTotalValue_4(using: testingCoreDataStack.context)
         
-        let dashboardViewModel = DashboardViewModel(snapshotRepository: testingSnapshotRepository, assetRepository: testingAssetRepository, liabilityRepository: testingLiabilityRepository)
+        let dashboardViewModel = DashboardViewModel(snapshotRepository: testingSnapshotRepository)
         
         var sut = DistributionChartViewModel(distributionChartType: .assetDistributionChart,
                                              dashboardViewModel: dashboardViewModel,
@@ -249,7 +249,7 @@ final class DistributionChartViewModelTests: XCTestCase {
     func test_computeTotalValue_5() throws {
         let (snapshot, expectedTotalAssetValue, expectedTotalLiabilityValue) = testDataProvider.createAndPersistTestObjects_computeTotalValue_5(using: testingCoreDataStack.context)
         
-        let dashboardViewModel = DashboardViewModel(snapshotRepository: testingSnapshotRepository, assetRepository: testingAssetRepository, liabilityRepository: testingLiabilityRepository)
+        let dashboardViewModel = DashboardViewModel(snapshotRepository: testingSnapshotRepository)
         
         var sut = DistributionChartViewModel(distributionChartType: .assetDistributionChart,
                                              dashboardViewModel: dashboardViewModel,
@@ -270,7 +270,7 @@ final class DistributionChartViewModelTests: XCTestCase {
     func test_setSelectedCategoryForNewCumulativeValue_1() throws {
         let (expectedAssetSelectedCategory, expectedLiabilitySelectedCategory) = testDataProvider.createAndPersistTestObjects_setSelectedCategoryForNewCumulativeValue_1(using: testingCoreDataStack.context)
         
-        let dashboardViewModel = DashboardViewModel(snapshotRepository: testingSnapshotRepository, assetRepository: testingAssetRepository, liabilityRepository: testingLiabilityRepository)
+        let dashboardViewModel = DashboardViewModel(snapshotRepository: testingSnapshotRepository)
         var sut = DistributionChartViewModel(distributionChartType: .assetDistributionChart,
                                              dashboardViewModel: dashboardViewModel,
                                              repository: testingSnapshotRepository)
@@ -292,7 +292,7 @@ final class DistributionChartViewModelTests: XCTestCase {
     func test_setSelectedCategoryForNewCumulativeValue_2() throws {
         let (expectedAssetSelectedCategory, expectedLiabilitySelectedCategory) = testDataProvider.createAndPersistTestObjects_setSelectedCategoryForNewCumulativeValue_2(using: testingCoreDataStack.context)
         
-        let dashboardViewModel = DashboardViewModel(snapshotRepository: testingSnapshotRepository, assetRepository: testingAssetRepository, liabilityRepository: testingLiabilityRepository)
+        let dashboardViewModel = DashboardViewModel(snapshotRepository: testingSnapshotRepository)
         var sut = DistributionChartViewModel(distributionChartType: .assetDistributionChart,
                                              dashboardViewModel: dashboardViewModel,
                                              repository: testingSnapshotRepository)
