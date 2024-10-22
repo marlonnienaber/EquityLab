@@ -27,11 +27,15 @@ struct AssetFormViewModelTestDataProvider {
     }
     
     func createAndPersistTestObjects_saveAsset_1(context: NSManagedObjectContext) -> Receivable {
-        DataFactory.createReceivable(name: "Lenni", date: .now, debtor: "Lenni", initialAmount: 100.0, repaidAmount: 20.0, context: context)
+        let receivable = DataFactory.createReceivable(name: "Lenni", date: .now, debtor: "Lenni", initialAmount: 100.0, repaidAmount: 20.0, context: context)
+        let _ = DataFactory.createAssetPool(named: "Darlehen", assets: [receivable], in: context)
+        return receivable
     }
     
     func createAndPersistTestObjects_saveAsset_2(context: NSManagedObjectContext) -> Possession {
-        DataFactory.createPossession(name: "Sparkasse Konto", volatile: true, context: context)
+        let possession = DataFactory.createPossession(name: "Sparkasse Konto", volatile: true, context: context)
+        let _ = DataFactory.createAssetPool(named: "Darlehen", assets: [possession], in: context)
+        return possession
     }
     
     func createAndPersistTestObjects_multiPurpose_1(context: NSManagedObjectContext) -> AssetPool {

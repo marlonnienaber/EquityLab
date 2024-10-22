@@ -121,13 +121,7 @@ class AssetFormViewModel {
         return assetPool
     }
     
-    
-    func getAssetPools() -> [AssetPool] {
-        Self.logger.debug("getAssetPools()")
-        return repository.fetchAssetPools()
-    }
-    
-    func createReceivable() throws {
+    private func createReceivable() throws {
         Self.logger.debug("createReceivable()")
         let assetPool = try validateReceivable(for: ValidationUseCase.create)
         repository.createReceivable(name: assetName,
@@ -138,7 +132,7 @@ class AssetFormViewModel {
                                     grantDate: receivableGrantDate)
     }
     
-    func updateReceivable() throws {
+    private func updateReceivable() throws {
         Self.logger.debug("updateReceivable()")
         guard let receivable = asset as? Receivable else { return }
         let _ = try validateReceivable(for: ValidationUseCase.update) /* TODO: use return value to make assetPool update possible */
@@ -150,23 +144,44 @@ class AssetFormViewModel {
                                     newGrantDate: receivableGrantDate)
     }
     
-    func createPossession() throws {
+    private func createPossession() throws {
         Self.logger.debug("createPossession()")
         let assetPool = try validatePossession(for: ValidationUseCase.create)
         repository.createPossession(name: assetName, pool: assetPool, isVolatile: possessionIsVolatile)
     }
     
-    func updatePossession() throws {
+    private func updatePossession() throws {
         Self.logger.debug("updatePossession(possession)")
         guard let possession = asset as? Possession else { return }
         let _ = try validatePossession(for: ValidationUseCase.update) /* TODO: use return value to make assetPool update possible */
         repository.updatePossession(possession: possession, newName: assetName, newIsVolatile: possessionIsVolatile)
     }
     
+    func saveReceivable() throws {
+        if asset.isNil {
+            try createReceivable()
+        } else {
+            try updateReceivable()
+        }
+    }
+    
+    func savePossession() throws {
+        if asset.isNil {
+            try createPossession()
+        } else {
+            try updatePossession()
+        }
+    }
+    
     func deleteAsset() {
         Self.logger.debug("deleteAsset()")
         guard let asset else { return }
         repository.delete(asset: asset)
+    }
+    
+    func getAssetPools() -> [AssetPool] {
+        Self.logger.debug("getAssetPools()")
+        return repository.fetchAssetPools()
     }
 }
 

@@ -88,23 +88,13 @@ struct PossessionForm: View {
     
     private var saveButton: some View {
         Button("Save") {
-            if viewModel.asset.isNil {
-                do {
-                    try viewModel.createPossession()
-                    viewModel.dismissSheet()
-                } catch let error as PossessionValidationError  {
-                    viewModel.possessionValidationError = error
-                    viewModel.showValidationErrorAlert = true
-                } catch {}
-            } else {
-                do {
-                    try viewModel.updatePossession()
-                    viewModel.dismissSheet()
-                } catch let error as PossessionValidationError  {
-                    viewModel.possessionValidationError = error
-                    viewModel.showValidationErrorAlert = true
-                } catch {}
-            }
+            do {
+                try viewModel.savePossession()
+                viewModel.dismissSheet()
+            } catch let error as PossessionValidationError  {
+                viewModel.possessionValidationError = error
+                viewModel.showValidationErrorAlert = true
+            } catch {}
         }
     }
 }

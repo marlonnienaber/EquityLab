@@ -37,7 +37,7 @@ final class AssetFormViewModelTests: XCTestCase {
         sut.receivableGrantDate = expectedGrantDate
         sut.receivableInitialAmount = expectedInitialAmount
         sut.receivableRepaidAmount = expectedRepaidAmount
-        sut.updateReceivable()
+        try sut.saveReceivable()
         
         let persistedAssets = testingAssetRepository.fetchAssets()
         XCTAssertTrue(persistedAssets.count == 1)
@@ -67,7 +67,7 @@ final class AssetFormViewModelTests: XCTestCase {
         
         sut.assetName = expectedName
         sut.possessionIsVolatile = expectedIsVolatile
-        sut.updatePossession()
+        try sut.savePossession()
         
         let persistedAssets = testingAssetRepository.fetchAssets()
         XCTAssertTrue(persistedAssets.count == 1)
@@ -99,7 +99,7 @@ final class AssetFormViewModelTests: XCTestCase {
         sut.receivableRepaidAmount = expectedRepaidAmount
         sut.assetPool = assetPool
         sut.selectedAssetType = .receivable
-        sut.createReceivable()
+        try sut.saveReceivable()
         
         let persistedAssets = testingAssetRepository.fetchAssets()
         XCTAssertTrue(persistedAssets.count == 1)
@@ -131,7 +131,7 @@ final class AssetFormViewModelTests: XCTestCase {
         sut.possessionIsVolatile = expectedIsVolatile
         sut.assetPool = assetPool
         sut.selectedAssetType = .possession
-        sut.createPossession()
+        try sut.savePossession()
         
         let persistedAssets = testingAssetRepository.fetchAssets()
         XCTAssertTrue(persistedAssets.count == 1)
@@ -163,7 +163,7 @@ final class AssetFormViewModelTests: XCTestCase {
         sut.receivableRepaidAmount = firstExpectedRepaidAmount
         sut.assetPool = assetPool
         sut.selectedAssetType = .receivable
-        sut.createReceivable()
+        try sut.saveReceivable()
         
         let secondExpectedName = "Rote Sonne"
         let secondExpectedDebtor = "Lenni"
@@ -178,7 +178,9 @@ final class AssetFormViewModelTests: XCTestCase {
         sut.receivableRepaidAmount = secondExpectedRepaidAmount
         sut.assetPool = assetPool
         sut.selectedAssetType = .receivable
-        sut.createReceivable()
+        XCTAssertThrowsError(try sut.saveReceivable()) { error in
+            XCTAssertEqual(error as? ReceivableValidationError, ReceivableValidationError.sameNameAlreadyExists)
+        }
         
         let persistedAssets = testingAssetRepository.fetchAssets()
         XCTAssertTrue(persistedAssets.count == 1)
@@ -210,7 +212,7 @@ final class AssetFormViewModelTests: XCTestCase {
         sut.possessionIsVolatile = firstExpectedIsVolatile
         sut.assetPool = assetPool
         sut.selectedAssetType = .possession
-        sut.createPossession()
+        try sut.savePossession()
         
         let secondExpectedName = "Commerzbank Konto"
         let secondExpectedIsVolatile = true
@@ -219,7 +221,9 @@ final class AssetFormViewModelTests: XCTestCase {
         sut.possessionIsVolatile = secondExpectedIsVolatile
         sut.assetPool = assetPool
         sut.selectedAssetType = .possession
-        sut.createPossession()
+        XCTAssertThrowsError(try sut.savePossession()) { error in
+            XCTAssertEqual(error as? PossessionValidationError, PossessionValidationError.sameNameAlreadyExists)
+        }
         
         let persistedAssets = testingAssetRepository.fetchAssets()
         XCTAssertTrue(persistedAssets.count == 1)
@@ -251,7 +255,7 @@ final class AssetFormViewModelTests: XCTestCase {
         sut.receivableRepaidAmount = firstExpectedRepaidAmount
         sut.assetPool = assetPool
         sut.selectedAssetType = .receivable
-        sut.createReceivable()
+        try sut.saveReceivable()
         
         let secondExpectedName = "Rote Sonne"
         let secondExpectedIsVolatile = true
@@ -260,7 +264,9 @@ final class AssetFormViewModelTests: XCTestCase {
         sut.possessionIsVolatile = secondExpectedIsVolatile
         sut.assetPool = assetPool
         sut.selectedAssetType = .possession
-        sut.createPossession()
+        XCTAssertThrowsError(try sut.savePossession()) { error in
+            XCTAssertEqual(error as? PossessionValidationError, PossessionValidationError.sameNameAlreadyExists)
+        }
         
         let persistedAssets = testingAssetRepository.fetchAssets()
         XCTAssertTrue(persistedAssets.count == 1)
@@ -292,7 +298,7 @@ final class AssetFormViewModelTests: XCTestCase {
         sut.possessionIsVolatile = firstExpectedIsVolatile
         sut.assetPool = assetPool
         sut.selectedAssetType = .possession
-        sut.createPossession()
+        try sut.savePossession()
         
         let secondExpectedName = "Commerzbank Konto"
         let secondExpectedDebtor = "Lenni"
@@ -307,7 +313,9 @@ final class AssetFormViewModelTests: XCTestCase {
         sut.receivableRepaidAmount = secondExpectedRepaidAmount
         sut.assetPool = assetPool
         sut.selectedAssetType = .receivable
-        sut.createReceivable()
+        XCTAssertThrowsError(try sut.saveReceivable()) { error in
+            XCTAssertEqual(error as? ReceivableValidationError, ReceivableValidationError.sameNameAlreadyExists)
+        }
         
         let persistedAssets = testingAssetRepository.fetchAssets()
         XCTAssertTrue(persistedAssets.count == 1)

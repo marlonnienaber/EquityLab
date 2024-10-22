@@ -97,23 +97,13 @@ struct ReceivableForm: View {
     
     private var saveButton: some View {
         Button("Save") {
-            if viewModel.asset.isNil {
-                do {
-                    try viewModel.createReceivable()
-                    viewModel.dismissSheet()
-                } catch let error as ReceivableValidationError  {
-                    viewModel.receivableValidationError = error
-                    viewModel.showValidationErrorAlert = true
-                } catch {}
-            } else {
-                do {
-                    try viewModel.updateReceivable()
-                    viewModel.dismissSheet()
-                } catch let error as ReceivableValidationError  {
-                    viewModel.receivableValidationError = error
-                    viewModel.showValidationErrorAlert = true
-                } catch {}
-            }
+            do {
+                try viewModel.saveReceivable()
+                viewModel.dismissSheet()
+            } catch let error as ReceivableValidationError  {
+                viewModel.receivableValidationError = error
+                viewModel.showValidationErrorAlert = true
+            } catch {}
         }
     }
 }
