@@ -43,7 +43,7 @@ class LiabilityFormViewModel {
     private var liabilityWithSameNameDoesExist: Bool {
         Self.logger.debug("liabilityWithSameNameDoesExist")
         let liabilities = repository.fetchLiabilities()
-        return liabilities.contains(where: {$0.name == liabilityName})
+        return liabilities.contains(where: {$0.name == liabilityName && $0 != liability})
     }
     
     private var repaidSurpassesInitialAmount: Bool {
@@ -71,9 +71,9 @@ class LiabilityFormViewModel {
         return liabilityCreditor.isEmpty
     }
     
-    private func validateLiability(for useCase: ValidationUseCase) throws -> LiabilityPool {
+    private func validateLiability() throws -> LiabilityPool {
         Self.logger.debug("validateReceivable()")
-        if useCase == .create && liabilityWithSameNameDoesExist {
+        if liabilityWithSameNameDoesExist {
             throw LiabilityValidationError.sameNameAlreadyExists
         }
         if repaidSurpassesInitialAmount {
@@ -97,7 +97,7 @@ class LiabilityFormViewModel {
     
     private func createLiability() throws {
         Self.logger.debug("createLiability()")
-        let liabilityPool = try validateLiability(for: ValidationUseCase.create)
+        let liabilityPool = try validateLiability()
         repository.createLiability(name: liabilityName,
                                    pool: liabilityPool,
                                    creditor: liabilityCreditor,
@@ -109,7 +109,7 @@ class LiabilityFormViewModel {
     private func updateLiability() throws {
         Self.logger.debug("updateLiability()")
         guard let liability else { return }
-        let _ = try validateLiability(for: ValidationUseCase.update) /* TODO: use return value to make liabilityPool update possible */
+        let _ = try validateLiability() /* TODO: use return value to make liabilityPool update possible */
         repository.updateLiability(liability: liability,
                                    newName: liabilityName,
                                    newCreditor: liabilityCreditor,

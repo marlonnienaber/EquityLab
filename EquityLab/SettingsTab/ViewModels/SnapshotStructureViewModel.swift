@@ -25,6 +25,12 @@ class SnapshotStructureViewModel {
     var showCreateAssetPoolAlert = false
     var showCreateLiabilityPoolAlert = false
     
+    var assetPoolValidationError: AssetPoolValidationError?
+    var showAssetPoolValidationErrorAlert = false
+    
+    var liabilityPoolValidationError: LiabilityPoolValidationError?
+    var showLiabilityPoolValidationErrorAlert = false
+    
     init(assetRepository: AssetRepository = .production, liabilityRepository: LiabilityRepository = .production) {
         Self.logger.debug("SnapshotStructureViewModel()")
         
@@ -48,6 +54,64 @@ class SnapshotStructureViewModel {
         self.liabilityRepository.add(observer: self)
     }
     
+    private var assetPoolWithSameNameExists: Bool {
+        let assetPools = assetRepository.fetchAssetPools()
+        return assetPools.contains(where: { $0.name == alertPoolName && $0 != assetPoolToEdit })
+    }
+    
+    private var liabilityPoolWithSameNameExists: Bool {
+        let liabilityPools = liabilityRepository.fetchLiabilityPools()
+        return liabilityPools.contains(where: { $0.name == alertPoolName && $0 != liabilityPoolToEdit })
+    }
+    
+    private func validateAssetPool() throws {
+        if assetPoolWithSameNameExists {
+            throw AssetPoolValidationError.poolWithSameNameAlreadyExists
+        }
+    }
+    
+    private func validateLiabilityPool() throws {
+        if liabilityPoolWithSameNameExists {
+            throw LiabilityPoolValidationError.poolWithSameNameAlreadyExists
+        }
+    }
+    
+    func createAssetPool() throws {
+        Self.logger.debug("createAssetPool()")
+        try validateAssetPool()
+        assetRepository.createAssetPool(named: alertPoolName)
+    }
+    
+    func updateAssetPool() throws {
+        Self.logger.debug("updateAssetPool()")
+        guard let assetPoolToEdit else { return }
+        try validateAssetPool()
+        assetRepository.update(assetPool: assetPoolToEdit, newName: alertPoolName)
+    }
+    
+    func delete(assetPool: AssetPool) {
+        Self.logger.debug("delete(assetPool)")
+        assetRepository.delete(assetPool: assetPool)
+    }
+    
+    func createLiabilityPool() throws {
+        Self.logger.debug("createLiabilityPool()")
+        try validateLiabilityPool()
+        liabilityRepository.createLiabilityPool(named: alertPoolName)
+    }
+    
+    func updateLiabilityPool() throws {
+        Self.logger.debug("updateLiabilityPool()")
+        guard let liabilityPoolToEdit else { return }
+        try validateLiabilityPool()
+        liabilityRepository.update(liabilityPool: liabilityPoolToEdit, newName: alertPoolName)
+    }
+    
+    func delete(liabilityPool: LiabilityPool) {
+        Self.logger.debug("delete()liabilityPool")
+        liabilityRepository.delete(liabilityPool: liabilityPool)
+    }
+    
     func getAssetsForAssetPool(_ pool: AssetPool) -> [Asset] {
         Self.logger.debug("getAssetsForAssetPool(_ pool)")
         return assetPoolToAssetsDictionary[pool] ?? []
@@ -56,38 +120,6 @@ class SnapshotStructureViewModel {
     func getLiabilitiesForLiabilityPool(_ pool: LiabilityPool) -> [Liability] {
         Self.logger.debug("getliabilitiesForLiabilityPool(_ pool)")
         return liabilityPoolToLiabilitiesDictionary[pool] ?? []
-    }
-    
-    func createAssetPool() {
-        Self.logger.debug("createAssetPool()")
-        assetRepository.createAssetPool(named: alertPoolName)
-    }
-    
-    func delete(assetPool: AssetPool) {
-        Self.logger.debug("delete(assetPool)")
-        assetRepository.delete(assetPool: assetPool)
-    }
-    
-    func updateAssetPool() {
-        Self.logger.debug("updateAssetPool()")
-        guard let assetPoolToEdit else { return }
-        assetRepository.update(assetPool: assetPoolToEdit, newName: alertPoolName)
-    }
-    
-    func createLiabilityPool() {
-        Self.logger.debug("createLiabilityPool()")
-        liabilityRepository.createLiabilityPool(named: alertPoolName)
-    }
-    
-    func delete(liabilityPool: LiabilityPool) {
-        Self.logger.debug("delete()liabilityPool")
-        liabilityRepository.delete(liabilityPool: liabilityPool)
-    }
-    
-    func updateLiabilityPool() {
-        Self.logger.debug("updateLiabilityPool()")
-        guard let liabilityPoolToEdit else { return }
-        liabilityRepository.update(liabilityPool: liabilityPoolToEdit, newName: alertPoolName)
     }
 }
 
@@ -143,4 +175,18 @@ enum BalanceItemType {
     case receivable
     case liabilityPool
     case liability
+}
+
+enum AssetPoolValidationError: String, LocalizedError {
+    case poolWithSameNameAlreadyExists = "A pool with the same name already exists!"
+    var errorDescription: String? {
+        return self.rawValue
+    }
+}
+
+enum LiabilityPoolValidationError: String, LocalizedError {
+    case poolWithSameNameAlreadyExists = "A pool with the same name already exists!"
+    var errorDescription: String? {
+        return self.rawValue
+    }
 }

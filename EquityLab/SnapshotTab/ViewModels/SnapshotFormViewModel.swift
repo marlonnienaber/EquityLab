@@ -91,11 +91,11 @@ class SnapshotFormViewModel {
     
     private var snapshotWithSameDateDoesExist: Bool {
         let snapshots = snapshotRepository.fetchSnapshots()
-        return snapshots.contains(where: { $0.date == date.startOfDay})
+        return snapshots.contains(where: { $0.date == date.startOfDay && $0 != snapshot })
     }
     
-    private func validateSnapshot(for useCase: ValidationUseCase) throws {
-        if useCase == .create && snapshotWithSameDateDoesExist {
+    private func validateSnapshot() throws {
+        if snapshotWithSameDateDoesExist {
             throw SnapshotValidationError.sameDateAlreadyExists
         }
         for assetProxy in assetProxies {
@@ -111,13 +111,13 @@ class SnapshotFormViewModel {
     }
     
     private func createSnapshot() throws {
-        try validateSnapshot(for: ValidationUseCase.create)
+        try validateSnapshot()
         snapshotRepository.createSnapshot(with: date, assetProxies, and: liabilityProxies)
     }
     
     private func updateSnapshot() throws {
         guard let snapshot else { return }
-        try validateSnapshot(for: ValidationUseCase.update)
+        try validateSnapshot()
         snapshotRepository.updateSnapshot(snapshot, using: date, assetProxies, and: liabilityProxies)
     }
     

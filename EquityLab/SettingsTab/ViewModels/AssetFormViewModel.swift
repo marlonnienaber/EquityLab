@@ -58,7 +58,7 @@ class AssetFormViewModel {
     private var assetWithSameNameDoesExist: Bool {
         Self.logger.debug("assetWithSameNameDoesExist")
         let assets = repository.fetchAssets()
-        return assets.contains(where: {$0.name == assetName})
+        return assets.contains(where: {$0.name == assetName && $0 != asset})
     }
     
     private var repaidSurpassesInitialAmount: Bool {
@@ -86,9 +86,9 @@ class AssetFormViewModel {
         return receivableDebtor.isEmpty
     }
     
-    private func validateReceivable(for useCase: ValidationUseCase) throws -> AssetPool {
+    private func validateReceivable() throws -> AssetPool {
         Self.logger.debug("validateReceivable()")
-        if useCase == .create && assetWithSameNameDoesExist {
+        if assetWithSameNameDoesExist {
             throw ReceivableValidationError.sameNameAlreadyExists
         }
         if repaidSurpassesInitialAmount {
@@ -110,8 +110,8 @@ class AssetFormViewModel {
         return assetPool
     }
     
-    private func validatePossession(for useCase: ValidationUseCase) throws -> AssetPool {
-        if useCase == .create && assetWithSameNameDoesExist {
+    private func validatePossession() throws -> AssetPool {
+        if assetWithSameNameDoesExist {
             throw PossessionValidationError.sameNameAlreadyExists
         }
         if nameIsEmpty {
@@ -123,7 +123,7 @@ class AssetFormViewModel {
     
     private func createReceivable() throws {
         Self.logger.debug("createReceivable()")
-        let assetPool = try validateReceivable(for: ValidationUseCase.create)
+        let assetPool = try validateReceivable()
         repository.createReceivable(name: assetName,
                                     pool: assetPool,
                                     debtor: receivableDebtor,
@@ -135,7 +135,7 @@ class AssetFormViewModel {
     private func updateReceivable() throws {
         Self.logger.debug("updateReceivable()")
         guard let receivable = asset as? Receivable else { return }
-        let _ = try validateReceivable(for: ValidationUseCase.update) /* TODO: use return value to make assetPool update possible */
+        let _ = try validateReceivable() /* TODO: use return value to make assetPool update possible */
         repository.updateReceivable(receivable: receivable,
                                     newName: assetName,
                                     newDebtor: receivableDebtor,
@@ -146,14 +146,14 @@ class AssetFormViewModel {
     
     private func createPossession() throws {
         Self.logger.debug("createPossession()")
-        let assetPool = try validatePossession(for: ValidationUseCase.create)
+        let assetPool = try validatePossession()
         repository.createPossession(name: assetName, pool: assetPool, isVolatile: possessionIsVolatile)
     }
     
     private func updatePossession() throws {
         Self.logger.debug("updatePossession(possession)")
         guard let possession = asset as? Possession else { return }
-        let _ = try validatePossession(for: ValidationUseCase.update) /* TODO: use return value to make assetPool update possible */
+        let _ = try validatePossession() /* TODO: use return value to make assetPool update possible */
         repository.updatePossession(possession: possession, newName: assetName, newIsVolatile: possessionIsVolatile)
     }
     
@@ -205,9 +205,4 @@ enum PossessionValidationError: String, LocalizedError {
     var errorDescription: String? {
         return self.rawValue
     }
-}
-
-enum ValidationUseCase {
-    case update
-    case create
 }

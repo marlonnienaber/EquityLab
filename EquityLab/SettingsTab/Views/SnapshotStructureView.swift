@@ -38,32 +38,78 @@ struct SnapshotStructureView: View {
                 }
             }
             .padding(.horizontal)
-            .poolEditAlert<AssetPool>(
+            .poolEditAlert<AssetPool, AssetPoolValidationError>(
                 title: "Edit AssetPool",
                 isPresented: $viewModel.showEditAssetPoolAlert,
                 presentedPool: viewModel.assetPoolToEdit,
                 textFieldContent: $viewModel.alertPoolName,
-                saveAction: { viewModel.updateAssetPool() },
-                deleteAction: { viewModel.delete(assetPool: $0) }
+                saveAction: { try viewModel.updateAssetPool() },
+                errorAction: { error in
+                    viewModel.assetPoolValidationError = error
+                    viewModel.showAssetPoolValidationErrorAlert = true
+                },
+                deleteAction: { viewModel.delete(assetPool: $0) },
+                cleanUpAction: {
+                    viewModel.assetPoolToEdit = nil
+                    viewModel.alertPoolName = ""
+                }
             )
-            .poolEditAlert<LiabilityPool>(
+            .poolEditAlert<LiabilityPool, LiabilityPoolValidationError>(
                 title: "Edit LiabilityPool",
                 isPresented: $viewModel.showEditLiabilityPoolAlert,
                 presentedPool: viewModel.liabilityPoolToEdit,
                 textFieldContent: $viewModel.alertPoolName,
-                saveAction: { viewModel.updateLiabilityPool() },
-                deleteAction: { viewModel.delete(liabilityPool: $0) }
+                saveAction: { try viewModel.updateLiabilityPool() },
+                errorAction: { error in
+                    viewModel.liabilityPoolValidationError = error
+                    viewModel.showLiabilityPoolValidationErrorAlert = true
+                },
+                deleteAction: { viewModel.delete(liabilityPool: $0) },
+                cleanUpAction: {
+                    viewModel.assetPoolToEdit = nil
+                    viewModel.alertPoolName = ""
+                }
             )
-            .poolCreateAlert(
+            .poolCreateAlert<AssetPoolValidationError>(
                 isPresented: $viewModel.showCreateAssetPoolAlert,
                 textFieldContent: $viewModel.alertPoolName,
-                saveAction: { viewModel.createAssetPool() }
+                saveAction: { try viewModel.createAssetPool() },
+                errorAction: { error in
+                    viewModel.assetPoolValidationError = error
+                    viewModel.showAssetPoolValidationErrorAlert = true
+                },
+                cleanUpAction: { viewModel.alertPoolName = "" }
             )
-            .poolCreateAlert(
+            .poolCreateAlert<LiabilityPoolValidationError>(
                 isPresented: $viewModel.showCreateLiabilityPoolAlert,
                 textFieldContent: $viewModel.alertPoolName,
-                saveAction: { viewModel.createLiabilityPool() }
+                saveAction: { try viewModel.createLiabilityPool() },
+                errorAction: { error in
+                    viewModel.liabilityPoolValidationError = error
+                    viewModel.showLiabilityPoolValidationErrorAlert = true
+                },
+                cleanUpAction: { viewModel.alertPoolName = "" }
             )
+            .alert(isPresented: $viewModel.showAssetPoolValidationErrorAlert, error: viewModel.assetPoolValidationError) { _ in
+                Button("OK", role: .cancel) {
+                    viewModel.assetPoolValidationError = nil
+                    if viewModel.assetPoolToEdit.isNil {
+                        viewModel.showCreateAssetPoolAlert = true
+                    } else {
+                        viewModel.showEditAssetPoolAlert = true
+                    }
+                }
+            } message: { _ in }
+            .alert(isPresented: $viewModel.showLiabilityPoolValidationErrorAlert, error: viewModel.liabilityPoolValidationError) { _ in
+                Button("OK", role: .cancel) {
+                    viewModel.liabilityPoolValidationError = nil
+                    if viewModel.liabilityPoolToEdit.isNil {
+                        viewModel.showCreateLiabilityPoolAlert = true
+                    } else {
+                        viewModel.showEditLiabilityPoolAlert = true
+                    }
+                }
+            } message: { _ in }
             .sheet(isPresented: $viewModel.showBalanceItemPickerSheet) {
                 balanceItemSelectionMenu
                     .presentationDetents([.fraction(0.25)])
@@ -137,40 +183,57 @@ struct SnapshotStructureView: View {
 }
 
 extension View {
-    func poolEditAlert<PoolType>(
+    func poolEditAlert<PoolType, ErrorType: Error>(
         title: String,
         isPresented: Binding<Bool>,
         presentedPool: PoolType?,
         textFieldContent: Binding<String>,
-        saveAction: @escaping () -> (),
-        deleteAction: @escaping (PoolType) -> ()
+        saveAction: @escaping () throws -> (),
+        errorAction: @escaping (ErrorType) -> (),
+        deleteAction: @escaping (PoolType) -> (),
+        cleanUpAction: @escaping () -> ()
     ) -> some View {
         self.alert("Edit AssetPool", isPresented: isPresented, presenting: presentedPool) { pool in
             TextField("Value", text: textFieldContent)
             Button("Cancel", role: .cancel) {
                 isPresented.wrappedValue = false
+                cleanUpAction()
             }
             Button("Save") {
-                saveAction()
+                do {
+                    try saveAction()
+                    cleanUpAction()
+                } catch let error as ErrorType {
+                    errorAction(error)
+                } catch {}
             }
             Button("Delete", role: .destructive) {
                 deleteAction(pool)
+                cleanUpAction()
             }
         }
     }
     
-    func poolCreateAlert(
+    func poolCreateAlert<ErrorType:Error>(
         isPresented: Binding<Bool>,
         textFieldContent: Binding<String>,
-        saveAction: @escaping () -> ()
+        saveAction: @escaping () throws -> (),
+        errorAction: @escaping (ErrorType) -> (),
+        cleanUpAction: @escaping () -> ()
     ) -> some View {
         self.alert("What should the name of the new pool be?", isPresented: isPresented) {
             TextField("Value", text: textFieldContent)
             Button("Cancel") {
                 isPresented.wrappedValue = false
+                cleanUpAction()
             }
             Button("Save") {
-                saveAction()
+                do {
+                    try saveAction()
+                    cleanUpAction()
+                } catch let error as ErrorType {
+                    errorAction(error)
+                } catch {}
             }
         }
     }

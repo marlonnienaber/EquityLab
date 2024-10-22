@@ -90,7 +90,7 @@ final class SnapshotStructureViewModelTests: XCTestCase {
         let sut = SnapshotStructureViewModel(assetRepository: testingAssetRepository, liabilityRepository: testingLiabilityRepository)
         let expectedAssetPoolName = "test pool"
         sut.alertPoolName = expectedAssetPoolName
-        sut.createAssetPool()
+        try sut.createAssetPool()
         
         let viewModelPools = sut.assetPools
         XCTAssertTrue(viewModelPools.count == 1)
@@ -142,7 +142,7 @@ final class SnapshotStructureViewModelTests: XCTestCase {
         let sut = SnapshotStructureViewModel(assetRepository: testingAssetRepository, liabilityRepository: testingLiabilityRepository)
         sut.assetPoolToEdit = poolToUpdate
         sut.alertPoolName = "Cash"
-        sut.updateAssetPool()
+        try sut.updateAssetPool()
         
         let actualViewModelPoolNames = sut.assetPools.map{ $0.name }
         XCTAssertTrue(expectedPoolNames ≡ actualViewModelPoolNames)
@@ -164,7 +164,7 @@ final class SnapshotStructureViewModelTests: XCTestCase {
         let sut = SnapshotStructureViewModel(assetRepository: testingAssetRepository, liabilityRepository: testingLiabilityRepository)
         let expectedLiabilityPoolName = "test pool"
         sut.alertPoolName = expectedLiabilityPoolName
-        sut.createLiabilityPool()
+        try sut.createLiabilityPool()
         
         let viewModelPools = sut.liabilityPools
         XCTAssertTrue(viewModelPools.count == 1)
@@ -216,7 +216,7 @@ final class SnapshotStructureViewModelTests: XCTestCase {
         let sut = SnapshotStructureViewModel(assetRepository: testingAssetRepository, liabilityRepository: testingLiabilityRepository)
         sut.liabilityPoolToEdit = poolToUpdate
         sut.alertPoolName = "Familie"
-        sut.updateLiabilityPool()
+        try sut.updateLiabilityPool()
         
         let actualViewModelPoolNames = sut.liabilityPools.map{ $0.name }
         XCTAssertTrue(expectedPoolNames ≡ actualViewModelPoolNames)
