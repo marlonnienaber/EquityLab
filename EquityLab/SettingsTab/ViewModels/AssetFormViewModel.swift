@@ -71,9 +71,9 @@ class AssetFormViewModel {
         return receivableRepaidAmount < .zero
     }
     
-    private var initialAmountNegative: Bool {
+    private var initialAmountNotStrictlyPositive: Bool {
         Self.logger.debug("initialAmountNegative")
-        return receivableInitialAmount < .zero
+        return receivableInitialAmount <= .zero
     }
     
     private var nameIsEmpty: Bool {
@@ -94,8 +94,8 @@ class AssetFormViewModel {
         if repaidSurpassesInitialAmount {
             throw ReceivableValidationError.repaidSurpassesInitialAmount
         }
-        if initialAmountNegative {
-            throw ReceivableValidationError.initialAmountNegative
+        if initialAmountNotStrictlyPositive {
+            throw ReceivableValidationError.initialAmountNotStrictlyPositive
         }
         if repaidAmountNegative {
             throw ReceivableValidationError.repaidAmountNegative
@@ -186,7 +186,7 @@ class AssetFormViewModel {
 }
 
 enum ReceivableValidationError: String, LocalizedError {
-    case initialAmountNegative = "The initial amount can not be negative!"
+    case initialAmountNotStrictlyPositive = "The initial amount must be strictly positive!"
     case repaidAmountNegative = "The repaid amount can not be negative!"
     case repaidSurpassesInitialAmount = "The initial amount must be bigger or equal to the repaid amount"
     case emptyName = "No name was chosen!"

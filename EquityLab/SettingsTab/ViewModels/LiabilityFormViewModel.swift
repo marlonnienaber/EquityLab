@@ -56,9 +56,9 @@ class LiabilityFormViewModel {
         return liabilityRepaidAmount < .zero
     }
     
-    private var initialAmountNegative: Bool {
+    private var initialAmountNotStrictlyPositive: Bool {
         Self.logger.debug("initialAmountNegative")
-        return liabilityInitialAmount < .zero
+        return liabilityInitialAmount <= .zero
     }
     
     private var nameIsEmpty: Bool {
@@ -79,8 +79,8 @@ class LiabilityFormViewModel {
         if repaidSurpassesInitialAmount {
             throw LiabilityValidationError.repaidSurpassesInitialAmount
         }
-        if initialAmountNegative {
-            throw LiabilityValidationError.initialAmountNegative
+        if initialAmountNotStrictlyPositive {
+            throw LiabilityValidationError.initialAmountNotStrictlyPositive
         }
         if repaidAmountNegative {
             throw LiabilityValidationError.repaidAmountNegative
@@ -140,7 +140,7 @@ class LiabilityFormViewModel {
 }
 
 enum LiabilityValidationError: String, LocalizedError {
-    case initialAmountNegative = "The initial amount can not be negative!"
+    case initialAmountNotStrictlyPositive = "The initial amount must be strictly positive!"
     case repaidAmountNegative = "The repaid amount can not be negative!"
     case repaidSurpassesInitialAmount = "The initial amount must be bigger or equal to the repaid amount"
     case emptyName = "No name was chosen!"
