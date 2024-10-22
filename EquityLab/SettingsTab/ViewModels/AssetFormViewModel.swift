@@ -185,7 +185,7 @@ class AssetFormViewModel {
     }
 }
 
-enum ReceivableValidationError: String, Error, LocalizedError {
+enum ReceivableValidationError: String, LocalizedError {
     case initialAmountNegative = "The initial amount can not be negative!"
     case repaidAmountNegative = "The repaid amount can not be negative!"
     case repaidSurpassesInitialAmount = "The initial amount must be bigger or equal to the repaid amount"
@@ -198,7 +198,7 @@ enum ReceivableValidationError: String, Error, LocalizedError {
     }
 }
 
-enum PossessionValidationError: String, Error, LocalizedError {
+enum PossessionValidationError: String, LocalizedError {
     case emptyName = "No name was chosen!"
     case noAssetPoolSelected = "No asset pool was chosen!"
     case sameNameAlreadyExists = "An asset with the same name already exists!"

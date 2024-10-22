@@ -49,6 +49,7 @@ struct LiabilityFormViewModelTestDataProvider {
                                     repaidAmount: initialRepaidAmount,
                                     context: context)
         
+        let _ = DataFactory.createLiabilityPool(named: "Privat", liabilities: [liability], in: context)
         
         return liability
     }

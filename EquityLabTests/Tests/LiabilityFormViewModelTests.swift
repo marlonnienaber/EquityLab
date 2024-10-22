@@ -38,7 +38,7 @@ final class LiabilityFormViewModelTests: XCTestCase {
         sut.liabilityInitialAmount = expectedInitialAmount
         sut.liabilityRepaidAmount = expectedRepaidAmount
         sut.liabilityPool = liabilityPool
-        sut.createLiability()
+        try sut.saveLiability()
         
         let liabilities = testingLiabilityRepository.fetchLiabilities()
         XCTAssertTrue(liabilities.count == 1)
@@ -71,7 +71,7 @@ final class LiabilityFormViewModelTests: XCTestCase {
         sut.liabilityGrantDate = expectedDate
         sut.liabilityCreditor = expectedCreditor
         sut.liabilityRepaidAmount = expectedRepaidAmount
-        sut.updateLiability(liability: liabilityToUpdate)
+        try sut.saveLiability()
         
         let liabilities = testingLiabilityRepository.fetchLiabilities()
         XCTAssertTrue(liabilities.count == 1)

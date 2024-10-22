@@ -27,6 +27,11 @@ struct LiabilityForm: View {
                     saveButton
                 }
             }
+            .alert(isPresented: $viewModel.showValidationErrorAlert, error: viewModel.liabilityValidationError) { _ in
+                Button("OK", role: .cancel) {
+                    viewModel.liabilityValidationError = nil
+                }
+            } message: { _ in }
             .onTapGesture {
                 hideKeyboard()
             }
@@ -93,13 +98,13 @@ struct LiabilityForm: View {
     
     private var saveButton: some View {
         Button("Save") {
-            if let liability = viewModel.liability {
-                viewModel.updateLiability(liability: liability)
-            } else {
-                viewModel.createLiability()
-            }
-            viewModel.dismissSheet()
+            do {
+                try viewModel.saveLiability()
+                viewModel.dismissSheet()
+            } catch let error as LiabilityValidationError  {
+                viewModel.liabilityValidationError = error
+                viewModel.showValidationErrorAlert = true
+            } catch {}
         }
-        .disabled(viewModel.liabilityPool.isNil)
     }
 }
