@@ -1,6 +1,7 @@
 import XCTest
 @testable import EquityLab
 
+/* TODO: add missing test case descriptions */
 final class LiabilityFormViewModelTests: XCTestCase {
     private var testingCoreDataStack: TestingCoreDataStack!
     private var testingLiabilityRepository: LiabilityRepository!
