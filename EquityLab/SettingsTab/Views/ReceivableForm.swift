@@ -26,9 +26,9 @@ struct ReceivableForm: View {
                     saveButton
                 }
             }
-            .alert(isPresented: $viewModel.showValidationErrorAlert, error: viewModel.validationError) { _ in
+            .alert(isPresented: $viewModel.showValidationErrorAlert, error: viewModel.receivableValidationError) { _ in
                 Button("OK", role: .cancel) {
-                    viewModel.validationError = nil
+                    viewModel.receivableValidationError = nil
                 }
             } message: { _ in }
             .onTapGesture {
@@ -102,7 +102,7 @@ struct ReceivableForm: View {
                     try viewModel.createReceivable()
                     viewModel.dismissSheet()
                 } catch let error as ReceivableValidationError  {
-                    viewModel.validationError = error
+                    viewModel.receivableValidationError = error
                     viewModel.showValidationErrorAlert = true
                 } catch {}
             } else {
@@ -110,7 +110,7 @@ struct ReceivableForm: View {
                     try viewModel.updateReceivable()
                     viewModel.dismissSheet()
                 } catch let error as ReceivableValidationError  {
-                    viewModel.validationError = error
+                    viewModel.receivableValidationError = error
                     viewModel.showValidationErrorAlert = true
                 } catch {}
             }

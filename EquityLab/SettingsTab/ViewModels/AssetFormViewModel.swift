@@ -16,7 +16,8 @@ class AssetFormViewModel {
     var possessionIsVolatile: Bool
     var showPopover: Bool = false
     var selectedAssetType: Asset.SubType
-    var validationError: ReceivableValidationError?
+    var receivableValidationError: ReceivableValidationError?
+    var possessionValidationError: PossessionValidationError?
     var showValidationErrorAlert = false
     let dismissSheet: () -> ()
     
@@ -85,9 +86,9 @@ class AssetFormViewModel {
         return receivableDebtor.isEmpty
     }
     
-    private func validateUserInputForCreatingReceivable() throws -> AssetPool {
+    private func validateReceivable(for useCase: ValidationUseCase) throws -> AssetPool {
         Self.logger.debug("validateReceivable()")
-        if assetWithSameNameDoesExist {
+        if useCase == .create && assetWithSameNameDoesExist {
             throw ReceivableValidationError.sameNameAlreadyExists
         }
         if repaidSurpassesInitialAmount {
@@ -109,24 +110,14 @@ class AssetFormViewModel {
         return assetPool
     }
     
-    private func validateUserInputForUpdatingReceivable() throws -> AssetPool {
-        Self.logger.debug("validateReceivable()")
-        if repaidSurpassesInitialAmount {
-            throw ReceivableValidationError.repaidSurpassesInitialAmount
-        }
-        if initialAmountNegative {
-            throw ReceivableValidationError.initialAmountNegative
-        }
-        if repaidAmountNegative {
-            throw ReceivableValidationError.repaidAmountNegative
+    private func validatePossession(for useCase: ValidationUseCase) throws -> AssetPool {
+        if useCase == .create && assetWithSameNameDoesExist {
+            throw PossessionValidationError.sameNameAlreadyExists
         }
         if nameIsEmpty {
-            throw ReceivableValidationError.emptyName
+            throw PossessionValidationError.emptyName
         }
-        if debtorIsEmpty {
-            throw ReceivableValidationError.emptyDebtor
-        }
-        guard let assetPool else { throw ReceivableValidationError.noAssetPoolSelected }
+        guard let assetPool else { throw PossessionValidationError.noAssetPoolSelected }
         return assetPool
     }
     
@@ -138,7 +129,7 @@ class AssetFormViewModel {
     
     func createReceivable() throws {
         Self.logger.debug("createReceivable()")
-        let assetPool = try validateUserInputForCreatingReceivable()
+        let assetPool = try validateReceivable(for: ValidationUseCase.create)
         repository.createReceivable(name: assetName,
                                     pool: assetPool,
                                     debtor: receivableDebtor,
@@ -150,7 +141,7 @@ class AssetFormViewModel {
     func updateReceivable() throws {
         Self.logger.debug("updateReceivable()")
         guard let receivable = asset as? Receivable else { return }
-        let assetPool = try validateUserInputForUpdatingReceivable() /* TODO: use return value to make assetPool update possible */
+        let _ = try validateReceivable(for: ValidationUseCase.update) /* TODO: use return value to make assetPool update possible */
         repository.updateReceivable(receivable: receivable,
                                     newName: assetName,
                                     newDebtor: receivableDebtor,
@@ -159,17 +150,16 @@ class AssetFormViewModel {
                                     newGrantDate: receivableGrantDate)
     }
     
-    func createPossession() {
+    func createPossession() throws {
         Self.logger.debug("createPossession()")
-        if let assetPool, assetWithSameNameDoesNotExist() {
-            repository.createPossession(name: assetName, pool: assetPool, isVolatile: possessionIsVolatile)
-        }
-        /* TODO: give some feedback to the user in case an asset with the same name does exist */
+        let assetPool = try validatePossession(for: ValidationUseCase.create)
+        repository.createPossession(name: assetName, pool: assetPool, isVolatile: possessionIsVolatile)
     }
     
-    func updatePossession() {
+    func updatePossession() throws {
         Self.logger.debug("updatePossession(possession)")
         guard let possession = asset as? Possession else { return }
+        let _ = try validatePossession(for: ValidationUseCase.update) /* TODO: use return value to make assetPool update possible */
         repository.updatePossession(possession: possession, newName: assetName, newIsVolatile: possessionIsVolatile)
     }
     
@@ -191,4 +181,18 @@ enum ReceivableValidationError: String, Error, LocalizedError {
     var errorDescription: String? {
         return self.rawValue
     }
+}
+
+enum PossessionValidationError: String, Error, LocalizedError {
+    case emptyName = "No name was chosen!"
+    case noAssetPoolSelected = "No asset pool was chosen!"
+    case sameNameAlreadyExists = "An asset with the same name already exists!"
+    var errorDescription: String? {
+        return self.rawValue
+    }
+}
+
+enum ValidationUseCase {
+    case update
+    case create
 }
