@@ -10,6 +10,8 @@ class SnapshotFormViewModel {
     let liabilityPoolNames: [String]
     var assetProxies: [PositionProxy]
     var liabilityProxies: [PositionProxy]
+    var snapshotValidationError: SnapshotValidationError?
+    var showValidationErrorAlert = false
     let dismissSheet: () -> ()
     
     init(
@@ -87,21 +89,45 @@ class SnapshotFormViewModel {
         return (assetProxies,liabilityProxies)
     }
     
-    private func createSnapshot() {
-        snapshotRepository.createSnapshot(with: date, assetProxies, and: liabilityProxies)
+    private var snapshotWithSameDateDoesExist: Bool {
+        let snapshots = snapshotRepository.fetchSnapshots()
+        return snapshots.contains(where: { $0.date == date.startOfDay})
     }
     
-    private func updateSnapshot() {
-        if let snapshot {
-            snapshotRepository.updateSnapshot(snapshot, using: date, assetProxies, and: liabilityProxies)
+    private func validateSnapshot(for useCase: ValidationUseCase) throws {
+        if useCase == .create && snapshotWithSameDateDoesExist {
+            throw SnapshotValidationError.sameDateAlreadyExists
+        }
+        for assetProxy in assetProxies {
+            if assetProxy.value < .zero {
+                throw SnapshotValidationError.negativePosition
+            }
+        }
+        for liabilityProxy in liabilityProxies {
+            if liabilityProxy.value < .zero {
+                throw SnapshotValidationError.negativePosition
+            }
         }
     }
     
-    func saveSnapshot() {
+    private func createSnapshot() throws {
+        try validateSnapshot(for: ValidationUseCase.create)
+        snapshotRepository.createSnapshot(with: date, assetProxies, and: liabilityProxies)
+    }
+    
+    private func updateSnapshot() throws {
+        guard let snapshot else { return }
+        try validateSnapshot(for: ValidationUseCase.update)
+        snapshotRepository.updateSnapshot(snapshot, using: date, assetProxies, and: liabilityProxies)
+    }
+    
+    
+    
+    func saveSnapshot() throws {
         if snapshot.isNotNil {
-            updateSnapshot()
+            try updateSnapshot()
         } else {
-            createSnapshot()
+            try createSnapshot()
         }
     }
     
@@ -127,5 +153,13 @@ class PositionProxy: Equatable {
     
     static func == (lhs: PositionProxy, rhs: PositionProxy) -> Bool {
         lhs.name == rhs.name && lhs.value == rhs.value && lhs.poolName == rhs.poolName
+    }
+}
+
+enum SnapshotValidationError: String, LocalizedError {
+    case sameDateAlreadyExists = "A snapshot of this day was already taken!"
+    case negativePosition = "Both assets and liabilities can only have non-negative values!"
+    var errorDescription: String? {
+        return self.rawValue
     }
 }

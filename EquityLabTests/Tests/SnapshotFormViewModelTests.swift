@@ -206,7 +206,7 @@ final class SnapshotFormViewModelTests: XCTestCase {
         let liabilityProxy2 = try XCTUnwrap(sut.liabilityProxies.first(where: {$0.name == "Studium"}))
         liabilityProxy2.value = 250.0
         
-        sut.saveSnapshot()
+        try sut.saveSnapshot()
         
         let snapshots = testingSnapshotRepository.fetchSnapshots()
         let snapshot = try XCTUnwrap(snapshots.first)
@@ -247,7 +247,7 @@ final class SnapshotFormViewModelTests: XCTestCase {
         let liabilityProxy2 = try XCTUnwrap(sut.liabilityProxies.first(where: {$0.name == "Booth"}))
         liabilityProxy2.value = 100.0
         
-        sut.saveSnapshot()
+        try sut.saveSnapshot()
         
         let snapshots = testingSnapshotRepository.fetchSnapshots()
         snapshot = try XCTUnwrap(snapshots.first)
@@ -261,6 +261,8 @@ final class SnapshotFormViewModelTests: XCTestCase {
         XCTAssertTrue(expectedLiabilityPositionProperties ≡ actualLiabilityPositionProperties)
         XCTAssertTrue(snapshots.count == 1)
     }
+    
+    /* TODO: add test that tests whether it is possible to create two snapshots of the same date */
 
 }
 
