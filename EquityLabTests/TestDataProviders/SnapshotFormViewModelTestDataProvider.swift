@@ -334,4 +334,48 @@ struct SnapshotFormViewModelTestDataProvider {
         
         return DataFactory.createSnapshot(with: assetPositions, and: liabilityPositions, for: date, in: context)
     }
+    
+    func createAndPersistTestObjects_saveSnapshot_3(using context: NSManagedObjectContext) -> Date {
+        let sparkasse = DataFactory.createAssetPosition(name: "Konto Sparkasse", poolName: "Bank", value: 0.0, context: context)
+        let commerzbank = DataFactory.createAssetPosition(name: "Konto Commerzbank", poolName: "Bank", value: 0.0, context: context)
+        let FNZ = DataFactory.createAssetPosition(name: "FNZ", poolName: "Wertpapiere", value: 0.0, context: context)
+        let geldbeutel = DataFactory.createAssetPosition(name: "Geldbeutel", poolName: "Bargeld", value: 0.0, context: context)
+        let assetPositions = [sparkasse,commerzbank,FNZ,geldbeutel]
+        
+        let auto = DataFactory.createLiabilityPosition(name: "Auto Papa", poolName: "Privat", value: 1000.0, context: context)
+        let booth = DataFactory.createLiabilityPosition(name: "Booth", poolName: "Privat", value: 200.0, context: context)
+        let studium = DataFactory.createLiabilityPosition(name: "Studium", poolName: "Staatlich", value: 5000.0, context: context)
+        let kaution = DataFactory.createLiabilityPosition(name: "Kaution", poolName: "Bank", value: 1000.0, context: context)
+        let liabilityPositions = [auto,booth,studium,kaution]
+        
+        let date = DateParser.shared.date(from: "2024-04-15T00:00:00")!
+        
+        DataFactory.createSnapshot(with: assetPositions, and: liabilityPositions, for: date, in: context)
+        
+        return date
+    }
+    
+    func createAndPersistTestObjects_saveSnapshot_4(using context: NSManagedObjectContext) -> (Snapshot, Date) {
+        let sparkasse = DataFactory.createAssetPosition(name: "Konto Sparkasse", poolName: "Bank", value: 0.0, context: context)
+        let commerzbank = DataFactory.createAssetPosition(name: "Konto Commerzbank", poolName: "Bank", value: 0.0, context: context)
+        let assetPositions1 = [sparkasse,commerzbank]
+        
+        let FNZ = DataFactory.createAssetPosition(name: "FNZ", poolName: "Wertpapiere", value: 0.0, context: context)
+        let geldbeutel = DataFactory.createAssetPosition(name: "Geldbeutel", poolName: "Bargeld", value: 0.0, context: context)
+        let assetPositions2 = [FNZ,geldbeutel]
+        
+        let auto = DataFactory.createLiabilityPosition(name: "Auto Papa", poolName: "Privat", value: 1000.0, context: context)
+        let booth = DataFactory.createLiabilityPosition(name: "Booth", poolName: "Privat", value: 200.0, context: context)
+        let liabilityPositions1 = [auto,booth]
+        
+        let studium = DataFactory.createLiabilityPosition(name: "Studium", poolName: "Staatlich", value: 5000.0, context: context)
+        let kaution = DataFactory.createLiabilityPosition(name: "Kaution", poolName: "Bank", value: 1000.0, context: context)
+        let liabilityPositions2 = [studium,kaution]
+        
+        let date1 = DateParser.shared.date(from: "2024-04-15T00:00:00")!
+        let date2 = DateParser.shared.date(from: "2024-04-14T00:00:00")!
+        
+        let _ = DataFactory.createSnapshot(with: assetPositions1, and: liabilityPositions1, for: date1, in: context)
+        return (DataFactory.createSnapshot(with: assetPositions2, and: liabilityPositions2, for: date2, in: context), date1)
+    }
 }

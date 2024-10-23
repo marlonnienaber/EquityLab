@@ -262,7 +262,37 @@ final class SnapshotFormViewModelTests: XCTestCase {
         XCTAssertTrue(snapshots.count == 1)
     }
     
-    /* TODO: add test that tests whether it is possible to create two snapshots of the same date */
-
+    /// test whether creating a snapshot throws an error if another snapshot with the same date exists
+    func test_saveSnapshot_3() throws {
+        let date = testDataProvider.createAndPersistTestObjects_saveSnapshot_3(using: testingCoreDataStack.context)
+        
+        let sut = SnapshotFormViewModel(snapshotRepository: testingSnapshotRepository,
+                                        assetRepository: testingAssetRepository,
+                                        liabilityRepository: testingLiabilityRepository,
+                                        dismissSheet: {})
+        
+        sut.date = date
+        
+        XCTAssertThrowsError(try sut.saveSnapshot()) { error in
+            XCTAssertEqual(error as? SnapshotValidationError, SnapshotValidationError.sameDateAlreadyExists)
+        }
+    }
+    
+    /// test whether updating the date of a snapshot to a date on which another snapshot was taken throws an error
+    func test_saveSnapshot_4() throws {
+        let (snapshot, newDate) = testDataProvider.createAndPersistTestObjects_saveSnapshot_4(using: testingCoreDataStack.context)
+        
+        let sut = SnapshotFormViewModel(snapshot: snapshot,
+                                        snapshotRepository: testingSnapshotRepository,
+                                        assetRepository: testingAssetRepository,
+                                        liabilityRepository: testingLiabilityRepository,
+                                        dismissSheet: {})
+        
+        sut.date = newDate
+        
+        XCTAssertThrowsError(try sut.saveSnapshot()) { error in
+            XCTAssertEqual(error as? SnapshotValidationError, SnapshotValidationError.sameDateAlreadyExists)
+        }
+    }
 }
 

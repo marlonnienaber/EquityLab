@@ -98,16 +98,6 @@ class SnapshotFormViewModel {
         if snapshotWithSameDateDoesExist {
             throw SnapshotValidationError.sameDateAlreadyExists
         }
-        for assetProxy in assetProxies {
-            if assetProxy.value < .zero {
-                throw SnapshotValidationError.negativePosition
-            }
-        }
-        for liabilityProxy in liabilityProxies {
-            if liabilityProxy.value < .zero {
-                throw SnapshotValidationError.negativePosition
-            }
-        }
     }
     
     private func createSnapshot() throws {
@@ -158,7 +148,6 @@ class PositionProxy: Equatable {
 
 enum SnapshotValidationError: String, LocalizedError {
     case sameDateAlreadyExists = "A snapshot of this day was already taken!"
-    case negativePosition = "Both assets and liabilities can only have non-negative values!"
     var errorDescription: String? {
         return self.rawValue
     }

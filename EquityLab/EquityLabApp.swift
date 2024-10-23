@@ -2,9 +2,8 @@ import SwiftUI
 
 @main
 struct EquityLabApp: App {
-    /* TODO: prevent that entities with same name are created or updated to a name that already exists */
-    /* TODO: prevent that snapshots with a date that already exists are created / thta existing snapshots are updated tp a date that already exists */
     /* TODO: search for divisions and check whether division by zero is treated sufficiently */
+    /* TODO: write validation test cases */
     var body: some Scene {
         WindowGroup {
             TabView {

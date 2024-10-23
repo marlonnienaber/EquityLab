@@ -53,7 +53,6 @@ class SnapshotRepository: NSObject {
     }
     
     func createSnapshot(with date: Date, _ assetProxies: [PositionProxy], and liabilityProxies: [PositionProxy]) {
-        /* TODO: only allow creation of date if snapshot with date does not exist already */
         let context = fetchedResultsController.managedObjectContext
         let snapshot = Snapshot(usedContext: context)
         snapshot.date = date.startOfDay
@@ -81,7 +80,6 @@ class SnapshotRepository: NSObject {
     }
     
     func updateSnapshot(_ snapshot: Snapshot, using date: Date, _ assetProxies: [PositionProxy], and liabilityProxies: [PositionProxy]) {
-        /* TODO: only allow updates of date if snapshot with date does not exist already */
         snapshot.date = date.startOfDay
         let assetPositions = fetchAssetPositions(of: snapshot)
         assetProxies.forEach { proxy in
