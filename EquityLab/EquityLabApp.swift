@@ -3,7 +3,6 @@ import SwiftUI
 @main
 struct EquityLabApp: App {
     /* TODO: search for divisions and check whether division by zero is treated sufficiently */
-    /* TODO: write validation test cases */
     var body: some Scene {
         WindowGroup {
             TabView {

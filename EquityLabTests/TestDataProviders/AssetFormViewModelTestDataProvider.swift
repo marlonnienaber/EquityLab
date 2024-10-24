@@ -42,6 +42,13 @@ struct AssetFormViewModelTestDataProvider {
         DataFactory.createAssetPool(named: "Privat", assets: [], in: context)
     }
     
+    func createAndPersistTestObjects_multiPurpose_2(context: NSManagedObjectContext) -> (AssetPool,String) {
+        let assetPool = DataFactory.createAssetPool(named: "Privat", assets: [], in: context)
+        let existingAssetName = "Blitz"
+        let asset = DataFactory.createPossession(name: existingAssetName, volatile: true, context: context)
+        return (assetPool,existingAssetName)
+    }
+    
     func createAndPersistTestObjects_deleteAssets_1(using context: NSManagedObjectContext) -> (Asset,[Asset]) {
         let asset1 = DataFactory.createReceivable(name: "Blitz",
                                                   date: DateParser.shared.date(from: "2024-04-15T00:00:00")!,

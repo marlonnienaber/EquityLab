@@ -11,6 +11,9 @@ final class AssetFormViewModelTests: XCTestCase {
         testingAssetRepository = AssetRepository(context: testingCoreDataStack.context)
     }
     
+    
+    
+    /// test whether the getAssetPools() function returns the before persited assetpools
     func test_getAssetPools_1() throws {
         let expectedPools = testDataProvider.createAndPersitsTestObjects_getAssetPools_1(using: testingCoreDataStack.context)
         
@@ -20,7 +23,9 @@ final class AssetFormViewModelTests: XCTestCase {
         XCTAssertTrue(expectedPools ≡ actualPools)
     }
     
-    /// update a Receivable
+    
+    
+    /// update a receivable
     func test_updateReceivable_1() throws {
         var receivable = testDataProvider.createAndPersistTestObjects_saveAsset_1(context: testingCoreDataStack.context)
         
@@ -56,6 +61,75 @@ final class AssetFormViewModelTests: XCTestCase {
         XCTAssertEqual(expectedRepaidAmount, actualRepaidAmount)
     }
     
+    /// update a receivable with an empty name and check whether the correct error is thrown
+    func test_updateReceivable_2() throws {
+        let receivable = testDataProvider.createAndPersistTestObjects_saveAsset_1(context: testingCoreDataStack.context)
+        
+        let sut = AssetFormViewModel(asset: receivable, repository: testingAssetRepository, dismissSheet: {})
+        
+        sut.assetName = ""
+        
+        XCTAssertThrowsError(try sut.saveReceivable()) { error in
+            XCTAssertEqual(error as? ReceivableValidationError, ReceivableValidationError.emptyName)
+        }
+    }
+    
+    /// update a receivable with an debtor and check whether the correct error is thrown
+    func test_updateReceivable_3() throws {
+        let receivable = testDataProvider.createAndPersistTestObjects_saveAsset_1(context: testingCoreDataStack.context)
+        
+        let sut = AssetFormViewModel(asset: receivable, repository: testingAssetRepository, dismissSheet: {})
+        
+        sut.receivableDebtor = ""
+        
+        XCTAssertThrowsError(try sut.saveReceivable()) { error in
+            XCTAssertEqual(error as? ReceivableValidationError, ReceivableValidationError.emptyDebtor)
+        }
+    }
+    
+    /// update a receivable with an initial amount which is not strictly positive and check whether the correct error is thrown
+    func test_updateReceivable_4() throws {
+        let receivable = testDataProvider.createAndPersistTestObjects_saveAsset_1(context: testingCoreDataStack.context)
+        
+        let sut = AssetFormViewModel(asset: receivable, repository: testingAssetRepository, dismissSheet: {})
+        
+        sut.receivableInitialAmount = 0.0
+        sut.receivableRepaidAmount = 0.0
+        
+        XCTAssertThrowsError(try sut.saveReceivable()) { error in
+            XCTAssertEqual(error as? ReceivableValidationError, ReceivableValidationError.initialAmountNotStrictlyPositive)
+        }
+    }
+    
+    /// update a receivable such that the repaid amount is bigger than the repaid amount and check whether the correct error is thrown
+    func test_updateReceivable_5() throws {
+        let receivable = testDataProvider.createAndPersistTestObjects_saveAsset_1(context: testingCoreDataStack.context)
+        
+        let sut = AssetFormViewModel(asset: receivable, repository: testingAssetRepository, dismissSheet: {})
+        
+        sut.receivableInitialAmount = 10.0
+        sut.receivableRepaidAmount = 20.0
+        
+        XCTAssertThrowsError(try sut.saveReceivable()) { error in
+            XCTAssertEqual(error as? ReceivableValidationError, ReceivableValidationError.repaidSurpassesInitialAmount)
+        }
+    }
+    
+    /// update a receivable such that no assetPool is selected and check whether the correct error is thrown
+    func test_updateReceivable_6() throws {
+        let receivable = testDataProvider.createAndPersistTestObjects_saveAsset_1(context: testingCoreDataStack.context)
+        
+        let sut = AssetFormViewModel(asset: receivable, repository: testingAssetRepository, dismissSheet: {})
+        
+        sut.assetPool = nil
+        
+        XCTAssertThrowsError(try sut.saveReceivable()) { error in
+            XCTAssertEqual(error as? ReceivableValidationError, ReceivableValidationError.noAssetPoolSelected)
+        }
+    }
+    
+    
+    
     /// update a Possession
     func test_updatePossession_1() throws {
         var possession = testDataProvider.createAndPersistTestObjects_saveAsset_2(context: testingCoreDataStack.context)
@@ -80,6 +154,32 @@ final class AssetFormViewModelTests: XCTestCase {
         XCTAssertEqual(expectedIsVolatile, actualIsVolatile)
     }
     
+    /// update a possession with an empty name and check whether the correct error is thrown
+    func test_updatePossession_2() throws {
+        let possession = testDataProvider.createAndPersistTestObjects_saveAsset_2(context: testingCoreDataStack.context)
+        
+        let sut = AssetFormViewModel(asset: possession, repository: testingAssetRepository, dismissSheet: {})
+        
+        sut.assetName = ""
+        XCTAssertThrowsError(try sut.savePossession()) { error in
+            XCTAssertEqual(error as? PossessionValidationError, PossessionValidationError.emptyName)
+        }
+    }
+    
+    /// update a possession such that no assetPool is selected and check whether the correct error is thrown
+    func test_updatePossession_3() throws {
+        let possession = testDataProvider.createAndPersistTestObjects_saveAsset_2(context: testingCoreDataStack.context)
+        
+        let sut = AssetFormViewModel(asset: possession, repository: testingAssetRepository, dismissSheet: {})
+        
+        sut.assetPool = nil
+        XCTAssertThrowsError(try sut.savePossession()) { error in
+            XCTAssertEqual(error as? PossessionValidationError, PossessionValidationError.noAssetPoolSelected)
+        }
+    }
+    
+    
+    
     /// create a Receivable
     func test_createReceivable_1() throws {
         let assetPool = testDataProvider.createAndPersistTestObjects_multiPurpose_1(context: testingCoreDataStack.context)
@@ -98,7 +198,6 @@ final class AssetFormViewModelTests: XCTestCase {
         sut.receivableInitialAmount = expectedInitialAmount
         sut.receivableRepaidAmount = expectedRepaidAmount
         sut.assetPool = assetPool
-        sut.selectedAssetType = .receivable
         try sut.saveReceivable()
         
         let persistedAssets = testingAssetRepository.fetchAssets()
@@ -118,6 +217,121 @@ final class AssetFormViewModelTests: XCTestCase {
         XCTAssertEqual(expectedRepaidAmount, actualRepaidAmount)
     }
     
+    /// create a Receivable with an empty name and check whether the correct error is thrown
+    func test_createReceivable_2() throws {
+        let assetPool = testDataProvider.createAndPersistTestObjects_multiPurpose_1(context: testingCoreDataStack.context)
+        
+        let sut = AssetFormViewModel(repository: testingAssetRepository, dismissSheet: {})
+        
+        let expectedName = ""
+        let expectedDebtor = "Philipp"
+        let expectedGrantDate = DateParser.shared.date(from: "2024-07-23T00:00:00")!
+        let expectedInitialAmount = 200.0
+        let expectedRepaidAmount = 40.0
+        
+        sut.assetName = expectedName
+        sut.receivableDebtor = expectedDebtor
+        sut.receivableGrantDate = expectedGrantDate
+        sut.receivableInitialAmount = expectedInitialAmount
+        sut.receivableRepaidAmount = expectedRepaidAmount
+        sut.assetPool = assetPool
+        XCTAssertThrowsError(try sut.saveReceivable()) { error in
+            XCTAssertEqual(error as? ReceivableValidationError, ReceivableValidationError.emptyName)
+        }
+    }
+    
+    /// create a Receivable with an empty debtor and check whether the correct error is thrown
+    func test_createReceivable_3() throws {
+        let assetPool = testDataProvider.createAndPersistTestObjects_multiPurpose_1(context: testingCoreDataStack.context)
+        
+        let sut = AssetFormViewModel(repository: testingAssetRepository, dismissSheet: {})
+        
+        let expectedName = "Some name"
+        let expectedDebtor = ""
+        let expectedGrantDate = DateParser.shared.date(from: "2024-07-23T00:00:00")!
+        let expectedInitialAmount = 200.0
+        let expectedRepaidAmount = 40.0
+        
+        sut.assetName = expectedName
+        sut.receivableDebtor = expectedDebtor
+        sut.receivableGrantDate = expectedGrantDate
+        sut.receivableInitialAmount = expectedInitialAmount
+        sut.receivableRepaidAmount = expectedRepaidAmount
+        sut.assetPool = assetPool
+        XCTAssertThrowsError(try sut.saveReceivable()) { error in
+            XCTAssertEqual(error as? ReceivableValidationError, ReceivableValidationError.emptyDebtor)
+        }
+    }
+    
+    /// create a Receivable where the repaid amount surpasses the  initial amount and check whether the correct error is thrown
+    func test_createReceivable_4() throws {
+        let assetPool = testDataProvider.createAndPersistTestObjects_multiPurpose_1(context: testingCoreDataStack.context)
+        
+        let sut = AssetFormViewModel(repository: testingAssetRepository, dismissSheet: {})
+        
+        let expectedName = "Some name"
+        let expectedDebtor = "Someone"
+        let expectedGrantDate = DateParser.shared.date(from: "2024-07-23T00:00:00")!
+        let expectedInitialAmount = 40.0
+        let expectedRepaidAmount = 200.0
+        
+        sut.assetName = expectedName
+        sut.receivableDebtor = expectedDebtor
+        sut.receivableGrantDate = expectedGrantDate
+        sut.receivableInitialAmount = expectedInitialAmount
+        sut.receivableRepaidAmount = expectedRepaidAmount
+        sut.assetPool = assetPool
+        XCTAssertThrowsError(try sut.saveReceivable()) { error in
+            XCTAssertEqual(error as? ReceivableValidationError, ReceivableValidationError.repaidSurpassesInitialAmount)
+        }
+    }
+    
+    /// create a Receivable where the initial amount is not strictly positive and check whether the correct error is thrown
+    func test_createReceivable_5() throws {
+        let assetPool = testDataProvider.createAndPersistTestObjects_multiPurpose_1(context: testingCoreDataStack.context)
+        
+        let sut = AssetFormViewModel(repository: testingAssetRepository, dismissSheet: {})
+        
+        let expectedName = "Some name"
+        let expectedDebtor = "Someone"
+        let expectedGrantDate = DateParser.shared.date(from: "2024-07-23T00:00:00")!
+        let expectedInitialAmount = 0.0
+        let expectedRepaidAmount = 0.0
+        
+        sut.assetName = expectedName
+        sut.receivableDebtor = expectedDebtor
+        sut.receivableGrantDate = expectedGrantDate
+        sut.receivableInitialAmount = expectedInitialAmount
+        sut.receivableRepaidAmount = expectedRepaidAmount
+        sut.assetPool = assetPool
+        XCTAssertThrowsError(try sut.saveReceivable()) { error in
+            XCTAssertEqual(error as? ReceivableValidationError, ReceivableValidationError.initialAmountNotStrictlyPositive)
+        }
+    }
+    
+    /// create a Receivable such that no assetPool is selected and check whether the correct error is thrown
+    func test_createReceivable_6() throws {
+        let sut = AssetFormViewModel(repository: testingAssetRepository, dismissSheet: {})
+        
+        let expectedName = "Some name"
+        let expectedDebtor = "Someone"
+        let expectedGrantDate = DateParser.shared.date(from: "2024-07-23T00:00:00")!
+        let expectedInitialAmount = 20.0
+        let expectedRepaidAmount = 0.0
+        
+        sut.assetName = expectedName
+        sut.receivableDebtor = expectedDebtor
+        sut.receivableGrantDate = expectedGrantDate
+        sut.receivableInitialAmount = expectedInitialAmount
+        sut.receivableRepaidAmount = expectedRepaidAmount
+        sut.assetPool = nil
+        XCTAssertThrowsError(try sut.saveReceivable()) { error in
+            XCTAssertEqual(error as? ReceivableValidationError, ReceivableValidationError.noAssetPoolSelected)
+        }
+    }
+    
+    
+    
     /// create a Possession
     func test_createPossession_1() throws {
         let assetPool = testDataProvider.createAndPersistTestObjects_multiPurpose_1(context: testingCoreDataStack.context)
@@ -130,7 +344,6 @@ final class AssetFormViewModelTests: XCTestCase {
         sut.assetName = expectedName
         sut.possessionIsVolatile = expectedIsVolatile
         sut.assetPool = assetPool
-        sut.selectedAssetType = .possession
         try sut.savePossession()
         
         let persistedAssets = testingAssetRepository.fetchAssets()
@@ -143,6 +356,40 @@ final class AssetFormViewModelTests: XCTestCase {
         XCTAssertEqual(expectedName, actualName)
         XCTAssertEqual(expectedIsVolatile, actualIsVolatile)
     }
+    
+    /// create a possession with an empty name and check whether the correct error is thrown
+    func test_createPossession_2() throws {
+        let assetPool = testDataProvider.createAndPersistTestObjects_multiPurpose_1(context: testingCoreDataStack.context)
+        
+        let sut = AssetFormViewModel(repository: testingAssetRepository, dismissSheet: {})
+        
+        let expectedName = ""
+        let expectedIsVolatile = false
+        
+        sut.assetName = expectedName
+        sut.possessionIsVolatile = expectedIsVolatile
+        sut.assetPool = assetPool
+        XCTAssertThrowsError(try sut.savePossession()) { error in
+            XCTAssertEqual(error as? PossessionValidationError, PossessionValidationError.emptyName)
+        }
+    }
+    
+    /// create a possession such that no assetPool is selected and check whether the correct error is thrown
+    func test_createPossession_3() throws {
+        let sut = AssetFormViewModel(repository: testingAssetRepository, dismissSheet: {})
+        
+        let expectedName = "Commerzbank Konto"
+        let expectedIsVolatile = false
+        
+        sut.assetName = expectedName
+        sut.possessionIsVolatile = expectedIsVolatile
+        sut.assetPool = nil
+        XCTAssertThrowsError(try sut.savePossession()) { error in
+            XCTAssertEqual(error as? PossessionValidationError, PossessionValidationError.noAssetPoolSelected)
+        }
+    }
+    
+    
     
     /// create 2 Receivables of the same name. Only the first one should be persisted
     func test_createAssetsWithSameName_1() throws {
@@ -162,7 +409,6 @@ final class AssetFormViewModelTests: XCTestCase {
         sut.receivableInitialAmount = firstExpectedInitialAmount
         sut.receivableRepaidAmount = firstExpectedRepaidAmount
         sut.assetPool = assetPool
-        sut.selectedAssetType = .receivable
         try sut.saveReceivable()
         
         let secondExpectedName = "Rote Sonne"
@@ -177,7 +423,6 @@ final class AssetFormViewModelTests: XCTestCase {
         sut.receivableInitialAmount = secondExpectedInitialAmount
         sut.receivableRepaidAmount = secondExpectedRepaidAmount
         sut.assetPool = assetPool
-        sut.selectedAssetType = .receivable
         XCTAssertThrowsError(try sut.saveReceivable()) { error in
             XCTAssertEqual(error as? ReceivableValidationError, ReceivableValidationError.sameNameAlreadyExists)
         }
@@ -211,7 +456,6 @@ final class AssetFormViewModelTests: XCTestCase {
         sut.assetName = firstExpectedName
         sut.possessionIsVolatile = firstExpectedIsVolatile
         sut.assetPool = assetPool
-        sut.selectedAssetType = .possession
         try sut.savePossession()
         
         let secondExpectedName = "Commerzbank Konto"
@@ -220,7 +464,6 @@ final class AssetFormViewModelTests: XCTestCase {
         sut.assetName = secondExpectedName
         sut.possessionIsVolatile = secondExpectedIsVolatile
         sut.assetPool = assetPool
-        sut.selectedAssetType = .possession
         XCTAssertThrowsError(try sut.savePossession()) { error in
             XCTAssertEqual(error as? PossessionValidationError, PossessionValidationError.sameNameAlreadyExists)
         }
@@ -254,7 +497,6 @@ final class AssetFormViewModelTests: XCTestCase {
         sut.receivableInitialAmount = firstExpectedInitialAmount
         sut.receivableRepaidAmount = firstExpectedRepaidAmount
         sut.assetPool = assetPool
-        sut.selectedAssetType = .receivable
         try sut.saveReceivable()
         
         let secondExpectedName = "Rote Sonne"
@@ -263,7 +505,6 @@ final class AssetFormViewModelTests: XCTestCase {
         sut.assetName = secondExpectedName
         sut.possessionIsVolatile = secondExpectedIsVolatile
         sut.assetPool = assetPool
-        sut.selectedAssetType = .possession
         XCTAssertThrowsError(try sut.savePossession()) { error in
             XCTAssertEqual(error as? PossessionValidationError, PossessionValidationError.sameNameAlreadyExists)
         }
@@ -297,7 +538,6 @@ final class AssetFormViewModelTests: XCTestCase {
         sut.assetName = firstExpectedName
         sut.possessionIsVolatile = firstExpectedIsVolatile
         sut.assetPool = assetPool
-        sut.selectedAssetType = .possession
         try sut.savePossession()
         
         let secondExpectedName = "Commerzbank Konto"
@@ -312,7 +552,6 @@ final class AssetFormViewModelTests: XCTestCase {
         sut.receivableInitialAmount = secondExpectedInitialAmount
         sut.receivableRepaidAmount = secondExpectedRepaidAmount
         sut.assetPool = assetPool
-        sut.selectedAssetType = .receivable
         XCTAssertThrowsError(try sut.saveReceivable()) { error in
             XCTAssertEqual(error as? ReceivableValidationError, ReceivableValidationError.sameNameAlreadyExists)
         }
@@ -328,6 +567,8 @@ final class AssetFormViewModelTests: XCTestCase {
         XCTAssertEqual(firstExpectedIsVolatile, actualIsVolatile)
     }
     
+    
+    
     /// delete one asset and test viewModel interface providing data to view as well as persisted data
     func test_deleteAsset_1() throws {
         let (assetToDelete, expectedAssets) = testDataProvider.createAndPersistTestObjects_deleteAssets_1(using: testingCoreDataStack.context)
@@ -339,5 +580,4 @@ final class AssetFormViewModelTests: XCTestCase {
         let actualAssets = testingAssetRepository.fetchAssets()
         XCTAssertTrue(expectedAssets ≡ actualAssets)
     }
-
 }

@@ -15,7 +15,6 @@ class AssetFormViewModel {
     var receivableRepaidAmount: Double
     var possessionIsVolatile: Bool
     var showPopover: Bool = false
-    var selectedAssetType: Asset.SubType
     var receivableValidationError: ReceivableValidationError?
     var possessionValidationError: PossessionValidationError?
     var showValidationErrorAlert = false
@@ -26,7 +25,6 @@ class AssetFormViewModel {
         Self.logger.debug("AssetFormViewModel()")
         self.repository = repository
         self.asset = asset
-        self.selectedAssetType = .possession
         self.assetName = asset?.name ?? ""
         self.assetPool = asset?.pool
         if let receivable = asset as? Receivable {

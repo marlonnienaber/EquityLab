@@ -13,6 +13,8 @@ final class SnapshotStructureViewModelTests: XCTestCase {
         testingLiabilityRepository = LiabilityRepository(context: testingCoreDataStack.context)
     }
     
+    
+    
     /// create multiple assetPools with multiple Assets and test pools/assets()/assets(for pool)
     func test_assetsAndPools_1() throws {
         let (expectedPools, poolToAssetDictionary, expectedAssets) = testDataProvider.createAndPersistTestObjects_assetsAndPools_1(using: testingCoreDataStack.context)
@@ -85,6 +87,8 @@ final class SnapshotStructureViewModelTests: XCTestCase {
         }
     }
     
+    
+    
     /// create empty assetPool and test viewModel interface providing data to view as well as persisted data
     func test_createAssetPool_1() throws {
         let sut = SnapshotStructureViewModel(assetRepository: testingAssetRepository, liabilityRepository: testingLiabilityRepository)
@@ -109,6 +113,17 @@ final class SnapshotStructureViewModelTests: XCTestCase {
         XCTAssertTrue(persistedPools.count == 1)
         let actualPersistedAssetPoolName = (try XCTUnwrap(viewModelPools.first)).name
         XCTAssertEqual(expectedAssetPoolName, actualPersistedAssetPoolName)
+    }
+    
+    /// test whether creating a assetPool with an already existing name throws an exception
+    func test_createAssetPool_2() throws {
+        let name = testDataProvider.createAndPersistTestObjects_createAssetPool_1(using: testingCoreDataStack.context)
+        let sut = SnapshotStructureViewModel(assetRepository: testingAssetRepository, liabilityRepository: testingLiabilityRepository)
+
+        sut.alertPoolName = name
+        XCTAssertThrowsError(try sut.createAssetPool()) { error in
+            XCTAssertEqual(error as? AssetPoolValidationError, AssetPoolValidationError.poolWithSameNameAlreadyExists)
+        }
     }
     
     /// delete pool with multiple assets, then test viewModel interface providing data to view as well as persisted data
@@ -159,6 +174,19 @@ final class SnapshotStructureViewModelTests: XCTestCase {
         }
     }
     
+    /// test whether updating the name of a assetPool to a name of an already existing liabilityPool throws an error
+    func test_updateAssetPool_2() throws {
+        let (assetPool, newName) = testDataProvider.createAndPersistTestObjects_updateAssetPool_1(using: testingCoreDataStack.context)
+        let sut = SnapshotStructureViewModel(assetRepository: testingAssetRepository, liabilityRepository: testingLiabilityRepository)
+        sut.assetPoolToEdit = assetPool
+        sut.alertPoolName = newName
+        XCTAssertThrowsError(try sut.updateAssetPool()) { error in
+            XCTAssertEqual(error as? AssetPoolValidationError, AssetPoolValidationError.poolWithSameNameAlreadyExists)
+        }
+    }
+    
+    
+    
     /// create empty liabilityPool and test viewModel interface providing data to view as well as persisted data
     func test_createLiabilityPool_1() throws {
         let sut = SnapshotStructureViewModel(assetRepository: testingAssetRepository, liabilityRepository: testingLiabilityRepository)
@@ -183,6 +211,17 @@ final class SnapshotStructureViewModelTests: XCTestCase {
         XCTAssertTrue(persistedPools.count == 1)
         let actualPersistedLiabilityPoolName = (try XCTUnwrap(viewModelPools.first)).name
         XCTAssertEqual(expectedLiabilityPoolName, actualPersistedLiabilityPoolName)
+    }
+    
+    /// test whether creating a liability pool with an already existing name throws an exception
+    func test_createLiabilityPool_2() throws {
+        let name = testDataProvider.createAndPersistTestObjects_createLiabilityPool_1(using: testingCoreDataStack.context)
+        let sut = SnapshotStructureViewModel(assetRepository: testingAssetRepository, liabilityRepository: testingLiabilityRepository)
+
+        sut.alertPoolName = name
+        XCTAssertThrowsError(try sut.createLiabilityPool()) { error in
+            XCTAssertEqual(error as? LiabilityPoolValidationError, LiabilityPoolValidationError.poolWithSameNameAlreadyExists)
+        }
     }
     
     /// delete pool with multiple liabilities, then test viewModel interface providing data to view as well as persisted data
@@ -230,6 +269,17 @@ final class SnapshotStructureViewModelTests: XCTestCase {
             expectedLiabilitiesForPool = poolNameToLiabilityDictionary[pool.name]!
             actualLiabilitiesForPool = sut.getLiabilitiesForLiabilityPool(pool)
             XCTAssertTrue(expectedLiabilitiesForPool ≡ actualLiabilitiesForPool)
+        }
+    }
+    
+    /// test whether updating the name of a liabilityPool to a name of an already existing liabilityPool throws an error
+    func test_updateLiabilityPool_2() throws {
+        let (liabilityPool, newName) = testDataProvider.createAndPersistTestObjects_updateLiabilityPool_1(using: testingCoreDataStack.context)
+        let sut = SnapshotStructureViewModel(assetRepository: testingAssetRepository, liabilityRepository: testingLiabilityRepository)
+        sut.liabilityPoolToEdit = liabilityPool
+        sut.alertPoolName = newName
+        XCTAssertThrowsError(try sut.updateLiabilityPool()) { error in
+            XCTAssertEqual(error as? LiabilityPoolValidationError, LiabilityPoolValidationError.poolWithSameNameAlreadyExists)
         }
     }
 }
