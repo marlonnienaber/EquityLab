@@ -22,12 +22,6 @@ class ChangeChartViewModel {
         case .assetChangeChart: .assetsUnselected
         }
     }
-    
-    init(changeChartType: ChangeChartType, dashboardViewModel: DashboardViewModel) {
-        self.changeChartType = changeChartType
-        self.dashboardViewModel = dashboardViewModel
-    }
-    
     var changeCategories: [BarChartCategory] {
         guard let selectedShot = dashboardViewModel.selectedSnapshot, let beforeShot = computeShotBeforeSelectedShot() else { return [] }
         
@@ -48,12 +42,21 @@ class ChangeChartViewModel {
         let changeCategories = changedPoolValues.map{ BarChartCategory(change: $0.value, name: $0.key) }
         return changeCategories
     }
-    
+    var noChangesToLastSnapshot: Bool {
+        changeCategories.first(where: { $0.change != 0.0 }) == nil
+    }
     var maxChangePercentage: Double {
         let maxChange = changeCategories.map{ abs($0.change) }.max()
         guard let maxChange, !maxChange.isNaN, maxChange.isFinite else { return 0.0 }
         return maxChange
     }
+    
+    
+    init(changeChartType: ChangeChartType, dashboardViewModel: DashboardViewModel) {
+        self.changeChartType = changeChartType
+        self.dashboardViewModel = dashboardViewModel
+    }
+    
     
     func computeShotBeforeSelectedShot() -> Snapshot? {
         if let selectedDate = dashboardViewModel.selectedDate {

@@ -1,6 +1,5 @@
 import CoreData
 
-/* TODO: create Protocol 'ObservableRepository' which generalizes the observer logic (currently there is duplicate code here and in AssetRepository */
 class SnapshotRepository: NSObject {
     public static let production = SnapshotRepository(context: ProductionCoreDataStack.shared.context)
     private let fetchedResultsController: ObservingFetchedResultsController<Snapshot>
@@ -105,7 +104,7 @@ extension SnapshotRepository: NSFetchedResultsControllerDelegate {
 }
 
 protocol SnapshotObserver: AnyObject {
-    /* TODO: will this create a retain cycle or other memory problems */
+    /* TODO: will this create a retain cycle or other memory problems? */
     func notifyAfterSnapshotUpdate()
 }
 

@@ -30,7 +30,6 @@ class SettingsViewModel {
             isSerializingState = true
         }
         do {
-            /* TODO: parallelize fetches */
             let snapshots = snapshotRepository.fetchSnapshots()
             let liabilityPools = liabilityRepository.fetchLiabilityPools()
             let assetPools = assetRepository.fetchAssetPools()
