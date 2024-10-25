@@ -18,6 +18,8 @@ struct DistributionChart: View {
                     if let selectedCategory = viewModel.selectedCategory {
                         selectedCategoryDetails(selectedCategory: selectedCategory)
                             .selectedCategoryDetailsPositioning()
+                    } else {
+                        Spacer()
                     }
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
