@@ -5,7 +5,6 @@ struct DistributionChart: View {
     @State var viewModel: DistributionChartViewModel
     
     var body: some View {
-        /* TODO: positioning should not break if selectedCategory == nil */
         if viewModel.noValuesRecordedForThisSnapshot {
             Text("no positions with positive values were recorded with this snapshot")
                 .multilineTextAlignment(.center)

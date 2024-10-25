@@ -36,12 +36,14 @@ final class AssetFormViewModelTests: XCTestCase {
         let expectedGrantDate = DateParser.shared.date(from: "2024-07-23T00:00:00")!
         let expectedInitialAmount = 200.0
         let expectedRepaidAmount = 40.0
+        let expectedAssetPool = DataFactory.createAssetPool(named: "Some other pool", assets: [], in: testingCoreDataStack.context)
         
         sut.assetName = expectedName
         sut.receivableDebtor = expectedDebtor
         sut.receivableGrantDate = expectedGrantDate
         sut.receivableInitialAmount = expectedInitialAmount
         sut.receivableRepaidAmount = expectedRepaidAmount
+        sut.assetPool = expectedAssetPool
         try sut.saveReceivable()
         
         let persistedAssets = testingAssetRepository.fetchAssets()
@@ -53,12 +55,14 @@ final class AssetFormViewModelTests: XCTestCase {
         let actualGrantDate = receivable.grantDate
         let actualInitialAmount = receivable.initialAmount
         let actualRepaidAmount = receivable.repaidAmount
+        let actualAssetPool = receivable.pool
         
         XCTAssertEqual(expectedName, actualName)
         XCTAssertEqual(expectedDebtor, actualDebtor)
         XCTAssertEqual(expectedGrantDate, actualGrantDate)
         XCTAssertEqual(expectedInitialAmount, actualInitialAmount)
         XCTAssertEqual(expectedRepaidAmount, actualRepaidAmount)
+        XCTAssertEqual(expectedAssetPool, actualAssetPool)
     }
     
     /// update a receivable with an empty name and check whether the correct error is thrown
@@ -138,9 +142,11 @@ final class AssetFormViewModelTests: XCTestCase {
         
         let expectedName = "Commerzbank Konto"
         let expectedIsVolatile = false
+        let expectedAssetPool = DataFactory.createAssetPool(named: "Some other pool", assets: [], in: testingCoreDataStack.context)
         
         sut.assetName = expectedName
         sut.possessionIsVolatile = expectedIsVolatile
+        sut.assetPool = expectedAssetPool
         try sut.savePossession()
         
         let persistedAssets = testingAssetRepository.fetchAssets()
@@ -149,9 +155,11 @@ final class AssetFormViewModelTests: XCTestCase {
         
         let actualName = possession.name
         let actualIsVolatile = possession.volatile
+        let actualAssetPool = possession.pool
         
         XCTAssertEqual(expectedName, actualName)
         XCTAssertEqual(expectedIsVolatile, actualIsVolatile)
+        XCTAssertEqual(expectedAssetPool, actualAssetPool)
     }
     
     /// update a possession with an empty name and check whether the correct error is thrown

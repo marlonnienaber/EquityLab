@@ -83,13 +83,15 @@ class LiabilityRepository: NSObject {
                          newCreditor: String,
                          newInitialAmount: Double,
                          newRepaidAmount: Double,
-                         newGrantDate: Date) {
+                         newGrantDate: Date,
+                         newPool: LiabilityPool) {
         let context = fetchedResultsController.managedObjectContext
         liability.grantDate = newGrantDate.startOfDay
         liability.creditor = newCreditor
         liability.initialAmount = newInitialAmount
         liability.repaidAmount = newRepaidAmount
         liability.name = newName
+        liability.pool = newPool
         try? context.save()
     }
 }

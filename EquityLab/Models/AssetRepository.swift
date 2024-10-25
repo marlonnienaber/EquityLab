@@ -71,20 +71,23 @@ class AssetRepository: NSObject {
                           newDebtor: String,
                           newInitialAmount: Double,
                           newRepaidAmount: Double,
-                          newGrantDate: Date) {
+                          newGrantDate: Date,
+                          newPool: AssetPool) {
         let context = fetchedResultsController.managedObjectContext
         receivable.name = newName
         receivable.debtor = newDebtor
         receivable.initialAmount = newInitialAmount
         receivable.repaidAmount = newRepaidAmount
         receivable.grantDate = newGrantDate
+        receivable.pool = newPool
         try? context.save()
     }
     
-    func updatePossession(possession: Possession, newName: String, newIsVolatile: Bool) {
+    func updatePossession(possession: Possession, newName: String, newIsVolatile: Bool, newPool: AssetPool) {
         let context = fetchedResultsController.managedObjectContext
         possession.name = newName
         possession.volatile = newIsVolatile
+        possession.pool = newPool
         try? context.save()
     }
     

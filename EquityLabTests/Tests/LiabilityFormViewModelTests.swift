@@ -188,10 +188,12 @@ final class LiabilityFormViewModelTests: XCTestCase {
         let expectedCreditor = "Mama"
         let expectedInitialAmount = liabilityToUpdate.initialAmount
         let expectedRepaidAmount = 300.0
+        let expectedLiabilityPool = DataFactory.createLiabilityPool(named: "Some other pool", liabilities: [], in: testingCoreDataStack.context)
         
         sut.liabilityGrantDate = expectedDate
         sut.liabilityCreditor = expectedCreditor
         sut.liabilityRepaidAmount = expectedRepaidAmount
+        sut.liabilityPool = expectedLiabilityPool
         try sut.saveLiability()
         
         let liabilities = testingLiabilityRepository.fetchLiabilities()
@@ -203,12 +205,14 @@ final class LiabilityFormViewModelTests: XCTestCase {
         let actualCreditor = liability.creditor
         let actualInitialAmount = liability.initialAmount
         let actualRepaidAmount = liability.repaidAmount
+        let actualLiabilityPool = liability.pool
         
         XCTAssertEqual(expectedName, actualName)
         XCTAssertEqual(expectedDate, actualDate)
         XCTAssertEqual(expectedCreditor, actualCreditor)
         XCTAssertEqual(expectedInitialAmount, actualInitialAmount)
         XCTAssertEqual(expectedRepaidAmount, actualRepaidAmount)
+        XCTAssertEqual(expectedLiabilityPool, actualLiabilityPool)
     }
     
     /// update a Liability with an empty name and check whether the correct error is thrown

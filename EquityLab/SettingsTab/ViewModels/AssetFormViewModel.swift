@@ -125,13 +125,14 @@ class AssetFormViewModel {
     private func updateReceivable() throws {
         Self.logger.debug("updateReceivable()")
         guard let receivable = asset as? Receivable else { return }
-        let _ = try validateReceivable() /* TODO: use return value to make assetPool update possible */
+        let assetPool = try validateReceivable()
         repository.updateReceivable(receivable: receivable,
                                     newName: assetName,
                                     newDebtor: receivableDebtor,
                                     newInitialAmount: receivableInitialAmount,
                                     newRepaidAmount: receivableRepaidAmount,
-                                    newGrantDate: receivableGrantDate)
+                                    newGrantDate: receivableGrantDate,
+                                    newPool: assetPool)
     }
     
     private func createPossession() throws {
@@ -143,8 +144,8 @@ class AssetFormViewModel {
     private func updatePossession() throws {
         Self.logger.debug("updatePossession(possession)")
         guard let possession = asset as? Possession else { return }
-        let _ = try validatePossession() /* TODO: use return value to make assetPool update possible */
-        repository.updatePossession(possession: possession, newName: assetName, newIsVolatile: possessionIsVolatile)
+        let assetPool = try validatePossession()
+        repository.updatePossession(possession: possession, newName: assetName, newIsVolatile: possessionIsVolatile, newPool: assetPool)
     }
     
     func saveReceivable() throws {

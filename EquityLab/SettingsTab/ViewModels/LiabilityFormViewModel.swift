@@ -101,13 +101,14 @@ class LiabilityFormViewModel {
     private func updateLiability() throws {
         Self.logger.debug("updateLiability()")
         guard let liability else { return }
-        let _ = try validateLiability() /* TODO: use return value to make liabilityPool update possible */
+        let liabilityPool = try validateLiability()
         repository.updateLiability(liability: liability,
                                    newName: liabilityName,
                                    newCreditor: liabilityCreditor,
                                    newInitialAmount: liabilityInitialAmount,
                                    newRepaidAmount: liabilityRepaidAmount,
-                                   newGrantDate: liabilityGrantDate)
+                                   newGrantDate: liabilityGrantDate,
+                                   newPool: liabilityPool)
     }
     
     func saveLiability() throws {
