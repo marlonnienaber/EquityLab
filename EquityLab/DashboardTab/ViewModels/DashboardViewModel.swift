@@ -74,12 +74,7 @@ class DashboardViewModel {
     }
     
     
-    func getEquityValue(of snapshot: Snapshot) -> Double {
-        Self.logger.debug("getEquityValue(of snapshot)")
-        return equityValueCache[snapshot] ?? 0.0
-    }
-    
-    func getAssetValue(of snapshot: Snapshot) -> Double {
+    private func getAssetValue(of snapshot: Snapshot) -> Double {
         Self.logger.debug("getAssetValue(of snapshot)")
         if let assetValue = assetValueCache[snapshot] {
             return assetValue
@@ -90,7 +85,7 @@ class DashboardViewModel {
         }
     }
     
-    func getLiabilityValue(of snapshot: Snapshot) -> Double {
+    private func getLiabilityValue(of snapshot: Snapshot) -> Double {
         Self.logger.debug("getLiabilityValue(of snapshot)")
         if let liabilityValue = liabilityValueCache[snapshot] {
             return liabilityValue
@@ -99,6 +94,19 @@ class DashboardViewModel {
             liabilityValueCache[snapshot] = liabilityValue
             return liabilityValue
         }
+    }
+    
+    func getEquityValue(of snapshot: Snapshot) -> Double {
+        Self.logger.debug("getEquityValue(of snapshot)")
+        return equityValueCache[snapshot] ?? 0.0
+    }
+    
+    func getBalanceViewModel(for snapshot: Snapshot) -> BalanceViewModel {
+        BalanceViewModel(
+            assetValueString: LocalizedCurrencyFormatter.shared.string(from: getAssetValue(of: snapshot) as NSNumber) ?? "",
+            liabilityValueString: LocalizedCurrencyFormatter.shared.string(from: getLiabilityValue(of: snapshot) as NSNumber) ?? "",
+            equityValueString: LocalizedCurrencyFormatter.shared.string(from: getEquityValue(of: snapshot) as NSNumber) ?? ""
+        )
     }
     
     func initializeSelectedSnapshot() {
@@ -180,4 +188,10 @@ extension URL: Identifiable {
     public var id: String {
         absoluteString
     }
+}
+
+struct BalanceViewModel {
+    let assetValueString: String
+    let liabilityValueString: String
+    let equityValueString:String
 }

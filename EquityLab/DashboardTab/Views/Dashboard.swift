@@ -81,7 +81,7 @@ struct Dashboard: View {
                 switch viewModel.selectedSnapshotDetailView {
                 case .assetDetailView: assetDetailView
                 case .liabilityDetailView: liabilityDetailView
-                case .balanceDetailView: balanceDetailView
+                case .balanceDetailView: balanceDetailView(viewModel: viewModel.getBalanceViewModel(for: selectedSnapshot))
                 }
             } else {
                 Text("Please select a snapshot by taping on a data point in the equity section to display its details.")
@@ -95,7 +95,7 @@ struct Dashboard: View {
         }
     }
     
-    private var balanceDetailView: some View {
+    private func balanceDetailView(viewModel: BalanceViewModel) -> some View {
         VStack {
             Spacer()
             BalanceView(viewModel: viewModel)

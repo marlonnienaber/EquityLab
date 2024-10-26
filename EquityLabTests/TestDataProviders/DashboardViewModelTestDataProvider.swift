@@ -2,121 +2,75 @@
 import CoreData
 
 struct DashboardViewModelTestDataProvider {
-    func createAndPersistTestObjects_assetValue_1(using context: NSManagedObjectContext) -> Snapshot {
+    func createAndPersistTestObjects_getBalanceViewModel_1(using context: NSManagedObjectContext) -> Snapshot {
         let assetPositions: [AssetPosition] = []
         let liabilityPositions: [LiabilityPosition] = []
         let date: Date = .now
         return DataFactory.createSnapshot(with: assetPositions, and: liabilityPositions, for: date, in: context)
     }
     
-    func createAndPersistTestObjects_assetValue_2(using context: NSManagedObjectContext) -> Snapshot {
+    func createAndPersistTestObjects_getBalanceViewModel_2(using context: NSManagedObjectContext) -> Snapshot {
         let assetPosition1 = DataFactory.createAssetPosition(name: "Purse", poolName: "Cash", value: 0.0, context: context)
         let assetPosition2 = DataFactory.createAssetPosition(name: "Konto Sparkasse", poolName: "Bank", value: 0.0, context: context)
         let assetPosition3 = DataFactory.createAssetPosition(name: "Depot FNZ", poolName: "Securities", value: 0.0, context: context)
         
+        let liabilityPosition1 = DataFactory.createLiabilityPosition(name: "Car", poolName: "Private", value: 0.0, context: context)
+        let liabilityPosition2 = DataFactory.createLiabilityPosition(name: "Office Building", poolName: "Business", value: 0.0, context: context)
+        let liabilityPosition3 = DataFactory.createLiabilityPosition(name: "Server", poolName: "Business", value: 0.0, context: context)
+        
         let assetPositions: [AssetPosition] = [assetPosition1, assetPosition2, assetPosition3]
-        let liabilityPositions: [LiabilityPosition] = []
+        let liabilityPositions: [LiabilityPosition] = [liabilityPosition1,liabilityPosition2,liabilityPosition3]
         let date: Date = .now
         return DataFactory.createSnapshot(with: assetPositions, and: liabilityPositions, for: date, in: context)
     }
     
-    func createAndPersistTestObjects_assetValue_3(using context: NSManagedObjectContext) -> Snapshot {
+    func createAndPersistTestObjects_getBalanceViewModel_3(using context: NSManagedObjectContext) -> Snapshot {
         let assetPosition1 = DataFactory.createAssetPosition(name: "Purse", poolName: "Cash", value: 5.0, context: context)
         let assetPosition2 = DataFactory.createAssetPosition(name: "Piggy Bank", poolName: "Cash", value: 11.4, context: context)
         let assetPosition3 = DataFactory.createAssetPosition(name: "Konto Sparkasse", poolName: "Bank", value: 89.76, context: context)
         let assetPosition4 = DataFactory.createAssetPosition(name: "Konto Commerzbank", poolName: "Bank", value: 122.33, context: context)
         let assetPosition5 = DataFactory.createAssetPosition(name: "Depot FNZ", poolName: "Securities", value: 50.85, context: context)
         
-        let assetPositions: [AssetPosition] = [assetPosition1, assetPosition2, assetPosition3, assetPosition4, assetPosition5]
-        let liabilityPositions: [LiabilityPosition] = []
-        let date: Date = .now
-        return DataFactory.createSnapshot(with: assetPositions, and: liabilityPositions, for: date, in: context)
-    }
-    
-    func createAndPersistTestObjects_assetValue_4(using context: NSManagedObjectContext) -> Snapshot {
-        let assetPosition1 = DataFactory.createAssetPosition(name: "Purse", poolName: "Cash", value: 0.0, context: context)
-        let assetPosition2 = DataFactory.createAssetPosition(name: "Konto Sparkasse", poolName: "Bank", value: 10.0, context: context)
-        
-        let assetPositions: [AssetPosition] = [assetPosition1, assetPosition2]
-        let liabilityPositions: [LiabilityPosition] = []
-        let date: Date = .now
-        return DataFactory.createSnapshot(with: assetPositions, and: liabilityPositions, for: date, in: context)
-    }
-    
-    func createAndPersistTestObjects_assetValue_5(using context: NSManagedObjectContext) -> Snapshot {
-        let assetPosition1 = DataFactory.createAssetPosition(name: "Purse", poolName: "Cash", value: 0.0, context: context)
-        
-        let assetPositions: [AssetPosition] = [assetPosition1]
-        let liabilityPositions: [LiabilityPosition] = []
-        let date: Date = .now
-        return DataFactory.createSnapshot(with: assetPositions, and: liabilityPositions, for: date, in: context)
-    }
-    
-    func createAndPersistTestObjects_assetValue_6(using context: NSManagedObjectContext) -> Snapshot {
-        let assetPosition1 = DataFactory.createAssetPosition(name: "Purse", poolName: "Cash", value: 17.01, context: context)
-        
-        let assetPositions: [AssetPosition] = [assetPosition1]
-        let liabilityPositions: [LiabilityPosition] = []
-        let date: Date = .now
-        return DataFactory.createSnapshot(with: assetPositions, and: liabilityPositions, for: date, in: context)
-    }
-    
-    
-    
-    func createAndPersistTestObjects_liabilityValue_1(using context: NSManagedObjectContext) -> Snapshot {
-        let assetPositions: [AssetPosition] = []
-        let liabilityPositions: [LiabilityPosition] = []
-        let date: Date = .now
-        return DataFactory.createSnapshot(with: assetPositions, and: liabilityPositions, for: date, in: context)
-    }
-    
-    func createAndPersistTestObjects_liabilityValue_2(using context: NSManagedObjectContext) -> Snapshot {
-        let liabilityPosition1 = DataFactory.createLiabilityPosition(name: "Car", poolName: "Private", value: 0.0, context: context)
-        let liabilityPosition2 = DataFactory.createLiabilityPosition(name: "Office Building", poolName: "Business", value: 0.0, context: context)
-        let liabilityPosition3 = DataFactory.createLiabilityPosition(name: "Server", poolName: "Business", value: 0.0, context: context)
-        
-        let assetPositions: [AssetPosition] = []
-        let liabilityPositions: [LiabilityPosition] = [liabilityPosition1, liabilityPosition2, liabilityPosition3]
-        let date: Date = .now
-        return DataFactory.createSnapshot(with: assetPositions, and: liabilityPositions, for: date, in: context)
-    }
-    
-    func createAndPersistTestObjects_liabilityValue_3(using context: NSManagedObjectContext) -> Snapshot {
         let liabilityPosition1 = DataFactory.createLiabilityPosition(name: "Car", poolName: "Private", value: 5.0, context: context)
         let liabilityPosition2 = DataFactory.createLiabilityPosition(name: "DJ Equipment", poolName: "Private", value: 11.4, context: context)
         let liabilityPosition3 = DataFactory.createLiabilityPosition(name: "Office Building", poolName: "Business", value: 89.76, context: context)
         let liabilityPosition4 = DataFactory.createLiabilityPosition(name: "Server", poolName: "Business", value: 122.33, context: context)
         let liabilityPosition5 = DataFactory.createLiabilityPosition(name: "Production", poolName: "Business", value: 50.85, context: context)
         
-        let assetPositions: [AssetPosition] = []
+        let assetPositions: [AssetPosition] = [assetPosition1, assetPosition2, assetPosition3, assetPosition4, assetPosition5]
         let liabilityPositions: [LiabilityPosition] = [liabilityPosition1, liabilityPosition2, liabilityPosition3, liabilityPosition4, liabilityPosition5]
         let date: Date = .now
         return DataFactory.createSnapshot(with: assetPositions, and: liabilityPositions, for: date, in: context)
     }
     
-    func createAndPersistTestObjects_liabilityValue_4(using context: NSManagedObjectContext) -> Snapshot {
+    func createAndPersistTestObjects_getBalanceViewModel_4(using context: NSManagedObjectContext) -> Snapshot {
+        let assetPosition1 = DataFactory.createAssetPosition(name: "Purse", poolName: "Cash", value: 0.0, context: context)
+        let assetPosition2 = DataFactory.createAssetPosition(name: "Konto Sparkasse", poolName: "Bank", value: 10.0, context: context)
+        
         let liabilityPosition1 = DataFactory.createLiabilityPosition(name: "DJ Equipment", poolName: "Private", value: 0.0, context: context)
         let liabilityPosition2 = DataFactory.createLiabilityPosition(name: "Office Building", poolName: "Business", value: 10.0, context: context)
         
-        let assetPositions: [AssetPosition] = []
-        let liabilityPositions: [LiabilityPosition] = [liabilityPosition1, liabilityPosition2]
+        let assetPositions: [AssetPosition] = [assetPosition1, assetPosition2]
+        let liabilityPositions: [LiabilityPosition] = [liabilityPosition1,liabilityPosition2]
         let date: Date = .now
         return DataFactory.createSnapshot(with: assetPositions, and: liabilityPositions, for: date, in: context)
     }
     
-    func createAndPersistTestObjects_liabilityValue_5(using context: NSManagedObjectContext) -> Snapshot {
+    func createAndPersistTestObjects_getBalanceViewModel_5(using context: NSManagedObjectContext) -> Snapshot {
+        let assetPosition1 = DataFactory.createAssetPosition(name: "Purse", poolName: "Cash", value: 0.0, context: context)
         let liabilityPosition1 = DataFactory.createLiabilityPosition(name: "DJ Equipment", poolName: "Private", value: 0.0, context: context)
         
-        let assetPositions: [AssetPosition] = []
+        let assetPositions: [AssetPosition] = [assetPosition1]
         let liabilityPositions: [LiabilityPosition] = [liabilityPosition1]
         let date: Date = .now
         return DataFactory.createSnapshot(with: assetPositions, and: liabilityPositions, for: date, in: context)
     }
     
-    func createAndPersistTestObjects_liabilityValue_6(using context: NSManagedObjectContext) -> Snapshot {
+    func createAndPersistTestObjects_getBalanceViewModel_6(using context: NSManagedObjectContext) -> Snapshot {
+        let assetPosition1 = DataFactory.createAssetPosition(name: "Purse", poolName: "Cash", value: 17.01, context: context)
         let liabilityPosition1 = DataFactory.createLiabilityPosition(name: "Office Building", poolName: "Business", value: 17.01, context: context)
         
-        let assetPositions: [AssetPosition] = []
+        let assetPositions: [AssetPosition] = [assetPosition1]
         let liabilityPositions: [LiabilityPosition] = [liabilityPosition1]
         let date: Date = .now
         return DataFactory.createSnapshot(with: assetPositions, and: liabilityPositions, for: date, in: context)

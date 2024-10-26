@@ -17,114 +17,94 @@ final class DashboardViewModelTests: XCTestCase {
 
     
     
-    /// snapshot with no assetPositions
+    /// snapshot with no assetPositions/no liabilityPositions
     func test_assetValue_1() throws {
         let sut = DashboardViewModel(snapshotRepository: testingSnapshotRepository)
-        let testSnapshot = testDataProvider.createAndPersistTestObjects_assetValue_1(using: testingCoreDataStack.context)
-        let expectedResult = 0.0
-        let actualResult = sut.getAssetValue(of: testSnapshot)
-        XCTAssertEqual(expectedResult, actualResult)
+        let testSnapshot = testDataProvider.createAndPersistTestObjects_getBalanceViewModel_1(using: testingCoreDataStack.context)
+        let balanceViewModel = sut.getBalanceViewModel(for: testSnapshot)
+        
+        let expectedAssetValueString = LocalizedCurrencyFormatter.shared.string(from: 0.0)!
+        let actualAssetValueString = balanceViewModel.assetValueString
+        XCTAssertEqual(expectedAssetValueString, actualAssetValueString)
+        
+        let expectedLiabilityValueString = LocalizedCurrencyFormatter.shared.string(from: 0.0)!
+        let actualLiabilityValueString = balanceViewModel.liabilityValueString
+        XCTAssertEqual(expectedLiabilityValueString, actualLiabilityValueString)
     }
     
-    /// snapshot with 3 assetPosition of value 0.0
+    /// snapshot with 3 assetPosition and 3 liabilityPositions of value 0.0
     func test_assetValue_2() throws {
         let sut = DashboardViewModel(snapshotRepository: testingSnapshotRepository)
-        let testSnapshot = testDataProvider.createAndPersistTestObjects_assetValue_2(using: testingCoreDataStack.context)
-        let expectedResult = 0.0
-        let actualResult = sut.getAssetValue(of: testSnapshot)
-        XCTAssertEqual(expectedResult, actualResult)
+        let testSnapshot = testDataProvider.createAndPersistTestObjects_getBalanceViewModel_2(using: testingCoreDataStack.context)
+        let balanceViewModel = sut.getBalanceViewModel(for: testSnapshot)
+        
+        let expectedAssetValueString = LocalizedCurrencyFormatter.shared.string(from: 0.0)!
+        let actualAssetValueString = balanceViewModel.assetValueString
+        XCTAssertEqual(expectedAssetValueString, actualAssetValueString)
+        
+        let expectedLiabilityValueString = LocalizedCurrencyFormatter.shared.string(from: 0.0)!
+        let actualLiabilityValueString = balanceViewModel.liabilityValueString
+        XCTAssertEqual(expectedLiabilityValueString, actualLiabilityValueString)
     }
     
-    /// snapshot with 5 assetPosition of value > 0.0
+    /// snapshot with 5 assetPosition and 5 liabilityPositions of value > 0.0
     func test_assetValue_3() throws {
         let sut = DashboardViewModel(snapshotRepository: testingSnapshotRepository)
-        let testSnapshot = testDataProvider.createAndPersistTestObjects_assetValue_3(using: testingCoreDataStack.context)
-        let expectedResult = 279.34
-        let actualResult = sut.getAssetValue(of: testSnapshot)
-        XCTAssertEqual(expectedResult, actualResult)
+        let testSnapshot = testDataProvider.createAndPersistTestObjects_getBalanceViewModel_3(using: testingCoreDataStack.context)
+        let balanceViewModel = sut.getBalanceViewModel(for: testSnapshot)
+        
+        let expectedAssetValueString = LocalizedCurrencyFormatter.shared.string(from: 279.34)!
+        let actualAssetValueString = balanceViewModel.assetValueString
+        XCTAssertEqual(expectedAssetValueString, actualAssetValueString)
+        
+        let expectedLiabilityValueString = LocalizedCurrencyFormatter.shared.string(from: 279.34)!
+        let actualLiabilityValueString = balanceViewModel.liabilityValueString
+        XCTAssertEqual(expectedLiabilityValueString, actualLiabilityValueString)
     }
     
-    /// snapshot with 2 assetPositions (one with value 0.0 and one with value > 0.0)
+    /// snapshot with 2 assetPositions and 2 liabilityPositions(one with value 0.0 and one with value > 0.0)
     func test_assetValue_4() throws {
         let sut = DashboardViewModel(snapshotRepository: testingSnapshotRepository)
-        let testSnapshot = testDataProvider.createAndPersistTestObjects_assetValue_4(using: testingCoreDataStack.context)
-        let expectedResult = 10.0
-        let actualResult = sut.getAssetValue(of: testSnapshot)
-        XCTAssertEqual(expectedResult, actualResult)
+        let testSnapshot = testDataProvider.createAndPersistTestObjects_getBalanceViewModel_4(using: testingCoreDataStack.context)
+        let balanceViewModel = sut.getBalanceViewModel(for: testSnapshot)
+        
+        let expectedAssetValueString = LocalizedCurrencyFormatter.shared.string(from: 10.0)!
+        let actualAssetValueString = balanceViewModel.assetValueString
+        XCTAssertEqual(expectedAssetValueString, actualAssetValueString)
+        
+        let expectedLiabilityValueString = LocalizedCurrencyFormatter.shared.string(from: 10.0)!
+        let actualLiabilityValueString = balanceViewModel.liabilityValueString
+        XCTAssertEqual(expectedLiabilityValueString, actualLiabilityValueString)
     }
     
-    /// snapshot with 1 assetPositions of value 0.0
+    /// snapshot with 1 assetPositions and 1 liabilityPosition of value 0.0
     func test_assetValue_5() throws {
         let sut = DashboardViewModel(snapshotRepository: testingSnapshotRepository)
-        let testSnapshot = testDataProvider.createAndPersistTestObjects_assetValue_5(using: testingCoreDataStack.context)
-        let expectedResult = 0.0
-        let actualResult = sut.getAssetValue(of: testSnapshot)
-        XCTAssertEqual(expectedResult, actualResult)
+        let testSnapshot = testDataProvider.createAndPersistTestObjects_getBalanceViewModel_5(using: testingCoreDataStack.context)
+        let balanceViewModel = sut.getBalanceViewModel(for: testSnapshot)
+        
+        let expectedAssetValueString = LocalizedCurrencyFormatter.shared.string(from: 0.0)!
+        let actualAssetValueString = balanceViewModel.assetValueString
+        XCTAssertEqual(expectedAssetValueString, actualAssetValueString)
+        
+        let expectedLiabilityValueString = LocalizedCurrencyFormatter.shared.string(from: 0.0)!
+        let actualLiabilityValueString = balanceViewModel.liabilityValueString
+        XCTAssertEqual(expectedLiabilityValueString, actualLiabilityValueString)
     }
     
-    /// snapshot with 1 assetPositions of value > 0.0
+    /// snapshot with 1 assetPositions and liabilityPosition of value > 0.0
     func test_assetValue_6() throws {
         let sut = DashboardViewModel(snapshotRepository: testingSnapshotRepository)
-        let testSnapshot = testDataProvider.createAndPersistTestObjects_assetValue_6(using: testingCoreDataStack.context)
-        let expectedResult = 17.01
-        let actualResult = sut.getAssetValue(of: testSnapshot)
-        XCTAssertEqual(expectedResult, actualResult)
-    }
-    
-    
-    
-    /// snapshot with no liabilityPositions
-    func test_liabilityValue_1() throws {
-        let sut = DashboardViewModel(snapshotRepository: testingSnapshotRepository)
-        let testSnapshot = testDataProvider.createAndPersistTestObjects_liabilityValue_1(using: testingCoreDataStack.context)
-        let expectedResult = 0.0
-        let actualResult = sut.getLiabilityValue(of: testSnapshot)
-        XCTAssertEqual(expectedResult, actualResult)
-    }
-    
-    /// snapshot with 3 liabilityPositions of value 0.0
-    func test_liabilityValue_2() throws {
-        let sut = DashboardViewModel(snapshotRepository: testingSnapshotRepository)
-        let testSnapshot = testDataProvider.createAndPersistTestObjects_liabilityValue_2(using: testingCoreDataStack.context)
-        let expectedResult = 0.0
-        let actualResult = sut.getLiabilityValue(of: testSnapshot)
-        XCTAssertEqual(expectedResult, actualResult)
-    }
-    
-    /// snapshot with 5 liabilityPositions of value > 0.0
-    func test_liabilityValue_3() throws {
-        let sut = DashboardViewModel(snapshotRepository: testingSnapshotRepository)
-        let testSnapshot = testDataProvider.createAndPersistTestObjects_liabilityValue_3(using: testingCoreDataStack.context)
-        let expectedResult = 279.34
-        let actualResult = sut.getLiabilityValue(of: testSnapshot)
-        XCTAssertEqual(expectedResult, actualResult)
-    }
-    
-    /// snapshot with 2 liabilityPositions (one with value 0.0 and one with value > 0.0)
-    func test_liabilityValue_4() throws {
-        let sut = DashboardViewModel(snapshotRepository: testingSnapshotRepository)
-        let testSnapshot = testDataProvider.createAndPersistTestObjects_liabilityValue_4(using: testingCoreDataStack.context)
-        let expectedResult = 10.0
-        let actualResult = sut.getLiabilityValue(of: testSnapshot)
-        XCTAssertEqual(expectedResult, actualResult)
-    }
-    
-    /// snapshot with 1 liabilityPosition of value 0.0
-    func test_liabilityValue_5() throws {
-        let sut = DashboardViewModel(snapshotRepository: testingSnapshotRepository)
-        let testSnapshot = testDataProvider.createAndPersistTestObjects_liabilityValue_5(using: testingCoreDataStack.context)
-        let expectedResult = 0.0
-        let actualResult = sut.getLiabilityValue(of: testSnapshot)
-        XCTAssertEqual(expectedResult, actualResult)
-    }
-    
-    /// snapshot with 1 liabilityPosition of value > 0.0
-    func test_liabilityValue_6() throws {
-        let sut = DashboardViewModel(snapshotRepository: testingSnapshotRepository)
-        let testSnapshot = testDataProvider.createAndPersistTestObjects_liabilityValue_6(using: testingCoreDataStack.context)
-        let expectedResult = 17.01
-        let actualResult = sut.getLiabilityValue(of: testSnapshot)
-        XCTAssertEqual(expectedResult, actualResult)
+        let testSnapshot = testDataProvider.createAndPersistTestObjects_getBalanceViewModel_6(using: testingCoreDataStack.context)
+        let balanceViewModel = sut.getBalanceViewModel(for: testSnapshot)
+        
+        let expectedAssetValueString = LocalizedCurrencyFormatter.shared.string(from: 17.01)!
+        let actualAssetValueString = balanceViewModel.assetValueString
+        XCTAssertEqual(expectedAssetValueString, actualAssetValueString)
+        
+        let expectedLiabilityValueString = LocalizedCurrencyFormatter.shared.string(from: 17.01)!
+        let actualLiabilityValueString = balanceViewModel.liabilityValueString
+        XCTAssertEqual(expectedLiabilityValueString, actualLiabilityValueString)
     }
     
     
