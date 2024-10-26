@@ -159,4 +159,8 @@ struct Pool: Equatable, Hashable {
     static func == (lhs: Pool, rhs: Pool) -> Bool {
         lhs.name == rhs.name
     }
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(name)
+    }
 }
