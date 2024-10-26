@@ -1,9 +1,10 @@
 import CoreData
+import ObservableProperties
 
 class LiabilityRepository: NSObject {
     public static let production = LiabilityRepository(context: ProductionCoreDataStack.shared.context)
     private let fetchedResultsController: ObservingFetchedResultsController<LiabilityPool>
-    private var observers: [WeakLiabilityObserver]
+    @Publisher var liabilityPools: [LiabilityPool]
     
     init(context: NSManagedObjectContext) {
         let request = ObservingFetchRequest<LiabilityPool>(entityName: "LiabilityPool")
@@ -11,15 +12,11 @@ class LiabilityRepository: NSObject {
         request.observedRelationships = ["liabilities"]
         fetchedResultsController = .init(fetchRequest: request, managedObjectContext: context, sectionNameKeyPath: nil, cacheName: nil)
         try? fetchedResultsController.performFetch()
-        self.observers = []
+        self.liabilityPools = fetchedResultsController.fetchedObjects as? [LiabilityPool] ?? []
         super.init()
         fetchedResultsController.delegate = self
     }
     
-    func add(observer: LiabilityObserver) {
-        guard !observers.contains(where: { $0.observer === observer }) else { return }
-        observers.append(WeakLiabilityObserver(observer: observer))
-    }
     
     func fetchLiabilities() -> [Liability] {
         let liabilityFetchRequest = NSFetchRequest<Liability>(entityName: String(describing: "Liability"))
@@ -98,19 +95,6 @@ class LiabilityRepository: NSObject {
 
 extension LiabilityRepository: NSFetchedResultsControllerDelegate {
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-        observers = observers.filter { $0.observer.isNotNil }
-        observers.forEach{ $0.observer?.notifyAfterLiabilityUpdate()}
-    }
-}
-
-protocol LiabilityObserver: AnyObject {
-    /* TODO: will this create a retain cycle or other memory problems */
-    func notifyAfterLiabilityUpdate()
-}
-
-class WeakLiabilityObserver {
-    weak var observer: LiabilityObserver?
-    init(observer: LiabilityObserver?) {
-        self.observer = observer
+        liabilityPools = fetchedResultsController.fetchedObjects as? [LiabilityPool] ?? []
     }
 }

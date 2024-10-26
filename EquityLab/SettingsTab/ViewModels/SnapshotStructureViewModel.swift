@@ -43,13 +43,20 @@ class SnapshotStructureViewModel {
         assetRepository.$assetPools.registerObserver(self, keyPath: \.assetPools)
         assetRepository.$assetPools.onSetDo { [weak self] newAssetPools in
             guard let self else { return }
-            self.assetPoolToAssetsDictionary = [:]
+            assetPoolToAssetsDictionary = [:]
             for pool in newAssetPools {
                 assetPoolToAssetsDictionary[pool] = assetRepository.fetchAssets(for: pool)
             }
         }
         
-        self.liabilityPools = liabilityRepository.fetchLiabilityPools()
+        liabilityRepository.$liabilityPools.registerObserver(self, keyPath: \.liabilityPools)
+        liabilityRepository.$liabilityPools.onSetDo { [weak self] newLiabilityPools in
+            guard let self else { return }
+            liabilityPoolToLiabilitiesDictionary = [:]
+            for pool in liabilityPools {
+                liabilityPoolToLiabilitiesDictionary[pool] = liabilityRepository.fetchLiabilities(for: pool)
+            }
+        }
         
         for pool in assetPools {
             assetPoolToAssetsDictionary[pool] = assetRepository.fetchAssets(for: pool)
@@ -57,8 +64,6 @@ class SnapshotStructureViewModel {
         for pool in liabilityPools {
             liabilityPoolToLiabilitiesDictionary[pool] = liabilityRepository.fetchLiabilities(for: pool)
         }
-        
-        self.liabilityRepository.add(observer: self)
     }
     
     private var assetPoolWithSameNameExists: Bool {
@@ -127,17 +132,6 @@ class SnapshotStructureViewModel {
     func getLiabilitiesForLiabilityPool(_ pool: LiabilityPool) -> [Liability] {
         Self.logger.debug("getliabilitiesForLiabilityPool(_ pool)")
         return liabilityPoolToLiabilitiesDictionary[pool] ?? []
-    }
-}
-
-extension SnapshotStructureViewModel: LiabilityObserver {
-    func notifyAfterLiabilityUpdate() {
-        Self.logger.debug("notifyAfterLiabilityUpdate()")
-        self.liabilityPools = liabilityRepository.fetchLiabilityPools()
-        self.liabilityPoolToLiabilitiesDictionary = [:]
-        for pool in liabilityPools {
-            liabilityPoolToLiabilitiesDictionary[pool] = liabilityRepository.fetchLiabilities(for: pool)
-        }
     }
 }
 

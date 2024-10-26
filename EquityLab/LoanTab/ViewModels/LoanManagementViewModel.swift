@@ -27,10 +27,12 @@ class LoanManagementViewModel {
 
         assetRepository.$assetPools.onSetDo { [weak self] _ in
             guard let self else { return }
-            self.receivables = assetRepository.fetchReceivables()
+            receivables = assetRepository.fetchReceivables()
         }
-        
-        liabilityRepository.add(observer: self)
+        liabilityRepository.$liabilityPools.onSetDo { [weak self] _ in
+            guard let self else { return }
+            liabilities = liabilityRepository.fetchLiabilities()
+        }
     }
     
     func deleteReceivables(for indexSet: IndexSet) {
@@ -41,13 +43,6 @@ class LoanManagementViewModel {
     func deleteLiabilities(for indexSet: IndexSet) {
         Self.logger.debug("deleteLiabilities(for indexSet:)")
         indexSet.map{liabilities[$0]}.forEach{liabilityRepository.delete(liability: $0)}
-    }
-}
-
-extension LoanManagementViewModel: LiabilityObserver {
-    func notifyAfterLiabilityUpdate() {
-        Self.logger.debug("notifyAfterLiabilityUpdate()")
-        self.liabilities = liabilityRepository.fetchLiabilities()
     }
 }
 
