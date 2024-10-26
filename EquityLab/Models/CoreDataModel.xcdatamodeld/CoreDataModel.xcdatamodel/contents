@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="22758" systemVersion="23B92" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithSwiftData="YES" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="23231" systemVersion="23G93" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithSwiftData="YES" userDefinedModelVersionIdentifier="">
     <entity name="Asset" representedClassName="Asset" isAbstract="YES" syncable="YES">
         <attribute name="name" optional="YES" attributeType="String"/>
         <relationship name="pool" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="AssetPool" inverseName="assets" inverseEntity="AssetPool"/>
     </entity>
     <entity name="AssetPool" representedClassName="AssetPool" syncable="YES">
         <attribute name="name" optional="YES" attributeType="String"/>
-        <relationship name="assets" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Asset" inverseName="pool" inverseEntity="Asset"/>
+        <relationship name="assets" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Asset" inverseName="pool" inverseEntity="Asset"/>
     </entity>
     <entity name="AssetPosition" representedClassName="AssetPosition" parentEntity="Position" syncable="YES">
         <relationship name="snapshot" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Snapshot" inverseName="assets" inverseEntity="Snapshot"/>

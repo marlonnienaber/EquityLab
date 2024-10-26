@@ -31,6 +31,12 @@ class AssetRepository: NSObject {
         return (try? fetchedResultsController.managedObjectContext.fetch(assetFetchRequest)) ?? []
     }
     
+    func fetchReceivables() -> [Receivable] {
+        let receivableFetchRequest = NSFetchRequest<Receivable>(entityName: String(describing: "Receivable"))
+        receivableFetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Receivable.grantDate, ascending: true)]
+        return (try? fetchedResultsController.managedObjectContext.fetch(receivableFetchRequest)) ?? []
+    }
+    
     func fetchAssets(for pool: AssetPool) -> [Asset] {
         (try? fetchedResultsController.managedObjectContext.fetch(pool.getAssetRequest())) ?? []
     }
@@ -65,20 +71,23 @@ class AssetRepository: NSObject {
                           newDebtor: String,
                           newInitialAmount: Double,
                           newRepaidAmount: Double,
-                          newGrantDate: Date) {
+                          newGrantDate: Date,
+                          newPool: AssetPool) {
         let context = fetchedResultsController.managedObjectContext
         receivable.name = newName
         receivable.debtor = newDebtor
         receivable.initialAmount = newInitialAmount
         receivable.repaidAmount = newRepaidAmount
         receivable.grantDate = newGrantDate
+        receivable.pool = newPool
         try? context.save()
     }
     
-    func updatePossession(possession: Possession, newName: String, newIsVolatile: Bool) {
+    func updatePossession(possession: Possession, newName: String, newIsVolatile: Bool, newPool: AssetPool) {
         let context = fetchedResultsController.managedObjectContext
         possession.name = newName
         possession.volatile = newIsVolatile
+        possession.pool = newPool
         try? context.save()
     }
     
@@ -111,7 +120,7 @@ class AssetRepository: NSObject {
 
 extension AssetRepository: NSFetchedResultsControllerDelegate {
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-        observers = observers.filter { $0.observer != nil }
+        observers = observers.filter { $0.observer.isNotNil }
         observers.forEach{ $0.observer?.notifyAfterAssetUpdate()}
     }
 }

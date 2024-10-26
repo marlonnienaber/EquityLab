@@ -8,54 +8,6 @@ struct Dashboard: View {
     var body: some View {
         NavigationView {
             dashboardContent
-                .toolbar {
-                    ToolbarItem(placement: .navigationBarTrailing) {
-                        Menu {
-                            Button {
-                                Task {
-                                    await viewModel.serializeStateAndShowFileLocationPicker()
-                                }
-                            } label: {
-                                HStack {
-                                    Text("export data")
-                                    Image(systemName: "square.and.arrow.up")
-                                }
-                            }
-                            Button {
-                                viewModel.presentImportPathPickerSheet = true
-                            } label: {
-                                HStack {
-                                    Text("import data")
-                                    Image(systemName: "square.and.arrow.down")
-                                }
-                            }
-                        } label: {
-                            Image(systemName: "ellipsis.circle")
-                        }
-                    }
-                }
-                .sheet(item: $viewModel.temporaryBackupFileUrl) { url in
-                    ExportPathPicker(temporaryFileUrl: url)
-                }
-                .sheet(isPresented: $viewModel.presentImportPathPickerSheet) {
-                    ImportPathPicker { url in
-                        viewModel.deserializeJsonFile(at: url)
-                    }
-                }
-                .overlay {
-                    if viewModel.isSerializingState {
-                        VStack {
-                            ProgressView("Loading...")
-                                .progressViewStyle(CircularProgressViewStyle())
-                                .foregroundColor(.primary)
-                                .padding()
-                                .background(.primaryInverted)
-                                .cornerRadius(10)
-                        }
-                        .shadow(radius: 10)
-                        .transition(.opacity)
-                    }
-                }
                 .navigationTitle("Analytics")
         }
     }
@@ -129,7 +81,7 @@ struct Dashboard: View {
                 switch viewModel.selectedSnapshotDetailView {
                 case .assetDetailView: assetDetailView
                 case .liabilityDetailView: liabilityDetailView
-                case .balanceDetailView: balanceDetailView
+                case .balanceDetailView: balanceDetailView(viewModel: viewModel.getBalanceViewModel(for: selectedSnapshot))
                 }
             } else {
                 Text("Please select a snapshot by taping on a data point in the equity section to display its details.")
@@ -143,7 +95,7 @@ struct Dashboard: View {
         }
     }
     
-    private var balanceDetailView: some View {
+    private func balanceDetailView(viewModel: BalanceViewModel) -> some View {
         VStack {
             Spacer()
             BalanceView(viewModel: viewModel)
@@ -197,62 +149,5 @@ private struct PageViewGroupBoxStyle: GroupBoxStyle {
                 RoundedRectangle(cornerRadius: 8, style: .continuous)
                     .fill(Color(UIColor.secondarySystemBackground))
             )
-    }
-}
-
-struct ExportPathPicker: UIViewControllerRepresentable {
-    let temporaryFileUrl: URL
-    
-    func makeCoordinator() -> Coordinator {
-        Coordinator(temporaryFileUrl: temporaryFileUrl)
-    }
-    
-    func makeUIViewController(context: Context) -> UIDocumentPickerViewController {
-        let documentPicker = UIDocumentPickerViewController(forExporting: [temporaryFileUrl], asCopy: true)
-        documentPicker.delegate = context.coordinator
-        return documentPicker
-    }
-    
-    func updateUIViewController(_ uiViewController: UIDocumentPickerViewController, context: Context) {}
-    
-    class Coordinator: NSObject, UIDocumentPickerDelegate {
-        let temporaryFileUrl: URL
-        
-        init(temporaryFileUrl: URL) {
-            self.temporaryFileUrl = temporaryFileUrl
-        }
-        
-        func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
-            try? FileManager.default.removeItem(at: temporaryFileUrl)
-        }
-    }
-}
-
-struct ImportPathPicker: UIViewControllerRepresentable {
-    var onFilePicked: (URL) -> Void
-    
-    func makeCoordinator() -> Coordinator {
-        Coordinator(onFilePicked: onFilePicked)
-    }
-    
-    func makeUIViewController(context: Context) -> UIDocumentPickerViewController {
-        let picker = UIDocumentPickerViewController(forOpeningContentTypes: [.json], asCopy: true)
-        picker.delegate = context.coordinator
-        return picker
-    }
-    
-    func updateUIViewController(_ uiViewController: UIDocumentPickerViewController, context: Context) {}
-    
-    class Coordinator: NSObject, UIDocumentPickerDelegate {
-        var onFilePicked: (URL) -> Void
-        
-        init(onFilePicked: @escaping (URL) -> Void) {
-            self.onFilePicked = onFilePicked
-        }
-        
-        func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
-            guard let url = urls.first else { return }
-            onFilePicked(url)
-        }
     }
 }

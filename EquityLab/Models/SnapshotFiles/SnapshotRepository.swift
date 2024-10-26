@@ -1,6 +1,5 @@
 import CoreData
 
-/* TODO: create Protocol 'ObservableRepository' which generalizes the observer logic (currently there is duplicate code here and in AssetRepository */
 class SnapshotRepository: NSObject {
     public static let production = SnapshotRepository(context: ProductionCoreDataStack.shared.context)
     private let fetchedResultsController: ObservingFetchedResultsController<Snapshot>
@@ -53,7 +52,6 @@ class SnapshotRepository: NSObject {
     }
     
     func createSnapshot(with date: Date, _ assetProxies: [PositionProxy], and liabilityProxies: [PositionProxy]) {
-        /* TODO: only allow creation of date if snapshot with date does not exist already */
         let context = fetchedResultsController.managedObjectContext
         let snapshot = Snapshot(usedContext: context)
         snapshot.date = date.startOfDay
@@ -81,7 +79,6 @@ class SnapshotRepository: NSObject {
     }
     
     func updateSnapshot(_ snapshot: Snapshot, using date: Date, _ assetProxies: [PositionProxy], and liabilityProxies: [PositionProxy]) {
-        /* TODO: only allow updates of date if snapshot with date does not exist already */
         snapshot.date = date.startOfDay
         let assetPositions = fetchAssetPositions(of: snapshot)
         assetProxies.forEach { proxy in
@@ -101,13 +98,13 @@ class SnapshotRepository: NSObject {
 
 extension SnapshotRepository: NSFetchedResultsControllerDelegate {
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-        observers = observers.filter { $0.observer != nil }
+        observers = observers.filter { $0.observer.isNotNil }
         observers.forEach{ $0.observer?.notifyAfterSnapshotUpdate()}
     }
 }
 
 protocol SnapshotObserver: AnyObject {
-    /* TODO: will this create a retain cycle or other memory problems */
+    /* TODO: will this create a retain cycle or other memory problems? */
     func notifyAfterSnapshotUpdate()
 }
 

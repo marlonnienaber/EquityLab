@@ -43,6 +43,9 @@ class DistributionChartViewModel {
         }
         return categories
     }
+    var noValuesRecordedForThisSnapshot: Bool {
+        distributionCategories.first(where: { $0.value > 0.0 }) == nil
+    }
 
     
     init(

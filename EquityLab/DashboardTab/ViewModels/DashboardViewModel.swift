@@ -7,8 +7,6 @@ class DashboardViewModel {
     @ObservationIgnored private static let logger = Logger(subsystem: .dashboardTab, component: .dashboardViewModel)
     
     @ObservationIgnored private var snapshotRepository: SnapshotRepository
-    @ObservationIgnored private var assetRepository: AssetRepository
-    @ObservationIgnored private var liabilityRepository: LiabilityRepository
     @ObservationIgnored private let snapshotAnalyzer: SnapshotAnalyzer
     @ObservationIgnored private var equityValueCache = [Snapshot:Double]()
     @ObservationIgnored private var assetValueCache = [Snapshot:Double]()
@@ -28,13 +26,13 @@ class DashboardViewModel {
         switch selectedTimeHorizon {
         case .threeMonths:
             let threeMonthsAgo = calendar.date(byAdding: .month, value: -3, to: today)!
-            return snapshots.filter{ $0.date != nil }.filter{ $0.date! >= threeMonthsAgo }
+            return snapshots.filter{ $0.date.isNotNil }.filter{ $0.date! >= threeMonthsAgo }
         case .sixMonths:
             let sixMonthsAgo = calendar.date(byAdding: .month, value: -6, to: today)!
-            return snapshots.filter{ $0.date != nil }.filter{ $0.date! >= sixMonthsAgo }
+            return snapshots.filter{ $0.date.isNotNil }.filter{ $0.date! >= sixMonthsAgo }
         case .eighteenMonths:
             let eighteenMonthsAgo = calendar.date(byAdding: .month, value: -18, to: today)!
-            return snapshots.filter{ $0.date != nil }.filter{ $0.date! >= eighteenMonthsAgo }
+            return snapshots.filter{ $0.date.isNotNil }.filter{ $0.date! >= eighteenMonthsAgo }
         case .all:
             return snapshots
         }
@@ -46,7 +44,7 @@ class DashboardViewModel {
         set {
             if let newValue {
                 selectedSnapshot = snapshots.filter { snapshot in
-                    snapshot.date != nil
+                    snapshot.date.isNotNil
                 }.min{ firstSnapshot, secondSnapshot in
                     firstSnapshot.date!.isCloser(to: newValue, than: secondSnapshot.date!)
                 }
@@ -61,20 +59,11 @@ class DashboardViewModel {
     var selectedTimeHorizon: TimeHorizon = .all
     var selectedSnapshotDetailView: SnapshotDetailView = .balanceDetailView
     var selectedDetailPage: DetailPage = .changeDetailPage
-    var temporaryBackupFileUrl: URL?
-    var isSerializingState = false
-    var presentImportPathPickerSheet = false
     
     
-    init(
-        snapshotRepository: SnapshotRepository = .production,
-        assetRepository: AssetRepository = .production,
-        liabilityRepository: LiabilityRepository = .production
-    ) {
+    init(snapshotRepository: SnapshotRepository = .production) {
         Self.logger.debug("DashboardViewModel()")
         self.snapshotRepository = snapshotRepository
-        self.assetRepository = assetRepository
-        self.liabilityRepository = liabilityRepository
         self.snapshotAnalyzer = SnapshotAnalyzer(repository: snapshotRepository)
         self.snapshotRepository.add(observer: self)
         self.snapshots = snapshotRepository.fetchSnapshots()
@@ -85,12 +74,7 @@ class DashboardViewModel {
     }
     
     
-    func getEquityValue(of snapshot: Snapshot) -> Double {
-        Self.logger.debug("getEquityValue(of snapshot)")
-        return equityValueCache[snapshot] ?? 0.0
-    }
-    
-    func getAssetValue(of snapshot: Snapshot) -> Double {
+    private func getAssetValue(of snapshot: Snapshot) -> Double {
         Self.logger.debug("getAssetValue(of snapshot)")
         if let assetValue = assetValueCache[snapshot] {
             return assetValue
@@ -101,7 +85,7 @@ class DashboardViewModel {
         }
     }
     
-    func getLiabilityValue(of snapshot: Snapshot) -> Double {
+    private func getLiabilityValue(of snapshot: Snapshot) -> Double {
         Self.logger.debug("getLiabilityValue(of snapshot)")
         if let liabilityValue = liabilityValueCache[snapshot] {
             return liabilityValue
@@ -110,6 +94,19 @@ class DashboardViewModel {
             liabilityValueCache[snapshot] = liabilityValue
             return liabilityValue
         }
+    }
+    
+    func getEquityValue(of snapshot: Snapshot) -> Double {
+        Self.logger.debug("getEquityValue(of snapshot)")
+        return equityValueCache[snapshot] ?? 0.0
+    }
+    
+    func getBalanceViewModel(for snapshot: Snapshot) -> BalanceViewModel {
+        BalanceViewModel(
+            assetValueString: LocalizedCurrencyFormatter.shared.string(from: getAssetValue(of: snapshot) as NSNumber) ?? "",
+            liabilityValueString: LocalizedCurrencyFormatter.shared.string(from: getLiabilityValue(of: snapshot) as NSNumber) ?? "",
+            equityValueString: LocalizedCurrencyFormatter.shared.string(from: getEquityValue(of: snapshot) as NSNumber) ?? ""
+        )
     }
     
     func initializeSelectedSnapshot() {
@@ -132,61 +129,6 @@ class DashboardViewModel {
                 array.map { $0.value }.reduce(0, +)
             }
         }
-    }
-    
-    func serializeStateAndShowFileLocationPicker() async {
-        Self.logger.debug("serializeStateAndShowFileLocationPicker()")
-        await MainActor.run {
-            isSerializingState = true
-        }
-        do {
-            /* TODO: parallelize fetches */
-            let snapshots = snapshotRepository.fetchSnapshots()
-            let liabilityPools = liabilityRepository.fetchLiabilityPools()
-            let assetPools = assetRepository.fetchAssetPools()
-            let jsonBackup = JsonBackup(snapshots: snapshots, liabilityPools: liabilityPools, assetPools: assetPools)
-            let encoder = JSONEncoder()
-            encoder.outputFormatting = .prettyPrinted
-            let jsonData = try encoder.encode(jsonBackup)
-            
-            let formatter = DateFormatter()
-            formatter.dateFormat = "dd-MM-yyyy|HH-mm"
-            let timestamp = formatter.string(from: Date())
-            let fileName = "\(timestamp).json"
-            
-            let temporaryDirectory = FileManager.default.temporaryDirectory
-            let temporaryFileURL = temporaryDirectory.appendingPathComponent(fileName)
-            try jsonData.write(to: temporaryFileURL)
-            
-            await MainActor.run {
-                self.isSerializingState = false
-                self.temporaryBackupFileUrl = temporaryFileURL
-            }
-        } catch {
-            await MainActor.run {
-                self.isSerializingState = false
-                /* TODO: handle */
-            }
-        }
-    }
-    
-    func deserializeJsonFile(at url: URL) {
-        Self.logger.debug("deserializeJsonFile(at url)")
-        let context = ProductionCoreDataStack.shared.context
-        
-        let entityTypes = [Snapshot.self,Position.self,AssetPool.self, Asset.self,LiabilityPool.self,Liability.self]
-        for entityType in entityTypes {
-            let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: String(describing: entityType))
-            let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
-            guard let _ = try? context.execute(deleteRequest) else { return }
-        }
-        guard let _ = try? context.save() else { return }
-        
-
-        guard let data = try? Data(contentsOf: url), !data.isEmpty else { return }
-        let decoder = JSONDecoder()
-        guard let _ = try? decoder.decode(JsonBackup.self, from: data) else { return }
-        try? context.save()
     }
 }
 
@@ -246,4 +188,10 @@ extension URL: Identifiable {
     public var id: String {
         absoluteString
     }
+}
+
+struct BalanceViewModel {
+    let assetValueString: String
+    let liabilityValueString: String
+    let equityValueString:String
 }

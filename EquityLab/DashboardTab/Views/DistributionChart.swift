@@ -5,19 +5,24 @@ struct DistributionChart: View {
     @State var viewModel: DistributionChartViewModel
     
     var body: some View {
-        /* TODO: handle selected snapshot with pools -> no categories */
-        /* TODO: positioning should not break if selectedCategory == nil */
-        GeometryReader { geometry in
-            HStack(spacing: 0) {
-                chart(geometry)
-                    .distributionChartPositioning(for: geometry)
-                verticalSeperator(for: geometry)
-                if let selectedCategory = viewModel.selectedCategory {
-                    selectedCategoryDetails(selectedCategory: selectedCategory)
-                        .selectedCategoryDetailsPositioning()
+        if viewModel.noValuesRecordedForThisSnapshot {
+            Text("no positions with positive values were recorded with this snapshot")
+                .multilineTextAlignment(.center)
+        } else {
+            GeometryReader { geometry in
+                HStack(spacing: 0) {
+                    chart(geometry)
+                        .distributionChartPositioning(for: geometry)
+                    verticalSeperator(for: geometry)
+                    if let selectedCategory = viewModel.selectedCategory {
+                        selectedCategoryDetails(selectedCategory: selectedCategory)
+                            .selectedCategoryDetailsPositioning()
+                    } else {
+                        Spacer()
+                    }
                 }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
     }
     

@@ -1,6 +1,5 @@
 import Foundation
 
-/* TODO: test */
 struct SnapshotAnalyzer {
     private let repository: SnapshotRepository
     

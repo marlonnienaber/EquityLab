@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct BalanceView: View {
-    var viewModel: DashboardViewModel
+    let viewModel: BalanceViewModel
     
     var body: some View {
         VStack(spacing: 8) {
@@ -25,10 +25,7 @@ struct BalanceView: View {
             Image(systemName: "plus.circle")
             Text("Assets")
             Spacer()
-            //TODO: actually selectedSnapshot should never be nil if BalanceView is shown. It may make sense to decouple the viewModels of the snapshotDetailSection from the DashboardViewModel and show a noSnapshotSelectedView in the Dashboard whenever no snapshot is selected. This would make this unnecessary check obsolete
-            if let selectedSnapshot = viewModel.selectedSnapshot, let assetValueString = LocalizedCurrencyFormatter.shared.string(from: viewModel.getAssetValue(of: selectedSnapshot) as NSNumber) {
-                Text(assetValueString)
-            }
+            Text(viewModel.assetValueString)
         }
     }
     
@@ -37,10 +34,7 @@ struct BalanceView: View {
             Image(systemName: "minus.circle")
             Text("Liabilities")
             Spacer()
-            //TODO: see first TODO
-            if let selectedSnapshot = viewModel.selectedSnapshot, let liabilityValueString = LocalizedCurrencyFormatter.shared.string(from: viewModel.getLiabilityValue(of: selectedSnapshot) as NSNumber) {
-                Text(liabilityValueString)
-            }
+            Text(viewModel.liabilityValueString)
         }
     }
     
@@ -49,10 +43,7 @@ struct BalanceView: View {
             Image(systemName: "equal.square")
             Text("Equity")
             Spacer()
-            //TODO: see first TODO
-            if let selectedSnapshot = viewModel.selectedSnapshot, let equityValueString = LocalizedCurrencyFormatter.shared.string(from: viewModel.getEquityValue(of: selectedSnapshot) as NSNumber) {
-                Text(equityValueString)
-            }
+            Text(viewModel.equityValueString)
         }
     }
 }

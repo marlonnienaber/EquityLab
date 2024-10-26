@@ -6,35 +6,40 @@ struct ChangenChart: View {
     @State var viewModel: ChangeChartViewModel
     
     var body: some View {
-        Chart {
-            ForEach(viewModel.changeCategories) { category in
-                BarMark(
-                    x: .value("category", category.name),
-                    y: .value("value", category.change)
-                )
-                .annotation(position: .bottom) {
-                    Text(category.change == 0 ? "" :  String(format: "%.1f", category.change) + "%")
-                        .font(.caption)
+        if viewModel.noChangesToLastSnapshot {
+            Text("there were no changes compared to the last snapshot")
+                .multilineTextAlignment(.center)
+        } else {
+            Chart {
+                ForEach(viewModel.changeCategories) { category in
+                    BarMark(
+                        x: .value("category", category.name),
+                        y: .value("value", category.change)
+                    )
+                    .annotation(position: .bottom) {
+                        Text(category.change == 0 ? "" :  String(format: "%.1f", category.change) + "%")
+                            .font(.caption)
+                    }
+                    .foregroundStyle(viewModel.changeChartColor)
+                    .cornerRadius(5)
                 }
-                .foregroundStyle(viewModel.changeChartColor)
-                .cornerRadius(5)
             }
-        }
-        .chartYAxis{
-            AxisMarks(values: [0]) { _ in
-                AxisGridLine()
+            .chartYAxis{
+                AxisMarks(values: [0]) { _ in
+                    AxisGridLine()
+                }
             }
-        }
-        .chartXAxis{
-            AxisMarks{
-                AxisValueLabel()
+            .chartXAxis{
+                AxisMarks{
+                    AxisValueLabel()
+                }
             }
-        }
-        .chartYScale(domain: [
+            .chartYScale(domain: [
                 -viewModel.maxChangePercentage - 11,
                  viewModel.maxChangePercentage + 11
             ]
-        )
-        .animation(.easeInOut(duration: 0.5))
+            )
+            .animation(.easeInOut(duration: 0.5))
+        }
     }
 }

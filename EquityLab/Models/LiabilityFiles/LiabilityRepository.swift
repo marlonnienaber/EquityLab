@@ -23,6 +23,7 @@ class LiabilityRepository: NSObject {
     
     func fetchLiabilities() -> [Liability] {
         let liabilityFetchRequest = NSFetchRequest<Liability>(entityName: String(describing: "Liability"))
+        liabilityFetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Liability.grantDate, ascending: true)]
         return (try? fetchedResultsController.managedObjectContext.fetch(liabilityFetchRequest)) ?? []
     }
     
@@ -82,20 +83,22 @@ class LiabilityRepository: NSObject {
                          newCreditor: String,
                          newInitialAmount: Double,
                          newRepaidAmount: Double,
-                         newGrantDate: Date) {
+                         newGrantDate: Date,
+                         newPool: LiabilityPool) {
         let context = fetchedResultsController.managedObjectContext
         liability.grantDate = newGrantDate.startOfDay
         liability.creditor = newCreditor
         liability.initialAmount = newInitialAmount
         liability.repaidAmount = newRepaidAmount
         liability.name = newName
+        liability.pool = newPool
         try? context.save()
     }
 }
 
 extension LiabilityRepository: NSFetchedResultsControllerDelegate {
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-        observers = observers.filter { $0.observer != nil }
+        observers = observers.filter { $0.observer.isNotNil }
         observers.forEach{ $0.observer?.notifyAfterLiabilityUpdate()}
     }
 }

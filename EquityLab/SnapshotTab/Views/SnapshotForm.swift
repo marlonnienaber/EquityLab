@@ -11,6 +11,7 @@ struct SnapshotForm: View {
                 assetSection
                 liabilitySection
             }
+            .navigationTitle("new Snapshot")
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button("Cancel"){
@@ -19,12 +20,21 @@ struct SnapshotForm: View {
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button("Save") {
-                        viewModel.saveSnapshot()
-                        viewModel.dismissSheet()
+                        do {
+                            try viewModel.saveSnapshot()
+                            viewModel.dismissSheet()
+                        } catch let error as SnapshotValidationError {
+                            viewModel.snapshotValidationError = error
+                            viewModel.showValidationErrorAlert = true
+                        } catch {}
                     }
                 }
             }
-            .navigationTitle("new Snapshot")
+            .alert(isPresented: $viewModel.showValidationErrorAlert, error: viewModel.snapshotValidationError) { _ in
+                Button("OK", role: .cancel) {
+                    viewModel.snapshotValidationError = nil
+                }
+            } message: { _ in }
         }
     }
     

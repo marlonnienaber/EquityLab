@@ -2,21 +2,21 @@ import SwiftUI
 
 @main
 struct EquityLabApp: App {
-    /* TODO: search for divisions and check whether division by zero is treated sufficiently */
+    /* TODO: exchange callback logic with binding logic for all repositories */
     var body: some Scene {
         WindowGroup {
             TabView {
                 Dashboard().tabItem{
                     Image(systemName: "chart.bar.xaxis")
                 }
-                AssetLedger().tabItem {
-                    Image(systemName: "dollarsign.circle")
-                }
-                LiabilityLedger().tabItem {
-                    Image(systemName: "person.line.dotted.person.fill")
-                }
                 SnapshotLedger().tabItem {
                     Image(systemName: "camera.aperture")
+                }
+                LoanManagementView().tabItem {
+                    Image(systemName: "person.line.dotted.person.fill")
+                }
+                SettingsView().tabItem {
+                    Image(systemName: "gear")
                 }
             }
         }

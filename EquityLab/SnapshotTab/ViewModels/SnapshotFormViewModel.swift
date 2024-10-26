@@ -10,6 +10,8 @@ class SnapshotFormViewModel {
     let liabilityPoolNames: [String]
     var assetProxies: [PositionProxy]
     var liabilityProxies: [PositionProxy]
+    var snapshotValidationError: SnapshotValidationError?
+    var showValidationErrorAlert = false
     let dismissSheet: () -> ()
     
     init(
@@ -87,21 +89,35 @@ class SnapshotFormViewModel {
         return (assetProxies,liabilityProxies)
     }
     
-    private func createSnapshot() {
-        snapshotRepository.createSnapshot(with: date, assetProxies, and: liabilityProxies)
+    private var snapshotWithSameDateDoesExist: Bool {
+        let snapshots = snapshotRepository.fetchSnapshots()
+        return snapshots.contains(where: { $0.date == date.startOfDay && $0 != snapshot })
     }
     
-    private func updateSnapshot() {
-        if let snapshot {
-            snapshotRepository.updateSnapshot(snapshot, using: date, assetProxies, and: liabilityProxies)
+    private func validateSnapshot() throws {
+        if snapshotWithSameDateDoesExist {
+            throw SnapshotValidationError.sameDateAlreadyExists
         }
     }
     
-    func saveSnapshot() {
-        if snapshot != nil {
-            updateSnapshot()
+    private func createSnapshot() throws {
+        try validateSnapshot()
+        snapshotRepository.createSnapshot(with: date, assetProxies, and: liabilityProxies)
+    }
+    
+    private func updateSnapshot() throws {
+        guard let snapshot else { return }
+        try validateSnapshot()
+        snapshotRepository.updateSnapshot(snapshot, using: date, assetProxies, and: liabilityProxies)
+    }
+    
+    
+    
+    func saveSnapshot() throws {
+        if snapshot.isNotNil {
+            try updateSnapshot()
         } else {
-            createSnapshot()
+            try createSnapshot()
         }
     }
     
@@ -127,5 +143,12 @@ class PositionProxy: Equatable {
     
     static func == (lhs: PositionProxy, rhs: PositionProxy) -> Bool {
         lhs.name == rhs.name && lhs.value == rhs.value && lhs.poolName == rhs.poolName
+    }
+}
+
+enum SnapshotValidationError: String, LocalizedError {
+    case sameDateAlreadyExists = "A snapshot of this day was already taken!"
+    var errorDescription: String? {
+        return self.rawValue
     }
 }
