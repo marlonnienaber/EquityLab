@@ -193,6 +193,6 @@ enum PossessionValidationError: String, LocalizedError {
     case noAssetPoolSelected = "No asset pool was chosen!"
     case sameNameAlreadyExists = "An asset with the same name already exists!"
     var errorDescription: String? {
-        return self.rawValue
+        self.rawValue
     }
 }

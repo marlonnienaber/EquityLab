@@ -7,6 +7,7 @@ extension Array where Element: UIColor {
         case 0: return first ?? .clear
         case 1: return last ?? .clear
         default:
+            guard count > 1 else { return first ?? .clear }
             let approxIndex = percentage / (1 / CGFloat(count - 1))
             let firstIndex = Int(approxIndex.rounded(.down))
             let secondIndex = Int(approxIndex.rounded(.up))

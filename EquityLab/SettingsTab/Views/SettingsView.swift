@@ -1,4 +1,5 @@
 import SwiftUI
+import AlertToast
 
 struct SettingsView: View {
     @State var viewModel = SettingsViewModel()
@@ -16,26 +17,21 @@ struct SettingsView: View {
             }
             .navigationTitle("Settings")
             .sheet(item: $viewModel.temporaryBackupFileUrl) { url in
-                ExportPathPicker(temporaryFileUrl: url)
+                ExportPathPicker(viewModel: viewModel, temporaryFileUrl: url)
             }
             .sheet(isPresented: $viewModel.presentImportPathPickerSheet) {
                 ImportPathPicker { url in
                     viewModel.deserializeJsonFile(at: url)
                 }
             }
-            .overlay {
-                if viewModel.isSerializingState {
-                    VStack {
-                        ProgressView("Loading...")
-                            .progressViewStyle(CircularProgressViewStyle())
-                            .foregroundColor(.primary)
-                            .padding()
-                            .background(.primaryInverted)
-                            .cornerRadius(10)
-                    }
-                    .shadow(radius: 10)
-                    .transition(.opacity)
-                }
+            .toast(isPresenting: $viewModel.isSerializingState) {
+                AlertToast(type: .loading, title: "exporting...")
+            }
+            .toast(isPresenting: $viewModel.operationSucceeded, tapToDismiss: false) {
+                AlertToast(type: .complete(.green), title: "success!", subTitle: viewModel.operationSuccessDescription)
+            }
+            .toast(isPresenting: $viewModel.operationFailed, tapToDismiss: false) {
+                AlertToast(type: .error(.red), title: "error!", subTitle: viewModel.operationFailedDescription)
             }
         }
     }
@@ -79,10 +75,11 @@ struct SettingsView: View {
 }
 
 struct ExportPathPicker: UIViewControllerRepresentable {
+    let viewModel: SettingsViewModel
     let temporaryFileUrl: URL
     
     func makeCoordinator() -> Coordinator {
-        Coordinator(temporaryFileUrl: temporaryFileUrl)
+        Coordinator(viewModel: viewModel, temporaryFileUrl: temporaryFileUrl)
     }
     
     func makeUIViewController(context: Context) -> UIDocumentPickerViewController {
@@ -94,14 +91,18 @@ struct ExportPathPicker: UIViewControllerRepresentable {
     func updateUIViewController(_ uiViewController: UIDocumentPickerViewController, context: Context) {}
     
     class Coordinator: NSObject, UIDocumentPickerDelegate {
+        let viewModel: SettingsViewModel
         let temporaryFileUrl: URL
         
-        init(temporaryFileUrl: URL) {
+        init(viewModel: SettingsViewModel, temporaryFileUrl: URL) {
+            self.viewModel = viewModel
             self.temporaryFileUrl = temporaryFileUrl
         }
         
         func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
             try? FileManager.default.removeItem(at: temporaryFileUrl)
+            viewModel.operationSucceeded = true
+            viewModel.operationSuccessDescription = "data were exported to the picked location"
         }
     }
 }

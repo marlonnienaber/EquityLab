@@ -10,6 +10,10 @@ class SettingsViewModel {
     @ObservationIgnored private var assetRepository: AssetRepository
     @ObservationIgnored private var liabilityRepository: LiabilityRepository
     var isSerializingState = false
+    var operationFailed = false
+    var operationSucceeded = false
+    var operationSuccessDescription = ""
+    var operationFailedDescription = ""
     var temporaryBackupFileUrl: URL?
     var presentImportPathPickerSheet = false
     
@@ -42,39 +46,51 @@ class SettingsViewModel {
             formatter.dateFormat = "dd-MM-yyyy|HH-mm"
             let timestamp = formatter.string(from: Date())
             let fileName = "\(timestamp).json"
-            
             let temporaryDirectory = FileManager.default.temporaryDirectory
             let temporaryFileURL = temporaryDirectory.appendingPathComponent(fileName)
             try jsonData.write(to: temporaryFileURL)
-            
             await MainActor.run {
                 self.isSerializingState = false
                 self.temporaryBackupFileUrl = temporaryFileURL
             }
-        } catch {
+        } catch let error {
             await MainActor.run {
                 self.isSerializingState = false
-                /* TODO: handle */
+                self.operationFailedDescription = error.localizedDescription
+                self.operationFailed = true
             }
         }
     }
     
     func deserializeJsonFile(at url: URL) {
         Self.logger.debug("deserializeJsonFile(at url)")
-        let context = ProductionCoreDataStack.shared.context
-        
-        let entityTypes = [Snapshot.self,Position.self,AssetPool.self, Asset.self,LiabilityPool.self,Liability.self]
-        for entityType in entityTypes {
-            let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: String(describing: entityType))
-            let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
-            guard let _ = try? context.execute(deleteRequest) else { return }
+        do {
+            let context = ProductionCoreDataStack.shared.context
+            
+            let entityTypes = [Snapshot.self,Position.self,AssetPool.self, Asset.self,LiabilityPool.self,Liability.self]
+            for entityType in entityTypes {
+                let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: String(describing: entityType))
+                let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
+                guard let _ = try? context.execute(deleteRequest) else { return }
+            }
+            try context.save()
+            
+            let data = try Data(contentsOf: url)
+            guard !data.isEmpty else { throw EmptyDataError() }
+            let decoder = JSONDecoder()
+            let _  = try decoder.decode(JsonBackup.self, from: data)
+            try context.save()
+            operationSuccessDescription = "The data from the selected file were imported"
+            operationSucceeded = true
+        } catch let error {
+            operationFailedDescription = error.localizedDescription
+            operationFailed = true
         }
-        guard let _ = try? context.save() else { return }
-        
+    }
+}
 
-        guard let data = try? Data(contentsOf: url), !data.isEmpty else { return }
-        let decoder = JSONDecoder()
-        guard let _ = try? decoder.decode(JsonBackup.self, from: data) else { return }
-        try? context.save()
+struct EmptyDataError: LocalizedError {
+    var errorDescription: String? {
+        "The imported file does not contain any data"
     }
 }
