@@ -21,12 +21,12 @@
 		73037F722CC59414005DD105 /* SettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73037F712CC5940E005DD105 /* SettingsViewModel.swift */; };
 		7314FD6F2C7510E100483835 /* TestingCoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7314FD6E2C7510E100483835 /* TestingCoreDataStack.swift */; };
 		732588562CCD03BB002031CF /* AlertToast in Frameworks */ = {isa = PBXBuildFile; productRef = 732588552CCD03BB002031CF /* AlertToast */; };
+		732588592CCD3839002031CF /* ObservableProperties in Frameworks */ = {isa = PBXBuildFile; productRef = 732588582CCD3839002031CF /* ObservableProperties */; };
 		73332B962CC67E860020839D /* LoanManagementViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73332B952CC67E7D0020839D /* LoanManagementViewModelTests.swift */; };
 		73332B982CC67EA70020839D /* LoanManagementViewModelTestDataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73332B972CC67E980020839D /* LoanManagementViewModelTestDataProvider.swift */; };
 		733473872C8DEC950050C656 /* DistributionChartViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 733473862C8DEC950050C656 /* DistributionChartViewModelTests.swift */; };
 		7342ED272C44750200BA20A4 /* EquityLabApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7342ED262C44750200BA20A4 /* EquityLabApp.swift */; };
 		7342ED2B2C44750300BA20A4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7342ED2A2C44750300BA20A4 /* Assets.xcassets */; };
-		7342ED2E2C44750300BA20A4 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7342ED2D2C44750300BA20A4 /* Preview Assets.xcassets */; };
 		7342ED4F2C44789A00BA20A4 /* LiabilityPool+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7342ED4B2C44789A00BA20A4 /* LiabilityPool+CoreDataClass.swift */; };
 		7342ED502C44789A00BA20A4 /* LiabilityPool+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7342ED4C2C44789A00BA20A4 /* LiabilityPool+CoreDataProperties.swift */; };
 		7342ED512C44789A00BA20A4 /* Liability+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7342ED4D2C44789A00BA20A4 /* Liability+CoreDataClass.swift */; };
@@ -127,7 +127,6 @@
 		7342ED232C44750200BA20A4 /* EquityLab.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EquityLab.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7342ED262C44750200BA20A4 /* EquityLabApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EquityLabApp.swift; sourceTree = "<group>"; };
 		7342ED2A2C44750300BA20A4 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		7342ED2D2C44750300BA20A4 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		7342ED4B2C44789A00BA20A4 /* LiabilityPool+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LiabilityPool+CoreDataClass.swift"; sourceTree = SOURCE_ROOT; };
 		7342ED4C2C44789A00BA20A4 /* LiabilityPool+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LiabilityPool+CoreDataProperties.swift"; sourceTree = SOURCE_ROOT; };
 		7342ED4D2C44789A00BA20A4 /* Liability+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Liability+CoreDataClass.swift"; sourceTree = SOURCE_ROOT; };
@@ -209,6 +208,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				732588592CCD3839002031CF /* ObservableProperties in Frameworks */,
 				732588562CCD03BB002031CF /* AlertToast in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -312,17 +312,8 @@
 				7342ED342C44754E00BA20A4 /* Models */,
 				7342ED752C447BA300BA20A4 /* Utility */,
 				7342ED2A2C44750300BA20A4 /* Assets.xcassets */,
-				7342ED2C2C44750300BA20A4 /* Preview Content */,
 			);
 			path = EquityLab;
-			sourceTree = "<group>";
-		};
-		7342ED2C2C44750300BA20A4 /* Preview Content */ = {
-			isa = PBXGroup;
-			children = (
-				7342ED2D2C44750300BA20A4 /* Preview Assets.xcassets */,
-			);
-			path = "Preview Content";
 			sourceTree = "<group>";
 		};
 		7342ED342C44754E00BA20A4 /* Models */ = {
@@ -334,9 +325,6 @@
 				73980F452AA57A4500CA4849 /* CoreDataModel.xcdatamodeld */,
 				7342ED732C447B7200BA20A4 /* ProductionCoreDataStack.swift */,
 				7314FD6E2C7510E100483835 /* TestingCoreDataStack.swift */,
-				7363D3D52C85F85200EC9F16 /* SnapshotRepository.swift */,
-				7363DDF52CA89752009F3412 /* AssetRepository.swift */,
-				7363DDF72CA89CD2009F3412 /* LiabilityRepository.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -352,6 +340,7 @@
 				7342ED642C447A0C00BA20A4 /* Possession+CoreDataProperties.swift */,
 				7342ED692C447A0C00BA20A4 /* Receivable+CoreDataClass.swift */,
 				7342ED6A2C447A0C00BA20A4 /* Receivable+CoreDataProperties.swift */,
+				7363DDF52CA89752009F3412 /* AssetRepository.swift */,
 			);
 			path = AssetFiles;
 			sourceTree = "<group>";
@@ -363,6 +352,7 @@
 				7342ED4E2C44789A00BA20A4 /* Liability+CoreDataProperties.swift */,
 				7342ED4B2C44789A00BA20A4 /* LiabilityPool+CoreDataClass.swift */,
 				7342ED4C2C44789A00BA20A4 /* LiabilityPool+CoreDataProperties.swift */,
+				7363DDF72CA89CD2009F3412 /* LiabilityRepository.swift */,
 			);
 			path = LiabilityFiles;
 			sourceTree = "<group>";
@@ -378,6 +368,7 @@
 				7342EDB22C44842100BA20A4 /* AssetPosition+CoreDataProperties.swift */,
 				7342EDB32C44842100BA20A4 /* LiabilityPosition+CoreDataClass.swift */,
 				7342EDB42C44842100BA20A4 /* LiabilityPosition+CoreDataProperties.swift */,
+				7363D3D52C85F85200EC9F16 /* SnapshotRepository.swift */,
 			);
 			path = SnapshotFiles;
 			sourceTree = "<group>";
@@ -618,6 +609,7 @@
 			mainGroup = 7342ED1A2C44750200BA20A4;
 			packageReferences = (
 				732588542CCD03BB002031CF /* XCRemoteSwiftPackageReference "AlertToast" */,
+				732588572CCD3839002031CF /* XCRemoteSwiftPackageReference "ObservableProperties" */,
 			);
 			productRefGroup = 7342ED242C44750200BA20A4 /* Products */;
 			projectDirPath = "";
@@ -641,7 +633,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7342ED2E2C44750300BA20A4 /* Preview Assets.xcassets in Resources */,
 				7342ED2B2C44750300BA20A4 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -921,7 +912,6 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"EquityLab/Preview Content\"";
 				DEVELOPMENT_TEAM = 8AJMSZ2ZQ3;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -950,7 +940,6 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"EquityLab/Preview Content\"";
 				DEVELOPMENT_TEAM = 8AJMSZ2ZQ3;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -1013,6 +1002,14 @@
 				minimumVersion = 1.3.9;
 			};
 		};
+		732588572CCD3839002031CF /* XCRemoteSwiftPackageReference "ObservableProperties" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/marlonnienaber/ObservableProperties";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.1.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -1020,6 +1017,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 732588542CCD03BB002031CF /* XCRemoteSwiftPackageReference "AlertToast" */;
 			productName = AlertToast;
+		};
+		732588582CCD3839002031CF /* ObservableProperties */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 732588572CCD3839002031CF /* XCRemoteSwiftPackageReference "ObservableProperties" */;
+			productName = ObservableProperties;
 		};
 /* End XCSwiftPackageProductDependency section */
 
