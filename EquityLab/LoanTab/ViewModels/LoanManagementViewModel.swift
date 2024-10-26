@@ -22,10 +22,14 @@ class LoanManagementViewModel {
         self.assetRepository = assetRepository
         self.liabilityRepository = liabilityRepository
         
-        self.receivables = assetRepository.fetchReceivables()
         self.liabilities = liabilityRepository.fetchLiabilities()
+        self.receivables = assetRepository.fetchReceivables()
 
-        assetRepository.add(observer: self)
+        assetRepository.$assetPools.onSetDo { [weak self] _ in
+            guard let self else { return }
+            self.receivables = assetRepository.fetchReceivables()
+        }
+        
         liabilityRepository.add(observer: self)
     }
     
@@ -40,12 +44,7 @@ class LoanManagementViewModel {
     }
 }
 
-extension LoanManagementViewModel: AssetObserver, LiabilityObserver {
-    func notifyAfterAssetUpdate() {
-        Self.logger.debug("notifyAfterAssetUpdate()")
-        self.receivables = assetRepository.fetchReceivables()
-    }
-    
+extension LoanManagementViewModel: LiabilityObserver {
     func notifyAfterLiabilityUpdate() {
         Self.logger.debug("notifyAfterLiabilityUpdate()")
         self.liabilities = liabilityRepository.fetchLiabilities()

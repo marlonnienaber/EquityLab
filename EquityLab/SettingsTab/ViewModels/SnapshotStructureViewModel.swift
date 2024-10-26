@@ -9,8 +9,8 @@ class SnapshotStructureViewModel {
     @ObservationIgnored private let liabilityRepository: LiabilityRepository
     @ObservationIgnored private var assetPoolToAssetsDictionary: [AssetPool:[Asset]]
     @ObservationIgnored private var liabilityPoolToLiabilitiesDictionary: [LiabilityPool:[Liability]]
-    var assetPools: [AssetPool]
-    var liabilityPools: [LiabilityPool]
+    var assetPools = [AssetPool]()
+    var liabilityPools = [LiabilityPool]()
     
     var alertPoolName = ""
     var showEditAssetPoolAlert = false
@@ -37,11 +37,19 @@ class SnapshotStructureViewModel {
         self.assetRepository = assetRepository
         self.liabilityRepository = liabilityRepository
         
-        self.assetPools = assetRepository.fetchAssetPools()
         self.assetPoolToAssetsDictionary = [:]
+        self.liabilityPoolToLiabilitiesDictionary = [:]
+        
+        assetRepository.$assetPools.registerObserver(self, keyPath: \.assetPools)
+        assetRepository.$assetPools.onSetDo { [weak self] newAssetPools in
+            guard let self else { return }
+            self.assetPoolToAssetsDictionary = [:]
+            for pool in newAssetPools {
+                assetPoolToAssetsDictionary[pool] = assetRepository.fetchAssets(for: pool)
+            }
+        }
         
         self.liabilityPools = liabilityRepository.fetchLiabilityPools()
-        self.liabilityPoolToLiabilitiesDictionary = [:]
         
         for pool in assetPools {
             assetPoolToAssetsDictionary[pool] = assetRepository.fetchAssets(for: pool)
@@ -50,7 +58,6 @@ class SnapshotStructureViewModel {
             liabilityPoolToLiabilitiesDictionary[pool] = liabilityRepository.fetchLiabilities(for: pool)
         }
         
-        self.assetRepository.add(observer: self)
         self.liabilityRepository.add(observer: self)
     }
     
@@ -123,22 +130,13 @@ class SnapshotStructureViewModel {
     }
 }
 
-extension SnapshotStructureViewModel: AssetObserver, LiabilityObserver {
+extension SnapshotStructureViewModel: LiabilityObserver {
     func notifyAfterLiabilityUpdate() {
         Self.logger.debug("notifyAfterLiabilityUpdate()")
         self.liabilityPools = liabilityRepository.fetchLiabilityPools()
         self.liabilityPoolToLiabilitiesDictionary = [:]
         for pool in liabilityPools {
             liabilityPoolToLiabilitiesDictionary[pool] = liabilityRepository.fetchLiabilities(for: pool)
-        }
-    }
-    
-    func notifyAfterAssetUpdate() {
-        Self.logger.debug("notifyAfterAssetUpdate()")
-        self.assetPools = assetRepository.fetchAssetPools()
-        self.assetPoolToAssetsDictionary = [:]
-        for pool in assetPools {
-            assetPoolToAssetsDictionary[pool] = assetRepository.fetchAssets(for: pool)
         }
     }
 }

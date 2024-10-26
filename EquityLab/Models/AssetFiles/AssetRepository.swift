@@ -1,9 +1,10 @@
 import CoreData
+import ObservableProperties
 
 class AssetRepository: NSObject {
     public static let production = AssetRepository(context: ProductionCoreDataStack.shared.context)
     private let fetchedResultsController: ObservingFetchedResultsController<AssetPool>
-    private var observers: [WeakAssetObserver]
+    @Publisher var assetPools: [AssetPool]
     
     init(context: NSManagedObjectContext) {
         let request = ObservingFetchRequest<AssetPool>(entityName: "AssetPool")
@@ -11,14 +12,9 @@ class AssetRepository: NSObject {
         request.observedRelationships = ["assets"]
         fetchedResultsController = .init(fetchRequest: request, managedObjectContext: context, sectionNameKeyPath: nil, cacheName: nil)
         try? fetchedResultsController.performFetch()
-        self.observers = []
+        self.assetPools = fetchedResultsController.fetchedObjects as? [AssetPool] ?? []
         super.init()
         fetchedResultsController.delegate = self
-    }
-    
-    func add(observer: AssetObserver) {
-        guard !observers.contains(where: { $0.observer === observer }) else { return }
-        observers.append(WeakAssetObserver(observer: observer))
     }
     
     func fetchAssetPools() -> [AssetPool] {
@@ -120,19 +116,6 @@ class AssetRepository: NSObject {
 
 extension AssetRepository: NSFetchedResultsControllerDelegate {
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-        observers = observers.filter { $0.observer.isNotNil }
-        observers.forEach{ $0.observer?.notifyAfterAssetUpdate()}
-    }
-}
-
-protocol AssetObserver: AnyObject {
-    /* TODO: will this create a retain cycle or other memory problems */
-    func notifyAfterAssetUpdate()
-}
-
-class WeakAssetObserver {
-    weak var observer: AssetObserver?
-    init(observer: AssetObserver?) {
-        self.observer = observer
+        assetPools = fetchedResultsController.fetchedObjects as? [AssetPool] ?? []
     }
 }
