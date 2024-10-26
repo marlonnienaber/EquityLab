@@ -65,11 +65,15 @@ class DashboardViewModel {
         Self.logger.debug("DashboardViewModel()")
         self.snapshotRepository = snapshotRepository
         self.snapshotAnalyzer = SnapshotAnalyzer(repository: snapshotRepository)
-        self.snapshotRepository.add(observer: self)
-        self.snapshots = snapshotRepository.fetchSnapshots()
-        for snapshot in snapshots {
-            equityValueCache[snapshot] = snapshotAnalyzer.calculateEquityValue(for: snapshot)
+        
+        snapshotRepository.$snapshots.registerObserver(self, keyPath: \.snapshots)
+        snapshotRepository.$snapshots.onSetDo { [weak self] newSnapshots in
+            guard let self else { return }
+            for snapshot in newSnapshots {
+                equityValueCache[snapshot] = snapshotAnalyzer.calculateEquityValue(for: snapshot)
+            }
         }
+        
         self.selectedSnapshot = snapshots.last
     }
     
@@ -129,15 +133,6 @@ class DashboardViewModel {
                 array.map { $0.value }.reduce(0, +)
             }
         }
-    }
-}
-
-extension DashboardViewModel: SnapshotObserver {
-    func notifyAfterSnapshotUpdate() {
-        Self.logger.debug("notifyAfterSnapshotUpdate()")
-        self.snapshots = snapshotRepository.fetchSnapshots(sortingOrder: .ascending)
-        guard let selectedSnapshot else { return }
-        self.selectedSnapshot = snapshots.first(where: { $0 == selectedSnapshot })
     }
 }
 

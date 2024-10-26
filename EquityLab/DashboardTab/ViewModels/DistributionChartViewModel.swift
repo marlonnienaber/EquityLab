@@ -59,7 +59,10 @@ class DistributionChartViewModel {
         self.dashboardViewModel = dashboardViewModel
         self.repository = repository
         self.selectedCategory = distributionCategories.first
-        self.repository.add(observer: self)
+        repository.$snapshots.onSetDo { [weak self] _ in
+            guard let self else { return }
+            selectedCategory = distributionCategories.first
+        }
     }
     
     
@@ -125,13 +128,6 @@ class DistributionChartViewModel {
     func setSelectedCategoryForNewSnapshot() {
         Self.logger.debug("setSelectedCategoryForNewSnapshot()")
         selectedCategory = distributionCategories.first(where: {$0 == selectedCategory}) ?? distributionCategories.first
-    }
-}
-
-extension DistributionChartViewModel: SnapshotObserver {
-    func notifyAfterSnapshotUpdate() {
-        Self.logger.debug("notifyAfterSnapshotUpdate()")
-        selectedCategory = distributionCategories.first
     }
 }
 

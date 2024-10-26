@@ -1,9 +1,11 @@
 import CoreData
+import ObservableProperties
 
 class SnapshotRepository: NSObject {
     public static let production = SnapshotRepository(context: ProductionCoreDataStack.shared.context)
     private let fetchedResultsController: ObservingFetchedResultsController<Snapshot>
-    private var observers: [WeakSnapshotObserver]
+    @Publisher var snapshots: [Snapshot]
+    
     
     init(context: NSManagedObjectContext) {
         let request = ObservingFetchRequest<Snapshot>(entityName: "Snapshot")
@@ -11,14 +13,9 @@ class SnapshotRepository: NSObject {
         request.observedRelationships = ["assets", "liabilities"]
         fetchedResultsController = .init(fetchRequest: request, managedObjectContext: context, sectionNameKeyPath: nil, cacheName: nil)
         try? fetchedResultsController.performFetch()
-        self.observers = []
+        self.snapshots = fetchedResultsController.fetchedObjects as? [Snapshot] ?? []
         super.init()
         fetchedResultsController.delegate = self
-    }
-    
-    func add(observer: SnapshotObserver) {
-        guard !observers.contains(where: { $0.observer === observer }) else { return }
-        observers.append(WeakSnapshotObserver(observer: observer))
     }
     
     
@@ -98,20 +95,7 @@ class SnapshotRepository: NSObject {
 
 extension SnapshotRepository: NSFetchedResultsControllerDelegate {
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-        observers = observers.filter { $0.observer.isNotNil }
-        observers.forEach{ $0.observer?.notifyAfterSnapshotUpdate()}
-    }
-}
-
-protocol SnapshotObserver: AnyObject {
-    /* TODO: will this create a retain cycle or other memory problems? */
-    func notifyAfterSnapshotUpdate()
-}
-
-class WeakSnapshotObserver {
-    weak var observer: SnapshotObserver?
-    init(observer: SnapshotObserver?) {
-        self.observer = observer
+        snapshots = fetchedResultsController.fetchedObjects as? [Snapshot] ?? []
     }
 }
 
