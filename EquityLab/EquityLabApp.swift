@@ -2,7 +2,6 @@ import SwiftUI
 
 @main
 struct EquityLabApp: App {
-    /* TODO: exchange callback logic with binding logic for all repositories */
     var body: some Scene {
         WindowGroup {
             TabView {

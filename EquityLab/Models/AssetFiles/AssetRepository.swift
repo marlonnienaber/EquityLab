@@ -17,6 +17,7 @@ class AssetRepository: NSObject {
         fetchedResultsController.delegate = self
     }
     
+    
     func fetchAssetPools() -> [AssetPool] {
         try? fetchedResultsController.performFetch()
         return fetchedResultsController.fetchedObjects as? [AssetPool] ?? []
