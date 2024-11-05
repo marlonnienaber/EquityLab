@@ -104,13 +104,12 @@ class DistributionChartViewModel {
     
     func computeTotalValue(for snapshot: Snapshot) -> Double {
         Self.logger.debug("computeTotalValue(for snapshot)")
-        let positions: [Position]
         switch distributionChartType {
-        case .assetDistributionChart: positions = repository.fetchAssetPositions(of: snapshot)
-        case .liabilityDistributionChart: positions = repository.fetchLiabilityPositions(of: snapshot)
+        case .assetDistributionChart:
+            return repository.fetchAssetPositions(of: snapshot).map{ $0.value }.reduce(0, +)
+        case .liabilityDistributionChart:
+            return repository.fetchLiabilityPositions(of: snapshot).map{ $0.value }.reduce(0, +)
         }
-        let totalValue = positions.map{ $0.value }.reduce(0, +)
-        return totalValue
     }
     
     func setSelectedCategoryForNewCumulativeValue(cumulativeValue: Double) {

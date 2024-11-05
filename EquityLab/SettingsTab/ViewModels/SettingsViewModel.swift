@@ -67,7 +67,15 @@ class SettingsViewModel {
         do {
             let context = ProductionCoreDataStack.shared.context
             
-            let entityTypes = [Snapshot.self,Position.self,AssetPool.self, Asset.self,LiabilityPool.self,Liability.self]
+            let entityTypes = [
+                Snapshot.self,
+                AssetPosition.self,
+                LiabilityPosition.self,
+                AssetPool.self,
+                Asset.self,
+                LiabilityPool.self,
+                Liability.self
+            ]
             for entityType in entityTypes {
                 let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: String(describing: entityType))
                 let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
