@@ -72,7 +72,8 @@ class SettingsViewModel {
                 AssetPosition.self,
                 LiabilityPosition.self,
                 AssetPool.self,
-                Asset.self,
+                Possession.self,
+                Receivable.self,
                 LiabilityPool.self,
                 Liability.self
             ]

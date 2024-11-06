@@ -1,7 +1,7 @@
 import CoreData
 
 @objc(Liability)
-public class Liability: NSManagedObject, Codable, Named {
+public class Liability: NSManagedObject, Codable {
     
     public var repaymentPercentage: Double {
         repaidAmount / initialAmount

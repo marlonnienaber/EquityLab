@@ -24,12 +24,12 @@ final class SnapshotStructureViewModelTests: XCTestCase {
         let actualPools = sut.assetPools
         XCTAssertTrue(expectedPools ≡ actualPools)
         
-        var expectedAssetsForPool: [Asset]
-        var actualAssetsForPool: [Asset]
+        var expectedAssetsForPool: [SnapshotStructureItem]
+        var actualAssetsForPool: [SnapshotStructureItem]
         for pool in actualPools {
             expectedAssetsForPool = poolToAssetDictionary[pool]!
             actualAssetsForPool = sut.getAssetsForAssetPool(pool)
-            XCTAssertTrue(expectedAssetsForPool ≡ actualAssetsForPool)
+            XCTAssertTrue(checkEquivalence(of: expectedAssetsForPool, and: actualAssetsForPool, by: [\.name]))
         }
     }
     
@@ -42,12 +42,12 @@ final class SnapshotStructureViewModelTests: XCTestCase {
         let actualPools = sut.assetPools
         XCTAssertTrue(expectedPools ≡ actualPools)
         
-        var expectedAssetsForPool: [Asset]
-        var actualAssetsForPool: [Asset]
+        var expectedAssetsForPool: [SnapshotStructureItem]
+        var actualAssetsForPool: [SnapshotStructureItem]
         for pool in actualPools {
             expectedAssetsForPool = poolToAssetDictionary[pool]!
             actualAssetsForPool = sut.getAssetsForAssetPool(pool)
-            XCTAssertTrue(expectedAssetsForPool ≡ actualAssetsForPool)
+            XCTAssertTrue(checkEquivalence(of: expectedAssetsForPool, and: actualAssetsForPool, by: [\.name]))
         }
     }
     
@@ -101,12 +101,12 @@ final class SnapshotStructureViewModelTests: XCTestCase {
         let actualViewModelAssetPoolName = (try XCTUnwrap(viewModelPools.first)).name
         XCTAssertEqual(expectedAssetPoolName, actualViewModelAssetPoolName)
         
-        var expectedAssetsForPool: [Asset]
-        var actualAssetsForPool: [Asset]
+        var expectedAssetsForPool: [SnapshotStructureItem]
+        var actualAssetsForPool: [SnapshotStructureItem]
         for pool in viewModelPools {
             expectedAssetsForPool = []
             actualAssetsForPool = sut.getAssetsForAssetPool(pool)
-            XCTAssertTrue(expectedAssetsForPool ≡ actualAssetsForPool)
+            XCTAssertTrue(checkEquivalence(of: expectedAssetsForPool, and: actualAssetsForPool, by: [\.name]))
         }
         
         let persistedPools = testingAssetRepository.fetchAssetPools()
@@ -138,16 +138,17 @@ final class SnapshotStructureViewModelTests: XCTestCase {
         let actualPersistedPools = testingAssetRepository.fetchAssetPools()
         XCTAssertTrue(expectedPools ≡ actualPersistedPools)
         
-        var expectedAssetsForPool: [Asset]
-        var actualAssetsForPool: [Asset]
+        var expectedAssetsForPool: [SnapshotStructureItem]
+        var actualAssetsForPool: [SnapshotStructureItem]
         for pool in actualViewModelPools {
             expectedAssetsForPool = poolToAssetDictionary[pool]!
             actualAssetsForPool = sut.getAssetsForAssetPool(pool)
-            XCTAssertTrue(expectedAssetsForPool ≡ actualAssetsForPool)
+            let isEquivalent = checkEquivalence(of: expectedAssetsForPool, and: actualAssetsForPool, by: [\.name])
+            XCTAssertTrue(isEquivalent)
         }
-        let expectedAssetsForPoolToDelete = [Asset]()
+        let expectedAssetsForPoolToDelete = [SnapshotStructureItem]()
         let actualAssetsForPoolToDelete = sut.getAssetsForAssetPool(poolToDelete)
-        XCTAssertEqual(expectedAssetsForPoolToDelete,actualAssetsForPoolToDelete)
+        XCTAssertTrue(checkEquivalence(of: expectedAssetsForPoolToDelete, and: actualAssetsForPoolToDelete, by: [\.name]))
     }
     
     /// update pool and test viewModel interface providing data to view as well as persisted data
@@ -165,12 +166,12 @@ final class SnapshotStructureViewModelTests: XCTestCase {
         XCTAssertTrue(expectedPoolNames ≡ actualPersistedPoolNames)
         
         let actualViewModelPools = sut.assetPools
-        var expectedAssetsForPool: [Asset]
-        var actualAssetsForPool: [Asset]
+        var expectedAssetsForPool: [SnapshotStructureItem]
+        var actualAssetsForPool: [SnapshotStructureItem]
         for pool in actualViewModelPools {
             expectedAssetsForPool = poolNameToAssetDictionary[pool.name]!
             actualAssetsForPool = sut.getAssetsForAssetPool(pool)
-            XCTAssertTrue(expectedAssetsForPool ≡ actualAssetsForPool)
+            XCTAssertTrue(checkEquivalence(of: expectedAssetsForPool, and: actualAssetsForPool, by: [\.name]))
         }
     }
     

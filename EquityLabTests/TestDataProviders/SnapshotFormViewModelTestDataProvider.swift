@@ -18,10 +18,10 @@ struct SnapshotFormViewModelTestDataProvider {
         let assetPoolName2 = "Bank"
         let assetPoolName3 = "Wertpapiere"
         let assetPoolName4 = "Geliehen"
-        let _ = DataFactory.createAssetPool(named: assetPoolName1, assets: [asset2], in: context)
-        let _ = DataFactory.createAssetPool(named: assetPoolName2, assets: [asset3, asset4], in: context)
-        let _ = DataFactory.createAssetPool(named: assetPoolName3, assets: [asset5], in: context)
-        let _ = DataFactory.createAssetPool(named: assetPoolName4, assets: [asset1], in: context)
+        let assetPool1 = DataFactory.createAssetPool(named: assetPoolName1, possessions: [asset2], receivables: [], in: context)
+        let assetPool2 = DataFactory.createAssetPool(named: assetPoolName2, possessions: [asset3,asset4], receivables: [], in: context)
+        let assetPool3 = DataFactory.createAssetPool(named: assetPoolName3, possessions: [asset5], receivables: [], in: context)
+        let assetPool4 = DataFactory.createAssetPool(named: assetPoolName4,  possessions: [], receivables: [asset1], in: context)
         
         let liability1 = DataFactory.createLiability(name: "Auto",
                                                      date: DateParser.shared.date(from: "2023-03-15T00:00:00")!,
@@ -81,10 +81,10 @@ struct SnapshotFormViewModelTestDataProvider {
         let assetPoolName2 = "Bank"
         let assetPoolName3 = "Wertpapiere"
         let assetPoolName4 = "Geliehen"
-        let _ = DataFactory.createAssetPool(named: assetPoolName1, assets: [asset2], in: context)
-        let _ = DataFactory.createAssetPool(named: assetPoolName2, assets: [asset3, asset4], in: context)
-        let _ = DataFactory.createAssetPool(named: assetPoolName3, assets: [asset5], in: context)
-        let assetPool4 = DataFactory.createAssetPool(named: assetPoolName4, assets: [asset1], in: context)
+        let assetPool1 = DataFactory.createAssetPool(named: assetPoolName1, possessions: [asset2], receivables: [], in: context)
+        let assetPool2 = DataFactory.createAssetPool(named: assetPoolName2, possessions: [asset3,asset4], receivables: [], in: context)
+        let assetPool3 = DataFactory.createAssetPool(named: assetPoolName3, possessions: [asset5], receivables: [], in: context)
+        let assetPool4 = DataFactory.createAssetPool(named: assetPoolName4,  possessions: [], receivables: [asset1], in: context)
         
         let liability1 = DataFactory.createLiability(name: "Auto",
                                                      date: DateParser.shared.date(from: "2023-03-15T00:00:00")!,
@@ -190,10 +190,10 @@ struct SnapshotFormViewModelTestDataProvider {
         let assetPoolName2 = "Bank"
         let assetPoolName3 = "Wertpapiere"
         let assetPoolName4 = "Geliehen"
-        let _ = DataFactory.createAssetPool(named: assetPoolName1, assets: [asset2], in: context)
-        let _ = DataFactory.createAssetPool(named: assetPoolName2, assets: [asset3, asset4], in: context)
-        let _ = DataFactory.createAssetPool(named: assetPoolName3, assets: [asset5], in: context)
-        let _ = DataFactory.createAssetPool(named: assetPoolName4, assets: [asset1], in: context)
+        let assetPool1 = DataFactory.createAssetPool(named: assetPoolName1, possessions: [asset2], receivables: [], in: context)
+        let assetPool2 = DataFactory.createAssetPool(named: assetPoolName2, possessions: [asset3,asset4], receivables: [], in: context)
+        let assetPool3 = DataFactory.createAssetPool(named: assetPoolName3, possessions: [asset5], receivables: [], in: context)
+        let assetPool4 = DataFactory.createAssetPool(named: assetPoolName4,  possessions: [], receivables: [asset1], in: context)
         
         let liability1 = DataFactory.createLiability(name: "Auto",
                                                      date: DateParser.shared.date(from: "2023-03-15T00:00:00")!,
@@ -295,8 +295,8 @@ struct SnapshotFormViewModelTestDataProvider {
         
         let assetPoolName1 = "Bargeld"
         let assetPoolName2 = "Bank"
-        let _ = DataFactory.createAssetPool(named: assetPoolName1, assets: [asset1], in: context)
-        let _ = DataFactory.createAssetPool(named: assetPoolName2, assets: [asset2, asset3], in: context)
+        let _ = DataFactory.createAssetPool(named: assetPoolName1, possessions: [asset1], receivables: [], in: context)
+        let _ = DataFactory.createAssetPool(named: assetPoolName2, possessions: [asset2,asset3], receivables: [], in: context)
         
         let liability1 = DataFactory.createLiability(name: "Auto",
                                                      date: DateParser.shared.date(from: "2023-03-15T00:00:00")!,

@@ -23,9 +23,12 @@ class AssetRepository: NSObject {
         return fetchedResultsController.fetchedObjects as? [AssetPool] ?? []
     }
     
-    func fetchAssets() -> [Asset] {
-        let assetFetchRequest = NSFetchRequest<Asset>(entityName: String(describing: "Asset"))
-        return (try? fetchedResultsController.managedObjectContext.fetch(assetFetchRequest)) ?? []
+    func fetchPossessions(for assetPool: AssetPool) -> [Possession] {
+        (try? fetchedResultsController.managedObjectContext.fetch(assetPool.getPossessionRequest())) ?? []
+    }
+    
+    func fetchReceivables(for assetPool: AssetPool) -> [Receivable] {
+        (try? fetchedResultsController.managedObjectContext.fetch(assetPool.getReceivableRequest())) ?? []
     }
     
     func fetchReceivables() -> [Receivable] {
@@ -34,13 +37,20 @@ class AssetRepository: NSObject {
         return (try? fetchedResultsController.managedObjectContext.fetch(receivableFetchRequest)) ?? []
     }
     
-    func fetchAssets(for pool: AssetPool) -> [Asset] {
-        (try? fetchedResultsController.managedObjectContext.fetch(pool.getAssetRequest())) ?? []
+    func fetchPossessions() -> [Possession] {
+        let possessionFetchRequest = NSFetchRequest<Possession>(entityName: String(describing: "Possession"))
+        return (try? fetchedResultsController.managedObjectContext.fetch(possessionFetchRequest)) ?? []
     }
     
-    func delete(asset: Asset) {
+    func delete(receivable: Receivable) {
         let context = fetchedResultsController.managedObjectContext
-        context.delete(asset)
+        context.delete(receivable)
+        try? context.save()
+    }
+    
+    func delete(possession: Possession) {
+        let context = fetchedResultsController.managedObjectContext
+        context.delete(possession)
         try? context.save()
     }
     

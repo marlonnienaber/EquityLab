@@ -1,7 +1,7 @@
 import CoreData
 
 @objc(LiabilityPool)
-public class LiabilityPool: NSManagedObject, Codable, Named {
+public class LiabilityPool: NSManagedObject, Codable {
     
     func getLiabilityRequest() -> NSFetchRequest<Liability> {
         let request = Liability.fetchRequest()

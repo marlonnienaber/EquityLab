@@ -1,4 +1,4 @@
-
+import Foundation
 import CoreData
 
 
@@ -12,5 +12,11 @@ extension Receivable {
     @NSManaged public var grantDate: Date
     @NSManaged public var initialAmount: Double
     @NSManaged public var repaidAmount: Double
+    @NSManaged public var name: String
+    @NSManaged public var pool: AssetPool?
+
+}
+
+extension Receivable : Identifiable {
 
 }

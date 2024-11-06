@@ -1,4 +1,4 @@
-
+import Foundation
 import CoreData
 
 
@@ -9,5 +9,11 @@ extension Possession {
     }
 
     @NSManaged public var volatile: Bool
+    @NSManaged public var name: String
+    @NSManaged public var pool: AssetPool?
+
+}
+
+extension Possession : Identifiable {
 
 }

@@ -55,9 +55,9 @@ class SnapshotFormViewModel {
     private static func createProxies(using snapshotRepository: SnapshotRepository,
                                       and assetRepository: AssetRepository,
                                       and liabilityRepository: LiabilityRepository) -> ([PositionProxy],[PositionProxy]) {
-        let assets = assetRepository.fetchAssets()
-        let assetProxies = assets.map{ asset in
-            if let possession = asset as? Possession, let pool = possession.pool {
+        let possessions = assetRepository.fetchPossessions()
+        let possessionProxies = possessions.map{ possession in
+            if let pool = possession.pool {
                 if possession.volatile {
                     return PositionProxy(name: possession.name, value: 0.0, pool: pool.name)
                 } else {
@@ -72,7 +72,13 @@ class SnapshotFormViewModel {
                     let latestValue = datesAndValues.max{ $0.date < $1.date }?.value ?? 0.0
                     return PositionProxy(name: possession.name, value: latestValue, pool: pool.name)
                 }
-            } else if let receivable = asset as? Receivable, let pool = receivable.pool {
+            } else {
+                return nil
+            }
+        }.compactMap{ $0 }
+        let receivables = assetRepository.fetchReceivables()
+        let receivableProxies = receivables.map{ receivable in
+            if let pool = receivable.pool {
                 return PositionProxy(name: receivable.name, value: receivable.openAmount, pool: pool.name)
             } else {
                 return nil
@@ -86,7 +92,7 @@ class SnapshotFormViewModel {
                 return nil
             }
         }.compactMap{ $0 }
-        return (assetProxies,liabilityProxies)
+        return (possessionProxies + receivableProxies, liabilityProxies)
     }
     
     private var snapshotWithSameDateDoesExist: Bool {

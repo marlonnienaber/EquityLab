@@ -20,6 +20,11 @@
 		73037F702CC3BAE8005DD105 /* Collection+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73037F6F2CC3BADB005DD105 /* Collection+Extension.swift */; };
 		73037F722CC59414005DD105 /* SettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73037F712CC5940E005DD105 /* SettingsViewModel.swift */; };
 		7314FD6F2C7510E100483835 /* TestingCoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7314FD6E2C7510E100483835 /* TestingCoreDataStack.swift */; };
+		731AA46A2CDABA13004145E0 /* ReceivableFormViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 731AA4692CDABA07004145E0 /* ReceivableFormViewModel.swift */; };
+		731AA46C2CDC13A0004145E0 /* PossessionFormViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 731AA46B2CDC1398004145E0 /* PossessionFormViewModelTests.swift */; };
+		731AA46E2CDC140A004145E0 /* PossessionFormViewModelTestDataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 731AA46D2CDC1408004145E0 /* PossessionFormViewModelTestDataProvider.swift */; };
+		731AA4702CDC20D8004145E0 /* ReceivableFormViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 731AA46F2CDC20CC004145E0 /* ReceivableFormViewModelTests.swift */; };
+		731AA4722CDC20EA004145E0 /* ReceivableFormViewModelTestDataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 731AA4712CDC20DB004145E0 /* ReceivableFormViewModelTestDataProvider.swift */; };
 		732588562CCD03BB002031CF /* AlertToast in Frameworks */ = {isa = PBXBuildFile; productRef = 732588552CCD03BB002031CF /* AlertToast */; };
 		732588592CCD3839002031CF /* ObservableProperties in Frameworks */ = {isa = PBXBuildFile; productRef = 732588582CCD3839002031CF /* ObservableProperties */; };
 		73332B962CC67E860020839D /* LoanManagementViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73332B952CC67E7D0020839D /* LoanManagementViewModelTests.swift */; };
@@ -31,14 +36,6 @@
 		7342ED502C44789A00BA20A4 /* LiabilityPool+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7342ED4C2C44789A00BA20A4 /* LiabilityPool+CoreDataProperties.swift */; };
 		7342ED512C44789A00BA20A4 /* Liability+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7342ED4D2C44789A00BA20A4 /* Liability+CoreDataClass.swift */; };
 		7342ED522C44789A00BA20A4 /* Liability+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7342ED4E2C44789A00BA20A4 /* Liability+CoreDataProperties.swift */; };
-		7342ED6B2C447A0C00BA20A4 /* Possession+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7342ED632C447A0C00BA20A4 /* Possession+CoreDataClass.swift */; };
-		7342ED6C2C447A0C00BA20A4 /* Possession+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7342ED642C447A0C00BA20A4 /* Possession+CoreDataProperties.swift */; };
-		7342ED6D2C447A0C00BA20A4 /* AssetPool+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7342ED652C447A0C00BA20A4 /* AssetPool+CoreDataClass.swift */; };
-		7342ED6E2C447A0C00BA20A4 /* AssetPool+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7342ED662C447A0C00BA20A4 /* AssetPool+CoreDataProperties.swift */; };
-		7342ED6F2C447A0C00BA20A4 /* Asset+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7342ED672C447A0C00BA20A4 /* Asset+CoreDataClass.swift */; };
-		7342ED702C447A0C00BA20A4 /* Asset+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7342ED682C447A0C00BA20A4 /* Asset+CoreDataProperties.swift */; };
-		7342ED712C447A0C00BA20A4 /* Receivable+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7342ED692C447A0C00BA20A4 /* Receivable+CoreDataClass.swift */; };
-		7342ED722C447A0C00BA20A4 /* Receivable+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7342ED6A2C447A0C00BA20A4 /* Receivable+CoreDataProperties.swift */; };
 		7342ED742C447B7200BA20A4 /* ProductionCoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7342ED732C447B7200BA20A4 /* ProductionCoreDataStack.swift */; };
 		7342ED782C447BDC00BA20A4 /* CurrencyInputField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7342ED772C447BDC00BA20A4 /* CurrencyInputField.swift */; };
 		7342ED7B2C447CAF00BA20A4 /* ObservingFetchRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7342ED7A2C447CAF00BA20A4 /* ObservingFetchRequest.swift */; };
@@ -48,7 +45,6 @@
 		7342ED842C447D7E00BA20A4 /* UIColorArrayExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7342ED832C447D7E00BA20A4 /* UIColorArrayExtension.swift */; };
 		7342ED872C447E5000BA20A4 /* LocalizedCurrencyFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7342ED862C447E5000BA20A4 /* LocalizedCurrencyFormatter.swift */; };
 		7342ED892C447E7000BA20A4 /* LocalizedShortDateFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7342ED882C447E7000BA20A4 /* LocalizedShortDateFormatter.swift */; };
-		7342ED982C447FF500BA20A4 /* AssetFormViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7342ED972C447FF500BA20A4 /* AssetFormViewModel.swift */; };
 		7342ED9F2C44818100BA20A4 /* LiabilityFormViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7342ED9E2C44818100BA20A4 /* LiabilityFormViewModel.swift */; };
 		7342EDA72C44821200BA20A4 /* LiabilityForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7342EDA62C44821200BA20A4 /* LiabilityForm.swift */; };
 		7342EDAC2C4482C700BA20A4 /* SnapshotLedgerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7342EDAB2C4482C700BA20A4 /* SnapshotLedgerViewModel.swift */; };
@@ -73,8 +69,6 @@
 		7363DE022CAC74AC009F3412 /* NSManagedObject+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7363DE012CAC74A4009F3412 /* NSManagedObject+Extension.swift */; };
 		7366CD1E2CB1EB000066ACC3 /* LiabilityFormViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7366CD1D2CB1EAEF0066ACC3 /* LiabilityFormViewModelTests.swift */; };
 		7366CD202CB1EB1E0066ACC3 /* LiabilityFormViewModelTestDataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7366CD1F2CB1EB0C0066ACC3 /* LiabilityFormViewModelTestDataProvider.swift */; };
-		7371458B2CB0293B009578C8 /* AssetFormViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7371458A2CB02930009578C8 /* AssetFormViewModelTests.swift */; };
-		7371458D2CB02977009578C8 /* AssetFormViewModelTestDataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7371458C2CB02967009578C8 /* AssetFormViewModelTestDataProvider.swift */; };
 		73823CDD2C6154930049D03C /* DistributionChartViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73823CDC2C6154930049D03C /* DistributionChartViewModel.swift */; };
 		73823CDF2C62B2EE0049D03C /* ChangeChartViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73823CDE2C62B2EE0049D03C /* ChangeChartViewModel.swift */; };
 		73823CE12C68023E0049D03C /* BalanceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73823CE02C68023E0049D03C /* BalanceView.swift */; };
@@ -92,6 +86,13 @@
 		73ED17E82CDA864900313D00 /* AssetPosition+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73ED17E32CDA864900313D00 /* AssetPosition+CoreDataClass.swift */; };
 		73ED17E92CDA864900313D00 /* LiabilityPosition+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73ED17E62CDA864900313D00 /* LiabilityPosition+CoreDataProperties.swift */; };
 		73ED17EA2CDA864900313D00 /* AssetPosition+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73ED17E42CDA864900313D00 /* AssetPosition+CoreDataProperties.swift */; };
+		73ED17ED2CDAACE100313D00 /* Possession+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73ED17EB2CDAACE100313D00 /* Possession+CoreDataClass.swift */; };
+		73ED17EE2CDAACE100313D00 /* Possession+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73ED17EC2CDAACE100313D00 /* Possession+CoreDataProperties.swift */; };
+		73ED17F52CDAAF8100313D00 /* AssetPool+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73ED17F42CDAAF8100313D00 /* AssetPool+CoreDataProperties.swift */; };
+		73ED17F62CDAAF8100313D00 /* AssetPool+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73ED17F32CDAAF8100313D00 /* AssetPool+CoreDataClass.swift */; };
+		73ED17FD2CDAB22900313D00 /* Receivable+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73ED17FB2CDAB22900313D00 /* Receivable+CoreDataClass.swift */; };
+		73ED17FE2CDAB22900313D00 /* Receivable+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73ED17FC2CDAB22900313D00 /* Receivable+CoreDataProperties.swift */; };
+		73ED18002CDAB3C400313D00 /* PossessionFormViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73ED17FF2CDAB3C300313D00 /* PossessionFormViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -119,6 +120,11 @@
 		73037F712CC5940E005DD105 /* SettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewModel.swift; sourceTree = "<group>"; };
 		7314FD652C75106500483835 /* EquityLabTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EquityLabTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		7314FD6E2C7510E100483835 /* TestingCoreDataStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestingCoreDataStack.swift; sourceTree = "<group>"; };
+		731AA4692CDABA07004145E0 /* ReceivableFormViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceivableFormViewModel.swift; sourceTree = "<group>"; };
+		731AA46B2CDC1398004145E0 /* PossessionFormViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PossessionFormViewModelTests.swift; sourceTree = "<group>"; };
+		731AA46D2CDC1408004145E0 /* PossessionFormViewModelTestDataProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PossessionFormViewModelTestDataProvider.swift; sourceTree = "<group>"; };
+		731AA46F2CDC20CC004145E0 /* ReceivableFormViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceivableFormViewModelTests.swift; sourceTree = "<group>"; };
+		731AA4712CDC20DB004145E0 /* ReceivableFormViewModelTestDataProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceivableFormViewModelTestDataProvider.swift; sourceTree = "<group>"; };
 		73332B952CC67E7D0020839D /* LoanManagementViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoanManagementViewModelTests.swift; sourceTree = "<group>"; };
 		73332B972CC67E980020839D /* LoanManagementViewModelTestDataProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoanManagementViewModelTestDataProvider.swift; sourceTree = "<group>"; };
 		733473862C8DEC950050C656 /* DistributionChartViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DistributionChartViewModelTests.swift; sourceTree = "<group>"; };
@@ -129,14 +135,6 @@
 		7342ED4C2C44789A00BA20A4 /* LiabilityPool+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LiabilityPool+CoreDataProperties.swift"; sourceTree = SOURCE_ROOT; };
 		7342ED4D2C44789A00BA20A4 /* Liability+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Liability+CoreDataClass.swift"; sourceTree = SOURCE_ROOT; };
 		7342ED4E2C44789A00BA20A4 /* Liability+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Liability+CoreDataProperties.swift"; sourceTree = SOURCE_ROOT; };
-		7342ED632C447A0C00BA20A4 /* Possession+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Possession+CoreDataClass.swift"; sourceTree = SOURCE_ROOT; };
-		7342ED642C447A0C00BA20A4 /* Possession+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Possession+CoreDataProperties.swift"; sourceTree = SOURCE_ROOT; };
-		7342ED652C447A0C00BA20A4 /* AssetPool+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AssetPool+CoreDataClass.swift"; sourceTree = SOURCE_ROOT; };
-		7342ED662C447A0C00BA20A4 /* AssetPool+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AssetPool+CoreDataProperties.swift"; sourceTree = SOURCE_ROOT; };
-		7342ED672C447A0C00BA20A4 /* Asset+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Asset+CoreDataClass.swift"; sourceTree = SOURCE_ROOT; };
-		7342ED682C447A0C00BA20A4 /* Asset+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Asset+CoreDataProperties.swift"; sourceTree = SOURCE_ROOT; };
-		7342ED692C447A0C00BA20A4 /* Receivable+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Receivable+CoreDataClass.swift"; sourceTree = SOURCE_ROOT; };
-		7342ED6A2C447A0C00BA20A4 /* Receivable+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Receivable+CoreDataProperties.swift"; sourceTree = SOURCE_ROOT; };
 		7342ED732C447B7200BA20A4 /* ProductionCoreDataStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductionCoreDataStack.swift; sourceTree = "<group>"; };
 		7342ED772C447BDC00BA20A4 /* CurrencyInputField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyInputField.swift; sourceTree = "<group>"; };
 		7342ED7A2C447CAF00BA20A4 /* ObservingFetchRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObservingFetchRequest.swift; sourceTree = "<group>"; };
@@ -146,7 +144,6 @@
 		7342ED832C447D7E00BA20A4 /* UIColorArrayExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColorArrayExtension.swift; sourceTree = "<group>"; };
 		7342ED862C447E5000BA20A4 /* LocalizedCurrencyFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalizedCurrencyFormatter.swift; sourceTree = "<group>"; };
 		7342ED882C447E7000BA20A4 /* LocalizedShortDateFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalizedShortDateFormatter.swift; sourceTree = "<group>"; };
-		7342ED972C447FF500BA20A4 /* AssetFormViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetFormViewModel.swift; sourceTree = "<group>"; };
 		7342ED9E2C44818100BA20A4 /* LiabilityFormViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiabilityFormViewModel.swift; sourceTree = "<group>"; };
 		7342EDA62C44821200BA20A4 /* LiabilityForm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiabilityForm.swift; sourceTree = "<group>"; };
 		7342EDAB2C4482C700BA20A4 /* SnapshotLedgerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapshotLedgerViewModel.swift; sourceTree = "<group>"; };
@@ -171,8 +168,6 @@
 		7363DE012CAC74A4009F3412 /* NSManagedObject+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSManagedObject+Extension.swift"; sourceTree = "<group>"; };
 		7366CD1D2CB1EAEF0066ACC3 /* LiabilityFormViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiabilityFormViewModelTests.swift; sourceTree = "<group>"; };
 		7366CD1F2CB1EB0C0066ACC3 /* LiabilityFormViewModelTestDataProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiabilityFormViewModelTestDataProvider.swift; sourceTree = "<group>"; };
-		7371458A2CB02930009578C8 /* AssetFormViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetFormViewModelTests.swift; sourceTree = "<group>"; };
-		7371458C2CB02967009578C8 /* AssetFormViewModelTestDataProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetFormViewModelTestDataProvider.swift; sourceTree = "<group>"; };
 		73823CDC2C6154930049D03C /* DistributionChartViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DistributionChartViewModel.swift; sourceTree = "<group>"; };
 		73823CDE2C62B2EE0049D03C /* ChangeChartViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangeChartViewModel.swift; sourceTree = "<group>"; };
 		73823CE02C68023E0049D03C /* BalanceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BalanceView.swift; sourceTree = "<group>"; };
@@ -190,6 +185,13 @@
 		73ED17E42CDA864900313D00 /* AssetPosition+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AssetPosition+CoreDataProperties.swift"; sourceTree = SOURCE_ROOT; };
 		73ED17E52CDA864900313D00 /* LiabilityPosition+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LiabilityPosition+CoreDataClass.swift"; sourceTree = SOURCE_ROOT; };
 		73ED17E62CDA864900313D00 /* LiabilityPosition+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LiabilityPosition+CoreDataProperties.swift"; sourceTree = SOURCE_ROOT; };
+		73ED17EB2CDAACE100313D00 /* Possession+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Possession+CoreDataClass.swift"; sourceTree = SOURCE_ROOT; };
+		73ED17EC2CDAACE100313D00 /* Possession+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Possession+CoreDataProperties.swift"; sourceTree = SOURCE_ROOT; };
+		73ED17F32CDAAF8100313D00 /* AssetPool+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AssetPool+CoreDataClass.swift"; sourceTree = SOURCE_ROOT; };
+		73ED17F42CDAAF8100313D00 /* AssetPool+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AssetPool+CoreDataProperties.swift"; sourceTree = SOURCE_ROOT; };
+		73ED17FB2CDAB22900313D00 /* Receivable+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Receivable+CoreDataClass.swift"; sourceTree = SOURCE_ROOT; };
+		73ED17FC2CDAB22900313D00 /* Receivable+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Receivable+CoreDataProperties.swift"; sourceTree = SOURCE_ROOT; };
+		73ED17FF2CDAB3C300313D00 /* PossessionFormViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PossessionFormViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -236,9 +238,10 @@
 		73037F4E2CC00EAC005DD105 /* ViewModels */ = {
 			isa = PBXGroup;
 			children = (
+				731AA4692CDABA07004145E0 /* ReceivableFormViewModel.swift */,
+				73ED17FF2CDAB3C300313D00 /* PossessionFormViewModel.swift */,
 				73037F712CC5940E005DD105 /* SettingsViewModel.swift */,
 				73037F532CC00ECE005DD105 /* SnapshotStructureViewModel.swift */,
-				7342ED972C447FF500BA20A4 /* AssetFormViewModel.swift */,
 				7342ED9E2C44818100BA20A4 /* LiabilityFormViewModel.swift */,
 			);
 			path = ViewModels;
@@ -328,14 +331,12 @@
 		7342ED382C44781000BA20A4 /* AssetFiles */ = {
 			isa = PBXGroup;
 			children = (
-				7342ED652C447A0C00BA20A4 /* AssetPool+CoreDataClass.swift */,
-				7342ED662C447A0C00BA20A4 /* AssetPool+CoreDataProperties.swift */,
-				7342ED672C447A0C00BA20A4 /* Asset+CoreDataClass.swift */,
-				7342ED682C447A0C00BA20A4 /* Asset+CoreDataProperties.swift */,
-				7342ED632C447A0C00BA20A4 /* Possession+CoreDataClass.swift */,
-				7342ED642C447A0C00BA20A4 /* Possession+CoreDataProperties.swift */,
-				7342ED692C447A0C00BA20A4 /* Receivable+CoreDataClass.swift */,
-				7342ED6A2C447A0C00BA20A4 /* Receivable+CoreDataProperties.swift */,
+				73ED17FB2CDAB22900313D00 /* Receivable+CoreDataClass.swift */,
+				73ED17FC2CDAB22900313D00 /* Receivable+CoreDataProperties.swift */,
+				73ED17F32CDAAF8100313D00 /* AssetPool+CoreDataClass.swift */,
+				73ED17F42CDAAF8100313D00 /* AssetPool+CoreDataProperties.swift */,
+				73ED17EB2CDAACE100313D00 /* Possession+CoreDataClass.swift */,
+				73ED17EC2CDAACE100313D00 /* Possession+CoreDataProperties.swift */,
 				7363DDF52CA89752009F3412 /* AssetRepository.swift */,
 			);
 			path = AssetFiles;
@@ -508,10 +509,11 @@
 		73B8119F2CA7261D003B1973 /* Tests */ = {
 			isa = PBXGroup;
 			children = (
+				731AA46F2CDC20CC004145E0 /* ReceivableFormViewModelTests.swift */,
+				731AA46B2CDC1398004145E0 /* PossessionFormViewModelTests.swift */,
 				73332B952CC67E7D0020839D /* LoanManagementViewModelTests.swift */,
 				73037F612CC2E19E005DD105 /* SnapshotStructureViewModelTests.swift */,
 				7366CD1D2CB1EAEF0066ACC3 /* LiabilityFormViewModelTests.swift */,
-				7371458A2CB02930009578C8 /* AssetFormViewModelTests.swift */,
 				7363DDF92CA99557009F3412 /* SnapshotFormViewModelTests.swift */,
 				7363DDF12CA758D1009F3412 /* DashboardViewModelTests.swift */,
 				733473862C8DEC950050C656 /* DistributionChartViewModelTests.swift */,
@@ -523,10 +525,11 @@
 		73B811A02CA72624003B1973 /* TestDataProviders */ = {
 			isa = PBXGroup;
 			children = (
+				731AA4712CDC20DB004145E0 /* ReceivableFormViewModelTestDataProvider.swift */,
+				731AA46D2CDC1408004145E0 /* PossessionFormViewModelTestDataProvider.swift */,
 				73332B972CC67E980020839D /* LoanManagementViewModelTestDataProvider.swift */,
 				73037F632CC2E230005DD105 /* SnapshotStructureViewModelTestDataProvider.swift */,
 				7366CD1F2CB1EB0C0066ACC3 /* LiabilityFormViewModelTestDataProvider.swift */,
-				7371458C2CB02967009578C8 /* AssetFormViewModelTestDataProvider.swift */,
 				7363DDFB2CA9F0A9009F3412 /* SnapshotFormViewModelTestDataProvider.swift */,
 				73B811A12CA72644003B1973 /* DashboardViewModelTestDataProvider.swift */,
 				73B811A52CA72670003B1973 /* DistributionChartViewModelTestDataProvider.swift */,
@@ -642,6 +645,7 @@
 				7366CD1E2CB1EB000066ACC3 /* LiabilityFormViewModelTests.swift in Sources */,
 				73A428092C7E3B1F0086181F /* DateParser.swift in Sources */,
 				73B811A62CA7267B003B1973 /* DistributionChartViewModelTestDataProvider.swift in Sources */,
+				731AA46C2CDC13A0004145E0 /* PossessionFormViewModelTests.swift in Sources */,
 				73B8119C2CA72359003B1973 /* DataFactory.swift in Sources */,
 				7363DDFA2CA99562009F3412 /* SnapshotFormViewModelTests.swift in Sources */,
 				7363DDF22CA758D7009F3412 /* DashboardViewModelTests.swift in Sources */,
@@ -650,12 +654,13 @@
 				73037F622CC2E1AB005DD105 /* SnapshotStructureViewModelTests.swift in Sources */,
 				7363DDFC2CA9F0B7009F3412 /* SnapshotFormViewModelTestDataProvider.swift in Sources */,
 				7366CD202CB1EB1E0066ACC3 /* LiabilityFormViewModelTestDataProvider.swift in Sources */,
+				731AA4722CDC20EA004145E0 /* ReceivableFormViewModelTestDataProvider.swift in Sources */,
+				731AA4702CDC20D8004145E0 /* ReceivableFormViewModelTests.swift in Sources */,
 				73037F642CC2E233005DD105 /* SnapshotStructureViewModelTestDataProvider.swift in Sources */,
 				73B811A22CA7264E003B1973 /* DashboardViewModelTestDataProvider.swift in Sources */,
-				7371458D2CB02977009578C8 /* AssetFormViewModelTestDataProvider.swift in Sources */,
 				73B8119A2CA6D3F4003B1973 /* SnapshotLedgerViewModelTests.swift in Sources */,
 				733473872C8DEC950050C656 /* DistributionChartViewModelTests.swift in Sources */,
-				7371458B2CB0293B009578C8 /* AssetFormViewModelTests.swift in Sources */,
+				731AA46E2CDC140A004145E0 /* PossessionFormViewModelTestDataProvider.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -673,7 +678,6 @@
 				73ED17E82CDA864900313D00 /* AssetPosition+CoreDataClass.swift in Sources */,
 				73ED17E92CDA864900313D00 /* LiabilityPosition+CoreDataProperties.swift in Sources */,
 				73ED17EA2CDA864900313D00 /* AssetPosition+CoreDataProperties.swift in Sources */,
-				7342ED982C447FF500BA20A4 /* AssetFormViewModel.swift in Sources */,
 				7342ED7D2C447CD700BA20A4 /* ObservingFetchedResultsController.swift in Sources */,
 				73980F472AA57A4500CA4849 /* CoreDataModel.xcdatamodeld in Sources */,
 				73D2C5902C5FBB970019A800 /* ChangeChart.swift in Sources */,
@@ -692,21 +696,17 @@
 				7342EDBA2C4484FC00BA20A4 /* SnapshotFormViewModel.swift in Sources */,
 				7342EDA72C44821200BA20A4 /* LiabilityForm.swift in Sources */,
 				7342ED782C447BDC00BA20A4 /* CurrencyInputField.swift in Sources */,
+				73ED17FD2CDAB22900313D00 /* Receivable+CoreDataClass.swift in Sources */,
+				73ED17FE2CDAB22900313D00 /* Receivable+CoreDataProperties.swift in Sources */,
 				73037F502CC00EC2005DD105 /* SettingsView.swift in Sources */,
 				7342ED842C447D7E00BA20A4 /* UIColorArrayExtension.swift in Sources */,
-				7342ED6B2C447A0C00BA20A4 /* Possession+CoreDataClass.swift in Sources */,
 				73037F702CC3BAE8005DD105 /* Collection+Extension.swift in Sources */,
-				7342ED6C2C447A0C00BA20A4 /* Possession+CoreDataProperties.swift in Sources */,
-				7342ED6D2C447A0C00BA20A4 /* AssetPool+CoreDataClass.swift in Sources */,
-				7342ED6E2C447A0C00BA20A4 /* AssetPool+CoreDataProperties.swift in Sources */,
-				7342ED6F2C447A0C00BA20A4 /* Asset+CoreDataClass.swift in Sources */,
 				73037F602CC2CF79005DD105 /* Optional+Extension.swift in Sources */,
-				7342ED702C447A0C00BA20A4 /* Asset+CoreDataProperties.swift in Sources */,
+				73ED18002CDAB3C400313D00 /* PossessionFormViewModel.swift in Sources */,
+				731AA46A2CDABA13004145E0 /* ReceivableFormViewModel.swift in Sources */,
 				73037F722CC59414005DD105 /* SettingsViewModel.swift in Sources */,
 				7342ED872C447E5000BA20A4 /* LocalizedCurrencyFormatter.swift in Sources */,
-				7342ED712C447A0C00BA20A4 /* Receivable+CoreDataClass.swift in Sources */,
 				7342ED742C447B7200BA20A4 /* ProductionCoreDataStack.swift in Sources */,
-				7342ED722C447A0C00BA20A4 /* Receivable+CoreDataProperties.swift in Sources */,
 				7342ED272C44750200BA20A4 /* EquityLabApp.swift in Sources */,
 				7342ED4F2C44789A00BA20A4 /* LiabilityPool+CoreDataClass.swift in Sources */,
 				7342EDAF2C44838C00BA20A4 /* Snapshot+CoreDataClass.swift in Sources */,
@@ -717,6 +717,8 @@
 				7342EDBC2C44868900BA20A4 /* SnapshotLedger.swift in Sources */,
 				73037F522CC00ECB005DD105 /* SnapshotStructureView.swift in Sources */,
 				7363DDF82CA89CDE009F3412 /* LiabilityRepository.swift in Sources */,
+				73ED17ED2CDAACE100313D00 /* Possession+CoreDataClass.swift in Sources */,
+				73ED17EE2CDAACE100313D00 /* Possession+CoreDataProperties.swift in Sources */,
 				7342ED9F2C44818100BA20A4 /* LiabilityFormViewModel.swift in Sources */,
 				7342ED822C447D4F00BA20A4 /* CircularProgressView.swift in Sources */,
 				7342ED512C44789A00BA20A4 /* Liability+CoreDataClass.swift in Sources */,
@@ -724,6 +726,8 @@
 				7342ED522C44789A00BA20A4 /* Liability+CoreDataProperties.swift in Sources */,
 				7363DDFE2CA9FD6C009F3412 /* Array+Extension.swift in Sources */,
 				7342ED7F2C447D0200BA20A4 /* RelationshipObserver.swift in Sources */,
+				73ED17F52CDAAF8100313D00 /* AssetPool+CoreDataProperties.swift in Sources */,
+				73ED17F62CDAAF8100313D00 /* AssetPool+CoreDataClass.swift in Sources */,
 				73037F5E2CC12101005DD105 /* PossessionForm.swift in Sources */,
 				7342ED892C447E7000BA20A4 /* LocalizedShortDateFormatter.swift in Sources */,
 				73B811982CA6CF4B003B1973 /* SnapshotAnalyzer.swift in Sources */,
