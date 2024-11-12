@@ -40,8 +40,20 @@ struct LiabilityForm: View {
     
     private var descriptionSection: some View {
         Section {
-            TextField("creditor", text: $viewModel.liabilityCreditor)
-            TextField("purpose", text: $viewModel.liabilityName)
+            TextField("purpose", text: $viewModel.name)
+            NavigationLink {
+                PersonSelectionView(viewModel:
+                    PersonSelectionViewModel(selectedPerson: viewModel.creditor) { selectedPerson in
+                        viewModel.creditor = selectedPerson
+                    }
+                )
+            } label: {
+                HStack {
+                    Text("Debtor")
+                    Spacer()
+                    Text(viewModel.creditor?.name ?? "none selected")
+                }
+            }
             Picker("LiabilityPool", selection: $viewModel.liabilityPool) {
                 ForEach(viewModel.getLiabilityPools()) { pool in
                     Text(pool.name).tag(pool)
@@ -56,13 +68,13 @@ struct LiabilityForm: View {
             HStack {
                 Text("initial amount")
                 Spacer()
-                CurrencyInputField(value: $viewModel.liabilityInitialAmount)
+                CurrencyInputField(value: $viewModel.initialAmount)
                     .padding(6)
             }
             HStack {
                 Text("repaid amount")
                 Spacer()
-                CurrencyInputField(value: $viewModel.liabilityRepaidAmount)
+                CurrencyInputField(value: $viewModel.repaidAmount)
                     .padding(6)
             }
         }
@@ -70,7 +82,7 @@ struct LiabilityForm: View {
     
     private var dateSection: some View {
         Section {
-            DatePicker("date", selection: $viewModel.liabilityGrantDate, in: ...Date(), displayedComponents: .date)
+            DatePicker("date", selection: $viewModel.grantDate, in: ...Date(), displayedComponents: .date)
         }
     }
     

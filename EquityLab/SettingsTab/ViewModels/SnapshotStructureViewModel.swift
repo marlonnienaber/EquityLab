@@ -83,12 +83,14 @@ class SnapshotStructureViewModel {
     }
     
     private func validateAssetPool() throws {
+        /* TODO: add empty name validation case */
         if assetPoolWithSameNameExists {
             throw AssetPoolValidationError.poolWithSameNameAlreadyExists
         }
     }
     
     private func validateLiabilityPool() throws {
+        /* TODO: add empty name validation case */
         if liabilityPoolWithSameNameExists {
             throw LiabilityPoolValidationError.poolWithSameNameAlreadyExists
         }

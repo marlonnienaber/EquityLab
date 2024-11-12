@@ -75,7 +75,7 @@ class AssetRepository: NSObject {
     
     func updateReceivable(receivable: Receivable,
                           newName: String,
-                          newDebtor: String,
+                          newDebtor: Person,
                           newInitialAmount: Double,
                           newRepaidAmount: Double,
                           newGrantDate: Date,
@@ -100,7 +100,7 @@ class AssetRepository: NSObject {
     
     func createReceivable(name: String,
                           pool: AssetPool,
-                          debtor: String,
+                          debtor: Person,
                           initialAmount: Double,
                           repaidAmount: Double,
                           grantDate: Date) {

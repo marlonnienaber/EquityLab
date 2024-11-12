@@ -11,7 +11,7 @@ class PossessionFormViewModel {
     var name: String
     var isVolatile: Bool
     var showPopover: Bool = false
-    var validationError: PossessionValidationError?
+    var possessionValidationError: PossessionValidationError?
     var showValidationErrorAlert = false
     let dismissSheet: () -> ()
     

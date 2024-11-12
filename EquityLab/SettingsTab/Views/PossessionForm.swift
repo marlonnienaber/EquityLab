@@ -24,9 +24,9 @@ struct PossessionForm: View {
                     saveButton
                 }
             }
-            .alert(isPresented: $viewModel.showValidationErrorAlert, error: viewModel.validationError) { _ in
+            .alert(isPresented: $viewModel.showValidationErrorAlert, error: viewModel.possessionValidationError) { _ in
                 Button("OK", role: .cancel) {
-                    viewModel.validationError = nil
+                    viewModel.possessionValidationError = nil
                 }
             } message: { _ in }
             .onTapGesture {
@@ -92,7 +92,7 @@ struct PossessionForm: View {
                 try viewModel.savePossession()
                 viewModel.dismissSheet()
             } catch let error as PossessionValidationError  {
-                viewModel.validationError = error
+                viewModel.possessionValidationError = error
                 viewModel.showValidationErrorAlert = true
             } catch {}
         }

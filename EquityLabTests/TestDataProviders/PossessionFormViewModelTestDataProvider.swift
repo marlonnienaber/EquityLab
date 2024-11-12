@@ -3,9 +3,10 @@ import CoreData
 
 struct PossessionFormViewModelTestDataProvider {
     func createAndPersitsTestObjects_getAssetPools_1(using context: NSManagedObjectContext) -> [AssetPool] {
+        let person1 = DataFactory.createPerson(name: "Lenni", using: context)
         let asset1 = DataFactory.createReceivable(name: "Blitz",
                                                   date: DateParser.shared.date(from: "2024-04-15T00:00:00")!,
-                                                  debtor: "Lenni",
+                                                  debtor: person1,
                                                   initialAmount: 20.0,
                                                   repaidAmount: 0.0,
                                                   context: context)
@@ -37,10 +38,11 @@ struct PossessionFormViewModelTestDataProvider {
     }
     
     func createAndPersistTestObjects_createPossessionsWithSameName_2(context: NSManagedObjectContext) -> (Receivable,AssetPool) {
+        let person2 = DataFactory.createPerson(name: "Philipp", using: context)
         let receivable = DataFactory.createReceivable(
             name: "Rote Sonne",
             date: DateParser.shared.date(from: "2024-07-23T00:00:00")!,
-            debtor: "Philipp",
+            debtor: person2,
             initialAmount: 200.0,
             repaidAmount: 40.0,
             context: context

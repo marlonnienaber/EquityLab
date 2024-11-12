@@ -3,9 +3,10 @@ import CoreData
 
 struct SnapshotStructureViewModelTestDataProvider {
     func createAndPersistTestObjects_assetsAndPools_1(using context: NSManagedObjectContext) -> ([AssetPool],[AssetPool:[SnapshotStructureItem]],[SnapshotStructureItem]) {
+        let person1 = DataFactory.createPerson(name: "Lenni", using: context)
         let asset1 = DataFactory.createReceivable(name: "Blitz",
                                                   date: DateParser.shared.date(from: "2024-04-15T00:00:00")!,
-                                                  debtor: "Lenni",
+                                                  debtor: person1,
                                                   initialAmount: 20.0,
                                                   repaidAmount: 0.0,
                                                   context: context)
@@ -47,21 +48,24 @@ struct SnapshotStructureViewModelTestDataProvider {
     }
     
     func createAndPersistTestObjects_liabilitiesAndPools_1(using context: NSManagedObjectContext) -> ([LiabilityPool],[LiabilityPool:[Liability]],[Liability]) {
+        let person2 = DataFactory.createPerson(name: "Papa", using: context)
+        let person3 = DataFactory.createPerson(name: "Mama", using: context)
+        let person4 = DataFactory.createPerson(name: "Bayerische Landesregierung", using: context)
         let liability1 = DataFactory.createLiability(name: "Auto",
                                                      date: DateParser.shared.date(from: "2024-04-15T00:00:00")!,
-                                                     creditor: "Papa",
+                                                     creditor: person2,
                                                      initialAmount: 1000.0,
                                                      repaidAmount: 100.0,
                                                      context: context)
         let liability2 = DataFactory.createLiability(name: "Booth",
                                                      date: DateParser.shared.date(from: "2024-09-15T00:00:00")!,
-                                                     creditor: "Mama",
+                                                     creditor: person3,
                                                      initialAmount: 300.0,
                                                      repaidAmount: 50.0,
                                                      context: context)
         let liability3 = DataFactory.createLiability(name: "Studium",
                                                      date: DateParser.shared.date(from: "2024-04-15T00:00:00")!,
-                                                     creditor: "Bayerische Landesregierung",
+                                                     creditor: person4,
                                                      initialAmount: 5000.0,
                                                      repaidAmount: 1300.0,
                                                      context: context)
@@ -93,9 +97,10 @@ struct SnapshotStructureViewModelTestDataProvider {
     }
     
     func createAndPersistTestObjects_deleteAssetPool_1(using context: NSManagedObjectContext) -> (AssetPool,[AssetPool],[AssetPool:[SnapshotStructureItem]],[SnapshotStructureItem]) {
+        let person1 = DataFactory.createPerson(name: "Lenni", using: context)
         let asset1 = DataFactory.createReceivable(name: "Blitz",
                                                   date: DateParser.shared.date(from: "2024-04-15T00:00:00")!,
-                                                  debtor: "Lenni",
+                                                  debtor: person1,
                                                   initialAmount: 20.0,
                                                   repaidAmount: 0.0,
                                                   context: context)
@@ -123,9 +128,10 @@ struct SnapshotStructureViewModelTestDataProvider {
     }
     
     func createAndPersistTestObjects_updateAssetPool_1(using context: NSManagedObjectContext) -> (AssetPool,[String],[String:[SnapshotStructureItem]],[SnapshotStructureItem]) {
+        let person1 = DataFactory.createPerson(name: "Lenni", using: context)
         let asset1 = DataFactory.createReceivable(name: "Blitz",
                                                   date: DateParser.shared.date(from: "2024-04-15T00:00:00")!,
-                                                  debtor: "Lenni",
+                                                  debtor: person1,
                                                   initialAmount: 20.0,
                                                   repaidAmount: 0.0,
                                                   context: context)
@@ -154,21 +160,24 @@ struct SnapshotStructureViewModelTestDataProvider {
     }
     
     func createAndPersistTestObjects_deleteLiabilityPool_1(using context: NSManagedObjectContext) -> (LiabilityPool,[LiabilityPool],[LiabilityPool:[Liability]],[Liability]) {
+        let person2 = DataFactory.createPerson(name: "Papa", using: context)
+        let person3 = DataFactory.createPerson(name: "Mama", using: context)
+        let person4 = DataFactory.createPerson(name: "Bayerische Landesregierung", using: context)
         let liability1 = DataFactory.createLiability(name: "Auto",
                                                      date: DateParser.shared.date(from: "2024-04-15T00:00:00")!,
-                                                     creditor: "Papa",
+                                                     creditor: person2,
                                                      initialAmount: 1000.0,
                                                      repaidAmount: 100.0,
                                                      context: context)
         let liability2 = DataFactory.createLiability(name: "Booth",
                                                      date: DateParser.shared.date(from: "2024-09-15T00:00:00")!,
-                                                     creditor: "Mama",
+                                                     creditor: person3,
                                                      initialAmount: 300.0,
                                                      repaidAmount: 50.0,
                                                      context: context)
         let liability3 = DataFactory.createLiability(name: "Studium",
                                                      date: DateParser.shared.date(from: "2024-04-15T00:00:00")!,
-                                                     creditor: "Bayerische Landesregierung",
+                                                     creditor: person4,
                                                      initialAmount: 5000.0,
                                                      repaidAmount: 1300.0,
                                                      context: context)
@@ -187,21 +196,24 @@ struct SnapshotStructureViewModelTestDataProvider {
     }
     
     func createAndPersistTestObjects_updateLiabilityPool_1(using context: NSManagedObjectContext) -> (LiabilityPool,[String],[String:[Liability]],[Liability]) {
+        let person2 = DataFactory.createPerson(name: "Papa", using: context)
+        let person3 = DataFactory.createPerson(name: "Mama", using: context)
+        let person4 = DataFactory.createPerson(name: "Bayerische Landesregierung", using: context)
         let liability1 = DataFactory.createLiability(name: "Auto",
                                                      date: DateParser.shared.date(from: "2024-04-15T00:00:00")!,
-                                                     creditor: "Papa",
+                                                     creditor: person2,
                                                      initialAmount: 1000.0,
                                                      repaidAmount: 100.0,
                                                      context: context)
         let liability2 = DataFactory.createLiability(name: "Booth",
                                                      date: DateParser.shared.date(from: "2024-09-15T00:00:00")!,
-                                                     creditor: "Mama",
+                                                     creditor: person3,
                                                      initialAmount: 300.0,
                                                      repaidAmount: 50.0,
                                                      context: context)
         let liability3 = DataFactory.createLiability(name: "Studium",
                                                      date: DateParser.shared.date(from: "2024-04-15T00:00:00")!,
-                                                     creditor: "Bayerische Landesregierung",
+                                                     creditor: person4,
                                                      initialAmount: 5000.0,
                                                      repaidAmount: 1300.0,
                                                      context: context)
@@ -220,21 +232,24 @@ struct SnapshotStructureViewModelTestDataProvider {
     }
     
     func createAndPersistTestObjects_createLiabilityPool_1(using context: NSManagedObjectContext) -> String {
+        let person2 = DataFactory.createPerson(name: "Papa", using: context)
+        let person3 = DataFactory.createPerson(name: "Mama", using: context)
+        let person4 = DataFactory.createPerson(name: "Bayerische Landesregierung", using: context)
         let liability1 = DataFactory.createLiability(name: "Auto",
                                                      date: DateParser.shared.date(from: "2024-04-15T00:00:00")!,
-                                                     creditor: "Papa",
+                                                     creditor: person2,
                                                      initialAmount: 1000.0,
                                                      repaidAmount: 100.0,
                                                      context: context)
         let liability2 = DataFactory.createLiability(name: "Booth",
                                                      date: DateParser.shared.date(from: "2024-09-15T00:00:00")!,
-                                                     creditor: "Mama",
+                                                     creditor: person3,
                                                      initialAmount: 300.0,
                                                      repaidAmount: 50.0,
                                                      context: context)
         let liability3 = DataFactory.createLiability(name: "Studium",
                                                      date: DateParser.shared.date(from: "2024-04-15T00:00:00")!,
-                                                     creditor: "Bayerische Landesregierung",
+                                                     creditor: person4,
                                                      initialAmount: 5000.0,
                                                      repaidAmount: 1300.0,
                                                      context: context)
@@ -244,21 +259,24 @@ struct SnapshotStructureViewModelTestDataProvider {
     }
     
     func createAndPersistTestObjects_updateLiabilityPool_1(using context: NSManagedObjectContext) -> (LiabilityPool,String) {
+        let person2 = DataFactory.createPerson(name: "Papa", using: context)
+        let person3 = DataFactory.createPerson(name: "Mama", using: context)
+        let person4 = DataFactory.createPerson(name: "Bayerische Landesregierung", using: context)
         let liability1 = DataFactory.createLiability(name: "Auto",
                                                      date: DateParser.shared.date(from: "2024-04-15T00:00:00")!,
-                                                     creditor: "Papa",
+                                                     creditor: person2,
                                                      initialAmount: 1000.0,
                                                      repaidAmount: 100.0,
                                                      context: context)
         let liability2 = DataFactory.createLiability(name: "Booth",
                                                      date: DateParser.shared.date(from: "2024-09-15T00:00:00")!,
-                                                     creditor: "Mama",
+                                                     creditor: person3,
                                                      initialAmount: 300.0,
                                                      repaidAmount: 50.0,
                                                      context: context)
         let liability3 = DataFactory.createLiability(name: "Studium",
                                                      date: DateParser.shared.date(from: "2024-04-15T00:00:00")!,
-                                                     creditor: "Bayerische Landesregierung",
+                                                     creditor: person4,
                                                      initialAmount: 5000.0,
                                                      repaidAmount: 1300.0,
                                                      context: context)
@@ -271,9 +289,10 @@ struct SnapshotStructureViewModelTestDataProvider {
     }
     
     func createAndPersistTestObjects_createAssetPool_1(using context: NSManagedObjectContext) -> String {
+        let person1 = DataFactory.createPerson(name: "Lenni", using: context)
         let asset1 = DataFactory.createReceivable(name: "Blitz",
                                                   date: DateParser.shared.date(from: "2024-04-15T00:00:00")!,
-                                                  debtor: "Lenni",
+                                                  debtor: person1,
                                                   initialAmount: 20.0,
                                                   repaidAmount: 0.0,
                                                   context: context)
@@ -288,9 +307,10 @@ struct SnapshotStructureViewModelTestDataProvider {
     }
     
     func createAndPersistTestObjects_updateAssetPool_1(using context: NSManagedObjectContext) -> (AssetPool,String) {
+        let person1 = DataFactory.createPerson(name: "Lenni", using: context)
         let asset1 = DataFactory.createReceivable(name: "Blitz",
                                                   date: DateParser.shared.date(from: "2024-04-15T00:00:00")!,
-                                                  debtor: "Lenni",
+                                                  debtor: person1,
                                                   initialAmount: 20.0,
                                                   repaidAmount: 0.0,
                                                   context: context)

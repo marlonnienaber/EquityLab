@@ -60,7 +60,7 @@ class LiabilityRepository: NSObject {
     
     func createLiability(name: String,
                          pool: LiabilityPool,
-                         creditor: String,
+                         creditor: Person,
                          initialAmount: Double,
                          repaidAmount: Double,
                          grantDate: Date) {
@@ -77,7 +77,7 @@ class LiabilityRepository: NSObject {
     
     func updateLiability(liability: Liability,
                          newName: String,
-                         newCreditor: String,
+                         newCreditor: Person,
                          newInitialAmount: Double,
                          newRepaidAmount: Double,
                          newGrantDate: Date,

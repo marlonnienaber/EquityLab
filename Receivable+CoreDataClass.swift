@@ -23,7 +23,7 @@ public class Receivable: NSManagedObject, Codable {
         self.init(usedContext: ProductionCoreDataStack.shared.context)
         let container = try decoder.container(keyedBy: CodingKeys.self)
         name = try container.decode(String.self, forKey: .name)
-        debtor = try container.decode(String.self, forKey: .debtor)
+        debtor = Person.getOrCreatePerson(name: try container.decode(String.self, forKey: .debtor))
         grantDate = try container.decode(Date.self, forKey: .grantDate)
         initialAmount = try container.decode(Double.self, forKey: .initialAmount)
         repaidAmount = try container.decode(Double.self, forKey: .repaidAmount)
@@ -32,7 +32,7 @@ public class Receivable: NSManagedObject, Codable {
     public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(name, forKey: .name)
-        try container.encode(debtor, forKey: .debtor)
+        try container.encode(debtor?.name, forKey: .debtor)
         try container.encode(grantDate, forKey: .grantDate)
         try container.encode(initialAmount, forKey: .initialAmount)
         try container.encode(repaidAmount, forKey: .repaidAmount)

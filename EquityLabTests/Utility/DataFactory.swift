@@ -62,7 +62,14 @@ struct DataFactory {
         return pool
     }
     
-    static func createReceivable(name: String, date: Date, debtor: String, initialAmount: Double, repaidAmount: Double, context: NSManagedObjectContext) -> Receivable {
+    static func createPerson(name: String, using context: NSManagedObjectContext) -> Person {
+        let person = Person(usedContext: context)
+        person.name = name
+        try? context.save()
+        return person
+    }
+    
+    static func createReceivable(name: String, date: Date, debtor: Person, initialAmount: Double, repaidAmount: Double, context: NSManagedObjectContext) -> Receivable {
         let receivable = Receivable(usedContext: context)
         receivable.name = name
         receivable.grantDate = date
@@ -81,7 +88,7 @@ struct DataFactory {
         return possession
     }
     
-    static func createLiability(name: String, date: Date, creditor: String, initialAmount: Double, repaidAmount: Double, context: NSManagedObjectContext) -> Liability {
+    static func createLiability(name: String, date: Date, creditor: Person, initialAmount: Double, repaidAmount: Double, context: NSManagedObjectContext) -> Liability {
         let liability = Liability(usedContext: context)
         liability.name = name
         liability.creditor = creditor

@@ -3,9 +3,10 @@ import CoreData
 
 struct ReceivableFormViewModelTestDataProvider {
     func createAndPersitsTestObjects_getAssetPools_1(using context: NSManagedObjectContext) -> [AssetPool] {
+        let person1 = DataFactory.createPerson(name: "Lenni", using: context)
         let asset1 = DataFactory.createReceivable(name: "Blitz",
                                                   date: DateParser.shared.date(from: "2024-04-15T00:00:00")!,
-                                                  debtor: "Lenni",
+                                                  debtor: person1,
                                                   initialAmount: 20.0,
                                                   repaidAmount: 0.0,
                                                   context: context)
@@ -27,7 +28,13 @@ struct ReceivableFormViewModelTestDataProvider {
     }
     
     func createAndPersistTestObjects_updateReceivable_multipurpose(context: NSManagedObjectContext) -> Receivable {
-        let receivable = DataFactory.createReceivable(name: "Lenni", date: .now, debtor: "Lenni", initialAmount: 100.0, repaidAmount: 20.0, context: context)
+        let person1 = DataFactory.createPerson(name: "Lenni", using: context)
+        let receivable = DataFactory.createReceivable(name: "Lenni",
+                                                      date: .now,
+                                                      debtor: person1,
+                                                      initialAmount: 100.0,
+                                                      repaidAmount: 20.0,
+                                                      context: context)
         let _ = DataFactory.createAssetPool(named: "Darlehen", possessions: [], receivables: [receivable], in: context)
         return receivable
     }
@@ -46,15 +53,17 @@ struct ReceivableFormViewModelTestDataProvider {
     }
     
     func createAndPersistTestObjects_deleteReceivable_1(using context: NSManagedObjectContext) -> (Receivable,[Receivable]) {
+        let person1 = DataFactory.createPerson(name: "Lenni", using: context)
+        let person2 = DataFactory.createPerson(name: "Haze", using: context)
         let asset1 = DataFactory.createReceivable(name: "Blitz",
                                                   date: DateParser.shared.date(from: "2024-04-15T00:00:00")!,
-                                                  debtor: "Lenni",
+                                                  debtor: person1,
                                                   initialAmount: 20.0,
                                                   repaidAmount: 0.0,
                                                   context: context)
         let asset2 = DataFactory.createReceivable(name: "Baumarkt",
                                                   date: DateParser.shared.date(from: "2024-04-16T00:00:00")!,
-                                                  debtor: "Haze",
+                                                  debtor: person2,
                                                   initialAmount: 30.0,
                                                   repaidAmount: 5.0,
                                                   context: context)

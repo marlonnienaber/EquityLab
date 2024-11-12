@@ -4,11 +4,13 @@ import XCTest
 final class ReceivableFormViewModelTests: XCTestCase {
     private var testingCoreDataStack: TestingCoreDataStack!
     private var testingAssetRepository: AssetRepository!
+    private var testingPersonRepository: PersonRepository!
     private let testDataProvider = ReceivableFormViewModelTestDataProvider()
     
     override func setUpWithError() throws {
         testingCoreDataStack = TestingCoreDataStack()
         testingAssetRepository = AssetRepository(context: testingCoreDataStack.context)
+        testingPersonRepository = PersonRepository(context: testingCoreDataStack.context)
     }
     
     
@@ -17,7 +19,7 @@ final class ReceivableFormViewModelTests: XCTestCase {
     func test_getAssetPools_1() throws {
         let expectedPools = testDataProvider.createAndPersitsTestObjects_getAssetPools_1(using: testingCoreDataStack.context)
 
-        let sut = ReceivableFormViewModel(repository: testingAssetRepository, dismissSheet: {})
+        let sut = ReceivableFormViewModel(assetRepository: testingAssetRepository, personRepository: testingPersonRepository, dismissSheet: {})
 
         let actualPools = sut.getAssetPools()
         XCTAssertTrue(expectedPools ≡ actualPools)
@@ -29,10 +31,10 @@ final class ReceivableFormViewModelTests: XCTestCase {
     func test_updateReceivable_1() throws {
         var receivable = testDataProvider.createAndPersistTestObjects_updateReceivable_multipurpose(context: testingCoreDataStack.context)
 
-        let sut = ReceivableFormViewModel(receivable: receivable, repository: testingAssetRepository, dismissSheet: {})
+        let sut = ReceivableFormViewModel(receivable: receivable, assetRepository: testingAssetRepository, personRepository: testingPersonRepository, dismissSheet: {})
 
         let expectedName = "Rote Sonne"
-        let expectedDebtor = "Philipp"
+        let expectedDebtor = DataFactory.createPerson(name: "Philipp", using: testingCoreDataStack.context)
         let expectedGrantDate = DateParser.shared.date(from: "2024-07-23T00:00:00")!
         let expectedInitialAmount = 200.0
         let expectedRepaidAmount = 40.0
@@ -69,7 +71,7 @@ final class ReceivableFormViewModelTests: XCTestCase {
     func test_updateReceivable_2() throws {
         let receivable = testDataProvider.createAndPersistTestObjects_updateReceivable_multipurpose(context: testingCoreDataStack.context)
 
-        let sut = ReceivableFormViewModel(receivable: receivable, repository: testingAssetRepository, dismissSheet: {})
+        let sut = ReceivableFormViewModel(receivable: receivable, assetRepository: testingAssetRepository, personRepository: testingPersonRepository, dismissSheet: {})
 
         sut.name = ""
 
@@ -82,12 +84,12 @@ final class ReceivableFormViewModelTests: XCTestCase {
     func test_updateReceivable_3() throws {
         let receivable = testDataProvider.createAndPersistTestObjects_updateReceivable_multipurpose(context: testingCoreDataStack.context)
 
-        let sut = ReceivableFormViewModel(receivable: receivable, repository: testingAssetRepository, dismissSheet: {})
+        let sut = ReceivableFormViewModel(receivable: receivable, assetRepository: testingAssetRepository, personRepository: testingPersonRepository, dismissSheet: {})
 
-        sut.debtor = ""
+        sut.debtor = nil
 
         XCTAssertThrowsError(try sut.saveReceivable()) { error in
-            XCTAssertEqual(error as? ReceivableValidationError, ReceivableValidationError.emptyDebtor)
+            XCTAssertEqual(error as? ReceivableValidationError, ReceivableValidationError.noDebtorSelected)
         }
     }
 
@@ -95,7 +97,7 @@ final class ReceivableFormViewModelTests: XCTestCase {
     func test_updateReceivable_4() throws {
         let receivable = testDataProvider.createAndPersistTestObjects_updateReceivable_multipurpose(context: testingCoreDataStack.context)
 
-        let sut = ReceivableFormViewModel(receivable: receivable, repository: testingAssetRepository, dismissSheet: {})
+        let sut = ReceivableFormViewModel(receivable: receivable, assetRepository: testingAssetRepository, personRepository: testingPersonRepository, dismissSheet: {})
 
         sut.initialAmount = 0.0
         sut.repaidAmount = 0.0
@@ -109,7 +111,7 @@ final class ReceivableFormViewModelTests: XCTestCase {
     func test_updateReceivable_5() throws {
         let receivable = testDataProvider.createAndPersistTestObjects_updateReceivable_multipurpose(context: testingCoreDataStack.context)
 
-        let sut = ReceivableFormViewModel(receivable: receivable, repository: testingAssetRepository, dismissSheet: {})
+        let sut = ReceivableFormViewModel(receivable: receivable, assetRepository: testingAssetRepository, personRepository: testingPersonRepository, dismissSheet: {})
 
         sut.initialAmount = 10.0
         sut.repaidAmount = 20.0
@@ -123,7 +125,7 @@ final class ReceivableFormViewModelTests: XCTestCase {
     func test_updateReceivable_6() throws {
         let receivable = testDataProvider.createAndPersistTestObjects_updateReceivable_multipurpose(context: testingCoreDataStack.context)
 
-        let sut = ReceivableFormViewModel(receivable: receivable, repository: testingAssetRepository, dismissSheet: {})
+        let sut = ReceivableFormViewModel(receivable: receivable, assetRepository: testingAssetRepository, personRepository: testingPersonRepository, dismissSheet: {})
 
         sut.assetPool = nil
 
@@ -138,10 +140,10 @@ final class ReceivableFormViewModelTests: XCTestCase {
     func test_createReceivable_1() throws {
         let assetPool = testDataProvider.createAndPersistTestObjects_createReceivable_multipurpose(context: testingCoreDataStack.context)
 
-        let sut = ReceivableFormViewModel(repository: testingAssetRepository, dismissSheet: {})
+        let sut = ReceivableFormViewModel(assetRepository: testingAssetRepository, personRepository: testingPersonRepository, dismissSheet: {})
 
         let expectedName = "Rote Sonne"
-        let expectedDebtor = "Philipp"
+        let expectedDebtor = DataFactory.createPerson(name: "Philipp", using: testingCoreDataStack.context)
         let expectedGrantDate = DateParser.shared.date(from: "2024-07-23T00:00:00")!
         let expectedInitialAmount = 200.0
         let expectedRepaidAmount = 40.0
@@ -175,10 +177,10 @@ final class ReceivableFormViewModelTests: XCTestCase {
     func test_createReceivable_2() throws {
         let assetPool = testDataProvider.createAndPersistTestObjects_createReceivable_multipurpose(context: testingCoreDataStack.context)
 
-        let sut = ReceivableFormViewModel(repository: testingAssetRepository, dismissSheet: {})
+        let sut = ReceivableFormViewModel(assetRepository: testingAssetRepository, personRepository: testingPersonRepository, dismissSheet: {})
 
         let expectedName = ""
-        let expectedDebtor = "Philipp"
+        let expectedDebtor = DataFactory.createPerson(name: "Philipp", using: testingCoreDataStack.context)
         let expectedGrantDate = DateParser.shared.date(from: "2024-07-23T00:00:00")!
         let expectedInitialAmount = 200.0
         let expectedRepaidAmount = 40.0
@@ -194,26 +196,24 @@ final class ReceivableFormViewModelTests: XCTestCase {
         }
     }
 
-    /// create a Receivable with an empty debtor and check whether the correct error is thrown
+    /// create a Receivable without debtor and check whether the correct error is thrown
     func test_createReceivable_3() throws {
         let assetPool = testDataProvider.createAndPersistTestObjects_createReceivable_multipurpose(context: testingCoreDataStack.context)
 
-        let sut = ReceivableFormViewModel(repository: testingAssetRepository, dismissSheet: {})
+        let sut = ReceivableFormViewModel(assetRepository: testingAssetRepository, personRepository: testingPersonRepository, dismissSheet: {})
 
         let expectedName = "Some name"
-        let expectedDebtor = ""
         let expectedGrantDate = DateParser.shared.date(from: "2024-07-23T00:00:00")!
         let expectedInitialAmount = 200.0
         let expectedRepaidAmount = 40.0
 
         sut.name = expectedName
-        sut.debtor = expectedDebtor
         sut.grantDate = expectedGrantDate
         sut.initialAmount = expectedInitialAmount
         sut.repaidAmount = expectedRepaidAmount
         sut.assetPool = assetPool
         XCTAssertThrowsError(try sut.saveReceivable()) { error in
-            XCTAssertEqual(error as? ReceivableValidationError, ReceivableValidationError.emptyDebtor)
+            XCTAssertEqual(error as? ReceivableValidationError, ReceivableValidationError.noDebtorSelected)
         }
     }
 
@@ -221,10 +221,10 @@ final class ReceivableFormViewModelTests: XCTestCase {
     func test_createReceivable_4() throws {
         let assetPool = testDataProvider.createAndPersistTestObjects_createReceivable_multipurpose(context: testingCoreDataStack.context)
 
-        let sut = ReceivableFormViewModel(repository: testingAssetRepository, dismissSheet: {})
+        let sut = ReceivableFormViewModel(assetRepository: testingAssetRepository, personRepository: testingPersonRepository, dismissSheet: {})
 
         let expectedName = "Some name"
-        let expectedDebtor = "Someone"
+        let expectedDebtor = DataFactory.createPerson(name: "Someone", using: testingCoreDataStack.context)
         let expectedGrantDate = DateParser.shared.date(from: "2024-07-23T00:00:00")!
         let expectedInitialAmount = 40.0
         let expectedRepaidAmount = 200.0
@@ -244,10 +244,10 @@ final class ReceivableFormViewModelTests: XCTestCase {
     func test_createReceivable_5() throws {
         let assetPool = testDataProvider.createAndPersistTestObjects_createReceivable_multipurpose(context: testingCoreDataStack.context)
 
-        let sut = ReceivableFormViewModel(repository: testingAssetRepository, dismissSheet: {})
+        let sut = ReceivableFormViewModel(assetRepository: testingAssetRepository, personRepository: testingPersonRepository, dismissSheet: {})
 
         let expectedName = "Some name"
-        let expectedDebtor = "Someone"
+        let expectedDebtor = DataFactory.createPerson(name: "Someone", using: testingCoreDataStack.context)
         let expectedGrantDate = DateParser.shared.date(from: "2024-07-23T00:00:00")!
         let expectedInitialAmount = 0.0
         let expectedRepaidAmount = 0.0
@@ -265,10 +265,10 @@ final class ReceivableFormViewModelTests: XCTestCase {
 
     /// create a Receivable such that no assetPool is selected and check whether the correct error is thrown
     func test_createReceivable_6() throws {
-        let sut = ReceivableFormViewModel(repository: testingAssetRepository, dismissSheet: {})
+        let sut = ReceivableFormViewModel(assetRepository: testingAssetRepository, personRepository: testingPersonRepository, dismissSheet: {})
 
         let expectedName = "Some name"
-        let expectedDebtor = "Someone"
+        let expectedDebtor = DataFactory.createPerson(name: "Someone", using: testingCoreDataStack.context)
         let expectedGrantDate = DateParser.shared.date(from: "2024-07-23T00:00:00")!
         let expectedInitialAmount = 20.0
         let expectedRepaidAmount = 0.0
@@ -290,10 +290,10 @@ final class ReceivableFormViewModelTests: XCTestCase {
     func test_createReceivablesWithSameName_1() throws {
         let assetPool = testDataProvider.createAndPersistTestObjects_createReceivable_multipurpose(context: testingCoreDataStack.context)
 
-        let sut = ReceivableFormViewModel(repository: testingAssetRepository, dismissSheet: {})
+        let sut = ReceivableFormViewModel(assetRepository: testingAssetRepository, personRepository: testingPersonRepository, dismissSheet: {})
 
         let firstExpectedName = "Rote Sonne"
-        let firstExpectedDebtor = "Philipp"
+        let firstExpectedDebtor = DataFactory.createPerson(name: "Philipp", using: testingCoreDataStack.context)
         let firstExpectedGrantDate = DateParser.shared.date(from: "2024-07-23T00:00:00")!
         let firstExpectedInitialAmount = 200.0
         let firstExpectedRepaidAmount = 40.0
@@ -307,7 +307,7 @@ final class ReceivableFormViewModelTests: XCTestCase {
         try sut.saveReceivable()
 
         let secondExpectedName = "Rote Sonne"
-        let secondExpectedDebtor = "Lenni"
+        let secondExpectedDebtor = DataFactory.createPerson(name: "Lenni", using: testingCoreDataStack.context)
         let secondExpectedGrantDate = DateParser.shared.date(from: "2024-07-22T00:00:00")!
         let secondExpectedInitialAmount = 100.0
         let secondExpectedRepaidAmount = 20.0
@@ -344,10 +344,10 @@ final class ReceivableFormViewModelTests: XCTestCase {
     func test_createReceivablesWithSameName_2() throws {
         let (expectedPossession,assetPool) = testDataProvider.createAndPersistTestObjects_createReceivablesWithSameName_2(context: testingCoreDataStack.context)
 
-        let sut = ReceivableFormViewModel(repository: testingAssetRepository, dismissSheet: {})
+        let sut = ReceivableFormViewModel(assetRepository: testingAssetRepository, personRepository: testingPersonRepository, dismissSheet: {})
 
         let secondExpectedName = "Commerzbank Konto"
-        let secondExpectedDebtor = "Lenni"
+        let secondExpectedDebtor = DataFactory.createPerson(name: "Lenni", using: testingCoreDataStack.context)
         let secondExpectedGrantDate = DateParser.shared.date(from: "2024-07-22T00:00:00")!
         let secondExpectedInitialAmount = 100.0
         let secondExpectedRepaidAmount = 20.0
@@ -376,7 +376,7 @@ final class ReceivableFormViewModelTests: XCTestCase {
     func test_deleteReceivable_1() throws {
         let (receivableToDelete, expectedReceivables) = testDataProvider.createAndPersistTestObjects_deleteReceivable_1(using: testingCoreDataStack.context)
 
-        let sut = ReceivableFormViewModel(repository: testingAssetRepository, dismissSheet: {})
+        let sut = ReceivableFormViewModel(assetRepository: testingAssetRepository, personRepository: testingPersonRepository, dismissSheet: {})
         sut.receivable = receivableToDelete
         sut.deleteReceivable()
 

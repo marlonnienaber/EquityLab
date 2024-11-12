@@ -19,6 +19,7 @@ extension Logger {
         case loanManagementViewModel = "LoanManagementViewModel"
         case liabilityFormViewModel = "LiabilityFormViewModel"
         case settingsViewModel = "SettingsViewModel"
+        case personSelectionViewModel = "PersonSelectionViewModel"
         case snapshotStructureViewModel = "SnapshotStructureViewModel"
         case possessionFormViewModel = "PossessionFormViewModel"
         case receivableFormViewModel = "ReceivableFormViewModel"

@@ -65,7 +65,7 @@ struct LoanManagementView: View {
                 VStack(alignment: .leading) {
                     Text(receivable.name)
                         .foregroundColor(Color.primary)
-                    Text(receivable.debtor)
+                    Text(viewModel.getDebtorName(of: receivable))
                         .font(.footnote)
                         .foregroundColor(Color.gray)
                     Text(initialAmountStringRepresentation)
@@ -85,7 +85,7 @@ struct LoanManagementView: View {
                 VStack(alignment: .leading) {
                     Text(liability.name)
                         .foregroundColor(Color.primary)
-                    Text(liability.creditor)
+                    Text(viewModel.getCreditorName(of: liability))
                         .font(.footnote)
                         .foregroundColor(Color.gray)
                     Text(initialAmountStringRepresentation)
@@ -123,7 +123,7 @@ struct LoanManagementView: View {
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button("Cancel"){
-                        viewModel.activeLoanUpdateSheet = nil
+                        viewModel.showLoanUpdatePickerSheet = false
                     }
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {

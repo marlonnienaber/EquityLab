@@ -4,11 +4,13 @@ import XCTest
 final class LiabilityFormViewModelTests: XCTestCase {
     private var testingCoreDataStack: TestingCoreDataStack!
     private var testingLiabilityRepository: LiabilityRepository!
+    private var testingPersonRepository: PersonRepository!
     private let testDataProvider = LiabilityFormViewModelTestDataProvider()
     
     override func setUpWithError() throws {
         testingCoreDataStack = TestingCoreDataStack()
         testingLiabilityRepository = LiabilityRepository(context: testingCoreDataStack.context)
+        testingPersonRepository = PersonRepository(context: testingCoreDataStack.context)
     }
     
     
@@ -17,7 +19,7 @@ final class LiabilityFormViewModelTests: XCTestCase {
     func test_getLiabilityPools_1() throws {
         let expectedPools = testDataProvider.createAndPersistTestObjects_getLiabilityPools_1(using: testingCoreDataStack.context)
         
-        let sut = LiabilityFormViewModel(repository: testingLiabilityRepository, dismissSheet: {})
+        let sut = LiabilityFormViewModel(liabilityRepository: testingLiabilityRepository, personRepository: testingPersonRepository, dismissSheet: {})
         
         let actualPools = sut.getLiabilityPools()
         XCTAssertTrue(expectedPools ≡ actualPools)
@@ -29,19 +31,19 @@ final class LiabilityFormViewModelTests: XCTestCase {
     func test_createLiability_1() throws {
         let liabilityPool = testDataProvider.createAndPersistTestObjects_createLiability_1(context: testingCoreDataStack.context)
         
-        let sut = LiabilityFormViewModel(repository: testingLiabilityRepository, dismissSheet: {})
+        let sut = LiabilityFormViewModel(liabilityRepository: testingLiabilityRepository, personRepository: testingPersonRepository, dismissSheet: {})
         
         let expectedName = "Auto"
         let expectedDate = DateParser.shared.date(from: "2024-04-15T00:00:00")!
-        let expectedCreditor = "Papa"
+        let expectedCreditor = DataFactory.createPerson(name: "Papa", using: testingCoreDataStack.context)
         let expectedInitialAmount = 1000.0
         let expectedRepaidAmount = 200.0
         
-        sut.liabilityName = expectedName
-        sut.liabilityGrantDate = expectedDate
-        sut.liabilityCreditor = expectedCreditor
-        sut.liabilityInitialAmount = expectedInitialAmount
-        sut.liabilityRepaidAmount = expectedRepaidAmount
+        sut.name = expectedName
+        sut.grantDate = expectedDate
+        sut.creditor = expectedCreditor
+        sut.initialAmount = expectedInitialAmount
+        sut.repaidAmount = expectedRepaidAmount
         sut.liabilityPool = liabilityPool
         try sut.saveLiability()
         
@@ -66,19 +68,19 @@ final class LiabilityFormViewModelTests: XCTestCase {
     func test_createLiability_2() throws {
         let liabilityPool = testDataProvider.createAndPersistTestObjects_createLiability_1(context: testingCoreDataStack.context)
         
-        let sut = LiabilityFormViewModel(repository: testingLiabilityRepository, dismissSheet: {})
+        let sut = LiabilityFormViewModel(liabilityRepository: testingLiabilityRepository, personRepository: testingPersonRepository, dismissSheet: {})
         
         let expectedName = ""
         let expectedDate = DateParser.shared.date(from: "2024-04-15T00:00:00")!
-        let expectedCreditor = "Papa"
+        let expectedCreditor = DataFactory.createPerson(name: "Papa", using: testingCoreDataStack.context)
         let expectedInitialAmount = 1000.0
         let expectedRepaidAmount = 200.0
         
-        sut.liabilityName = expectedName
-        sut.liabilityGrantDate = expectedDate
-        sut.liabilityCreditor = expectedCreditor
-        sut.liabilityInitialAmount = expectedInitialAmount
-        sut.liabilityRepaidAmount = expectedRepaidAmount
+        sut.name = expectedName
+        sut.grantDate = expectedDate
+        sut.creditor = expectedCreditor
+        sut.initialAmount = expectedInitialAmount
+        sut.repaidAmount = expectedRepaidAmount
         sut.liabilityPool = liabilityPool
         XCTAssertThrowsError(try sut.saveLiability()) { error in
             XCTAssertEqual(error as? LiabilityValidationError, LiabilityValidationError.emptyName)
@@ -89,22 +91,20 @@ final class LiabilityFormViewModelTests: XCTestCase {
     func test_createLiability_3() throws {
         let liabilityPool = testDataProvider.createAndPersistTestObjects_createLiability_1(context: testingCoreDataStack.context)
         
-        let sut = LiabilityFormViewModel(repository: testingLiabilityRepository, dismissSheet: {})
+        let sut = LiabilityFormViewModel(liabilityRepository: testingLiabilityRepository, personRepository: testingPersonRepository, dismissSheet: {})
         
         let expectedName = "Auto"
         let expectedDate = DateParser.shared.date(from: "2024-04-15T00:00:00")!
-        let expectedCreditor = ""
         let expectedInitialAmount = 1000.0
         let expectedRepaidAmount = 200.0
         
-        sut.liabilityName = expectedName
-        sut.liabilityGrantDate = expectedDate
-        sut.liabilityCreditor = expectedCreditor
-        sut.liabilityInitialAmount = expectedInitialAmount
-        sut.liabilityRepaidAmount = expectedRepaidAmount
+        sut.name = expectedName
+        sut.grantDate = expectedDate
+        sut.initialAmount = expectedInitialAmount
+        sut.repaidAmount = expectedRepaidAmount
         sut.liabilityPool = liabilityPool
         XCTAssertThrowsError(try sut.saveLiability()) { error in
-            XCTAssertEqual(error as? LiabilityValidationError, LiabilityValidationError.emptyCreditor)
+            XCTAssertEqual(error as? LiabilityValidationError, LiabilityValidationError.noCreditorSelected)
         }
     }
     
@@ -112,19 +112,19 @@ final class LiabilityFormViewModelTests: XCTestCase {
     func test_createLiability_4() throws {
         let liabilityPool = testDataProvider.createAndPersistTestObjects_createLiability_1(context: testingCoreDataStack.context)
         
-        let sut = LiabilityFormViewModel(repository: testingLiabilityRepository, dismissSheet: {})
+        let sut = LiabilityFormViewModel(liabilityRepository: testingLiabilityRepository, personRepository: testingPersonRepository, dismissSheet: {})
         
         let expectedName = "Auto"
         let expectedDate = DateParser.shared.date(from: "2024-04-15T00:00:00")!
-        let expectedCreditor = "Papa"
+        let expectedCreditor = DataFactory.createPerson(name: "Papa", using: testingCoreDataStack.context)
         let expectedInitialAmount = 100.0
         let expectedRepaidAmount = 200.0
         
-        sut.liabilityName = expectedName
-        sut.liabilityGrantDate = expectedDate
-        sut.liabilityCreditor = expectedCreditor
-        sut.liabilityInitialAmount = expectedInitialAmount
-        sut.liabilityRepaidAmount = expectedRepaidAmount
+        sut.name = expectedName
+        sut.grantDate = expectedDate
+        sut.creditor = expectedCreditor
+        sut.initialAmount = expectedInitialAmount
+        sut.repaidAmount = expectedRepaidAmount
         sut.liabilityPool = liabilityPool
         XCTAssertThrowsError(try sut.saveLiability()) { error in
             XCTAssertEqual(error as? LiabilityValidationError, LiabilityValidationError.repaidSurpassesInitialAmount)
@@ -135,19 +135,19 @@ final class LiabilityFormViewModelTests: XCTestCase {
     func test_createLiability_5() throws {
         let liabilityPool = testDataProvider.createAndPersistTestObjects_createLiability_1(context: testingCoreDataStack.context)
         
-        let sut = LiabilityFormViewModel(repository: testingLiabilityRepository, dismissSheet: {})
+        let sut = LiabilityFormViewModel(liabilityRepository: testingLiabilityRepository, personRepository: testingPersonRepository, dismissSheet: {})
         
         let expectedName = "Auto"
         let expectedDate = DateParser.shared.date(from: "2024-04-15T00:00:00")!
-        let expectedCreditor = "Papa"
+        let expectedCreditor = DataFactory.createPerson(name: "Papa", using: testingCoreDataStack.context)
         let expectedInitialAmount = 0.0
         let expectedRepaidAmount = 0.0
         
-        sut.liabilityName = expectedName
-        sut.liabilityGrantDate = expectedDate
-        sut.liabilityCreditor = expectedCreditor
-        sut.liabilityInitialAmount = expectedInitialAmount
-        sut.liabilityRepaidAmount = expectedRepaidAmount
+        sut.name = expectedName
+        sut.grantDate = expectedDate
+        sut.creditor = expectedCreditor
+        sut.initialAmount = expectedInitialAmount
+        sut.repaidAmount = expectedRepaidAmount
         sut.liabilityPool = liabilityPool
         XCTAssertThrowsError(try sut.saveLiability()) { error in
             XCTAssertEqual(error as? LiabilityValidationError, LiabilityValidationError.initialAmountNotStrictlyPositive)
@@ -156,19 +156,19 @@ final class LiabilityFormViewModelTests: XCTestCase {
     
     /// create a Liability such that no assetPool is selected and check whether the correct error is thrown
     func test_createLiability_6() throws {
-        let sut = LiabilityFormViewModel(repository: testingLiabilityRepository, dismissSheet: {})
+        let sut = LiabilityFormViewModel(liabilityRepository: testingLiabilityRepository, personRepository: testingPersonRepository, dismissSheet: {})
         
         let expectedName = "Auto"
         let expectedDate = DateParser.shared.date(from: "2024-04-15T00:00:00")!
-        let expectedCreditor = "Papa"
+        let expectedCreditor = DataFactory.createPerson(name: "Papa", using: testingCoreDataStack.context)
         let expectedInitialAmount = 1000.0
         let expectedRepaidAmount = 200.0
         
-        sut.liabilityName = expectedName
-        sut.liabilityGrantDate = expectedDate
-        sut.liabilityCreditor = expectedCreditor
-        sut.liabilityInitialAmount = expectedInitialAmount
-        sut.liabilityRepaidAmount = expectedRepaidAmount
+        sut.name = expectedName
+        sut.grantDate = expectedDate
+        sut.creditor = expectedCreditor
+        sut.initialAmount = expectedInitialAmount
+        sut.repaidAmount = expectedRepaidAmount
         sut.liabilityPool = nil
         XCTAssertThrowsError(try sut.saveLiability()) { error in
             XCTAssertEqual(error as? LiabilityValidationError, LiabilityValidationError.noLiabilityPoolSelected)
@@ -181,18 +181,18 @@ final class LiabilityFormViewModelTests: XCTestCase {
     func test_updateLiability_1() throws {
         let liabilityToUpdate = testDataProvider.createAndPersistTestObjects_updateLiability_1(context: testingCoreDataStack.context)
   
-        let sut = LiabilityFormViewModel(liability: liabilityToUpdate, repository: testingLiabilityRepository, dismissSheet: {})
+        let sut = LiabilityFormViewModel(liability: liabilityToUpdate, liabilityRepository: testingLiabilityRepository, personRepository: testingPersonRepository, dismissSheet: {})
         
         let expectedName = liabilityToUpdate.name
         let expectedDate = DateParser.shared.date(from: "2024-04-14T00:00:00")!
-        let expectedCreditor = "Mama"
+        let expectedCreditor = DataFactory.createPerson(name: "Mama", using: testingCoreDataStack.context)
         let expectedInitialAmount = liabilityToUpdate.initialAmount
         let expectedRepaidAmount = 300.0
         let expectedLiabilityPool = DataFactory.createLiabilityPool(named: "Some other pool", liabilities: [], in: testingCoreDataStack.context)
         
-        sut.liabilityGrantDate = expectedDate
-        sut.liabilityCreditor = expectedCreditor
-        sut.liabilityRepaidAmount = expectedRepaidAmount
+        sut.grantDate = expectedDate
+        sut.creditor = expectedCreditor
+        sut.repaidAmount = expectedRepaidAmount
         sut.liabilityPool = expectedLiabilityPool
         try sut.saveLiability()
         
@@ -219,9 +219,9 @@ final class LiabilityFormViewModelTests: XCTestCase {
     func test_updateLiability_2() throws {
         let liabilityToUpdate = testDataProvider.createAndPersistTestObjects_updateLiability_1(context: testingCoreDataStack.context)
   
-        let sut = LiabilityFormViewModel(liability: liabilityToUpdate, repository: testingLiabilityRepository, dismissSheet: {})
+        let sut = LiabilityFormViewModel(liability: liabilityToUpdate, liabilityRepository: testingLiabilityRepository, personRepository: testingPersonRepository, dismissSheet: {})
         
-        sut.liabilityName = ""
+        sut.name = ""
         XCTAssertThrowsError(try sut.saveLiability()) { error in
             XCTAssertEqual(error as? LiabilityValidationError, LiabilityValidationError.emptyName)
         }
@@ -231,11 +231,12 @@ final class LiabilityFormViewModelTests: XCTestCase {
     func test_updateLiability_3() throws {
         let liabilityToUpdate = testDataProvider.createAndPersistTestObjects_updateLiability_1(context: testingCoreDataStack.context)
   
-        let sut = LiabilityFormViewModel(liability: liabilityToUpdate, repository: testingLiabilityRepository, dismissSheet: {})
+        let sut = LiabilityFormViewModel(liability: liabilityToUpdate, liabilityRepository: testingLiabilityRepository, personRepository: testingPersonRepository, dismissSheet: {})
         
-        sut.liabilityCreditor = ""
+        sut.creditor = nil
+        
         XCTAssertThrowsError(try sut.saveLiability()) { error in
-            XCTAssertEqual(error as? LiabilityValidationError, LiabilityValidationError.emptyCreditor)
+            XCTAssertEqual(error as? LiabilityValidationError, LiabilityValidationError.noCreditorSelected)
         }
     }
     
@@ -243,10 +244,10 @@ final class LiabilityFormViewModelTests: XCTestCase {
     func test_updateLiability_4() throws {
         let liabilityToUpdate = testDataProvider.createAndPersistTestObjects_updateLiability_1(context: testingCoreDataStack.context)
   
-        let sut = LiabilityFormViewModel(liability: liabilityToUpdate, repository: testingLiabilityRepository, dismissSheet: {})
+        let sut = LiabilityFormViewModel(liability: liabilityToUpdate, liabilityRepository: testingLiabilityRepository, personRepository: testingPersonRepository, dismissSheet: {})
         
-        sut.liabilityInitialAmount = 0.0
-        sut.liabilityRepaidAmount = 0.0
+        sut.initialAmount = 0.0
+        sut.repaidAmount = 0.0
         
         XCTAssertThrowsError(try sut.saveLiability()) { error in
             XCTAssertEqual(error as? LiabilityValidationError, LiabilityValidationError.initialAmountNotStrictlyPositive)
@@ -257,10 +258,10 @@ final class LiabilityFormViewModelTests: XCTestCase {
     func test_updateLiability_5() throws {
         let liabilityToUpdate = testDataProvider.createAndPersistTestObjects_updateLiability_1(context: testingCoreDataStack.context)
   
-        let sut = LiabilityFormViewModel(liability: liabilityToUpdate, repository: testingLiabilityRepository, dismissSheet: {})
+        let sut = LiabilityFormViewModel(liability: liabilityToUpdate, liabilityRepository: testingLiabilityRepository, personRepository: testingPersonRepository, dismissSheet: {})
         
-        sut.liabilityInitialAmount = 5.0
-        sut.liabilityRepaidAmount = 10.0
+        sut.initialAmount = 5.0
+        sut.repaidAmount = 10.0
         
         XCTAssertThrowsError(try sut.saveLiability()) { error in
             XCTAssertEqual(error as? LiabilityValidationError, LiabilityValidationError.repaidSurpassesInitialAmount)
@@ -271,7 +272,7 @@ final class LiabilityFormViewModelTests: XCTestCase {
     func test_updateLiability_6() throws {
         let liabilityToUpdate = testDataProvider.createAndPersistTestObjects_updateLiability_1(context: testingCoreDataStack.context)
   
-        let sut = LiabilityFormViewModel(liability: liabilityToUpdate, repository: testingLiabilityRepository, dismissSheet: {})
+        let sut = LiabilityFormViewModel(liability: liabilityToUpdate, liabilityRepository: testingLiabilityRepository, personRepository: testingPersonRepository, dismissSheet: {})
         
         sut.liabilityPool = nil
         
@@ -286,7 +287,7 @@ final class LiabilityFormViewModelTests: XCTestCase {
     func test_deleteLiability_1() throws {
         let (liabilityToDelete, expectedLiabilities) = testDataProvider.createAndPersistTestObjects_deleteLiabilities_1(using: testingCoreDataStack.context)
         
-        let sut = LiabilityFormViewModel(repository: testingLiabilityRepository, dismissSheet: {})
+        let sut = LiabilityFormViewModel(liabilityRepository: testingLiabilityRepository, personRepository: testingPersonRepository, dismissSheet: {})
         sut.liability = liabilityToDelete
         sut.deleteLiability()
         

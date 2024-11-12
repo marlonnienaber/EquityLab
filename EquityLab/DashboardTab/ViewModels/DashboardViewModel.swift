@@ -173,12 +173,6 @@ extension Date {
     }
 }
 
-struct JsonBackup: Codable {
-    let snapshots: [Snapshot]
-    let liabilityPools: [LiabilityPool]
-    let assetPools: [AssetPool]
-}
-
 extension URL: Identifiable {
     public var id: String {
         absoluteString

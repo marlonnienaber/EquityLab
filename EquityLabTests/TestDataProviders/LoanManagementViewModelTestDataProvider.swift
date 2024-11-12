@@ -7,27 +7,30 @@ struct LoanManagementViewModelTestDataProvider {
         let date_21_10_1966 = DateParser.shared.date(from: "1966-10-21T00:00:00")!
         let date_01_01_2002 = DateParser.shared.date(from: "2002-01-01T00:00:00")!
         let date_26_04_2002 = DateParser.shared.date(from: "2002-04-26T00:00:00")!
+        let person1 = DataFactory.createPerson(name: "Lenni", using: context)
+        let person2 = DataFactory.createPerson(name: "Philipp", using: context)
+        let person3 = DataFactory.createPerson(name: "Filip", using: context)
         let receivable1 = DataFactory.createReceivable(name: "Blitz",
                                                        date: date_23_04_1970,
-                                                       debtor: "Lenni",
+                                                       debtor: person1,
                                                        initialAmount: 50.0,
                                                        repaidAmount: 0.0,
                                                        context: context)
         let receivable2 = DataFactory.createReceivable(name: "Lola Bar",
                                                        date: date_21_10_1966,
-                                                       debtor: "Lenni",
+                                                       debtor: person1,
                                                        initialAmount: 20.0,
                                                        repaidAmount: 0.0,
                                                        context: context)
         let receivable3 = DataFactory.createReceivable(name: "Haushalt",
                                                        date: date_01_01_2002,
-                                                       debtor: "Philipp",
+                                                       debtor: person2,
                                                        initialAmount: 200.0,
                                                        repaidAmount: 0.0,
                                                        context: context)
         let receivable4 = DataFactory.createReceivable(name: "PRST",
                                                        date: date_26_04_2002,
-                                                       debtor: "Filip",
+                                                       debtor: person3,
                                                        initialAmount: 50.0,
                                                        repaidAmount: 0.0,
                                                        context: context)
@@ -39,27 +42,30 @@ struct LoanManagementViewModelTestDataProvider {
         let date_21_10_1966 = DateParser.shared.date(from: "1966-10-21T00:00:00")!
         let date_01_01_2002 = DateParser.shared.date(from: "2002-01-01T00:00:00")!
         let date_26_04_2002 = DateParser.shared.date(from: "2002-04-26T00:00:00")!
+        let person1 = DataFactory.createPerson(name: "Lenni", using: context)
+        let person2 = DataFactory.createPerson(name: "Philipp", using: context)
+        let person3 = DataFactory.createPerson(name: "Filip", using: context)
         let receivable1 = DataFactory.createReceivable(name: "Blitz",
                                                        date: date_21_10_1966,
-                                                       debtor: "Lenni",
+                                                       debtor: person1,
                                                        initialAmount: 50.0,
                                                        repaidAmount: 0.0,
                                                        context: context)
         let receivable2 = DataFactory.createReceivable(name: "Lola Bar",
                                                        date: date_23_04_1970,
-                                                       debtor: "Lenni",
+                                                       debtor: person1,
                                                        initialAmount: 20.0,
                                                        repaidAmount: 0.0,
                                                        context: context)
         let receivable3 = DataFactory.createReceivable(name: "Haushalt",
                                                        date: date_01_01_2002,
-                                                       debtor: "Philipp",
+                                                       debtor: person2,
                                                        initialAmount: 200.0,
                                                        repaidAmount: 0.0,
                                                        context: context)
         let receivable4 = DataFactory.createReceivable(name: "PRST",
                                                        date: date_26_04_2002,
-                                                       debtor: "Filip",
+                                                       debtor: person3,
                                                        initialAmount: 50.0,
                                                        repaidAmount: 0.0,
                                                        context: context)
@@ -71,27 +77,30 @@ struct LoanManagementViewModelTestDataProvider {
         let date_21_10_1966 = DateParser.shared.date(from: "1966-10-21T00:00:00")!
         let date_01_01_2002 = DateParser.shared.date(from: "2002-01-01T00:00:00")!
         let date_26_04_2002 = DateParser.shared.date(from: "2002-04-26T00:00:00")!
+        let person1 = DataFactory.createPerson(name: "Lenni", using: context)
+        let person2 = DataFactory.createPerson(name: "Philipp", using: context)
+        let person3 = DataFactory.createPerson(name: "Filip", using: context)
         let receivable1 = DataFactory.createReceivable(name: "Blitz",
                                                        date: date_21_10_1966,
-                                                       debtor: "Lenni",
+                                                       debtor: person1,
                                                        initialAmount: 50.0,
                                                        repaidAmount: 0.0,
                                                        context: context)
         let receivable2 = DataFactory.createReceivable(name: "Lola Bar",
                                                        date: date_23_04_1970,
-                                                       debtor: "Lenni",
+                                                       debtor: person1,
                                                        initialAmount: 20.0,
                                                        repaidAmount: 0.0,
                                                        context: context)
         let receivable3 = DataFactory.createReceivable(name: "Haushalt",
                                                        date: date_01_01_2002,
-                                                       debtor: "Philipp",
+                                                       debtor: person2,
                                                        initialAmount: 200.0,
                                                        repaidAmount: 0.0,
                                                        context: context)
         let receivable4 = DataFactory.createReceivable(name: "PRST",
                                                        date: date_26_04_2002,
-                                                       debtor: "Filip",
+                                                       debtor: person3,
                                                        initialAmount: 50.0,
                                                        repaidAmount: 0.0,
                                                        context: context)
@@ -103,27 +112,30 @@ struct LoanManagementViewModelTestDataProvider {
         let date_21_10_1966 = DateParser.shared.date(from: "1966-10-21T00:00:00")!
         let date_01_01_2002 = DateParser.shared.date(from: "2002-01-01T00:00:00")!
         let date_26_04_2002 = DateParser.shared.date(from: "2002-04-26T00:00:00")!
+        let person1 = DataFactory.createPerson(name: "Lenni", using: context)
+        let person2 = DataFactory.createPerson(name: "Philipp", using: context)
+        let person3 = DataFactory.createPerson(name: "Filip", using: context)
         let receivable1 = DataFactory.createReceivable(name: "Blitz",
                                                        date: date_21_10_1966,
-                                                       debtor: "Lenni",
+                                                       debtor: person1,
                                                        initialAmount: 50.0,
                                                        repaidAmount: 0.0,
                                                        context: context)
         let receivable2 = DataFactory.createReceivable(name: "Lola Bar",
                                                        date: date_23_04_1970,
-                                                       debtor: "Lenni",
+                                                       debtor: person1,
                                                        initialAmount: 20.0,
                                                        repaidAmount: 0.0,
                                                        context: context)
         let receivable3 = DataFactory.createReceivable(name: "Haushalt",
                                                        date: date_01_01_2002,
-                                                       debtor: "Philipp",
+                                                       debtor: person2,
                                                        initialAmount: 200.0,
                                                        repaidAmount: 0.0,
                                                        context: context)
         let receivable4 = DataFactory.createReceivable(name: "PRST",
                                                        date: date_26_04_2002,
-                                                       debtor: "Filip",
+                                                       debtor: person3,
                                                        initialAmount: 50.0,
                                                        repaidAmount: 0.0,
                                                        context: context)
@@ -135,27 +147,30 @@ struct LoanManagementViewModelTestDataProvider {
         let date_21_10_1966 = DateParser.shared.date(from: "1966-10-21T00:00:00")!
         let date_01_01_2002 = DateParser.shared.date(from: "2002-01-01T00:00:00")!
         let date_26_04_2002 = DateParser.shared.date(from: "2002-04-26T00:00:00")!
+        let person1 = DataFactory.createPerson(name: "Lenni", using: context)
+        let person2 = DataFactory.createPerson(name: "Philipp", using: context)
+        let person3 = DataFactory.createPerson(name: "Filip", using: context)
         let receivable1 = DataFactory.createReceivable(name: "Blitz",
                                                        date: date_21_10_1966,
-                                                       debtor: "Lenni",
+                                                       debtor: person1,
                                                        initialAmount: 50.0,
                                                        repaidAmount: 0.0,
                                                        context: context)
         let receivable2 = DataFactory.createReceivable(name: "Lola Bar",
                                                        date: date_23_04_1970,
-                                                       debtor: "Lenni",
+                                                       debtor: person1,
                                                        initialAmount: 20.0,
                                                        repaidAmount: 0.0,
                                                        context: context)
         let receivable3 = DataFactory.createReceivable(name: "Haushalt",
                                                        date: date_01_01_2002,
-                                                       debtor: "Philipp",
+                                                       debtor: person2,
                                                        initialAmount: 200.0,
                                                        repaidAmount: 0.0,
                                                        context: context)
         let receivable4 = DataFactory.createReceivable(name: "PRST",
                                                        date: date_26_04_2002,
-                                                       debtor: "Filip",
+                                                       debtor: person3,
                                                        initialAmount: 50.0,
                                                        repaidAmount: 0.0,
                                                        context: context)
@@ -167,27 +182,30 @@ struct LoanManagementViewModelTestDataProvider {
         let date_21_10_1966 = DateParser.shared.date(from: "1966-10-21T00:00:00")!
         let date_01_01_2002 = DateParser.shared.date(from: "2002-01-01T00:00:00")!
         let date_26_04_2002 = DateParser.shared.date(from: "2002-04-26T00:00:00")!
+        let person1 = DataFactory.createPerson(name: "Lenni", using: context)
+        let person2 = DataFactory.createPerson(name: "Philipp", using: context)
+        let person3 = DataFactory.createPerson(name: "Filip", using: context)
         let receivable1 = DataFactory.createReceivable(name: "Blitz",
                                                        date: date_21_10_1966,
-                                                       debtor: "Lenni",
+                                                       debtor: person1,
                                                        initialAmount: 50.0,
                                                        repaidAmount: 0.0,
                                                        context: context)
         let receivable2 = DataFactory.createReceivable(name: "Lola Bar",
                                                        date: date_23_04_1970,
-                                                       debtor: "Lenni",
+                                                       debtor: person1,
                                                        initialAmount: 20.0,
                                                        repaidAmount: 0.0,
                                                        context: context)
         let receivable3 = DataFactory.createReceivable(name: "Haushalt",
                                                        date: date_01_01_2002,
-                                                       debtor: "Philipp",
+                                                       debtor: person2,
                                                        initialAmount: 200.0,
                                                        repaidAmount: 0.0,
                                                        context: context)
         let receivable4 = DataFactory.createReceivable(name: "PRST",
                                                        date: date_26_04_2002,
-                                                       debtor: "Filip",
+                                                       debtor: person3,
                                                        initialAmount: 50.0,
                                                        repaidAmount: 0.0,
                                                        context: context)
@@ -200,28 +218,30 @@ struct LoanManagementViewModelTestDataProvider {
         let date_21_10_1966 = DateParser.shared.date(from: "1966-10-21T00:00:00")!
         let date_01_01_2002 = DateParser.shared.date(from: "2002-01-01T00:00:00")!
         let date_26_04_2002 = DateParser.shared.date(from: "2002-04-26T00:00:00")!
-        
+        let person1 = DataFactory.createPerson(name: "Lenni", using: context)
+        let person2 = DataFactory.createPerson(name: "Philipp", using: context)
+        let person3 = DataFactory.createPerson(name: "Filip", using: context)
         let liability1 = DataFactory.createLiability(name: "Blitz",
                                                      date: date_21_10_1966,
-                                                     creditor: "Lenni",
+                                                     creditor: person1,
                                                      initialAmount: 50.0,
                                                      repaidAmount: 0.0,
                                                      context: context)
         let liability2 = DataFactory.createLiability(name: "Lola Bar",
                                                      date: date_23_04_1970,
-                                                     creditor: "Lenni",
+                                                     creditor: person1,
                                                      initialAmount: 20.0,
                                                      repaidAmount: 0.0,
                                                      context: context)
         let liability3 = DataFactory.createLiability(name: "Haushalt",
                                                      date: date_01_01_2002,
-                                                     creditor: "Philipp",
+                                                     creditor: person2,
                                                      initialAmount: 200.0,
                                                      repaidAmount: 0.0,
                                                      context: context)
         let liability4 = DataFactory.createLiability(name: "PRST",
                                                      date: date_26_04_2002,
-                                                     creditor: "Filip",
+                                                     creditor: person3,
                                                      initialAmount: 50.0,
                                                      repaidAmount: 0.0,
                                                      context: context)
@@ -233,28 +253,30 @@ struct LoanManagementViewModelTestDataProvider {
         let date_21_10_1966 = DateParser.shared.date(from: "1966-10-21T00:00:00")!
         let date_01_01_2002 = DateParser.shared.date(from: "2002-01-01T00:00:00")!
         let date_26_04_2002 = DateParser.shared.date(from: "2002-04-26T00:00:00")!
-        
+        let person1 = DataFactory.createPerson(name: "Lenni", using: context)
+        let person2 = DataFactory.createPerson(name: "Philipp", using: context)
+        let person3 = DataFactory.createPerson(name: "Filip", using: context)
         let liability1 = DataFactory.createLiability(name: "Blitz",
                                                      date: date_21_10_1966,
-                                                     creditor: "Lenni",
+                                                     creditor: person1,
                                                      initialAmount: 50.0,
                                                      repaidAmount: 0.0,
                                                      context: context)
         let liability2 = DataFactory.createLiability(name: "Lola Bar",
                                                      date: date_23_04_1970,
-                                                     creditor: "Lenni",
+                                                     creditor: person1,
                                                      initialAmount: 20.0,
                                                      repaidAmount: 0.0,
                                                      context: context)
         let liability3 = DataFactory.createLiability(name: "Haushalt",
                                                      date: date_01_01_2002,
-                                                     creditor: "Philipp",
+                                                     creditor: person2,
                                                      initialAmount: 200.0,
                                                      repaidAmount: 0.0,
                                                      context: context)
         let liability4 = DataFactory.createLiability(name: "PRST",
                                                      date: date_26_04_2002,
-                                                     creditor: "Filip",
+                                                     creditor: person3,
                                                      initialAmount: 50.0,
                                                      repaidAmount: 0.0,
                                                      context: context)
@@ -266,28 +288,30 @@ struct LoanManagementViewModelTestDataProvider {
         let date_21_10_1966 = DateParser.shared.date(from: "1966-10-21T00:00:00")!
         let date_01_01_2002 = DateParser.shared.date(from: "2002-01-01T00:00:00")!
         let date_26_04_2002 = DateParser.shared.date(from: "2002-04-26T00:00:00")!
-        
+        let person1 = DataFactory.createPerson(name: "Lenni", using: context)
+        let person2 = DataFactory.createPerson(name: "Philipp", using: context)
+        let person3 = DataFactory.createPerson(name: "Filip", using: context)
         let liability1 = DataFactory.createLiability(name: "Blitz",
                                                      date: date_21_10_1966,
-                                                     creditor: "Lenni",
+                                                     creditor: person1,
                                                      initialAmount: 50.0,
                                                      repaidAmount: 0.0,
                                                      context: context)
         let liability2 = DataFactory.createLiability(name: "Lola Bar",
                                                      date: date_23_04_1970,
-                                                     creditor: "Lenni",
+                                                     creditor: person1,
                                                      initialAmount: 20.0,
                                                      repaidAmount: 0.0,
                                                      context: context)
         let liability3 = DataFactory.createLiability(name: "Haushalt",
                                                      date: date_01_01_2002,
-                                                     creditor: "Philipp",
+                                                     creditor: person2,
                                                      initialAmount: 200.0,
                                                      repaidAmount: 0.0,
                                                      context: context)
         let liability4 = DataFactory.createLiability(name: "PRST",
                                                      date: date_26_04_2002,
-                                                     creditor: "Filip",
+                                                     creditor: person3,
                                                      initialAmount: 50.0,
                                                      repaidAmount: 0.0,
                                                      context: context)
@@ -299,28 +323,30 @@ struct LoanManagementViewModelTestDataProvider {
         let date_21_10_1966 = DateParser.shared.date(from: "1966-10-21T00:00:00")!
         let date_01_01_2002 = DateParser.shared.date(from: "2002-01-01T00:00:00")!
         let date_26_04_2002 = DateParser.shared.date(from: "2002-04-26T00:00:00")!
-        
+        let person1 = DataFactory.createPerson(name: "Lenni", using: context)
+        let person2 = DataFactory.createPerson(name: "Philipp", using: context)
+        let person3 = DataFactory.createPerson(name: "Filip", using: context)
         let liability1 = DataFactory.createLiability(name: "Blitz",
                                                      date: date_21_10_1966,
-                                                     creditor: "Lenni",
+                                                     creditor: person1,
                                                      initialAmount: 50.0,
                                                      repaidAmount: 0.0,
                                                      context: context)
         let liability2 = DataFactory.createLiability(name: "Lola Bar",
                                                      date: date_23_04_1970,
-                                                     creditor: "Lenni",
+                                                     creditor: person1,
                                                      initialAmount: 20.0,
                                                      repaidAmount: 0.0,
                                                      context: context)
         let liability3 = DataFactory.createLiability(name: "Haushalt",
                                                      date: date_01_01_2002,
-                                                     creditor: "Philipp",
+                                                     creditor: person2,
                                                      initialAmount: 200.0,
                                                      repaidAmount: 0.0,
                                                      context: context)
         let liability4 = DataFactory.createLiability(name: "PRST",
                                                      date: date_26_04_2002,
-                                                     creditor: "Filip",
+                                                     creditor: person3,
                                                      initialAmount: 50.0,
                                                      repaidAmount: 0.0,
                                                      context: context)
@@ -332,28 +358,30 @@ struct LoanManagementViewModelTestDataProvider {
         let date_21_10_1966 = DateParser.shared.date(from: "1966-10-21T00:00:00")!
         let date_01_01_2002 = DateParser.shared.date(from: "2002-01-01T00:00:00")!
         let date_26_04_2002 = DateParser.shared.date(from: "2002-04-26T00:00:00")!
-        
+        let person1 = DataFactory.createPerson(name: "Lenni", using: context)
+        let person2 = DataFactory.createPerson(name: "Philipp", using: context)
+        let person3 = DataFactory.createPerson(name: "Filip", using: context)
         let liability1 = DataFactory.createLiability(name: "Blitz",
                                                      date: date_21_10_1966,
-                                                     creditor: "Lenni",
+                                                     creditor: person1,
                                                      initialAmount: 50.0,
                                                      repaidAmount: 0.0,
                                                      context: context)
         let liability2 = DataFactory.createLiability(name: "Lola Bar",
                                                      date: date_23_04_1970,
-                                                     creditor: "Lenni",
+                                                     creditor: person1,
                                                      initialAmount: 20.0,
                                                      repaidAmount: 0.0,
                                                      context: context)
         let liability3 = DataFactory.createLiability(name: "Haushalt",
                                                      date: date_01_01_2002,
-                                                     creditor: "Philipp",
+                                                     creditor: person2,
                                                      initialAmount: 200.0,
                                                      repaidAmount: 0.0,
                                                      context: context)
         let liability4 = DataFactory.createLiability(name: "PRST",
                                                      date: date_26_04_2002,
-                                                     creditor: "Filip",
+                                                     creditor: person3,
                                                      initialAmount: 50.0,
                                                      repaidAmount: 0.0,
                                                      context: context)
@@ -365,28 +393,30 @@ struct LoanManagementViewModelTestDataProvider {
         let date_21_10_1966 = DateParser.shared.date(from: "1966-10-21T00:00:00")!
         let date_01_01_2002 = DateParser.shared.date(from: "2002-01-01T00:00:00")!
         let date_26_04_2002 = DateParser.shared.date(from: "2002-04-26T00:00:00")!
-        
+        let person1 = DataFactory.createPerson(name: "Lenni", using: context)
+        let person2 = DataFactory.createPerson(name: "Philipp", using: context)
+        let person3 = DataFactory.createPerson(name: "Filip", using: context)
         let liability1 = DataFactory.createLiability(name: "Blitz",
                                                      date: date_21_10_1966,
-                                                     creditor: "Lenni",
+                                                     creditor: person1,
                                                      initialAmount: 50.0,
                                                      repaidAmount: 0.0,
                                                      context: context)
         let liability2 = DataFactory.createLiability(name: "Lola Bar",
                                                      date: date_23_04_1970,
-                                                     creditor: "Lenni",
+                                                     creditor: person1,
                                                      initialAmount: 20.0,
                                                      repaidAmount: 0.0,
                                                      context: context)
         let liability3 = DataFactory.createLiability(name: "Haushalt",
                                                      date: date_01_01_2002,
-                                                     creditor: "Philipp",
+                                                     creditor: person2,
                                                      initialAmount: 200.0,
                                                      repaidAmount: 0.0,
                                                      context: context)
         let liability4 = DataFactory.createLiability(name: "PRST",
                                                      date: date_26_04_2002,
-                                                     creditor: "Filip",
+                                                     creditor: person3,
                                                      initialAmount: 50.0,
                                                      repaidAmount: 0.0,
                                                      context: context)

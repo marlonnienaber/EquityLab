@@ -26,9 +26,9 @@ struct ReceivableForm: View {
                     saveButton
                 }
             }
-            .alert(isPresented: $viewModel.showValidationErrorAlert, error: viewModel.validationError) { _ in
+            .alert(isPresented: $viewModel.showValidationErrorAlert, error: viewModel.receivableValidationError) { _ in
                 Button("OK", role: .cancel) {
-                    viewModel.validationError = nil
+                    viewModel.receivableValidationError = nil
                 }
             } message: { _ in }
             .onTapGesture {
@@ -40,7 +40,19 @@ struct ReceivableForm: View {
     private var descriptionSection: some View {
         Section {
             TextField("name", text: $viewModel.name)
-            TextField("debtor", text: $viewModel.debtor)
+            NavigationLink {
+                PersonSelectionView(viewModel:
+                    PersonSelectionViewModel(selectedPerson: viewModel.debtor) { selectedPerson in
+                        viewModel.debtor = selectedPerson
+                    }
+                )
+            } label: {
+                HStack {
+                    Text("Debtor")
+                    Spacer()
+                    Text(viewModel.debtor?.name ?? "none selected")
+                }
+            }
             Picker("AssetPool", selection: $viewModel.assetPool) {
                 ForEach(viewModel.getAssetPools()) { pool in
                     Text(pool.name).tag(pool)
@@ -101,7 +113,7 @@ struct ReceivableForm: View {
                 try viewModel.saveReceivable()
                 viewModel.dismissSheet()
             } catch let error as ReceivableValidationError  {
-                viewModel.validationError = error
+                viewModel.receivableValidationError = error
                 viewModel.showValidationErrorAlert = true
             } catch {}
         }
