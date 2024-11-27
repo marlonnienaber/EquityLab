@@ -7,19 +7,22 @@ class SnapshotLedgerViewModel {
     
     @ObservationIgnored private var repository: SnapshotRepository
     @ObservationIgnored private var snapshotAnalyzer: SnapshotAnalyzer
-    @ObservationIgnored private var equityValueCache = [Snapshot:Double]()
+    @ObservationIgnored private var equityValueCache = [Snapshot:Decimal]()
+    
     private var snapshots = [Snapshot]()
     private var yearToSnapshotDictionary = [Int:[Snapshot]]()
     var years = [Int]()
+    var activeSheet: SnapshotSheetType? = nil
     var hasNoSnapshots: Bool {
         years.isEmpty
     }
-    var activeSheet: SnapshotSheetType? = nil
+    
     
     init(repository: SnapshotRepository = .production) {
         Self.logger.debug("SnapshotLedgerViewModel()")
         self.repository = repository
         self.snapshotAnalyzer = SnapshotAnalyzer(repository: repository)
+        
         repository.$snapshots.registerObserver(self, keyPath: \.snapshots) {
             $0.reversed()
         }
@@ -68,18 +71,17 @@ class SnapshotLedgerViewModel {
     func deleteSnapshots(in year: Int, for indexSet: IndexSet) {
         Self.logger.debug("deleteSnapshots(in year)")
         guard let sectionSnapshots = yearToSnapshotDictionary[year] else { return }
-        indexSet.map{sectionSnapshots[$0]}.forEach{repository.delete(snapshot: $0)}
+        indexSet.map{sectionSnapshots[$0]}.forEach{repository.deleteSnapshot(snapshot: $0)}
     }
     
     func deleteSnapshots(withIndices indexSet: IndexSet) {
         Self.logger.debug("deleteSnapshots(withIndices indexSet)")
-        indexSet.map{snapshots[$0]}.forEach{repository.delete(snapshot: $0)}
+        indexSet.map{snapshots[$0]}.forEach{repository.deleteSnapshot(snapshot: $0)}
     }
     
     func getEquityValue(of snapshot: Snapshot) -> NSNumber {
         Self.logger.debug("getEquityValue(of snapshot)")
-        let equityValue = equityValueCache[snapshot] ?? 0.0
-        return NSNumber(value: equityValue)
+        return (equityValueCache[snapshot] ?? 0).nsDecimalNumberValue
     }
 }
 

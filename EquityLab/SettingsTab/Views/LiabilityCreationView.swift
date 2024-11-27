@@ -1,7 +1,7 @@
 
 import SwiftUI
 
-struct LiabilityForm: View {
+struct LiabilityCreationView: View {
     @State var viewModel: LiabilityFormViewModel
     
     var body: some View {
@@ -11,14 +11,10 @@ struct LiabilityForm: View {
                     .frame(maxHeight: 16)
                 Form {
                     descriptionSection
-                    amountSection
-                    dateSection
-                    if viewModel.liability.isNotNil {
-                        deleteSection
-                    }
+                    dataSection
                 }
             }
-            .navigationTitle(viewModel.liability.isNil ? "New Liability" : "Edit Liability")
+            .navigationTitle("New Liability")
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     cancelButton
@@ -63,42 +59,15 @@ struct LiabilityForm: View {
         }
     }
     
-    private var amountSection: some View {
+    private var dataSection: some View {
         Section {
             HStack {
                 Text("initial amount")
                 Spacer()
-                CurrencyInputField(value: $viewModel.initialAmount)
+                CurrencyInputField(value: $viewModel.disbursedAmount)
                     .padding(6)
             }
-            HStack {
-                Text("repaid amount")
-                Spacer()
-                CurrencyInputField(value: $viewModel.repaidAmount)
-                    .padding(6)
-            }
-        }
-    }
-    
-    private var dateSection: some View {
-        Section {
             DatePicker("date", selection: $viewModel.grantDate, in: ...Date(), displayedComponents: .date)
-        }
-    }
-    
-    private var deleteSection: some View {
-        Section {
-            HStack(alignment: .center) {
-                Spacer()
-                Button {
-                    viewModel.deleteLiability()
-                    viewModel.dismissSheet()
-                } label: {
-                    Text("Delete")
-                        .foregroundStyle(.red)
-                }
-                Spacer()
-            }
         }
     }
     
@@ -111,7 +80,7 @@ struct LiabilityForm: View {
     private var saveButton: some View {
         Button("Save") {
             do {
-                try viewModel.saveLiability()
+                try viewModel.createLiability()
                 viewModel.dismissSheet()
             } catch let error as LiabilityValidationError  {
                 viewModel.liabilityValidationError = error

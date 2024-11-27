@@ -4,15 +4,21 @@ import ObservableProperties
 class PersonRepository: NSObject {
     public static let production = PersonRepository(context: ProductionCoreDataStack.shared.context)
     private let fetchedResultsController: NSFetchedResultsController<Person>
-    @Publisher var persons: [Person]
+    
+    @Retriever var persons: [Person]
     
     init(context: NSManagedObjectContext) {
         let request = NSFetchRequest<Person>(entityName: "Person")
-        request.sortDescriptors = [NSSortDescriptor(keyPath: \AssetPool.name, ascending: true)]
+        request.sortDescriptors = []
         fetchedResultsController = .init(fetchRequest: request, managedObjectContext: context, sectionNameKeyPath: nil, cacheName: nil)
         try? fetchedResultsController.performFetch()
-        self.persons = fetchedResultsController.fetchedObjects ?? []
+        
         super.init()
+        
+        $persons.toRetrieveDo{ [unowned self] in
+            fetchedResultsController.fetchedObjects ?? .defaultValue
+        }
+        
         fetchedResultsController.delegate = self
     }
     
@@ -23,15 +29,16 @@ class PersonRepository: NSObject {
         try? context.save()
     }
     
-    func delete(person: Person) {
-        let context = fetchedResultsController.managedObjectContext
-        context.delete(person)
-        try? context.save()
-    }
+    /* TODO: ensure consistency of models -> only delete if all relationships allow for it! */
+//    func deletePerson(person: Person) {
+//        let context = fetchedResultsController.managedObjectContext
+//        context.delete(person)
+//        try? context.save()
+//    }
 }
 
 extension PersonRepository: NSFetchedResultsControllerDelegate {
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-        persons = fetchedResultsController.fetchedObjects ?? []
+        persons = fetchedResultsController.fetchedObjects ?? .defaultValue
     }
 }

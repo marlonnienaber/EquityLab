@@ -49,14 +49,15 @@ class PersonSelectionViewModel {
         personRepository.createPerson(with: name)
     }
     
-    func deletePersons(withIndices indexSet: IndexSet) {
-        indexSet.map{persons[$0]}.forEach{
-            if selectedPerson == $0 {
-                selectedPerson = nil
-            }
-            personRepository.delete(person: $0)
-        }
-    }
+    /* TODO: unly usable once function in PersonRepo implemented */
+//    func deletePersons(withIndices indexSet: IndexSet) {
+//        indexSet.map{persons[$0]}.forEach{
+//            if selectedPerson == $0 {
+//                selectedPerson = nil
+//            }
+//            personRepository.deletePerson(person: $0)
+//        }
+//    }
 }
 
 enum PersonValidationError: String, LocalizedError {

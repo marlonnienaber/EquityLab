@@ -15,7 +15,9 @@ extension Logger {
     enum Component: String {
         case dashboardViewModel = "DashboardViewModel"
         case distributionChartViewModel = "DistributionChartViewModel"
+        case changeChartViewModel = "ChangeChartViewModel"
         case snapshotLedgerViewModel = "SnapshotLedgerViewModel"
+        case snapshotFormViewModel = "SnapshotFormViewModel"
         case loanManagementViewModel = "LoanManagementViewModel"
         case liabilityFormViewModel = "LiabilityFormViewModel"
         case settingsViewModel = "SettingsViewModel"
@@ -23,5 +25,7 @@ extension Logger {
         case snapshotStructureViewModel = "SnapshotStructureViewModel"
         case possessionFormViewModel = "PossessionFormViewModel"
         case receivableFormViewModel = "ReceivableFormViewModel"
+        case receivableDetailViewModel = "ReceivableDetailViewModel"
+        case transactionDetailViewModel = "TransactionDetailViewModel"
     }
 }

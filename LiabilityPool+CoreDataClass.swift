@@ -5,7 +5,6 @@ public class LiabilityPool: NSManagedObject, Codable {
     
     func getLiabilityRequest() -> NSFetchRequest<Liability> {
         let request = Liability.fetchRequest()
-        request.sortDescriptors = [NSSortDescriptor(keyPath: \Liability.grantDate, ascending: true)]
         request.predicate = NSPredicate(format: "pool = %@", self)
         return request
     }

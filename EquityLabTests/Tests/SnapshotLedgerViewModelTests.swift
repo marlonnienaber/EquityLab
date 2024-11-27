@@ -45,7 +45,7 @@ final class SnapshotLedgerViewModelTests: XCTestCase {
         let sut = SnapshotLedgerViewModel(repository: testingSnapshotRepository)
         let (year, indexSet, expectedRemainingSnapshots) = testDataProvider.createAndPersistTestObjects_deleteSnapshotsInYear_1(using: testingCoreDataStack.context)
         sut.deleteSnapshots(in: year, for: indexSet)
-        let actualRemainingSnapshots = testingSnapshotRepository.fetchSnapshots()
+        let actualRemainingSnapshots = testingSnapshotRepository.snapshots
         XCTAssertTrue(expectedRemainingSnapshots ≡ actualRemainingSnapshots)
     }
     
@@ -54,7 +54,7 @@ final class SnapshotLedgerViewModelTests: XCTestCase {
         let sut = SnapshotLedgerViewModel(repository: testingSnapshotRepository)
         let (year, indexSet, expectedRemainingSnapshots) = testDataProvider.createAndPersistTestObjects_deleteSnapshotsInYear_2(using: testingCoreDataStack.context)
         sut.deleteSnapshots(in: year, for: indexSet)
-        let actualRemainingSnapshots = testingSnapshotRepository.fetchSnapshots()
+        let actualRemainingSnapshots = testingSnapshotRepository.snapshots
         XCTAssertTrue(expectedRemainingSnapshots ≡ actualRemainingSnapshots)
     }
     
@@ -63,7 +63,7 @@ final class SnapshotLedgerViewModelTests: XCTestCase {
         let sut = SnapshotLedgerViewModel(repository: testingSnapshotRepository)
         let (year, indexSet, expectedRemainingSnapshots) = testDataProvider.createAndPersistTestObjects_deleteSnapshotsInYear_3(using: testingCoreDataStack.context)
         sut.deleteSnapshots(in: year, for: indexSet)
-        let actualRemainingSnapshots = testingSnapshotRepository.fetchSnapshots()
+        let actualRemainingSnapshots = testingSnapshotRepository.snapshots
         XCTAssertTrue(expectedRemainingSnapshots ≡ actualRemainingSnapshots)
     }
     
@@ -74,7 +74,7 @@ final class SnapshotLedgerViewModelTests: XCTestCase {
         let sut = SnapshotLedgerViewModel(repository: testingSnapshotRepository)
         let (indexSet, expectedRemainingSnapshots) = testDataProvider.createAndPersistTestObjects_deleteSnapshotsWithIndices_1(using: testingCoreDataStack.context)
         sut.deleteSnapshots(withIndices: indexSet)
-        let actualRemainingSnapshots = testingSnapshotRepository.fetchSnapshots()
+        let actualRemainingSnapshots = testingSnapshotRepository.snapshots
         XCTAssertTrue(expectedRemainingSnapshots ≡ actualRemainingSnapshots)
     }
     
@@ -83,7 +83,7 @@ final class SnapshotLedgerViewModelTests: XCTestCase {
         let sut = SnapshotLedgerViewModel(repository: testingSnapshotRepository)
         let (indexSet, expectedRemainingSnapshots) = testDataProvider.createAndPersistTestObjects_deleteSnapshotsWithIndices_2(using: testingCoreDataStack.context)
         sut.deleteSnapshots(withIndices: indexSet)
-        let actualRemainingSnapshots = testingSnapshotRepository.fetchSnapshots()
+        let actualRemainingSnapshots = testingSnapshotRepository.snapshots
         XCTAssertTrue(expectedRemainingSnapshots ≡ actualRemainingSnapshots)
     }
     
@@ -92,7 +92,7 @@ final class SnapshotLedgerViewModelTests: XCTestCase {
         let sut = SnapshotLedgerViewModel(repository: testingSnapshotRepository)
         let (indexSet, expectedRemainingSnapshots) = testDataProvider.createAndPersistTestObjects_deleteSnapshotsWithIndices_3(using: testingCoreDataStack.context)
         sut.deleteSnapshots(withIndices: indexSet)
-        let actualRemainingSnapshots = testingSnapshotRepository.fetchSnapshots()
+        let actualRemainingSnapshots = testingSnapshotRepository.snapshots
         XCTAssertTrue(expectedRemainingSnapshots ≡ actualRemainingSnapshots)
     }
     
@@ -101,7 +101,7 @@ final class SnapshotLedgerViewModelTests: XCTestCase {
         let sut = SnapshotLedgerViewModel(repository: testingSnapshotRepository)
         let (indexSet, expectedRemainingSnapshots) = testDataProvider.createAndPersistTestObjects_deleteSnapshotsWithIndices_4(using: testingCoreDataStack.context)
         sut.deleteSnapshots(withIndices: indexSet)
-        let actualRemainingSnapshots = testingSnapshotRepository.fetchSnapshots()
+        let actualRemainingSnapshots = testingSnapshotRepository.snapshots
         XCTAssertTrue(expectedRemainingSnapshots ≡ actualRemainingSnapshots)
     }
     
@@ -110,7 +110,7 @@ final class SnapshotLedgerViewModelTests: XCTestCase {
         let sut = SnapshotLedgerViewModel(repository: testingSnapshotRepository)
         let (indexSet, expectedRemainingSnapshots) = testDataProvider.createAndPersistTestObjects_deleteSnapshotsWithIndices_5(using: testingCoreDataStack.context)
         sut.deleteSnapshots(withIndices: indexSet)
-        let actualRemainingSnapshots = testingSnapshotRepository.fetchSnapshots()
+        let actualRemainingSnapshots = testingSnapshotRepository.snapshots
         XCTAssertTrue(expectedRemainingSnapshots ≡ actualRemainingSnapshots)
     }
     
@@ -119,7 +119,7 @@ final class SnapshotLedgerViewModelTests: XCTestCase {
         let sut = SnapshotLedgerViewModel(repository: testingSnapshotRepository)
         let (indexSet, expectedRemainingSnapshots) = testDataProvider.createAndPersistTestObjects_deleteSnapshotsWithIndices_6(using: testingCoreDataStack.context)
         sut.deleteSnapshots(withIndices: indexSet)
-        let actualRemainingSnapshots = testingSnapshotRepository.fetchSnapshots()
+        let actualRemainingSnapshots = testingSnapshotRepository.snapshots
         XCTAssertTrue(expectedRemainingSnapshots ≡ actualRemainingSnapshots)
     }
     

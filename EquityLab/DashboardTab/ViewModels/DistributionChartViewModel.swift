@@ -32,7 +32,9 @@ class DistributionChartViewModel {
         let totalValue = computeTotalValue(for: selectedSnapshot)
         let poolValues = dashboardViewModel.computeValueByPool(for: positionType, using: selectedSnapshot)
         var categories = poolValues.keys.sorted().map{
-            DonutChartCategory(pools: [Pool(value: poolValues[$0]!, name: $0, percentage: (poolValues[$0]! / totalValue) * 100)])
+            let value = poolValues[$0]!
+            let percentage = ((poolValues[$0]! / totalValue) * 100)
+            return DonutChartCategory(pools: [Pool(value: value, name: $0, percentage: percentage)])
         }
         categories.sort(by: {$0.percentage < $1.percentage})
         while categories.contains(where: {$0.percentage < 3.0} ) && categories.count > 1 {
@@ -73,7 +75,7 @@ class DistributionChartViewModel {
     
     func getPercentageString(for pool: Pool) -> String {
         Self.logger.debug("getPercentageString(for pool)")
-        return String(format: "%.1f", pool.percentage) + " %"
+        return String(format: "%.1f", pool.percentage.doubleValue) + " %"
     }
     
     func getSelectedCategoryPercentageString() -> String? {
@@ -102,13 +104,13 @@ class DistributionChartViewModel {
     }
     
     
-    func computeTotalValue(for snapshot: Snapshot) -> Double {
+    func computeTotalValue(for snapshot: Snapshot) -> Decimal {
         Self.logger.debug("computeTotalValue(for snapshot)")
         switch distributionChartType {
         case .assetDistributionChart:
-            return repository.fetchAssetPositions(of: snapshot).map{ $0.value }.reduce(0, +)
+            return repository.assetPositions.filter{ $0.snapshot == snapshot }.map{ $0.value.decimalValue }.reduce(0, +)
         case .liabilityDistributionChart:
-            return repository.fetchLiabilityPositions(of: snapshot).map{ $0.value }.reduce(0, +)
+            return repository.liabilityPositions.filter{ $0.snapshot == snapshot }.map{ $0.value.decimalValue }.reduce(0, +)
         }
     }
     
@@ -138,18 +140,18 @@ enum DistributionChartType {
 struct DonutChartCategory: Equatable, Hashable {
     var pools: [Pool]
     var value: Double {
-        pools.map{ $0.value }.reduce(0, +)
+        pools.map{ $0.value }.reduce(0, +).doubleValue
     }
     var percentage: Double {
-        pools.map{ $0.percentage }.reduce(0, +)
+        pools.map{ $0.percentage }.reduce(0, +).doubleValue
     }
 }
 
 
 struct Pool: Equatable, Hashable {
-    let value: Double
+    let value: Decimal
     let name: String
-    let percentage: Double
+    let percentage: Decimal
     
     static func == (lhs: Pool, rhs: Pool) -> Bool {
         lhs.name == rhs.name

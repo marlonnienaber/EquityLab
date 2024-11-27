@@ -109,7 +109,7 @@ final class SnapshotStructureViewModelTests: XCTestCase {
             XCTAssertTrue(checkEquivalence(of: expectedAssetsForPool, and: actualAssetsForPool, by: [\.name]))
         }
         
-        let persistedPools = testingAssetRepository.fetchAssetPools()
+        let persistedPools = testingAssetRepository.assetPools
         XCTAssertTrue(persistedPools.count == 1)
         let actualPersistedAssetPoolName = (try XCTUnwrap(viewModelPools.first)).name
         XCTAssertEqual(expectedAssetPoolName, actualPersistedAssetPoolName)
@@ -135,7 +135,7 @@ final class SnapshotStructureViewModelTests: XCTestCase {
         
         let actualViewModelPools = sut.assetPools
         XCTAssertTrue(expectedPools ≡ actualViewModelPools)
-        let actualPersistedPools = testingAssetRepository.fetchAssetPools()
+        let actualPersistedPools = testingAssetRepository.assetPools
         XCTAssertTrue(expectedPools ≡ actualPersistedPools)
         
         var expectedAssetsForPool: [SnapshotStructureItem]
@@ -162,7 +162,7 @@ final class SnapshotStructureViewModelTests: XCTestCase {
         
         let actualViewModelPoolNames = sut.assetPools.map{ $0.name }
         XCTAssertTrue(expectedPoolNames ≡ actualViewModelPoolNames)
-        let actualPersistedPoolNames = testingAssetRepository.fetchAssetPools().map { $0.name }
+        let actualPersistedPoolNames = testingAssetRepository.assetPools.map { $0.name }
         XCTAssertTrue(expectedPoolNames ≡ actualPersistedPoolNames)
         
         let actualViewModelPools = sut.assetPools
@@ -208,7 +208,7 @@ final class SnapshotStructureViewModelTests: XCTestCase {
             XCTAssertTrue(expectedLiabilitiesForPool ≡ actualLiabilitiesForPool)
         }
         
-        let persistedPools = testingLiabilityRepository.fetchLiabilityPools()
+        let persistedPools = testingLiabilityRepository.liabilityPools
         XCTAssertTrue(persistedPools.count == 1)
         let actualPersistedLiabilityPoolName = (try XCTUnwrap(viewModelPools.first)).name
         XCTAssertEqual(expectedLiabilityPoolName, actualPersistedLiabilityPoolName)
@@ -234,7 +234,7 @@ final class SnapshotStructureViewModelTests: XCTestCase {
         
         let actualViewModelPools = sut.liabilityPools
         XCTAssertTrue(expectedPools ≡ actualViewModelPools)
-        let actualPersistedPools = testingLiabilityRepository.fetchLiabilityPools()
+        let actualPersistedPools = testingLiabilityRepository.liabilityPools
         XCTAssertTrue(expectedPools ≡ actualPersistedPools)
         
         var expectedLiabilitiesForPool: [Liability]
@@ -260,7 +260,7 @@ final class SnapshotStructureViewModelTests: XCTestCase {
         
         let actualViewModelPoolNames = sut.liabilityPools.map{ $0.name }
         XCTAssertTrue(expectedPoolNames ≡ actualViewModelPoolNames)
-        let actualPersistedPoolNames = testingLiabilityRepository.fetchLiabilityPools().map { $0.name }
+        let actualPersistedPoolNames = testingLiabilityRepository.liabilityPools.map { $0.name }
         XCTAssertTrue(expectedPoolNames ≡ actualPersistedPoolNames)
         
         let actualViewModelPools = sut.liabilityPools

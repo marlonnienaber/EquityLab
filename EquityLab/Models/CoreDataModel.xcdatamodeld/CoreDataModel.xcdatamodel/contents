@@ -8,16 +8,14 @@
     <entity name="AssetPosition" representedClassName="AssetPosition" syncable="YES">
         <attribute name="name" optional="YES" attributeType="String"/>
         <attribute name="poolName" optional="YES" attributeType="String"/>
-        <attribute name="value" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="value" optional="YES" attributeType="Decimal" defaultValueString="0.0"/>
         <relationship name="snapshot" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Snapshot" inverseName="assets" inverseEntity="Snapshot"/>
     </entity>
     <entity name="Liability" representedClassName="Liability" syncable="YES">
-        <attribute name="grantDate" attributeType="Date" usesScalarValueType="NO"/>
-        <attribute name="initialAmount" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="name" attributeType="String"/>
-        <attribute name="repaidAmount" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <relationship name="creditor" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Person" inverseName="receivables" inverseEntity="Person"/>
         <relationship name="pool" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="LiabilityPool" inverseName="liabilities" inverseEntity="LiabilityPool"/>
+        <relationship name="transactions" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Transaction" inverseName="liability" inverseEntity="Transaction"/>
     </entity>
     <entity name="LiabilityPool" representedClassName="LiabilityPool" syncable="YES">
         <attribute name="name" attributeType="String"/>
@@ -26,13 +24,15 @@
     <entity name="LiabilityPosition" representedClassName="LiabilityPosition" syncable="YES">
         <attribute name="name" optional="YES" attributeType="String"/>
         <attribute name="poolName" optional="YES" attributeType="String"/>
-        <attribute name="value" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="value" optional="YES" attributeType="Decimal" defaultValueString="0.0"/>
         <relationship name="snapshot" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Snapshot" inverseName="liabilities" inverseEntity="Snapshot"/>
     </entity>
     <entity name="Person" representedClassName="Person" syncable="YES">
         <attribute name="name" optional="YES" attributeType="String"/>
         <relationship name="liabilities" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Receivable" inverseName="debtor" inverseEntity="Receivable"/>
         <relationship name="receivables" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Liability" inverseName="creditor" inverseEntity="Liability"/>
+        <relationship name="shares" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Share" inverseName="shareHolder" inverseEntity="Share"/>
+        <relationship name="transactions" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Transaction" inverseName="issuer" inverseEntity="Transaction"/>
     </entity>
     <entity name="Possession" representedClassName="Possession" syncable="YES">
         <attribute name="name" optional="YES" attributeType="String"/>
@@ -40,16 +40,29 @@
         <relationship name="pool" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="AssetPool" inverseName="possessions" inverseEntity="AssetPool"/>
     </entity>
     <entity name="Receivable" representedClassName="Receivable" syncable="YES">
-        <attribute name="grantDate" attributeType="Date" usesScalarValueType="NO"/>
-        <attribute name="initialAmount" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="name" optional="YES" attributeType="String"/>
-        <attribute name="repaidAmount" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <relationship name="debtor" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Person" inverseName="liabilities" inverseEntity="Person"/>
         <relationship name="pool" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="AssetPool" inverseName="receivables" inverseEntity="AssetPool"/>
+        <relationship name="transactions" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Transaction" inverseName="receivable" inverseEntity="Transaction"/>
+    </entity>
+    <entity name="Share" representedClassName="Share" syncable="YES">
+        <attribute name="amount" optional="YES" attributeType="Decimal" defaultValueString="0.0"/>
+        <relationship name="shareHolder" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Person" inverseName="shares" inverseEntity="Person"/>
+        <relationship name="transaction" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Transaction" inverseName="shares" inverseEntity="Transaction"/>
     </entity>
     <entity name="Snapshot" representedClassName="Snapshot" syncable="YES">
         <attribute name="date" attributeType="Date" usesScalarValueType="NO"/>
         <relationship name="assets" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="AssetPosition" inverseName="snapshot" inverseEntity="AssetPosition"/>
         <relationship name="liabilities" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="LiabilityPosition" inverseName="snapshot" inverseEntity="LiabilityPosition"/>
+    </entity>
+    <entity name="Transaction" representedClassName="Transaction" syncable="YES">
+        <attribute name="amount" optional="YES" attributeType="Decimal" defaultValueString="0.0"/>
+        <attribute name="date" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="emoji" optional="YES" attributeType="String"/>
+        <attribute name="note" optional="YES" attributeType="String"/>
+        <relationship name="issuer" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Person" inverseName="transactions" inverseEntity="Person"/>
+        <relationship name="liability" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Liability" inverseName="transactions" inverseEntity="Liability"/>
+        <relationship name="receivable" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Receivable" inverseName="transactions" inverseEntity="Receivable"/>
+        <relationship name="shares" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Share" inverseName="transaction" inverseEntity="Share"/>
     </entity>
 </model>

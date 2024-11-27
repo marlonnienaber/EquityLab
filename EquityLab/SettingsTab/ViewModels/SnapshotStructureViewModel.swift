@@ -54,7 +54,7 @@ class SnapshotStructureViewModel {
             guard let self else { return }
             liabilityPoolToLiabilitiesDictionary = [:]
             for pool in liabilityPools {
-                liabilityPoolToLiabilitiesDictionary[pool] = liabilityRepository.fetchLiabilities(for: pool)
+                liabilityPoolToLiabilitiesDictionary[pool] = liabilityRepository.liabilities.filter{ $0.pool == pool }
             }
         }
         
@@ -62,23 +62,23 @@ class SnapshotStructureViewModel {
             assetPoolToAssetsDictionary[pool] = Self.fetchSnapshotStructureItems(for: pool, using: assetRepository)
         }
         for pool in liabilityPools {
-            liabilityPoolToLiabilitiesDictionary[pool] = liabilityRepository.fetchLiabilities(for: pool)
+            liabilityPoolToLiabilitiesDictionary[pool] = liabilityRepository.liabilities.filter{ $0.pool == pool }
         }
     }
     
     private static func fetchSnapshotStructureItems(for assetPool: AssetPool, using assetRepository: AssetRepository) -> [SnapshotStructureItem] {
-        let receivables = assetRepository.fetchReceivables(for: assetPool) as [SnapshotStructureItem]
-        let possessions = assetRepository.fetchPossessions(for: assetPool) as [SnapshotStructureItem]
+        let receivables = assetRepository.receivables.filter{ $0.pool == assetPool } as [SnapshotStructureItem]
+        let possessions = assetRepository.possessions.filter{ $0.pool == assetPool } as [SnapshotStructureItem]
         return receivables + possessions
     }
     
     private var assetPoolWithSameNameExists: Bool {
-        let assetPools = assetRepository.fetchAssetPools()
+        let assetPools = assetRepository.assetPools
         return assetPools.contains(where: { $0.name == alertPoolName && $0 != assetPoolToEdit })
     }
     
     private var liabilityPoolWithSameNameExists: Bool {
-        let liabilityPools = liabilityRepository.fetchLiabilityPools()
+        let liabilityPools = liabilityRepository.liabilityPools
         return liabilityPools.contains(where: { $0.name == alertPoolName && $0 != liabilityPoolToEdit })
     }
     
@@ -106,12 +106,12 @@ class SnapshotStructureViewModel {
         Self.logger.debug("updateAssetPool()")
         guard let assetPoolToEdit else { return }
         try validateAssetPool()
-        assetRepository.update(assetPool: assetPoolToEdit, newName: alertPoolName)
+        assetRepository.updateAssetPool(assetPool: assetPoolToEdit, newName: alertPoolName)
     }
     
     func delete(assetPool: AssetPool) {
         Self.logger.debug("delete(assetPool)")
-        assetRepository.delete(assetPool: assetPool)
+        assetRepository.deleteAssetPool(assetPool: assetPool)
     }
     
     func createLiabilityPool() throws {
@@ -124,12 +124,12 @@ class SnapshotStructureViewModel {
         Self.logger.debug("updateLiabilityPool()")
         guard let liabilityPoolToEdit else { return }
         try validateLiabilityPool()
-        liabilityRepository.update(liabilityPool: liabilityPoolToEdit, newName: alertPoolName)
+        liabilityRepository.updateLiabilityPool(liabilityPool: liabilityPoolToEdit, newName: alertPoolName)
     }
     
     func delete(liabilityPool: LiabilityPool) {
         Self.logger.debug("delete(liabilityPool)")
-        liabilityRepository.delete(liabilityPool: liabilityPool)
+        liabilityRepository.deleteLiabilityPool(liabilityPool: liabilityPool)
     }
     
     func getAssetsForAssetPool(_ pool: AssetPool) -> [SnapshotStructureItem] {

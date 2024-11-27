@@ -8,9 +8,10 @@ class DashboardViewModel {
     
     @ObservationIgnored private var snapshotRepository: SnapshotRepository
     @ObservationIgnored private let snapshotAnalyzer: SnapshotAnalyzer
-    @ObservationIgnored private var equityValueCache = [Snapshot:Double]()
-    @ObservationIgnored private var assetValueCache = [Snapshot:Double]()
-    @ObservationIgnored private var liabilityValueCache = [Snapshot:Double]()
+    @ObservationIgnored private var equityValueCache = [Snapshot:Decimal]()
+    @ObservationIgnored private var assetValueCache = [Snapshot:Decimal]()
+    @ObservationIgnored private var liabilityValueCache = [Snapshot:Decimal]()
+    
     private var snapshots = [Snapshot]() {
         didSet {
             for snapshot in snapshots {
@@ -18,7 +19,6 @@ class DashboardViewModel {
             }
         }
     }
-    
     var filteredSnapshots: [Snapshot] {
         Self.logger.debug("filteredSnapshots")
         let calendar = Calendar.current
@@ -78,7 +78,7 @@ class DashboardViewModel {
     }
     
     
-    private func getAssetValue(of snapshot: Snapshot) -> Double {
+    private func getAssetValue(of snapshot: Snapshot) -> Decimal {
         Self.logger.debug("getAssetValue(of snapshot)")
         if let assetValue = assetValueCache[snapshot] {
             return assetValue
@@ -89,7 +89,7 @@ class DashboardViewModel {
         }
     }
     
-    private func getLiabilityValue(of snapshot: Snapshot) -> Double {
+    private func getLiabilityValue(of snapshot: Snapshot) -> Decimal {
         Self.logger.debug("getLiabilityValue(of snapshot)")
         if let liabilityValue = liabilityValueCache[snapshot] {
             return liabilityValue
@@ -100,16 +100,16 @@ class DashboardViewModel {
         }
     }
     
-    func getEquityValue(of snapshot: Snapshot) -> Double {
+    func getEquityValue(of snapshot: Snapshot) -> Decimal {
         Self.logger.debug("getEquityValue(of snapshot)")
         return equityValueCache[snapshot] ?? 0.0
     }
     
     func getBalanceViewModel(for snapshot: Snapshot) -> BalanceViewModel {
         BalanceViewModel(
-            assetValueString: LocalizedCurrencyFormatter.shared.string(from: getAssetValue(of: snapshot) as NSNumber) ?? "",
-            liabilityValueString: LocalizedCurrencyFormatter.shared.string(from: getLiabilityValue(of: snapshot) as NSNumber) ?? "",
-            equityValueString: LocalizedCurrencyFormatter.shared.string(from: getEquityValue(of: snapshot) as NSNumber) ?? ""
+            assetValueString: LocalizedCurrencyFormatter.shared.string(from: getAssetValue(of: snapshot).nsDecimalNumberValue) ?? "",
+            liabilityValueString: LocalizedCurrencyFormatter.shared.string(from: getLiabilityValue(of: snapshot).nsDecimalNumberValue) ?? "",
+            equityValueString: LocalizedCurrencyFormatter.shared.string(from: getEquityValue(of: snapshot).nsDecimalNumberValue) ?? ""
         )
     }
     
@@ -120,17 +120,17 @@ class DashboardViewModel {
         }
     }
     
-    func computeValueByPool(for positionType: PositionType, using snapshot: Snapshot) -> [String:Double] {
+    func computeValueByPool(for positionType: PositionType, using snapshot: Snapshot) -> [String:Decimal] {
         Self.logger.debug("computeValueByPool(for positionType, using snapshot)")
         if positionType == .assets {
-            let assetPositions = snapshotRepository.fetchAssetPositions(of: snapshot)
+            let assetPositions = snapshotRepository.assetPositions.filter{ $0.snapshot == snapshot }
             return Dictionary(grouping: assetPositions, by: { $0.poolName }).mapValues { array in
-                array.map { $0.value }.reduce(0, +)
+                array.map { $0.value.decimalValue }.reduce(0, +)
             }
         } else {
-            let liabilityPositions = snapshotRepository.fetchLiabilityPositions(of: snapshot)
+            let liabilityPositions = snapshotRepository.liabilityPositions.filter{ $0.snapshot == snapshot }
             return Dictionary(grouping: liabilityPositions, by: { $0.poolName }).mapValues { array in
-                array.map { $0.value }.reduce(0, +)
+                array.map { $0.value.decimalValue }.reduce(0, +)
             }
         }
     }

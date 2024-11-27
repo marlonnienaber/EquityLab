@@ -3,98 +3,124 @@ import ObservableProperties
 
 class LiabilityRepository: NSObject {
     public static let production = LiabilityRepository(context: ProductionCoreDataStack.shared.context)
-    private let fetchedResultsController: ObservingFetchedResultsController<LiabilityPool>
-    @Publisher var liabilityPools: [LiabilityPool]
+    
+    private let liabilityPoolFetchedResultsController: NSFetchedResultsController<LiabilityPool>
+    private let liabilityFetchedResultsController: NSFetchedResultsController<Liability>
+    private let liabilityTransactionFetchedResultsController: NSFetchedResultsController<Transaction>
+    
+    @Retriever var liabilityPools: [LiabilityPool]
+    @Retriever var liabilities: [Liability]
+    @Retriever var liabilityTransactions: [Transaction]
+    
     
     init(context: NSManagedObjectContext) {
-        let request = ObservingFetchRequest<LiabilityPool>(entityName: "LiabilityPool")
-        request.sortDescriptors = [NSSortDescriptor(keyPath: \LiabilityPool.name, ascending: true)]
-        request.observedRelationships = ["liabilities"]
-        fetchedResultsController = .init(fetchRequest: request, managedObjectContext: context, sectionNameKeyPath: nil, cacheName: nil)
-        try? fetchedResultsController.performFetch()
-        self.liabilityPools = fetchedResultsController.fetchedObjects as? [LiabilityPool] ?? []
+        let liabilityPoolRequest = NSFetchRequest<LiabilityPool>(entityName: "LiabilityPool")
+        liabilityPoolRequest.sortDescriptors = []
+        liabilityPoolFetchedResultsController = .init(fetchRequest: liabilityPoolRequest, managedObjectContext: context, sectionNameKeyPath: nil, cacheName: nil)
+        try? liabilityPoolFetchedResultsController.performFetch()
+        
+        let liabilityRequest = NSFetchRequest<Liability>(entityName: "Liability")
+        liabilityRequest.sortDescriptors = []
+        liabilityFetchedResultsController = .init(fetchRequest: liabilityRequest, managedObjectContext: context, sectionNameKeyPath: nil, cacheName: nil)
+        try? liabilityFetchedResultsController.performFetch()
+        
+        let liabilityTransactionRequest = NSFetchRequest<Transaction>(entityName: "Transaction")
+        liabilityTransactionRequest.sortDescriptors = []
+        liabilityTransactionFetchedResultsController = .init(fetchRequest: liabilityTransactionRequest, managedObjectContext: context, sectionNameKeyPath: nil, cacheName: nil)
+        try? liabilityTransactionFetchedResultsController.performFetch()
+        
         super.init()
-        fetchedResultsController.delegate = self
+        
+        $liabilityPools.toRetrieveDo { [unowned self] in
+            liabilityPoolFetchedResultsController.fetchedObjects ?? .defaultValue
+        }
+        $liabilities.toRetrieveDo { [unowned self] in
+            liabilityFetchedResultsController.fetchedObjects ?? .defaultValue
+        }
+        $liabilityTransactions.toRetrieveDo { [unowned self] in
+            liabilityTransactionFetchedResultsController.fetchedObjects ?? .defaultValue
+        }
+        
+        liabilityPoolFetchedResultsController.delegate = self
+        liabilityFetchedResultsController.delegate = self
+        liabilityTransactionFetchedResultsController.delegate = self
     }
     
-    
-    func fetchLiabilities() -> [Liability] {
-        let liabilityFetchRequest = NSFetchRequest<Liability>(entityName: String(describing: "Liability"))
-        liabilityFetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Liability.grantDate, ascending: true)]
-        return (try? fetchedResultsController.managedObjectContext.fetch(liabilityFetchRequest)) ?? []
-    }
-    
-    func fetchLiabilities(for pool: LiabilityPool) -> [Liability] {
-        return (try? fetchedResultsController.managedObjectContext.fetch(pool.getLiabilityRequest())) ?? []
-    }
-    
-    func fetchLiabilityPools() -> [LiabilityPool] {
-        try? fetchedResultsController.performFetch()
-        return fetchedResultsController.fetchedObjects as? [LiabilityPool] ?? []
-    }
-    
-    func delete(liability: Liability) {
-        let context = fetchedResultsController.managedObjectContext
-        context.delete(liability)
-        try? context.save()
-    }
-    
-    func delete(liabilityPool: LiabilityPool) {
-        let context = fetchedResultsController.managedObjectContext
-        context.delete(liabilityPool)
-        try? context.save()
-    }
     
     func createLiabilityPool(named name: String) {
-        let context = fetchedResultsController.managedObjectContext
+        let context = liabilityPoolFetchedResultsController.managedObjectContext
         let pool = LiabilityPool(context: context)
         pool.name = name
         try? context.save()
     }
     
-    func update(liabilityPool: LiabilityPool, newName: String) {
-        let context = fetchedResultsController.managedObjectContext
+    func updateLiabilityPool(liabilityPool: LiabilityPool, newName: String) {
+        let context = liabilityPoolFetchedResultsController.managedObjectContext
         liabilityPool.name = newName
         try? context.save()
     }
     
+    func deleteLiabilityPool(liabilityPool: LiabilityPool) {
+        let context = liabilityPoolFetchedResultsController.managedObjectContext
+        context.delete(liabilityPool)
+        try? context.save()
+    }
+    
+    
     func createLiability(name: String,
                          pool: LiabilityPool,
                          creditor: Person,
-                         initialAmount: Double,
-                         repaidAmount: Double,
+                         disbursedAmount: Decimal,
                          grantDate: Date) {
-        let context = fetchedResultsController.managedObjectContext
+        let context = liabilityFetchedResultsController.managedObjectContext
         let liability = Liability(usedContext: context)
-        liability.grantDate = grantDate
         liability.creditor = creditor
-        liability.initialAmount = initialAmount
-        liability.repaidAmount = repaidAmount
         liability.name = name
         liability.pool = pool
+        let initialTransaction = Transaction(usedContext: context)
+        initialTransaction.issuer = creditor
+        initialTransaction.liability = liability
+        initialTransaction.amount = disbursedAmount.nsDecimalNumberValue
+        initialTransaction.date = grantDate
+        initialTransaction.note = "initial disbursement"
         try? context.save()
     }
     
     func updateLiability(liability: Liability,
                          newName: String,
-                         newCreditor: Person,
-                         newInitialAmount: Double,
-                         newRepaidAmount: Double,
-                         newGrantDate: Date,
-                         newPool: LiabilityPool) {
-        let context = fetchedResultsController.managedObjectContext
-        liability.grantDate = newGrantDate.startOfDay
-        liability.creditor = newCreditor
-        liability.initialAmount = newInitialAmount
-        liability.repaidAmount = newRepaidAmount
+                         newPool: LiabilityPool,
+                         newCreditor: Person) {
+        let context = liabilityFetchedResultsController.managedObjectContext
         liability.name = newName
         liability.pool = newPool
+        if liability.creditor != newCreditor {
+            liability.creditor = newCreditor
+            let transactions = liabilityTransactions.filter{ $0.liability == liability && $0.issuer.isNotNil }
+            transactions.forEach{ $0.issuer = newCreditor }
+        }
+        try? context.save()
+    }
+    
+    func deleteLiability(liability: Liability) {
+        let context = liabilityFetchedResultsController.managedObjectContext
+        context.delete(liability)
         try? context.save()
     }
 }
 
 extension LiabilityRepository: NSFetchedResultsControllerDelegate {
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-        liabilityPools = fetchedResultsController.fetchedObjects as? [LiabilityPool] ?? []
+        if controller == liabilityPoolFetchedResultsController {
+            liabilityPools = liabilityPoolFetchedResultsController.fetchedObjects ?? .defaultValue
+        }
+        if controller == liabilityFetchedResultsController {
+            liabilities = liabilityFetchedResultsController.fetchedObjects ?? .defaultValue
+        }
+        if controller == liabilityTransactionFetchedResultsController {
+            liabilityTransactions = liabilityTransactionFetchedResultsController.fetchedObjects ?? .defaultValue
+        }
     }
 }
+
+
+

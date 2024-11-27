@@ -4,10 +4,8 @@ import os
 
 @Observable
 class ChangeChartViewModel {
-    @ObservationIgnored private static let logger = Logger(
-        subsystem: Bundle.main.bundleIdentifier ?? "",
-        category: String(describing: ChangeChartViewModel.self)
-    )
+    @ObservationIgnored private static let logger = Logger(subsystem: .dashboardTab, component: .changeChartViewModel)
+    
     @ObservationIgnored private var changeChartType: ChangeChartType
     @ObservationIgnored private var positionType: PositionType {
         switch changeChartType {
@@ -15,6 +13,7 @@ class ChangeChartViewModel {
         case .liabilityChangeChart: .liabilities
         }
     }
+    
     var dashboardViewModel: DashboardViewModel
     var changeChartColor: Color {
         switch changeChartType {
@@ -39,7 +38,7 @@ class ChangeChartViewModel {
             }
             changedPoolValues[key] = changePercentage
         }
-        let changeCategories = changedPoolValues.map{ BarChartCategory(change: $0.value, name: $0.key) }
+        let changeCategories = changedPoolValues.map{ BarChartCategory(change: $0.value.doubleValue, name: $0.key) }
         return changeCategories
     }
     var noChangesToLastSnapshot: Bool {

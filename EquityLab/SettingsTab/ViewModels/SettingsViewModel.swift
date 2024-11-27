@@ -37,10 +37,10 @@ class SettingsViewModel {
             isSerializingState = true
         }
         do {
-            let snapshots = snapshotRepository.fetchSnapshots()
+            let snapshots = snapshotRepository.snapshots
             let persons = personRepository.persons
-            let liabilityPools = liabilityRepository.fetchLiabilityPools()
-            let assetPools = assetRepository.fetchAssetPools()
+            let liabilityPools = liabilityRepository.liabilityPools
+            let assetPools = assetRepository.assetPools
             let jsonBackup = JsonBackup(snapshots: snapshots, persons: persons, liabilityPools: liabilityPools, assetPools: assetPools)
             let encoder = JSONEncoder()
             encoder.outputFormatting = .prettyPrinted

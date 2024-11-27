@@ -20,9 +20,10 @@ struct PersonSelectionView: View {
                 }
                 .foregroundStyle(.primary)
             }
-            .onDelete { indexSet in
-                viewModel.deletePersons(withIndices: indexSet)
-            }
+            /* TODO: unly usable once function in PersonRepo implemented */
+//            .onDelete { indexSet in
+//                viewModel.deletePersons(withIndices: indexSet)
+//            }
         }
         .navigationTitle("Select Debtor")
         .alert("What should the name of the new person be?", isPresented: $viewModel.showCreatePersonAlert) {

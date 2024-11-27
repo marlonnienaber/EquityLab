@@ -49,7 +49,14 @@ struct SnapshotForm: View {
             ForEach(viewModel.assetPoolNames, id: \.self) { poolName in
                 ForEach(viewModel.getAssetProxies(for: poolName), id: \.name) { proxy in
                     if let index = viewModel.assetProxies.firstIndex(where: { $0.name == proxy.name }) {
-                        MonetaryInputView(positionName: proxy.name, positionPool: proxy.poolName, positionValue: $viewModel.assetProxies[index].value)
+                        CurrencyInputView(value: $viewModel.liabilityProxies[index].value) {
+                            VStack(alignment: .leading) {
+                                Text(proxy.name)
+                                    .fontWeight(.heavy)
+                                Text(proxy.poolName)
+                                    .font(.footnote)
+                            }
+                        }
                     }
                 }
             }
@@ -61,29 +68,16 @@ struct SnapshotForm: View {
             ForEach(viewModel.liabilityPoolNames, id: \.self) { poolName in
                 ForEach(viewModel.getLiabilityProxies(for: poolName), id: \.name) { proxy in
                     if let index = viewModel.liabilityProxies.firstIndex(where: { $0.name == proxy.name }) {
-                        MonetaryInputView(positionName: proxy.name, positionPool: proxy.poolName, positionValue: $viewModel.liabilityProxies[index].value)
+                        CurrencyInputView(value: $viewModel.liabilityProxies[index].value) {
+                            VStack(alignment: .leading) {
+                                Text(proxy.name)
+                                    .fontWeight(.heavy)
+                                Text(proxy.poolName)
+                                    .font(.footnote)
+                            }
+                        }
                     }
                 }
-            }
-        }
-    }
-    
-    struct MonetaryInputView: View {
-        let positionName: String
-        let positionPool: String
-        @Binding var positionValue: Double
-        
-        var body: some View {
-            HStack {
-                VStack(alignment: .leading) {
-                    Text(positionName)
-                        .fontWeight(.heavy)
-                    Text(positionPool)
-                        .font(.footnote)
-                }
-                Spacer()
-                CurrencyInputField(value: $positionValue)
-                    .padding(6)
             }
         }
     }

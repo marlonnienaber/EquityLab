@@ -208,12 +208,12 @@ final class SnapshotFormViewModelTests: XCTestCase {
         
         try sut.saveSnapshot()
         
-        let snapshots = testingSnapshotRepository.fetchSnapshots()
+        let snapshots = testingSnapshotRepository.snapshots
         let snapshot = try XCTUnwrap(snapshots.first)
         
         let actualSnapshotDate = snapshot.date
-        let actualAssetPositionProperties = testingSnapshotRepository.fetchAssetPositions(of: snapshot).map{ ($0.name, $0.value) }
-        let actualLiabilityPositionProperties = testingSnapshotRepository.fetchLiabilityPositions(of: snapshot).map{ ($0.name, $0.value) }
+        let actualAssetPositionProperties = testingSnapshotRepository.assetPositions.filter{ $0.snapshot == snapshot }.map{ ($0.name, $0.value) }
+        let actualLiabilityPositionProperties = testingSnapshotRepository.liabilityPositions.filter{ $0.snapshot == snapshot }.map{ ($0.name, $0.value) }
         
         XCTAssertEqual(expectedSnapshotDate, actualSnapshotDate)
         XCTAssertTrue(expectedAssetPositionProperties ≡ actualAssetPositionProperties)
@@ -249,12 +249,12 @@ final class SnapshotFormViewModelTests: XCTestCase {
         
         try sut.saveSnapshot()
         
-        let snapshots = testingSnapshotRepository.fetchSnapshots()
+        let snapshots = testingSnapshotRepository.snapshots
         snapshot = try XCTUnwrap(snapshots.first)
         
         let actualSnapshotDate = snapshot.date
-        let actualAssetPositionProperties = testingSnapshotRepository.fetchAssetPositions(of: snapshot).map{ ($0.name, $0.value) }
-        let actualLiabilityPositionProperties = testingSnapshotRepository.fetchLiabilityPositions(of: snapshot).map{ ($0.name, $0.value) }
+        let actualAssetPositionProperties = testingSnapshotRepository.assetPositions.filter{ $0.snapshot == snapshot }.map{ ($0.name, $0.value) }
+        let actualLiabilityPositionProperties = testingSnapshotRepository.liabilityPositions.filter{ $0.snapshot == snapshot }.map{ ($0.name, $0.value) }
         
         XCTAssertEqual(expectedSnapshotDate, actualSnapshotDate)
         XCTAssertTrue(expectedAssetPositionProperties ≡ actualAssetPositionProperties)
