@@ -60,6 +60,10 @@ class LoanManagementViewModel {
         liability.creditor?.name ?? ""
     }
     
+    func getDebtor(of receivable: Receivable) -> LoanPartner? {
+        receivable.debtor
+    }
+    
     func deleteReceivables(for indexSet: IndexSet) {
         Self.logger.debug("deleteReceivables(for indexSet:)")
         indexSet.map{receivables[$0]}.forEach{assetRepository.deleteReceivable(receivable: $0)}

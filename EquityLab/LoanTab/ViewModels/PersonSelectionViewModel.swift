@@ -7,18 +7,18 @@ class PersonSelectionViewModel {
     @ObservationIgnored private static let logger = Logger(subsystem: .loanManagementTab, component: .personSelectionViewModel)
     
     @ObservationIgnored private var personRepository: PersonRepository
-    var persons = [Person]()
-    var selectedPerson: Person?
+    var persons = [LoanPartner]()
+    var selectedPerson: LoanPartner?
     var personValidationError: PersonValidationError?
     var showCreatePersonAlert = false
     var showPersonValidationErrorAlert = false
     var name = ""
-    let setInParentViewModel: (Person?) -> ()
+    let setInParentViewModel: (LoanPartner?) -> ()
     
     init(
         personRepository: PersonRepository = .production,
-        selectedPerson: Person?,
-        onDismiss: @escaping (Person?) -> ()
+        selectedPerson: LoanPartner?,
+        onDismiss: @escaping (LoanPartner?) -> ()
     ) {
         Self.logger.debug("PersonSelectionViewModel()")
         self.personRepository = personRepository

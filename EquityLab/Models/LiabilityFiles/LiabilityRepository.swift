@@ -6,11 +6,11 @@ class LiabilityRepository: NSObject {
     
     private let liabilityPoolFetchedResultsController: NSFetchedResultsController<LiabilityPool>
     private let liabilityFetchedResultsController: NSFetchedResultsController<Liability>
-    private let liabilityTransactionFetchedResultsController: NSFetchedResultsController<Transaction>
+    private let liabilityTransactionFetchedResultsController: NSFetchedResultsController<LoanTransaction>
     
     @Retriever var liabilityPools: [LiabilityPool]
     @Retriever var liabilities: [Liability]
-    @Retriever var liabilityTransactions: [Transaction]
+    @Retriever var liabilityTransactions: [LoanTransaction]
     
     
     init(context: NSManagedObjectContext) {
@@ -24,7 +24,7 @@ class LiabilityRepository: NSObject {
         liabilityFetchedResultsController = .init(fetchRequest: liabilityRequest, managedObjectContext: context, sectionNameKeyPath: nil, cacheName: nil)
         try? liabilityFetchedResultsController.performFetch()
         
-        let liabilityTransactionRequest = NSFetchRequest<Transaction>(entityName: "Transaction")
+        let liabilityTransactionRequest = NSFetchRequest<LoanTransaction>(entityName: "LoanTransaction")
         liabilityTransactionRequest.sortDescriptors = []
         liabilityTransactionFetchedResultsController = .init(fetchRequest: liabilityTransactionRequest, managedObjectContext: context, sectionNameKeyPath: nil, cacheName: nil)
         try? liabilityTransactionFetchedResultsController.performFetch()
@@ -69,15 +69,17 @@ class LiabilityRepository: NSObject {
     
     func createLiability(name: String,
                          pool: LiabilityPool,
-                         creditor: Person,
+                         creditor: LoanPartner,
                          disbursedAmount: Decimal,
                          grantDate: Date) {
         let context = liabilityFetchedResultsController.managedObjectContext
+        
         let liability = Liability(usedContext: context)
         liability.creditor = creditor
         liability.name = name
         liability.pool = pool
-        let initialTransaction = Transaction(usedContext: context)
+        
+        let initialTransaction = LoanTransaction(usedContext: context)
         initialTransaction.issuer = creditor
         initialTransaction.liability = liability
         initialTransaction.amount = disbursedAmount.nsDecimalNumberValue
@@ -89,7 +91,7 @@ class LiabilityRepository: NSObject {
     func updateLiability(liability: Liability,
                          newName: String,
                          newPool: LiabilityPool,
-                         newCreditor: Person) {
+                         newCreditor: LoanPartner) {
         let context = liabilityFetchedResultsController.managedObjectContext
         liability.name = newName
         liability.pool = newPool

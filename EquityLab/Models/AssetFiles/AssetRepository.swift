@@ -7,14 +7,12 @@ class AssetRepository: NSObject {
     private let assetPoolFetchedResultsController: NSFetchedResultsController<AssetPool>
     private let possessionFetchedResultsController: NSFetchedResultsController<Possession>
     private let receivableFetchedResultsController: NSFetchedResultsController<Receivable>
-    private let receivableTransactionsFetchedResultsController: NSFetchedResultsController<Transaction>
-    private let receivableTransactionSharesFetchedResultsController: NSFetchedResultsController<Share>
+    private let receivableTransactionsFetchedResultsController: NSFetchedResultsController<LoanTransaction>
     
     @Retriever var assetPools: [AssetPool]
     @Retriever var possessions: [Possession]
     @Retriever var receivables: [Receivable]
-    @Retriever var receivableTransactions: [Transaction]
-    @Retriever var receivableTransactionShares: [Share]
+    @Retriever var receivableTransactions: [LoanTransaction]
     
     
     init(context: NSManagedObjectContext) {
@@ -33,16 +31,11 @@ class AssetRepository: NSObject {
         receivableFetchedResultsController = .init(fetchRequest: receivableRequest, managedObjectContext: context, sectionNameKeyPath: nil, cacheName: nil)
         try? receivableFetchedResultsController.performFetch()
         
-        let transactionRequest = NSFetchRequest<Transaction>(entityName: "Transaction")
+        let transactionRequest = NSFetchRequest<LoanTransaction>(entityName: "LoanTransaction")
         transactionRequest.sortDescriptors = []
         transactionRequest.predicate = NSPredicate(format: "receivable != nil")
         receivableTransactionsFetchedResultsController = .init(fetchRequest: transactionRequest, managedObjectContext: context, sectionNameKeyPath: nil, cacheName: nil)
         try? receivableTransactionsFetchedResultsController.performFetch()
-        
-        let transactionShareRequest = NSFetchRequest<Share>(entityName: "Share")
-        transactionShareRequest.sortDescriptors = []
-        receivableTransactionSharesFetchedResultsController = .init(fetchRequest: transactionShareRequest, managedObjectContext: context, sectionNameKeyPath: nil, cacheName: nil)
-        try? receivableTransactionSharesFetchedResultsController.performFetch()
         
         super.init()
         
@@ -58,21 +51,17 @@ class AssetRepository: NSObject {
         $receivableTransactions.toRetrieveDo { [unowned self] in
             receivableTransactionsFetchedResultsController.fetchedObjects ?? .defaultValue
         }
-        $receivableTransactionShares.toRetrieveDo { [unowned self] in
-            (receivableTransactionSharesFetchedResultsController.fetchedObjects ?? []).filter{ $0.transaction?.receivable.isNotNil ?? false }
-        }
 
         assetPoolFetchedResultsController.delegate = self
         possessionFetchedResultsController.delegate = self
         receivableFetchedResultsController.delegate = self
         receivableTransactionsFetchedResultsController.delegate = self
-        receivableTransactionSharesFetchedResultsController.delegate = self
     }
     
     
     func createReceivable(name: String,
                           pool: AssetPool,
-                          debtor: Person,
+                          debtor: LoanPartner,
                           disbursedAmount: Decimal,
                           grantDate: Date) {
         let context = assetPoolFetchedResultsController.managedObjectContext
@@ -82,22 +71,12 @@ class AssetRepository: NSObject {
         receivable.pool = pool
         receivable.debtor = debtor
         
-        let initialTransaction = Transaction(usedContext: context)
+        let initialTransaction = LoanTransaction(usedContext: context)
         initialTransaction.receivable = receivable
         initialTransaction.amount = disbursedAmount.nsDecimalNumberValue
         initialTransaction.date = grantDate
         initialTransaction.note = "initial disbursement"
-        initialTransaction.emoji = "⛽"
-        
-        /* TODO: implement mechanism for saving user specified distribution */
-        let userShare = Share(usedContext: context)
-        let userAmount = disbursedAmount / 2
-        userShare.transaction = initialTransaction
-        userShare.amount = userAmount.nsDecimalNumberValue
-        let debtorShare = Share(usedContext: context)
-        let debtorAmount = disbursedAmount - userAmount
-        debtorShare.transaction = initialTransaction
-        debtorShare.amount = debtorAmount.nsDecimalNumberValue
+        initialTransaction.emoji = "📤"
         
         try? context.save()
     }
@@ -105,7 +84,7 @@ class AssetRepository: NSObject {
     func updateReceivable(receivable: Receivable,
                           newName: String,
                           newPool: AssetPool,
-                          newDebtor: Person) {
+                          newDebtor: LoanPartner) {
         let context = receivableFetchedResultsController.managedObjectContext
         receivable.name = newName
         receivable.pool = newPool
@@ -166,6 +145,47 @@ class AssetRepository: NSObject {
         context.delete(assetPool)
         try? context.save()
     }
+    
+    
+    func createReceivableTransaction(
+        amount: Decimal,
+        date: Date,
+        note: String,
+        issuer: LoanPartner?,
+        receivable: Receivable
+    ) {
+        let context = receivableTransactionsFetchedResultsController.managedObjectContext
+        
+        let transaction = LoanTransaction(usedContext: context)
+        transaction.amount = amount.nsDecimalNumberValue
+        transaction.note = note
+        transaction.date = date.startOfDay
+        transaction.issuer = issuer
+        transaction.emoji = issuer.isNil ? "📤" : "💶"
+        transaction.receivable = receivable
+        
+        try? context.save()
+    }
+    
+    func updateReceivableTransaction(
+        transaction: LoanTransaction,
+        amount: Decimal,
+        date: Date,
+        note: String,
+        issuer: LoanPartner?,
+        receivable: Receivable
+    ) {
+        let context = receivableTransactionsFetchedResultsController.managedObjectContext
+        
+        transaction.amount = amount.nsDecimalNumberValue
+        transaction.note = note
+        transaction.date = date.startOfDay
+        transaction.issuer = issuer
+        transaction.emoji = issuer.isNil ? "📤" : "💶"
+        transaction.receivable = receivable
+        
+        try? context.save()
+    }
 }
 
 extension AssetRepository: NSFetchedResultsControllerDelegate {
@@ -181,9 +201,6 @@ extension AssetRepository: NSFetchedResultsControllerDelegate {
         }
         if controller == receivableTransactionsFetchedResultsController {
             receivableTransactions = receivableTransactionsFetchedResultsController.fetchedObjects ?? []
-        }
-        if controller == receivableTransactionSharesFetchedResultsController {
-            receivableTransactionShares = receivableTransactionSharesFetchedResultsController.fetchedObjects ?? []
         }
     }
 }

@@ -40,23 +40,23 @@ class SnapshotStructureViewModel {
         self.assetPoolToAssetsDictionary = [:]
         self.liabilityPoolToLiabilitiesDictionary = [:]
         
-        assetRepository.$assetPools.registerObserver(self, keyPath: \.assetPools)
-        assetRepository.$assetPools.onSetDo { [weak self] newAssetPools in
-            guard let self else { return }
-            assetPoolToAssetsDictionary = [:]
-            for pool in newAssetPools {
-                assetPoolToAssetsDictionary[pool] = Self.fetchSnapshotStructureItems(for: pool, using: assetRepository)
-            }
-        }
+//        assetRepository.$assetPools.registerObserver(self, keyPath: \.assetPools)
+//        assetRepository.$assetPools.onSetDo { [weak self] newAssetPools in
+//            guard let self else { return }
+//            assetPoolToAssetsDictionary = [:]
+//            for pool in newAssetPools {
+//                assetPoolToAssetsDictionary[pool] = Self.fetchSnapshotStructureItems(for: pool, using: assetRepository)
+//            }
+//        }
         
-        liabilityRepository.$liabilityPools.registerObserver(self, keyPath: \.liabilityPools)
-        liabilityRepository.$liabilityPools.onSetDo { [weak self] newLiabilityPools in
-            guard let self else { return }
-            liabilityPoolToLiabilitiesDictionary = [:]
-            for pool in liabilityPools {
-                liabilityPoolToLiabilitiesDictionary[pool] = liabilityRepository.liabilities.filter{ $0.pool == pool }
-            }
-        }
+//        liabilityRepository.$liabilityPools.registerObserver(self, keyPath: \.liabilityPools)
+//        liabilityRepository.$liabilityPools.onSetDo { [weak self] newLiabilityPools in
+//            guard let self else { return }
+//            liabilityPoolToLiabilitiesDictionary = [:]
+//            for pool in liabilityPools {
+//                liabilityPoolToLiabilitiesDictionary[pool] = liabilityRepository.liabilities.filter{ $0.pool == pool }
+//            }
+//        }
         
         for pool in assetPools {
             assetPoolToAssetsDictionary[pool] = Self.fetchSnapshotStructureItems(for: pool, using: assetRepository)

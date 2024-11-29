@@ -2,22 +2,21 @@ import Foundation
 import CoreData
 
 
-extension Person {
+extension LoanPartner {
 
-    @nonobjc public class func fetchRequest() -> NSFetchRequest<Person> {
-        return NSFetchRequest<Person>(entityName: "Person")
+    @nonobjc public class func fetchRequest() -> NSFetchRequest<LoanPartner> {
+        return NSFetchRequest<LoanPartner>(entityName: "LoanPartner")
     }
 
     @NSManaged public var name: String
     @NSManaged public var liabilities: NSSet?
     @NSManaged public var receivables: NSSet?
     @NSManaged public var transactions: NSSet?
-    @NSManaged public var shares: NSSet?
 
 }
 
 // MARK: Generated accessors for liabilities
-extension Person {
+extension LoanPartner {
 
     @objc(addLiabilitiesObject:)
     @NSManaged public func addToLiabilities(_ value: Receivable)
@@ -34,7 +33,7 @@ extension Person {
 }
 
 // MARK: Generated accessors for receivables
-extension Person {
+extension LoanPartner {
 
     @objc(addReceivablesObject:)
     @NSManaged public func addToReceivables(_ value: Liability)
@@ -51,13 +50,13 @@ extension Person {
 }
 
 // MARK: Generated accessors for transactions
-extension Person {
+extension LoanPartner {
 
     @objc(addTransactionsObject:)
-    @NSManaged public func addToTransactions(_ value: Transaction)
+    @NSManaged public func addToTransactions(_ value: LoanTransaction)
 
     @objc(removeTransactionsObject:)
-    @NSManaged public func removeFromTransactions(_ value: Transaction)
+    @NSManaged public func removeFromTransactions(_ value: LoanTransaction)
 
     @objc(addTransactions:)
     @NSManaged public func addToTransactions(_ values: NSSet)
@@ -67,23 +66,6 @@ extension Person {
 
 }
 
-// MARK: Generated accessors for shares
-extension Person {
-
-    @objc(addSharesObject:)
-    @NSManaged public func addToShares(_ value: Share)
-
-    @objc(removeSharesObject:)
-    @NSManaged public func removeFromShares(_ value: Share)
-
-    @objc(addShares:)
-    @NSManaged public func addToShares(_ values: NSSet)
-
-    @objc(removeShares:)
-    @NSManaged public func removeFromShares(_ values: NSSet)
-
-}
-
-extension Person : Identifiable {
+extension LoanPartner : Identifiable {
 
 }

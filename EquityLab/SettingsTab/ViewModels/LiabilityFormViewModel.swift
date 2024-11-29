@@ -10,7 +10,7 @@ class LiabilityFormViewModel {
     var liabilityPool: LiabilityPool?
     var name = ""
     var grantDate = Date.now
-    var creditor: Person?
+    var creditor: LoanPartner?
     var disbursedAmount: Decimal = 0
     var liabilityValidationError: LiabilityValidationError?
     var showValidationErrorAlert = false
@@ -43,7 +43,7 @@ class LiabilityFormViewModel {
         return name.isEmpty
     }
     
-    private func validateLiability() throws -> (LiabilityPool,Person) {
+    private func validateLiability() throws -> (LiabilityPool,LoanPartner) {
         Self.logger.debug("validateReceivable()")
         if liabilityWithSameNameDoesExist {
             throw LiabilityValidationError.sameNameAlreadyExists

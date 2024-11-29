@@ -3,9 +3,9 @@ import CoreData
 
 @objc(Liability)
 public class Liability: NSManagedObject, Codable {
-    func getTransactionRequest() -> NSFetchRequest<Transaction> {
-        let request = Transaction.fetchRequest()
-        request.sortDescriptors = [NSSortDescriptor(keyPath: \Transaction.date, ascending: true)]
+    func getTransactionRequest() -> NSFetchRequest<LoanTransaction> {
+        let request = LoanTransaction.fetchRequest()
+        request.sortDescriptors = [NSSortDescriptor(keyPath: \LoanTransaction.date, ascending: true)]
         request.predicate = NSPredicate(format: "liability = %@", self)
         return request
     }
@@ -20,7 +20,7 @@ public class Liability: NSManagedObject, Codable {
         
         let container = try decoder.container(keyedBy: CodingKeys.self)
         name = try container.decode(String.self, forKey: .name)
-        creditor = Person.getOrCreatePerson(name: try container.decode(String.self, forKey: .creditor))
+        creditor = LoanPartner.getOrCreatePerson(name: try container.decode(String.self, forKey: .creditor))
     }
     
     public func encode(to encoder: Encoder) throws {

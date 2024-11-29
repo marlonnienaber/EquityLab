@@ -9,7 +9,7 @@ extension Liability {
     }
 
     @NSManaged public var name: String
-    @NSManaged public var creditor: Person?
+    @NSManaged public var creditor: LoanPartner?
     @NSManaged public var pool: LiabilityPool?
     @NSManaged public var transactions: NSSet?
 
@@ -19,10 +19,10 @@ extension Liability {
 extension Liability {
 
     @objc(addTransactionsObject:)
-    @NSManaged public func addToTransactions(_ value: Transaction)
+    @NSManaged public func addToTransactions(_ value: LoanTransaction)
 
     @objc(removeTransactionsObject:)
-    @NSManaged public func removeFromTransactions(_ value: Transaction)
+    @NSManaged public func removeFromTransactions(_ value: LoanTransaction)
 
     @objc(addTransactions:)
     @NSManaged public func addToTransactions(_ values: NSSet)

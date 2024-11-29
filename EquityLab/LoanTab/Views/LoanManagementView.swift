@@ -9,8 +9,10 @@ struct LoanManagementView: View {
                 if viewModel.receivables.isNotEmpty {
                     Section("Receivables") {
                         ForEach(viewModel.receivables) { receivable in
-                            NavigationLink(value: receivable) {
-                                receivableCell(for: receivable)
+                            if let debtor = viewModel.getDebtor(of: receivable) {
+                                NavigationLink(value: Pair(receivable,debtor)) {
+                                    receivableCell(for: receivable)
+                                }
                             }
                         }
                         .onDelete { indexSet in
@@ -54,8 +56,8 @@ struct LoanManagementView: View {
                 loanUpdatePickerMenu
                     .presentationDetents([.fraction(0.25)])
             }
-            .navigationDestination(for: Receivable.self) { receivable in
-                ReceivableDetailView(viewModel: ReceivableDetailViewModel(receivable: receivable))
+            .navigationDestination(for: Pair<Receivable,LoanPartner>.self) { pair in
+                ReceivableDetailView(viewModel: ReceivableDetailViewModel(receivable: pair.first, debtor: pair.second))
             }
         }
     }

@@ -3,12 +3,12 @@ import ObservableProperties
 
 class PersonRepository: NSObject {
     public static let production = PersonRepository(context: ProductionCoreDataStack.shared.context)
-    private let fetchedResultsController: NSFetchedResultsController<Person>
+    private let fetchedResultsController: NSFetchedResultsController<LoanPartner>
     
-    @Retriever var persons: [Person]
+    @Retriever var persons: [LoanPartner]
     
     init(context: NSManagedObjectContext) {
-        let request = NSFetchRequest<Person>(entityName: "Person")
+        let request = NSFetchRequest<LoanPartner>(entityName: "LoanPartner")
         request.sortDescriptors = []
         fetchedResultsController = .init(fetchRequest: request, managedObjectContext: context, sectionNameKeyPath: nil, cacheName: nil)
         try? fetchedResultsController.performFetch()
@@ -24,7 +24,7 @@ class PersonRepository: NSObject {
     
     func createPerson(with name: String) {
         let context = fetchedResultsController.managedObjectContext
-        let person = Person(usedContext: context)
+        let person = LoanPartner(usedContext: context)
         person.name = name
         try? context.save()
     }

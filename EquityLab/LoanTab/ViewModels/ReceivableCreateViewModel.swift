@@ -10,7 +10,7 @@ class ReceivableCreateViewModel {
     var assetPool: AssetPool?
     var name =  ""
     var grantDate = Date.now
-    var debtor: Person?
+    var debtor: LoanPartner?
     var disbursedAmount: Decimal = 0.0
     var receivableValidationError: ReceivableValidationError?
     var showValidationErrorAlert = false
@@ -46,7 +46,7 @@ class ReceivableCreateViewModel {
         return name.isEmpty
     }
     
-    private func validateReceivable() throws -> (AssetPool,Person) {
+    private func validateReceivable() throws -> (AssetPool,LoanPartner) {
         Self.logger.debug("validateReceivable()")
         if assetWithSameNameDoesExist {
             throw ReceivableValidationError.sameNameAlreadyExists

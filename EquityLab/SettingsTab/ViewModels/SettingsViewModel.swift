@@ -110,7 +110,7 @@ struct EmptyDataError: LocalizedError {
 
 struct JsonBackup: Codable {
     let snapshots: [Snapshot]
-    let persons: [Person]
+    let persons: [LoanPartner]
     let liabilityPools: [LiabilityPool]
     let assetPools: [AssetPool]
     
@@ -121,7 +121,7 @@ struct JsonBackup: Codable {
         case assetPools
     }
     
-    init(snapshots: [Snapshot], persons: [Person], liabilityPools: [LiabilityPool], assetPools: [AssetPool]) {
+    init(snapshots: [Snapshot], persons: [LoanPartner], liabilityPools: [LiabilityPool], assetPools: [AssetPool]) {
         self.snapshots = snapshots
         self.persons = persons
         self.liabilityPools = liabilityPools

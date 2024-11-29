@@ -1,15 +1,15 @@
 import Foundation
 import CoreData
 
-@objc(Person)
-public class Person: NSManagedObject, Encodable {
-    static var nameLookup: [String: Person] = [:]
+@objc(LoanPartner)
+public class LoanPartner: NSManagedObject, Encodable {
+    static var nameLookup: [String: LoanPartner] = [:]
     
-    static func getOrCreatePerson(name: String) -> Person {
+    static func getOrCreatePerson(name: String) -> LoanPartner {
         if let existingPerson = nameLookup[name] {
             return existingPerson
         } else {
-            let newPerson = Person(usedContext: ProductionCoreDataStack.shared.context)
+            let newPerson = LoanPartner(usedContext: ProductionCoreDataStack.shared.context)
             newPerson.name = name
             nameLookup[name] = newPerson
             return newPerson
