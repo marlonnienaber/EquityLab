@@ -34,8 +34,8 @@ final class AssetFormViewModelTests: XCTestCase {
         let expectedName = "Rote Sonne"
         let expectedDebtor = "Philipp"
         let expectedGrantDate = DateParser.shared.date(from: "2024-07-23T00:00:00")!
-        let expectedInitialAmount = 200.0
-        let expectedRepaidAmount = 40.0
+        let expectedInitialAmount: Decimal = 200.0
+        let expectedRepaidAmount: Decimal = 40.0
         let expectedAssetPool = DataFactory.createAssetPool(named: "Some other pool", assets: [], in: testingCoreDataStack.context)
         
         sut.assetName = expectedName
@@ -53,8 +53,8 @@ final class AssetFormViewModelTests: XCTestCase {
         let actualName = receivable.name
         let actualDebtor = receivable.debtor
         let actualGrantDate = receivable.grantDate
-        let actualInitialAmount = receivable.initialAmount
-        let actualRepaidAmount = receivable.repaidAmount
+        let actualInitialAmount = receivable.initialAmount.decimalValue
+        let actualRepaidAmount = receivable.repaidAmount.decimalValue
         let actualAssetPool = receivable.pool
         
         XCTAssertEqual(expectedName, actualName)
@@ -197,8 +197,8 @@ final class AssetFormViewModelTests: XCTestCase {
         let expectedName = "Rote Sonne"
         let expectedDebtor = "Philipp"
         let expectedGrantDate = DateParser.shared.date(from: "2024-07-23T00:00:00")!
-        let expectedInitialAmount = 200.0
-        let expectedRepaidAmount = 40.0
+        let expectedInitialAmount: Decimal = 200.0
+        let expectedRepaidAmount: Decimal = 40.0
         
         sut.assetName = expectedName
         sut.receivableDebtor = expectedDebtor
@@ -215,8 +215,8 @@ final class AssetFormViewModelTests: XCTestCase {
         let actualName = receivable.name
         let actualDebtor = receivable.debtor
         let actualGrantDate = receivable.grantDate
-        let actualInitialAmount = receivable.initialAmount
-        let actualRepaidAmount = receivable.repaidAmount
+        let actualInitialAmount = receivable.initialAmount.decimalValue
+        let actualRepaidAmount = receivable.repaidAmount.decimalValue
         
         XCTAssertEqual(expectedName, actualName)
         XCTAssertEqual(expectedDebtor, actualDebtor)
@@ -234,8 +234,8 @@ final class AssetFormViewModelTests: XCTestCase {
         let expectedName = ""
         let expectedDebtor = "Philipp"
         let expectedGrantDate = DateParser.shared.date(from: "2024-07-23T00:00:00")!
-        let expectedInitialAmount = 200.0
-        let expectedRepaidAmount = 40.0
+        let expectedInitialAmount: Decimal = 200.0
+        let expectedRepaidAmount: Decimal = 40.0
         
         sut.assetName = expectedName
         sut.receivableDebtor = expectedDebtor
@@ -257,8 +257,8 @@ final class AssetFormViewModelTests: XCTestCase {
         let expectedName = "Some name"
         let expectedDebtor = ""
         let expectedGrantDate = DateParser.shared.date(from: "2024-07-23T00:00:00")!
-        let expectedInitialAmount = 200.0
-        let expectedRepaidAmount = 40.0
+        let expectedInitialAmount: Decimal = 200.0
+        let expectedRepaidAmount: Decimal = 40.0
         
         sut.assetName = expectedName
         sut.receivableDebtor = expectedDebtor
@@ -280,8 +280,8 @@ final class AssetFormViewModelTests: XCTestCase {
         let expectedName = "Some name"
         let expectedDebtor = "Someone"
         let expectedGrantDate = DateParser.shared.date(from: "2024-07-23T00:00:00")!
-        let expectedInitialAmount = 40.0
-        let expectedRepaidAmount = 200.0
+        let expectedInitialAmount: Decimal = 40.0
+        let expectedRepaidAmount: Decimal = 200.0
         
         sut.assetName = expectedName
         sut.receivableDebtor = expectedDebtor
@@ -303,8 +303,8 @@ final class AssetFormViewModelTests: XCTestCase {
         let expectedName = "Some name"
         let expectedDebtor = "Someone"
         let expectedGrantDate = DateParser.shared.date(from: "2024-07-23T00:00:00")!
-        let expectedInitialAmount = 0.0
-        let expectedRepaidAmount = 0.0
+        let expectedInitialAmount: Decimal = 0.0
+        let expectedRepaidAmount: Decimal = 0.0
         
         sut.assetName = expectedName
         sut.receivableDebtor = expectedDebtor
@@ -324,8 +324,8 @@ final class AssetFormViewModelTests: XCTestCase {
         let expectedName = "Some name"
         let expectedDebtor = "Someone"
         let expectedGrantDate = DateParser.shared.date(from: "2024-07-23T00:00:00")!
-        let expectedInitialAmount = 20.0
-        let expectedRepaidAmount = 0.0
+        let expectedInitialAmount: Decimal = 20.0
+        let expectedRepaidAmount: Decimal = 0.0
         
         sut.assetName = expectedName
         sut.receivableDebtor = expectedDebtor
@@ -408,8 +408,8 @@ final class AssetFormViewModelTests: XCTestCase {
         let firstExpectedName = "Rote Sonne"
         let firstExpectedDebtor = "Philipp"
         let firstExpectedGrantDate = DateParser.shared.date(from: "2024-07-23T00:00:00")!
-        let firstExpectedInitialAmount = 200.0
-        let firstExpectedRepaidAmount = 40.0
+        let firstExpectedInitialAmount: Decimal = 200.0
+        let firstExpectedRepaidAmount: Decimal = 40.0
         
         sut.assetName = firstExpectedName
         sut.receivableDebtor = firstExpectedDebtor
@@ -422,8 +422,8 @@ final class AssetFormViewModelTests: XCTestCase {
         let secondExpectedName = "Rote Sonne"
         let secondExpectedDebtor = "Lenni"
         let secondExpectedGrantDate = DateParser.shared.date(from: "2024-07-22T00:00:00")!
-        let secondExpectedInitialAmount = 100.0
-        let secondExpectedRepaidAmount = 20.0
+        let secondExpectedInitialAmount: Decimal = 100.0
+        let secondExpectedRepaidAmount: Decimal = 20.0
         
         sut.assetName = secondExpectedName
         sut.receivableDebtor = secondExpectedDebtor
@@ -442,8 +442,8 @@ final class AssetFormViewModelTests: XCTestCase {
         let actualName = receivable.name
         let actualDebtor = receivable.debtor
         let actualGrantDate = receivable.grantDate
-        let actualInitialAmount = receivable.initialAmount
-        let actualRepaidAmount = receivable.repaidAmount
+        let actualInitialAmount = receivable.initialAmount.decimalValue
+        let actualRepaidAmount = receivable.repaidAmount.decimalValue
         
         XCTAssertEqual(firstExpectedName, actualName)
         XCTAssertEqual(firstExpectedDebtor, actualDebtor)
@@ -496,8 +496,8 @@ final class AssetFormViewModelTests: XCTestCase {
         let firstExpectedName = "Rote Sonne"
         let firstExpectedDebtor = "Philipp"
         let firstExpectedGrantDate = DateParser.shared.date(from: "2024-07-23T00:00:00")!
-        let firstExpectedInitialAmount = 200.0
-        let firstExpectedRepaidAmount = 40.0
+        let firstExpectedInitialAmount: Decimal = 200.0
+        let firstExpectedRepaidAmount: Decimal = 40.0
         
         sut.assetName = firstExpectedName
         sut.receivableDebtor = firstExpectedDebtor
@@ -524,8 +524,8 @@ final class AssetFormViewModelTests: XCTestCase {
         let actualName = receivable.name
         let actualDebtor = receivable.debtor
         let actualGrantDate = receivable.grantDate
-        let actualInitialAmount = receivable.initialAmount
-        let actualRepaidAmount = receivable.repaidAmount
+        let actualInitialAmount = receivable.initialAmount.decimalValue
+        let actualRepaidAmount = receivable.repaidAmount.decimalValue
         
         XCTAssertEqual(firstExpectedName, actualName)
         XCTAssertEqual(firstExpectedDebtor, actualDebtor)
@@ -551,8 +551,8 @@ final class AssetFormViewModelTests: XCTestCase {
         let secondExpectedName = "Commerzbank Konto"
         let secondExpectedDebtor = "Lenni"
         let secondExpectedGrantDate = DateParser.shared.date(from: "2024-07-22T00:00:00")!
-        let secondExpectedInitialAmount = 100.0
-        let secondExpectedRepaidAmount = 20.0
+        let secondExpectedInitialAmount: Decimal = 100.0
+        let secondExpectedRepaidAmount: Decimal = 20.0
         
         sut.assetName = secondExpectedName
         sut.receivableDebtor = secondExpectedDebtor

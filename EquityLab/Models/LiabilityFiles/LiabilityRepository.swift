@@ -64,15 +64,15 @@ class LiabilityRepository: NSObject {
     func createLiability(name: String,
                          pool: LiabilityPool,
                          creditor: String,
-                         initialAmount: Double,
-                         repaidAmount: Double,
+                         initialAmount: Decimal,
+                         repaidAmount: Decimal,
                          grantDate: Date) {
         let context = fetchedResultsController.managedObjectContext
         let liability = Liability(usedContext: context)
         liability.grantDate = grantDate
         liability.creditor = creditor
-        liability.initialAmount = initialAmount
-        liability.repaidAmount = repaidAmount
+        liability.initialAmount = initialAmount.nsDecimalNumberValue
+        liability.repaidAmount = repaidAmount.nsDecimalNumberValue
         liability.name = name
         liability.pool = pool
         try? context.save()
@@ -81,15 +81,15 @@ class LiabilityRepository: NSObject {
     func updateLiability(liability: Liability,
                          newName: String,
                          newCreditor: String,
-                         newInitialAmount: Double,
-                         newRepaidAmount: Double,
+                         newInitialAmount: Decimal,
+                         newRepaidAmount: Decimal,
                          newGrantDate: Date,
                          newPool: LiabilityPool) {
         let context = fetchedResultsController.managedObjectContext
         liability.grantDate = newGrantDate.startOfDay
         liability.creditor = newCreditor
-        liability.initialAmount = newInitialAmount
-        liability.repaidAmount = newRepaidAmount
+        liability.initialAmount = newInitialAmount.nsDecimalNumberValue
+        liability.repaidAmount = newRepaidAmount.nsDecimalNumberValue
         liability.name = newName
         liability.pool = newPool
         try? context.save()

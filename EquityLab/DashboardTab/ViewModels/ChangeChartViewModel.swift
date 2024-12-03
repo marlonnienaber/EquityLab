@@ -45,7 +45,7 @@ class ChangeChartViewModel {
     var noChangesToLastSnapshot: Bool {
         changeCategories.first(where: { $0.change != 0.0 }) == nil
     }
-    var maxChangePercentage: Double {
+    var maxChangePercentage: Decimal {
         let maxChange = changeCategories.map{ abs($0.change) }.max()
         guard let maxChange, !maxChange.isNaN, maxChange.isFinite else { return 0.0 }
         return maxChange
@@ -74,7 +74,7 @@ enum ChangeChartType {
 }
 
 struct BarChartCategory: Identifiable {
-    let change: Double
+    let change: Decimal
     let name: String
     let id = UUID()
 }

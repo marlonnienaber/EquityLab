@@ -1,4 +1,4 @@
-
+import Foundation
 import CoreData
 
 
@@ -10,7 +10,7 @@ extension Receivable {
 
     @NSManaged public var debtor: String
     @NSManaged public var grantDate: Date
-    @NSManaged public var initialAmount: Double
-    @NSManaged public var repaidAmount: Double
+    @NSManaged public var initialAmount: NSDecimalNumber
+    @NSManaged public var repaidAmount: NSDecimalNumber
 
 }

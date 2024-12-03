@@ -21,7 +21,7 @@ final class DashboardViewModelTests: XCTestCase {
     func test_equityValue_1() throws {
         let sut = DashboardViewModel(snapshotRepository: testingSnapshotRepository)
         let testSnapshot = testDataProvider.createAndPersistTestObjects_equityValue_1(using: testingCoreDataStack.context)
-        let expectedResult = 17.77
+        let expectedResult: Decimal = 17.77
         let actualResult = sut.getEquityValue(of: testSnapshot)
         XCTAssertEqual(expectedResult, actualResult)
     }
@@ -30,7 +30,7 @@ final class DashboardViewModelTests: XCTestCase {
     func test_equityValue_2() throws {
         let sut = DashboardViewModel(snapshotRepository: testingSnapshotRepository)
         let testSnapshot = testDataProvider.createAndPersistTestObjects_equityValue_2(using: testingCoreDataStack.context)
-        let expectedResult = -20.43
+        let expectedResult: Decimal = -20.43
         let actualResult = sut.getEquityValue(of: testSnapshot)
         XCTAssertEqual(expectedResult, actualResult)
     }
@@ -39,7 +39,7 @@ final class DashboardViewModelTests: XCTestCase {
     func test_equityValue_3() throws {
         let sut = DashboardViewModel(snapshotRepository: testingSnapshotRepository)
         let testSnapshot = testDataProvider.createAndPersistTestObjects_equityValue_3(using: testingCoreDataStack.context)
-        let expectedResult = 253.91
+        let expectedResult: Decimal = 253.91
         let actualResult = sut.getEquityValue(of: testSnapshot)
         XCTAssertEqual(expectedResult, actualResult, accuracy: 0.01)
     }
@@ -48,7 +48,7 @@ final class DashboardViewModelTests: XCTestCase {
     func test_equityValue_4() throws {
         let sut = DashboardViewModel(snapshotRepository: testingSnapshotRepository)
         let testSnapshot = testDataProvider.createAndPersistTestObjects_equityValue_4(using: testingCoreDataStack.context)
-        let expectedResult = 876.79
+        let expectedResult: Decimal = 876.79
         let actualResult = sut.getEquityValue(of: testSnapshot)
         XCTAssertEqual(expectedResult, actualResult, accuracy: 0.01)
     }
@@ -153,9 +153,9 @@ final class DashboardViewModelTests: XCTestCase {
         let testSnapshot = testDataProvider.createAndPersistTestObjects_computeValueByPool_1(using: testingCoreDataStack.context)
         
         let resultAssetPoolValueDictionary = sut.computeValueByPool(for: .assets, using: testSnapshot)
-        let expectedCashValue = 166.18
-        let expectedBankValue = 711.25
-        let expectedSecuritiesValue = 870.7
+        let expectedCashValue: Decimal = 166.18
+        let expectedBankValue: Decimal = 711.25
+        let expectedSecuritiesValue: Decimal = 870.7
         
         let cashValue = resultAssetPoolValueDictionary["Cash"]
         let bankValue = resultAssetPoolValueDictionary["Bank"]
@@ -176,8 +176,8 @@ final class DashboardViewModelTests: XCTestCase {
         XCTAssertEqual(expectedAssetPoolKeyNumber, actualAssetPoolKeyNumber)
         
         let resultLiabilityPoolValueDictionary = sut.computeValueByPool(for: .liabilities, using: testSnapshot)
-        let expectedPrivateValue = 225.75
-        let expectedBusinessValue = 530.35
+        let expectedPrivateValue: Decimal = 225.75
+        let expectedBusinessValue: Decimal = 530.35
         
         let privateValue = resultLiabilityPoolValueDictionary["Private"]
         let businessValue = resultLiabilityPoolValueDictionary["Business"]
@@ -216,7 +216,7 @@ final class DashboardViewModelTests: XCTestCase {
         let testSnapshot = testDataProvider.createAndPersistTestObjects_computeValueByPool_3(using: testingCoreDataStack.context)
         
         let resultAssetPoolValueDictionary = sut.computeValueByPool(for: .assets, using: testSnapshot)
-        let expectedCashValue = 5.75
+        let expectedCashValue: Decimal = 5.75
         
         let cashValue = resultAssetPoolValueDictionary["Cash"]
         XCTAssertNotNil(cashValue)
@@ -229,7 +229,7 @@ final class DashboardViewModelTests: XCTestCase {
         XCTAssertEqual(expectedAssetPoolKeyNumber, actualAssetPoolKeyNumber)
         
         let resultLiabilityPoolValueDictionary = sut.computeValueByPool(for: .liabilities, using: testSnapshot)
-        let expectedPrivateValue = 120.99
+        let expectedPrivateValue: Decimal = 120.99
         
         let privateValue = resultLiabilityPoolValueDictionary["Private"]
         XCTAssertNotNil(privateValue)
@@ -248,7 +248,7 @@ final class DashboardViewModelTests: XCTestCase {
         let testSnapshot = testDataProvider.createAndPersistTestObjects_computeValueByPool_4(using: testingCoreDataStack.context)
         
         let resultAssetPoolValueDictionary = sut.computeValueByPool(for: .assets, using: testSnapshot)
-        let expectedCashValue = 0.0
+        let expectedCashValue: Decimal = 0.0
         
         let cashValue = resultAssetPoolValueDictionary["Cash"]
         XCTAssertNotNil(cashValue)
@@ -261,7 +261,7 @@ final class DashboardViewModelTests: XCTestCase {
         XCTAssertEqual(expectedAssetPoolKeyNumber, actualAssetPoolKeyNumber)
         
         let resultLiabilityPoolValueDictionary = sut.computeValueByPool(for: .liabilities, using: testSnapshot)
-        let expectedPrivateValue = 0.0
+        let expectedPrivateValue: Decimal = 0.0
         
         let privateValue = resultLiabilityPoolValueDictionary["Private"]
         XCTAssertNotNil(privateValue)
@@ -280,7 +280,7 @@ final class DashboardViewModelTests: XCTestCase {
         let testSnapshot = testDataProvider.createAndPersistTestObjects_computeValueByPool_5(using: testingCoreDataStack.context)
         
         let resultAssetPoolValueDictionary = sut.computeValueByPool(for: .assets, using: testSnapshot)
-        let expectedCashValue = 0.0
+        let expectedCashValue: Decimal = 0.0
         
         let cashValue = resultAssetPoolValueDictionary["Cash"]
         XCTAssertNotNil(cashValue)
@@ -293,7 +293,7 @@ final class DashboardViewModelTests: XCTestCase {
         XCTAssertEqual(expectedAssetPoolKeyNumber, actualAssetPoolKeyNumber)
         
         let resultLiabilityPoolValueDictionary = sut.computeValueByPool(for: .liabilities, using: testSnapshot)
-        let expectedPrivateValue = 0.0
+        let expectedPrivateValue: Decimal = 0.0
         
         let privateValue = resultLiabilityPoolValueDictionary["Private"]
         XCTAssertNotNil(privateValue)

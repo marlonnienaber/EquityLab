@@ -61,7 +61,7 @@ struct LoanManagementView: View {
     
     func receivableCell(for receivable: Receivable) -> some View {
         HStack {
-            if let initialAmountStringRepresentation = LocalizedCurrencyFormatter.shared.string(from: NSNumber(value: receivable.initialAmount)) {
+            if let initialAmountStringRepresentation = LocalizedCurrencyFormatter.shared.string(from: receivable.initialAmount) {
                 VStack(alignment: .leading) {
                     Text(receivable.name)
                         .foregroundColor(Color.primary)
@@ -81,7 +81,7 @@ struct LoanManagementView: View {
     
     private func liabilityCell(for liability: Liability) -> some View {
         HStack {
-            if let initialAmountStringRepresentation = LocalizedCurrencyFormatter.shared.string(from: NSNumber(value: liability.initialAmount)) {
+            if let initialAmountStringRepresentation = LocalizedCurrencyFormatter.shared.string(from: liability.initialAmount) {
                 VStack(alignment: .leading) {
                     Text(liability.name)
                         .foregroundColor(Color.primary)

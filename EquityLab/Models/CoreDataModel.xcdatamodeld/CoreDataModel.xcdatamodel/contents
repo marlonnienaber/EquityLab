@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="23231" systemVersion="23G93" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithSwiftData="YES" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="23507" systemVersion="23G93" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithSwiftData="YES" userDefinedModelVersionIdentifier="">
     <entity name="Asset" representedClassName="Asset" isAbstract="YES" syncable="YES">
         <attribute name="name" optional="YES" attributeType="String"/>
         <relationship name="pool" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="AssetPool" inverseName="assets" inverseEntity="AssetPool"/>
@@ -14,9 +14,9 @@
     <entity name="Liability" representedClassName="Liability" syncable="YES">
         <attribute name="creditor" attributeType="String"/>
         <attribute name="grantDate" attributeType="Date" usesScalarValueType="NO"/>
-        <attribute name="initialAmount" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="initialAmount" attributeType="Decimal" defaultValueString="0.0"/>
         <attribute name="name" attributeType="String"/>
-        <attribute name="repaidAmount" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="repaidAmount" attributeType="Decimal" defaultValueString="0.0"/>
         <relationship name="pool" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="LiabilityPool" inverseName="liabilities" inverseEntity="LiabilityPool"/>
     </entity>
     <entity name="LiabilityPool" representedClassName="LiabilityPool" syncable="YES">
@@ -29,7 +29,7 @@
     <entity name="Position" representedClassName="Position" isAbstract="YES" syncable="YES">
         <attribute name="name" attributeType="String"/>
         <attribute name="poolName" attributeType="String"/>
-        <attribute name="value" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="value" attributeType="Decimal" defaultValueString="0.0"/>
     </entity>
     <entity name="Possession" representedClassName="Possession" parentEntity="Asset" syncable="YES">
         <attribute name="volatile" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
@@ -37,8 +37,8 @@
     <entity name="Receivable" representedClassName="Receivable" parentEntity="Asset" syncable="YES">
         <attribute name="debtor" attributeType="String"/>
         <attribute name="grantDate" attributeType="Date" usesScalarValueType="NO"/>
-        <attribute name="initialAmount" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
-        <attribute name="repaidAmount" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="initialAmount" attributeType="Decimal" defaultValueString="0.0"/>
+        <attribute name="repaidAmount" attributeType="Decimal" defaultValueString="0.0"/>
     </entity>
     <entity name="Snapshot" representedClassName="Snapshot" syncable="YES">
         <attribute name="date" attributeType="Date" usesScalarValueType="NO"/>

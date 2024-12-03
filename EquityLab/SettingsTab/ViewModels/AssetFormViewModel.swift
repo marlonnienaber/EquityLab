@@ -11,8 +11,8 @@ class AssetFormViewModel {
     var assetName: String
     var receivableGrantDate: Date
     var receivableDebtor: String
-    var receivableInitialAmount: Double
-    var receivableRepaidAmount: Double
+    var receivableInitialAmount: Decimal
+    var receivableRepaidAmount: Decimal
     var possessionIsVolatile: Bool
     var showPopover: Bool = false
     var receivableValidationError: ReceivableValidationError?
@@ -30,8 +30,8 @@ class AssetFormViewModel {
         if let receivable = asset as? Receivable {
             self.receivableGrantDate = receivable.grantDate
             self.receivableDebtor = receivable.debtor
-            self.receivableInitialAmount = receivable.initialAmount
-            self.receivableRepaidAmount = receivable.repaidAmount
+            self.receivableInitialAmount = receivable.initialAmount.decimalValue
+            self.receivableRepaidAmount = receivable.repaidAmount.decimalValue
         } else {
             self.receivableGrantDate = Date.now
             self.receivableDebtor = ""

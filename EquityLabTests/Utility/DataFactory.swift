@@ -2,20 +2,20 @@
 import CoreData
 
 struct DataFactory {
-    static func createAssetPosition(name: String, poolName: String, value: Double, context: NSManagedObjectContext) -> AssetPosition {
+    static func createAssetPosition(name: String, poolName: String, value: Decimal, context: NSManagedObjectContext) -> AssetPosition {
         let assetPosition = AssetPosition(usedContext: context)
         assetPosition.name = name
         assetPosition.poolName = poolName
-        assetPosition.value = value
+        assetPosition.value = value.nsDecimalNumberValue
         try? context.save()
         return assetPosition
     }
     
-    static func createLiabilityPosition(name: String, poolName: String, value: Double, context: NSManagedObjectContext) -> LiabilityPosition {
+    static func createLiabilityPosition(name: String, poolName: String, value: Decimal, context: NSManagedObjectContext) -> LiabilityPosition {
         let liabilityPosition = LiabilityPosition(usedContext: context)
         liabilityPosition.name = name
         liabilityPosition.poolName = poolName
-        liabilityPosition.value = value
+        liabilityPosition.value = value.nsDecimalNumberValue
         try? context.save()
         return liabilityPosition
     }
@@ -59,13 +59,13 @@ struct DataFactory {
         return pool
     }
     
-    static func createReceivable(name: String, date: Date, debtor: String, initialAmount: Double, repaidAmount: Double, context: NSManagedObjectContext) -> Receivable {
+    static func createReceivable(name: String, date: Date, debtor: String, initialAmount: Decimal, repaidAmount: Decimal, context: NSManagedObjectContext) -> Receivable {
         let receivable = Receivable(usedContext: context)
         receivable.name = name
         receivable.grantDate = date
         receivable.debtor = debtor
-        receivable.initialAmount = initialAmount
-        receivable.repaidAmount = repaidAmount
+        receivable.initialAmount = initialAmount.nsDecimalNumberValue
+        receivable.repaidAmount = repaidAmount.nsDecimalNumberValue
         try? context.save()
         return receivable
     }
@@ -78,13 +78,13 @@ struct DataFactory {
         return possession
     }
     
-    static func createLiability(name: String, date: Date, creditor: String, initialAmount: Double, repaidAmount: Double, context: NSManagedObjectContext) -> Liability {
+    static func createLiability(name: String, date: Date, creditor: String, initialAmount: Decimal, repaidAmount: Decimal, context: NSManagedObjectContext) -> Liability {
         let liability = Liability(usedContext: context)
         liability.name = name
         liability.creditor = creditor
         liability.grantDate = date
-        liability.initialAmount = initialAmount
-        liability.repaidAmount = repaidAmount
+        liability.initialAmount = initialAmount.nsDecimalNumberValue
+        liability.repaidAmount = repaidAmount.nsDecimalNumberValue
         try? context.save()
         return liability
     }

@@ -1,4 +1,6 @@
+import Foundation
 import CoreData
+
 
 extension Liability {
 
@@ -8,9 +10,9 @@ extension Liability {
 
     @NSManaged public var creditor: String
     @NSManaged public var grantDate: Date
-    @NSManaged public var initialAmount: Double
+    @NSManaged public var initialAmount: NSDecimalNumber
     @NSManaged public var name: String
-    @NSManaged public var repaidAmount: Double
+    @NSManaged public var repaidAmount: NSDecimalNumber
     @NSManaged public var pool: LiabilityPool?
 
 }

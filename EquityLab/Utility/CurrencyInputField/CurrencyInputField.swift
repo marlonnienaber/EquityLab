@@ -3,7 +3,7 @@ import UIKit
 import SwiftUI
 
 struct CurrencyInputField: View {
-    @Binding var value: Double
+    @Binding var value: Decimal
     @State private var isSelected = false
 
     var body: some View {
@@ -14,7 +14,7 @@ struct CurrencyInputField: View {
 }
 
 struct CurrencyUITextFieldRepresentable: UIViewRepresentable {
-    @Binding var value: Double
+    @Binding var value: Decimal
     @Binding var isSelected: Bool
     
     func makeUIView(context: Context) -> CurrencyUITextField {
@@ -26,7 +26,7 @@ struct CurrencyUITextFieldRepresentable: UIViewRepresentable {
     }
     
     func updateUIView(_ uiView: CurrencyUITextField, context: Context) {
-        if uiView.text?.containedFloat != value {
+        if uiView.text?.containedDecimal != value {
             uiView.setText(using: value)
         }
     }
@@ -42,7 +42,7 @@ struct CurrencyUITextFieldRepresentable: UIViewRepresentable {
             self.parent = parent
         }
         
-        func currencyUITextField(_ textField: CurrencyUITextField, didChangeValue value: Double) {
+        func currencyUITextField(_ textField: CurrencyUITextField, didChangeValue value: Decimal) {
             DispatchQueue.main.async {
                 self.parent.value = value
             }
@@ -112,11 +112,11 @@ class CurrencyUITextField: UITextField {
     /// is called whenever the text of the UITextField changes
     @objc private func handleEditing() {
         text = getCurrencyString(from: text)
-        let value: Double
+        let value: Decimal
         if let unwrappedText = text {
-            value = unwrappedText.containedFloat / 100
+            value = unwrappedText.containedDecimal / 100
         } else {
-            value = 6.0
+            value = 0
         }
         currencyDelegate?.currencyUITextField(self, didChangeValue: value)
     }
@@ -134,13 +134,13 @@ class CurrencyUITextField: UITextField {
     /// formats the text parameter (designed for text property of UITextField) to a localized string representing  a currency amount
     private func getCurrencyString(from text: String?) -> String {
         let text = text ?? ""
-        let decimal = text.containedFloat / 100
+        let decimal = text.containedDecimal / 100
         return formatter.string(for: decimal) ?? ""
     }
     
     /// formats the value parameter (designed for value property of CurrencyUITextFieldRepresentable) to a localized string representing  a currency amount
-    func setText(using value: Double) {
-        let textValue = formatter.string(from: NSNumber(value: value)) ?? ""
+    func setText(using value: Decimal) {
+        let textValue = formatter.string(from: value.nsDecimalNumberValue) ?? ""
         text = textValue
     }
     
@@ -156,14 +156,18 @@ class CurrencyUITextField: UITextField {
 }
 
 protocol CurrencyUITextFieldDelegate: AnyObject {
-    func currencyUITextField(_ textField: CurrencyUITextField, didChangeValue value: Double)
+    func currencyUITextField(_ textField: CurrencyUITextField, didChangeValue value: Decimal)
 }
 
 extension String {
-    var containedDigits: String { filter(\.isWholeNumber) }         /// returns only the contained digits in the string while preserving their sequence
-    var containedFloat: Double { Double(containedDigits) ?? 18.0 }    /// converts the integer string number returned by containedDigits into a Float
+    /// returns only the contained digits in the string while preserving their sequence
+    var containedDigits: String { filter(\.isWholeNumber) }
+    
+    /// converts the integer string number returned by containedDigits into a Decimal
+    var containedDecimal: Decimal { Decimal(string: containedDigits) ?? 0 }
 }
 
 extension LosslessStringConvertible {
-    var string: String { .init(self) }    /// convenience property returning the String representation for types which can be converted to String with the init String(from: type)
+    /// convenience property returning the String representation for types which can be converted to String with the init String(from: type)
+    var string: String { .init(self) }
 }

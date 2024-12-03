@@ -34,8 +34,8 @@ final class LiabilityFormViewModelTests: XCTestCase {
         let expectedName = "Auto"
         let expectedDate = DateParser.shared.date(from: "2024-04-15T00:00:00")!
         let expectedCreditor = "Papa"
-        let expectedInitialAmount = 1000.0
-        let expectedRepaidAmount = 200.0
+        let expectedInitialAmount: Decimal = 1000.0
+        let expectedRepaidAmount: Decimal = 200.0
         
         sut.liabilityName = expectedName
         sut.liabilityGrantDate = expectedDate
@@ -52,8 +52,8 @@ final class LiabilityFormViewModelTests: XCTestCase {
         let actualName = liability.name
         let actualDate = liability.grantDate
         let actualCreditor = liability.creditor
-        let actualInitialAmount = liability.initialAmount
-        let actualRepaidAmount = liability.repaidAmount
+        let actualInitialAmount = liability.initialAmount.decimalValue
+        let actualRepaidAmount = liability.repaidAmount.decimalValue
         
         XCTAssertEqual(expectedName, actualName)
         XCTAssertEqual(expectedDate, actualDate)
@@ -71,8 +71,8 @@ final class LiabilityFormViewModelTests: XCTestCase {
         let expectedName = ""
         let expectedDate = DateParser.shared.date(from: "2024-04-15T00:00:00")!
         let expectedCreditor = "Papa"
-        let expectedInitialAmount = 1000.0
-        let expectedRepaidAmount = 200.0
+        let expectedInitialAmount: Decimal = 1000.0
+        let expectedRepaidAmount: Decimal = 200.0
         
         sut.liabilityName = expectedName
         sut.liabilityGrantDate = expectedDate
@@ -94,8 +94,8 @@ final class LiabilityFormViewModelTests: XCTestCase {
         let expectedName = "Auto"
         let expectedDate = DateParser.shared.date(from: "2024-04-15T00:00:00")!
         let expectedCreditor = ""
-        let expectedInitialAmount = 1000.0
-        let expectedRepaidAmount = 200.0
+        let expectedInitialAmount: Decimal = 1000.0
+        let expectedRepaidAmount: Decimal = 200.0
         
         sut.liabilityName = expectedName
         sut.liabilityGrantDate = expectedDate
@@ -117,8 +117,8 @@ final class LiabilityFormViewModelTests: XCTestCase {
         let expectedName = "Auto"
         let expectedDate = DateParser.shared.date(from: "2024-04-15T00:00:00")!
         let expectedCreditor = "Papa"
-        let expectedInitialAmount = 100.0
-        let expectedRepaidAmount = 200.0
+        let expectedInitialAmount: Decimal = 100.0
+        let expectedRepaidAmount: Decimal = 200.0
         
         sut.liabilityName = expectedName
         sut.liabilityGrantDate = expectedDate
@@ -140,8 +140,8 @@ final class LiabilityFormViewModelTests: XCTestCase {
         let expectedName = "Auto"
         let expectedDate = DateParser.shared.date(from: "2024-04-15T00:00:00")!
         let expectedCreditor = "Papa"
-        let expectedInitialAmount = 0.0
-        let expectedRepaidAmount = 0.0
+        let expectedInitialAmount: Decimal = 0.0
+        let expectedRepaidAmount: Decimal = 0.0
         
         sut.liabilityName = expectedName
         sut.liabilityGrantDate = expectedDate
@@ -161,8 +161,8 @@ final class LiabilityFormViewModelTests: XCTestCase {
         let expectedName = "Auto"
         let expectedDate = DateParser.shared.date(from: "2024-04-15T00:00:00")!
         let expectedCreditor = "Papa"
-        let expectedInitialAmount = 1000.0
-        let expectedRepaidAmount = 200.0
+        let expectedInitialAmount: Decimal = 1000.0
+        let expectedRepaidAmount: Decimal = 200.0
         
         sut.liabilityName = expectedName
         sut.liabilityGrantDate = expectedDate
@@ -187,7 +187,7 @@ final class LiabilityFormViewModelTests: XCTestCase {
         let expectedDate = DateParser.shared.date(from: "2024-04-14T00:00:00")!
         let expectedCreditor = "Mama"
         let expectedInitialAmount = liabilityToUpdate.initialAmount
-        let expectedRepaidAmount = 300.0
+        let expectedRepaidAmount: Decimal = 300.0
         let expectedLiabilityPool = DataFactory.createLiabilityPool(named: "Some other pool", liabilities: [], in: testingCoreDataStack.context)
         
         sut.liabilityGrantDate = expectedDate
@@ -204,7 +204,7 @@ final class LiabilityFormViewModelTests: XCTestCase {
         let actualDate = liability.grantDate
         let actualCreditor = liability.creditor
         let actualInitialAmount = liability.initialAmount
-        let actualRepaidAmount = liability.repaidAmount
+        let actualRepaidAmount = liability.repaidAmount.decimalValue
         let actualLiabilityPool = liability.pool
         
         XCTAssertEqual(expectedName, actualName)

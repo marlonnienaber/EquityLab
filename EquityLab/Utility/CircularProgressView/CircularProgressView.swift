@@ -3,12 +3,12 @@ import SwiftUI
 
 struct CircularProgressView: View {
     let progressColors: [UIColor] = [.systemRed, .systemRed, .systemOrange, .systemYellow, .systemGreen]
-    var progress: Double
+    var progress: Decimal
     var color: Color
     
-    init(progress: Double) {
+    init(progress: Decimal) {
         self.progress = progress
-        self.color = Color(progressColors.intermediate(percentage: CGFloat(progress)))
+        self.color = Color(progressColors.intermediate(percentage: progress.doubleValue))
     }
     
     var body: some View {
@@ -18,7 +18,7 @@ struct CircularProgressView: View {
                 .foregroundColor(Color.gray)
                 .opacity(0.25)
             Circle()
-                .trim(from: 0, to: CGFloat(min(self.progress, 1.0)))
+                .trim(from: 0, to: min(progress, 1.0).doubleValue)
                 .stroke(style: StrokeStyle(lineWidth: 5, lineCap: .round, lineJoin: .round))
                 .foregroundColor(color)
                 .rotationEffect(Angle(degrees: 270))
@@ -26,7 +26,7 @@ struct CircularProgressView: View {
                 Image(systemName: "checkmark")
                     .foregroundColor(Color.primary)
             } else {
-                Text("\(Int(progress * 100))%")
+                Text("\(progress * 100)%")
                     .font(.footnote)
                     .foregroundColor(Color.primary)
             }

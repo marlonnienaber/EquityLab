@@ -7,7 +7,7 @@ class SnapshotLedgerViewModel {
     
     @ObservationIgnored private var repository: SnapshotRepository
     @ObservationIgnored private var snapshotAnalyzer: SnapshotAnalyzer
-    @ObservationIgnored private var equityValueCache = [Snapshot:Double]()
+    @ObservationIgnored private var equityValueCache = [Snapshot:Decimal]()
     private var snapshots = [Snapshot]()
     private var yearToSnapshotDictionary = [Int:[Snapshot]]()
     var years = [Int]()
@@ -58,7 +58,7 @@ class SnapshotLedgerViewModel {
     func getEquityValue(of snapshot: Snapshot) -> NSNumber {
         Self.logger.debug("getEquityValue(of snapshot)")
         let equityValue = equityValueCache[snapshot] ?? 0.0
-        return NSNumber(value: equityValue)
+        return equityValue.nsDecimalNumberValue
     }
 }
 

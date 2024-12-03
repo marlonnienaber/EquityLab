@@ -71,7 +71,7 @@ struct SnapshotForm: View {
     struct MonetaryInputView: View {
         let positionName: String
         let positionPool: String
-        @Binding var positionValue: Double
+        @Binding var positionValue: Decimal
         
         var body: some View {
             HStack {

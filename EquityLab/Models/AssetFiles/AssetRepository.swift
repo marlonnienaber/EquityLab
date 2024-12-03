@@ -69,15 +69,15 @@ class AssetRepository: NSObject {
     func updateReceivable(receivable: Receivable,
                           newName: String,
                           newDebtor: String,
-                          newInitialAmount: Double,
-                          newRepaidAmount: Double,
+                          newInitialAmount: Decimal,
+                          newRepaidAmount: Decimal,
                           newGrantDate: Date,
                           newPool: AssetPool) {
         let context = fetchedResultsController.managedObjectContext
         receivable.name = newName
         receivable.debtor = newDebtor
-        receivable.initialAmount = newInitialAmount
-        receivable.repaidAmount = newRepaidAmount
+        receivable.initialAmount = newInitialAmount.nsDecimalNumberValue
+        receivable.repaidAmount = newRepaidAmount.nsDecimalNumberValue
         receivable.grantDate = newGrantDate
         receivable.pool = newPool
         try? context.save()
@@ -94,16 +94,16 @@ class AssetRepository: NSObject {
     func createReceivable(name: String,
                           pool: AssetPool,
                           debtor: String,
-                          initialAmount: Double,
-                          repaidAmount: Double,
+                          initialAmount: Decimal,
+                          repaidAmount: Decimal,
                           grantDate: Date) {
         let context = fetchedResultsController.managedObjectContext
         let receivable = Receivable(usedContext: context)
         receivable.name = name
         receivable.pool = pool
         receivable.debtor = debtor
-        receivable.initialAmount = initialAmount
-        receivable.repaidAmount = repaidAmount
+        receivable.initialAmount = initialAmount.nsDecimalNumberValue
+        receivable.repaidAmount = repaidAmount.nsDecimalNumberValue
         receivable.grantDate = grantDate
         try? context.save()
     }

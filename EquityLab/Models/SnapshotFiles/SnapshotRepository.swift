@@ -60,7 +60,7 @@ class SnapshotRepository: NSObject {
         assetProxies.forEach { proxy in
             let position = AssetPosition(usedContext: context)
             position.name = proxy.name
-            position.value = proxy.value
+            position.value = proxy.value.nsDecimalNumberValue
             position.poolName = proxy.poolName
             position.snapshot = snapshot
             assetPositions.append(position)
@@ -70,7 +70,7 @@ class SnapshotRepository: NSObject {
         liabilityProxies.forEach { proxy in
             let position = LiabilityPosition(usedContext: context)
             position.name = proxy.name
-            position.value = proxy.value
+            position.value = proxy.value.nsDecimalNumberValue
             position.poolName = proxy.poolName
             position.snapshot = snapshot
             liabilityPositions.append(position)
@@ -83,13 +83,13 @@ class SnapshotRepository: NSObject {
         let assetPositions = fetchAssetPositions(of: snapshot)
         assetProxies.forEach { proxy in
             if let position = assetPositions.first(where: { $0.name == proxy.name} ) {
-                position.value = proxy.value
+                position.value = proxy.value.nsDecimalNumberValue
             }
         }
         let liabilityPositions = fetchLiabilityPositions(of: snapshot)
         liabilityProxies.forEach { proxy in
             if let position = liabilityPositions.first(where: { $0.name == proxy.name} ) {
-                position.value = proxy.value
+                position.value = proxy.value.nsDecimalNumberValue
             }
         }
         try? fetchedResultsController.managedObjectContext.save()
