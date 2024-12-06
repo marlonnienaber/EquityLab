@@ -26,24 +26,33 @@ class AssetRepository: NSObject {
         return fetchedResultsController.fetchedObjects as? [AssetPool] ?? []
     }
     
-    func fetchAssets() -> [Asset] {
-        let assetFetchRequest = NSFetchRequest<Asset>(entityName: String(describing: "Asset"))
-        return (try? fetchedResultsController.managedObjectContext.fetch(assetFetchRequest)) ?? []
-    }
-    
     func fetchReceivables() -> [Receivable] {
-        let receivableFetchRequest = NSFetchRequest<Receivable>(entityName: String(describing: "Receivable"))
+        let receivableFetchRequest = Receivable.fetchRequest()
         receivableFetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Receivable.grantDate, ascending: true)]
         return (try? fetchedResultsController.managedObjectContext.fetch(receivableFetchRequest)) ?? []
     }
     
-    func fetchAssets(for pool: AssetPool) -> [Asset] {
-        (try? fetchedResultsController.managedObjectContext.fetch(pool.getAssetRequest())) ?? []
+    func fetchPossessions() -> [Possession] {
+        let possessionFetchRequest = Possession.fetchRequest()
+        possessionFetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Possession.name, ascending: true)]
+        return (try? fetchedResultsController.managedObjectContext.fetch(possessionFetchRequest)) ?? []
     }
     
-    func delete(asset: Asset) {
+    func fetchSnapshotStructureItems(for pool: AssetPool) -> [SnapshotStructureItem] {
+        let receivables = (try? fetchedResultsController.managedObjectContext.fetch(pool.getReceivableRequest())) ?? []
+        let possessions = (try? fetchedResultsController.managedObjectContext.fetch(pool.getPossessionRequest())) ?? []
+        return receivables + possessions
+    }
+    
+    func delete(possession: Possession) {
         let context = fetchedResultsController.managedObjectContext
-        context.delete(asset)
+        context.delete(possession)
+        try? context.save()
+    }
+    
+    func delete(receivable: Receivable) {
+        let context = fetchedResultsController.managedObjectContext
+        context.delete(receivable)
         try? context.save()
     }
     

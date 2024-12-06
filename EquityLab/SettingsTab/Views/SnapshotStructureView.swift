@@ -9,29 +9,17 @@ struct SnapshotStructureView: View {
             ScrollView {
                 VStack {
                     HStack(alignment: .top, spacing: 13) {
-                        BalanceSide<AssetPool,Asset>(
+                        BalanceSide (
+                            viewModel: viewModel,
                             title: "Assets",
                             headerBackgroundColor: .assetsUnselected,
-                            pools: viewModel.assetPools,
-                            itemRetriever: viewModel.getAssetsForAssetPool,
-                            poolEditButtonAction: { pool in
-                                viewModel.alertPoolName = pool.name
-                                viewModel.assetPoolToEdit = pool
-                                viewModel.showEditAssetPoolAlert = true
-                            },
-                            itemEditButtonAction: { viewModel.activeBalanceItemSheet = .updateSheetAsset(asset: $0) }
+                            pools: viewModel.assetPools
                         )
-                        BalanceSide<LiabilityPool,Liability>(
+                        BalanceSide (
+                            viewModel: viewModel,
                             title: "Liabilities",
                             headerBackgroundColor: .liabilitiesUnselected,
-                            pools: viewModel.liabilityPools,
-                            itemRetriever: viewModel.getLiabilitiesForLiabilityPool,
-                            poolEditButtonAction: { pool in
-                                viewModel.alertPoolName = pool.name
-                                viewModel.liabilityPoolToEdit = pool
-                                viewModel.showEditLiabilityPoolAlert = true
-                            },
-                            itemEditButtonAction: { viewModel.activeBalanceItemSheet = .updateSheetLiability(liability: $0) }
+                            pools: viewModel.liabilityPools
                         )
                     }
                     .padding(.top)
@@ -133,16 +121,18 @@ struct SnapshotStructureView: View {
     @ViewBuilder
     func sheetContent(for sheetType: BalanceItemSheet) -> some View {
         switch sheetType {
-        case .createSheetPossession: PossessionForm(viewModel: AssetFormViewModel{ viewModel.activeBalanceItemSheet = nil } )
-        case .createSheetReceivable: ReceivableForm(viewModel: AssetFormViewModel{ viewModel.activeBalanceItemSheet = nil } )
-        case .createSheetLiability: LiabilityForm(viewModel: LiabilityFormViewModel{ viewModel.activeBalanceItemSheet = nil } )
-        case .updateSheetAsset(let asset):
-            if let possession = asset as? Possession {
-                PossessionForm(viewModel: AssetFormViewModel(asset: possession) { viewModel.activeBalanceItemSheet = nil })
-            } else if let receivable = asset as? Receivable {
-                ReceivableForm(viewModel: AssetFormViewModel(asset: receivable) { viewModel.activeBalanceItemSheet = nil })
-            }
-        case .updateSheetLiability(let liability): LiabilityForm(viewModel: LiabilityFormViewModel(liability: liability) { viewModel.activeBalanceItemSheet = nil })
+        case .createSheetPossession:
+            PossessionForm(viewModel: PossessionFormViewModel{ viewModel.activeBalanceItemSheet = nil } )
+        case .createSheetReceivable:
+            ReceivableForm(viewModel: ReceivableFormViewModel{ viewModel.activeBalanceItemSheet = nil } )
+        case .createSheetLiability:
+            LiabilityForm(viewModel: LiabilityFormViewModel{ viewModel.activeBalanceItemSheet = nil } )
+        case .updateSheetPossession(let possession):
+            PossessionForm(viewModel: PossessionFormViewModel(possession: possession) { viewModel.activeBalanceItemSheet = nil })
+        case .updateSheetReceivable(let receivable):
+            ReceivableForm(viewModel: ReceivableFormViewModel(receivable: receivable) { viewModel.activeBalanceItemSheet = nil } )
+        case .updateSheetLiability(let liability):
+            LiabilityForm(viewModel: LiabilityFormViewModel(liability: liability) { viewModel.activeBalanceItemSheet = nil } )
         }
     }
     
@@ -239,13 +229,11 @@ extension View {
     }
 }
 
-struct BalanceSide<PoolType:Named&Hashable,ItemType:Named>: View {
+struct BalanceSide: View {
+    let viewModel: SnapshotStructureViewModel
     let title: String
     let headerBackgroundColor: Color
-    let pools: [PoolType]
-    let itemRetriever: (PoolType) -> ([ItemType])
-    let poolEditButtonAction: (PoolType) -> ()
-    let itemEditButtonAction: (ItemType) -> ()
+    let pools: [SnapshotStructurePool]
     
     var body: some View {
         VStack(alignment: .leading) {
@@ -276,7 +264,7 @@ struct BalanceSide<PoolType:Named&Hashable,ItemType:Named>: View {
         )
     }
     
-    func poolSection(for balancePool: PoolType) -> some View {
+    func poolSection(for balancePool: SnapshotStructurePool) -> some View {
         VStack(alignment: .leading, spacing: 8) {
             HStack {
                 Text(balancePool.name)
@@ -285,20 +273,20 @@ struct BalanceSide<PoolType:Named&Hashable,ItemType:Named>: View {
                     .underline()
                 Spacer()
                 Button {
-                    poolEditButtonAction(balancePool)
+                    balancePool.edit(via: viewModel)
                 } label: {
                     Image(systemName: "slider.horizontal.3")
                         .font(.subheadline)
                         .padding(.trailing)
                 }
             }
-            ForEach(itemRetriever(balancePool), id: \.name) { item in
+            ForEach(balancePool.retrieveItems(via: viewModel), id: \.name) { item in
                 HStack(spacing: 2) {
                     Text(item.name)
                         .font(.caption)
                         .padding(.leading)
                     Button {
-                        itemEditButtonAction(item)
+                        item.edit(via: viewModel)
                     } label: {
                         Image(systemName: "chevron.right.circle")
                             .font(.caption2)
@@ -309,5 +297,3 @@ struct BalanceSide<PoolType:Named&Hashable,ItemType:Named>: View {
         .padding(.vertical, 6)
     }
 }
-
-

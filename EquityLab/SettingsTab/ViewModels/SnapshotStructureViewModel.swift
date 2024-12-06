@@ -7,8 +7,8 @@ class SnapshotStructureViewModel {
     
     @ObservationIgnored private let assetRepository: AssetRepository
     @ObservationIgnored private let liabilityRepository: LiabilityRepository
-    @ObservationIgnored private var assetPoolToAssetsDictionary: [AssetPool:[Asset]]
-    @ObservationIgnored private var liabilityPoolToLiabilitiesDictionary: [LiabilityPool:[Liability]]
+    @ObservationIgnored private var assetPoolToAssetsDictionary: [AssetPool:[SnapshotStructureItem]] /* TODO: rename */
+    @ObservationIgnored private var liabilityPoolToLiabilitiesDictionary: [LiabilityPool:[SnapshotStructureItem]] /* TODO: rename */
     var assetPools: [AssetPool]
     var liabilityPools: [LiabilityPool]
     
@@ -44,10 +44,10 @@ class SnapshotStructureViewModel {
         self.liabilityPoolToLiabilitiesDictionary = [:]
         
         for pool in assetPools {
-            assetPoolToAssetsDictionary[pool] = assetRepository.fetchAssets(for: pool)
+            assetPoolToAssetsDictionary[pool] = assetRepository.fetchSnapshotStructureItems(for: pool)
         }
         for pool in liabilityPools {
-            liabilityPoolToLiabilitiesDictionary[pool] = liabilityRepository.fetchLiabilities(for: pool)
+            liabilityPoolToLiabilitiesDictionary[pool] = liabilityRepository.fetchSnapshotStructureItems(for: pool)
         }
         
         self.assetRepository.add(observer: self)
@@ -65,12 +65,14 @@ class SnapshotStructureViewModel {
     }
     
     private func validateAssetPool() throws {
+        /* TODO: add empty name validation case */
         if assetPoolWithSameNameExists {
             throw AssetPoolValidationError.poolWithSameNameAlreadyExists
         }
     }
     
     private func validateLiabilityPool() throws {
+        /* TODO: add empty name validation case */
         if liabilityPoolWithSameNameExists {
             throw LiabilityPoolValidationError.poolWithSameNameAlreadyExists
         }
@@ -112,12 +114,12 @@ class SnapshotStructureViewModel {
         liabilityRepository.delete(liabilityPool: liabilityPool)
     }
     
-    func getAssetsForAssetPool(_ pool: AssetPool) -> [Asset] {
+    func getAssetsForAssetPool(_ pool: AssetPool) -> [SnapshotStructureItem] {
         Self.logger.debug("getAssetsForAssetPool(_ pool)")
         return assetPoolToAssetsDictionary[pool] ?? []
     }
     
-    func getLiabilitiesForLiabilityPool(_ pool: LiabilityPool) -> [Liability] {
+    func getLiabilitiesForLiabilityPool(_ pool: LiabilityPool) -> [SnapshotStructureItem] {
         Self.logger.debug("getliabilitiesForLiabilityPool(_ pool)")
         return liabilityPoolToLiabilitiesDictionary[pool] ?? []
     }
@@ -129,7 +131,7 @@ extension SnapshotStructureViewModel: AssetObserver, LiabilityObserver {
         self.liabilityPools = liabilityRepository.fetchLiabilityPools()
         self.liabilityPoolToLiabilitiesDictionary = [:]
         for pool in liabilityPools {
-            liabilityPoolToLiabilitiesDictionary[pool] = liabilityRepository.fetchLiabilities(for: pool)
+            liabilityPoolToLiabilitiesDictionary[pool] = liabilityRepository.fetchSnapshotStructureItems(for: pool)
         }
     }
     
@@ -138,7 +140,7 @@ extension SnapshotStructureViewModel: AssetObserver, LiabilityObserver {
         self.assetPools = assetRepository.fetchAssetPools()
         self.assetPoolToAssetsDictionary = [:]
         for pool in assetPools {
-            assetPoolToAssetsDictionary[pool] = assetRepository.fetchAssets(for: pool)
+            assetPoolToAssetsDictionary[pool] = assetRepository.fetchSnapshotStructureItems(for: pool)
         }
     }
 }
@@ -151,7 +153,8 @@ enum BalanceItemSheet: Identifiable {
     case createSheetPossession
     case createSheetReceivable
     case createSheetLiability
-    case updateSheetAsset(asset: Asset)
+    case updateSheetPossession(possession: Possession)
+    case updateSheetReceivable(receivable: Receivable)
     case updateSheetLiability(liability: Liability)
     var id: String {
         switch self {
@@ -161,8 +164,10 @@ enum BalanceItemSheet: Identifiable {
             return "addSheetReceivable"
         case .createSheetLiability:
             return "addSheetLiability"
-        case .updateSheetAsset(let asset):
-            return "updateSheetAsset-\(asset.id)"
+        case .updateSheetPossession(let possession):
+            return "updateSheetPossession-\(possession.id)"
+        case .updateSheetReceivable(let receivable):
+            return "updateSheetReceivable-\(receivable.id)"
         case .updateSheetLiability(let liability):
             return "updateSheetLiability-\(liability.id)"
         }
@@ -188,5 +193,62 @@ enum LiabilityPoolValidationError: String, LocalizedError {
     case poolWithSameNameAlreadyExists = "A pool with the same name already exists!"
     var errorDescription: String? {
         return self.rawValue
+    }
+}
+
+
+
+protocol SnapshotStructurePool {
+    var name: String { get }
+    func edit(via viewModel: SnapshotStructureViewModel)
+    func retrieveItems(via viewModel: SnapshotStructureViewModel) -> [SnapshotStructureItem]
+}
+
+extension AssetPool: SnapshotStructurePool {
+    func edit(via viewModel: SnapshotStructureViewModel) {
+        viewModel.alertPoolName = name
+        viewModel.assetPoolToEdit = self
+        viewModel.showEditAssetPoolAlert = true
+    }
+    
+    func retrieveItems(via viewModel: SnapshotStructureViewModel) -> [SnapshotStructureItem] {
+        viewModel.getAssetsForAssetPool(self)
+    }
+}
+
+extension LiabilityPool: SnapshotStructurePool {
+    func edit(via viewModel: SnapshotStructureViewModel) {
+        viewModel.alertPoolName = name
+        viewModel.liabilityPoolToEdit = self
+        viewModel.showEditAssetPoolAlert = true
+    }
+    
+    func retrieveItems(via viewModel: SnapshotStructureViewModel) -> [SnapshotStructureItem] {
+        viewModel.getLiabilitiesForLiabilityPool(self)
+    }
+}
+
+
+
+protocol SnapshotStructureItem {
+    var name: String { get }
+    func edit(via viewModel: SnapshotStructureViewModel)
+}
+
+extension Receivable: SnapshotStructureItem {
+    func edit(via viewModel: SnapshotStructureViewModel) {
+        viewModel.activeBalanceItemSheet = .updateSheetReceivable(receivable: self)
+    }
+}
+
+extension Possession: SnapshotStructureItem {
+    func edit(via viewModel: SnapshotStructureViewModel) {
+        viewModel.activeBalanceItemSheet = .updateSheetPossession(possession: self)
+    }
+}
+
+extension Liability: SnapshotStructureItem {
+    func edit(via viewModel: SnapshotStructureViewModel) {
+        viewModel.activeBalanceItemSheet = .updateSheetLiability(liability: self)
     }
 }

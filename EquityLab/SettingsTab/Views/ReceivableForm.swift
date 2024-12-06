@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct ReceivableForm: View {
-    @State var viewModel: AssetFormViewModel
+    @State var viewModel: ReceivableFormViewModel
     
     var body: some View {
         NavigationView {
@@ -12,12 +12,12 @@ struct ReceivableForm: View {
                     descriptionSection
                     amountSection
                     dateSection
-                    if viewModel.asset.isNotNil {
+                    if viewModel.receivable.isNotNil {
                         deleteSection
                     }
                 }
             }
-            .navigationTitle(viewModel.asset.isNil ? "New Receivable" : "Edit Receivable")
+            .navigationTitle(viewModel.receivable.isNil ? "New Receivable" : "Edit Receivable")
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     cancelButton
@@ -39,8 +39,8 @@ struct ReceivableForm: View {
     
     private var descriptionSection: some View {
         Section {
-            TextField("name", text: $viewModel.assetName)
-            TextField("debtor", text: $viewModel.receivableDebtor)
+            TextField("name", text: $viewModel.name)
+            TextField("debtor", text: $viewModel.debtor)
             Picker("AssetPool", selection: $viewModel.assetPool) {
                 ForEach(viewModel.getAssetPools()) { pool in
                     Text(pool.name).tag(pool)
@@ -55,13 +55,13 @@ struct ReceivableForm: View {
             HStack {
                 Text("initial amount")
                 Spacer()
-                CurrencyInputField(value: $viewModel.receivableInitialAmount)
+                CurrencyInputField(value: $viewModel.initialAmount)
                     .padding(6)
             }
             HStack {
                 Text("repaid amount")
                 Spacer()
-                CurrencyInputField(value: $viewModel.receivableRepaidAmount)
+                CurrencyInputField(value: $viewModel.repaidAmount)
                     .padding(6)
             }
         }
@@ -69,7 +69,7 @@ struct ReceivableForm: View {
     
     private var dateSection: some View {
         Section {
-            DatePicker("date", selection: $viewModel.receivableGrantDate, in: ...Date(), displayedComponents: .date)
+            DatePicker("date", selection: $viewModel.grantDate, in: ...Date(), displayedComponents: .date)
         }
     }
     
@@ -78,7 +78,7 @@ struct ReceivableForm: View {
             HStack(alignment: .center) {
                 Spacer()
                 Button {
-                    viewModel.deleteAsset()
+                    viewModel.deleteReceivable()
                     viewModel.dismissSheet()
                 } label: {
                     Text("Delete")

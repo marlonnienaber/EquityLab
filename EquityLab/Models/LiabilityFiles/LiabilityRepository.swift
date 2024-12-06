@@ -27,8 +27,8 @@ class LiabilityRepository: NSObject {
         return (try? fetchedResultsController.managedObjectContext.fetch(liabilityFetchRequest)) ?? []
     }
     
-    func fetchLiabilities(for pool: LiabilityPool) -> [Liability] {
-        return (try? fetchedResultsController.managedObjectContext.fetch(pool.getLiabilityRequest())) ?? []
+    func fetchSnapshotStructureItems(for pool: LiabilityPool) -> [SnapshotStructureItem] {
+        (try? fetchedResultsController.managedObjectContext.fetch(pool.getLiabilityRequest())) ?? []
     }
     
     func fetchLiabilityPools() -> [LiabilityPool] {

@@ -39,11 +39,14 @@ struct DataFactory {
         return snapshot
     }
     
-    static func createAssetPool(named name: String, assets: [Asset], in context: NSManagedObjectContext) -> AssetPool {
+    static func createAssetPool(named name: String, possessions: [Possession], receivables: [Receivable], in context: NSManagedObjectContext) -> AssetPool {
         let pool = AssetPool(usedContext: context)
         pool.name = name
-        for asset in assets {
-            asset.pool = pool
+        for receivable in receivables {
+            receivable.pool = pool
+        }
+        for possession in possessions {
+            possession.pool = pool
         }
         try? context.save()
         return pool
