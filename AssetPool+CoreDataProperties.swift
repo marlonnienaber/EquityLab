@@ -1,4 +1,4 @@
-
+import Foundation
 import CoreData
 
 
@@ -9,24 +9,42 @@ extension AssetPool {
     }
 
     @NSManaged public var name: String
-    @NSManaged public var assets: NSSet?
+    @NSManaged public var possessions: NSSet?
+    @NSManaged public var receivables: NSSet?
 
 }
 
-// MARK: Generated accessors for assets
+// MARK: Generated accessors for possessions
 extension AssetPool {
 
-    @objc(addAssetsObject:)
-    @NSManaged public func addToAssets(_ value: Asset)
+    @objc(addPossessionsObject:)
+    @NSManaged public func addToPossessions(_ value: Possession)
 
-    @objc(removeAssetsObject:)
-    @NSManaged public func removeFromAssets(_ value: Asset)
+    @objc(removePossessionsObject:)
+    @NSManaged public func removeFromPossessions(_ value: Possession)
 
-    @objc(addAssets:)
-    @NSManaged public func addToAssets(_ values: NSSet)
+    @objc(addPossessions:)
+    @NSManaged public func addToPossessions(_ values: NSSet)
 
-    @objc(removeAssets:)
-    @NSManaged public func removeFromAssets(_ values: NSSet)
+    @objc(removePossessions:)
+    @NSManaged public func removeFromPossessions(_ values: NSSet)
+
+}
+
+// MARK: Generated accessors for receivables
+extension AssetPool {
+
+    @objc(addReceivablesObject:)
+    @NSManaged public func addToReceivables(_ value: Receivable)
+
+    @objc(removeReceivablesObject:)
+    @NSManaged public func removeFromReceivables(_ value: Receivable)
+
+    @objc(addReceivables:)
+    @NSManaged public func addToReceivables(_ values: NSSet)
+
+    @objc(removeReceivables:)
+    @NSManaged public func removeFromReceivables(_ values: NSSet)
 
 }
 

@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct PossessionForm: View {
-    @State var viewModel: AssetFormViewModel
+    @State var viewModel: PossessionFormViewModel
     
     var body: some View {
         NavigationView {
@@ -10,12 +10,12 @@ struct PossessionForm: View {
                     .frame(maxHeight: 16)
                 Form {
                     descriptionSection
-                    if viewModel.asset.isNotNil {
+                    if viewModel.possession.isNotNil {
                         deleteSection
                     }
                 }
             }
-            .navigationTitle(viewModel.asset.isNil ? "New Possession" : "Edit Possession")
+            .navigationTitle(viewModel.possession.isNil ? "New Possession" : "Edit Possession")
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     cancelButton
@@ -37,8 +37,8 @@ struct PossessionForm: View {
     
     private var descriptionSection: some View {
         Section {
-            TextField("name", text: $viewModel.assetName)
-            Toggle(isOn: $viewModel.possessionIsVolatile) {
+            TextField("name", text: $viewModel.name)
+            Toggle(isOn: $viewModel.isVolatile) {
                 HStack{
                     Text("volatile asset?")
                     Spacer()
@@ -69,7 +69,7 @@ struct PossessionForm: View {
             HStack(alignment: .center) {
                 Spacer()
                 Button {
-                    viewModel.deleteAsset()
+                    viewModel.deletePossession()
                     viewModel.dismissSheet()
                 } label: {
                     Text("Delete")

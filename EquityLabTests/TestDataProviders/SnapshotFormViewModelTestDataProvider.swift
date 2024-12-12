@@ -3,9 +3,10 @@ import CoreData
 
 struct SnapshotFormViewModelTestDataProvider {
     func createAndPersistTestObjects_poolNames_1(using context: NSManagedObjectContext) -> (Date,[String],[String],[PositionProxy],[PositionProxy]) {
+        let person1 = "Lenni"
         let asset1 = DataFactory.createReceivable(name: "Blitz",
                                                   date: DateParser.shared.date(from: "2024-04-15T00:00:00")!,
-                                                  debtor: "Lenni",
+                                                  debtor: person1,
                                                   initialAmount: 20.0,
                                                   repaidAmount: 0.0,
                                                   context: context)
@@ -18,26 +19,27 @@ struct SnapshotFormViewModelTestDataProvider {
         let assetPoolName2 = "Bank"
         let assetPoolName3 = "Wertpapiere"
         let assetPoolName4 = "Geliehen"
-        let _ = DataFactory.createAssetPool(named: assetPoolName1, assets: [asset2], in: context)
-        let _ = DataFactory.createAssetPool(named: assetPoolName2, assets: [asset3, asset4], in: context)
-        let _ = DataFactory.createAssetPool(named: assetPoolName3, assets: [asset5], in: context)
-        let _ = DataFactory.createAssetPool(named: assetPoolName4, assets: [asset1], in: context)
+        let assetPool1 = DataFactory.createAssetPool(named: assetPoolName1, possessions: [asset2], receivables: [], in: context)
+        let assetPool2 = DataFactory.createAssetPool(named: assetPoolName2, possessions: [asset3,asset4], receivables: [], in: context)
+        let assetPool3 = DataFactory.createAssetPool(named: assetPoolName3, possessions: [asset5], receivables: [], in: context)
+        let assetPool4 = DataFactory.createAssetPool(named: assetPoolName4,  possessions: [], receivables: [asset1], in: context)
         
+        let person2 = "Papa"
         let liability1 = DataFactory.createLiability(name: "Auto",
                                                      date: DateParser.shared.date(from: "2023-03-15T00:00:00")!,
-                                                     creditor: "Papa",
+                                                     creditor: person2,
                                                      initialAmount: 1000.0,
                                                      repaidAmount: 200.0,
                                                      context: context)
         let liability2 = DataFactory.createLiability(name: "Booth",
                                                      date: DateParser.shared.date(from: "2024-07-23T00:00:00")!,
-                                                     creditor: "Papa",
+                                                     creditor: person2,
                                                      initialAmount: 300.0,
                                                      repaidAmount: 0.0,
                                                      context: context)
         let liability3 = DataFactory.createLiability(name: "Studium",
                                                      date: DateParser.shared.date(from: "2024-07-23T00:00:00")!,
-                                                     creditor: "Papa",
+                                                     creditor: person2,
                                                      initialAmount: 5000.0,
                                                      repaidAmount: 1022.41,
                                                      context: context)
@@ -66,9 +68,10 @@ struct SnapshotFormViewModelTestDataProvider {
     }
     
     func createAndPersistTestObjects_poolNames_2(using context: NSManagedObjectContext) -> (Date,[String],[String],[PositionProxy],[PositionProxy]) {
+        let person1 = "Lenni"
         let asset1 = DataFactory.createReceivable(name: "Blitz",
                                                   date: DateParser.shared.date(from: "2024-04-15T00:00:00")!,
-                                                  debtor: "Lenni",
+                                                  debtor: person1,
                                                   initialAmount: 20.0,
                                                   repaidAmount: 0.0,
                                                   context: context)
@@ -81,26 +84,27 @@ struct SnapshotFormViewModelTestDataProvider {
         let assetPoolName2 = "Bank"
         let assetPoolName3 = "Wertpapiere"
         let assetPoolName4 = "Geliehen"
-        let _ = DataFactory.createAssetPool(named: assetPoolName1, assets: [asset2], in: context)
-        let _ = DataFactory.createAssetPool(named: assetPoolName2, assets: [asset3, asset4], in: context)
-        let _ = DataFactory.createAssetPool(named: assetPoolName3, assets: [asset5], in: context)
-        let assetPool4 = DataFactory.createAssetPool(named: assetPoolName4, assets: [asset1], in: context)
+        let assetPool1 = DataFactory.createAssetPool(named: assetPoolName1, possessions: [asset2], receivables: [], in: context)
+        let assetPool2 = DataFactory.createAssetPool(named: assetPoolName2, possessions: [asset3,asset4], receivables: [], in: context)
+        let assetPool3 = DataFactory.createAssetPool(named: assetPoolName3, possessions: [asset5], receivables: [], in: context)
+        let assetPool4 = DataFactory.createAssetPool(named: assetPoolName4,  possessions: [], receivables: [asset1], in: context)
         
+        let person2 = "Papa"
         let liability1 = DataFactory.createLiability(name: "Auto",
                                                      date: DateParser.shared.date(from: "2023-03-15T00:00:00")!,
-                                                     creditor: "Papa",
+                                                     creditor: person2,
                                                      initialAmount: 1000.0,
                                                      repaidAmount: 200.0,
                                                      context: context)
         let liability2 = DataFactory.createLiability(name: "Booth",
                                                      date: DateParser.shared.date(from: "2024-07-23T00:00:00")!,
-                                                     creditor: "Papa",
+                                                     creditor: person2,
                                                      initialAmount: 300.0,
                                                      repaidAmount: 0.0,
                                                      context: context)
         let liability3 = DataFactory.createLiability(name: "Studium",
                                                      date: DateParser.shared.date(from: "2024-07-23T00:00:00")!,
-                                                     creditor: "Papa",
+                                                     creditor: person2,
                                                      initialAmount: 5000.0,
                                                      repaidAmount: 1022.41,
                                                      context: context)
@@ -175,9 +179,10 @@ struct SnapshotFormViewModelTestDataProvider {
     }
     
     func createAndPersistTestObjects_getProxies_1(using context: NSManagedObjectContext) -> ([String:[PositionProxy]],[String:[PositionProxy]]) {
+        let person1 = "Lenni"
         let asset1 = DataFactory.createReceivable(name: "Blitz",
                                                   date: DateParser.shared.date(from: "2024-04-15T00:00:00")!,
-                                                  debtor: "Lenni",
+                                                  debtor: person1,
                                                   initialAmount: 20.0,
                                                   repaidAmount: 0.0,
                                                   context: context)
@@ -190,26 +195,27 @@ struct SnapshotFormViewModelTestDataProvider {
         let assetPoolName2 = "Bank"
         let assetPoolName3 = "Wertpapiere"
         let assetPoolName4 = "Geliehen"
-        let _ = DataFactory.createAssetPool(named: assetPoolName1, assets: [asset2], in: context)
-        let _ = DataFactory.createAssetPool(named: assetPoolName2, assets: [asset3, asset4], in: context)
-        let _ = DataFactory.createAssetPool(named: assetPoolName3, assets: [asset5], in: context)
-        let _ = DataFactory.createAssetPool(named: assetPoolName4, assets: [asset1], in: context)
+        let assetPool1 = DataFactory.createAssetPool(named: assetPoolName1, possessions: [asset2], receivables: [], in: context)
+        let assetPool2 = DataFactory.createAssetPool(named: assetPoolName2, possessions: [asset3,asset4], receivables: [], in: context)
+        let assetPool3 = DataFactory.createAssetPool(named: assetPoolName3, possessions: [asset5], receivables: [], in: context)
+        let assetPool4 = DataFactory.createAssetPool(named: assetPoolName4,  possessions: [], receivables: [asset1], in: context)
         
+        let person2 = "Papa"
         let liability1 = DataFactory.createLiability(name: "Auto",
                                                      date: DateParser.shared.date(from: "2023-03-15T00:00:00")!,
-                                                     creditor: "Papa",
+                                                     creditor: person2,
                                                      initialAmount: 1000.0,
                                                      repaidAmount: 200.0,
                                                      context: context)
         let liability2 = DataFactory.createLiability(name: "Booth",
                                                      date: DateParser.shared.date(from: "2024-07-23T00:00:00")!,
-                                                     creditor: "Papa",
+                                                     creditor: person2,
                                                      initialAmount: 300.0,
                                                      repaidAmount: 0.0,
                                                      context: context)
         let liability3 = DataFactory.createLiability(name: "Studium",
                                                      date: DateParser.shared.date(from: "2024-07-23T00:00:00")!,
-                                                     creditor: "Papa",
+                                                     creditor: person2,
                                                      initialAmount: 5000.0,
                                                      repaidAmount: 1022.41,
                                                      context: context)
@@ -295,18 +301,19 @@ struct SnapshotFormViewModelTestDataProvider {
         
         let assetPoolName1 = "Bargeld"
         let assetPoolName2 = "Bank"
-        let _ = DataFactory.createAssetPool(named: assetPoolName1, assets: [asset1], in: context)
-        let _ = DataFactory.createAssetPool(named: assetPoolName2, assets: [asset2, asset3], in: context)
+        let _ = DataFactory.createAssetPool(named: assetPoolName1, possessions: [asset1], receivables: [], in: context)
+        let _ = DataFactory.createAssetPool(named: assetPoolName2, possessions: [asset2,asset3], receivables: [], in: context)
         
+        let person2 = "Papa"
         let liability1 = DataFactory.createLiability(name: "Auto",
                                                      date: DateParser.shared.date(from: "2023-03-15T00:00:00")!,
-                                                     creditor: "Papa",
+                                                     creditor: person2,
                                                      initialAmount: 1000.0,
                                                      repaidAmount: 200.0,
                                                      context: context)
         let liability2 = DataFactory.createLiability(name: "Studium",
                                                      date: DateParser.shared.date(from: "2024-07-23T00:00:00")!,
-                                                     creditor: "Papa",
+                                                     creditor: person2,
                                                      initialAmount: 5000.0,
                                                      repaidAmount: 1022.41,
                                                      context: context)
@@ -379,3 +386,4 @@ struct SnapshotFormViewModelTestDataProvider {
         return (DataFactory.createSnapshot(with: assetPositions2, and: liabilityPositions2, for: date2, in: context), date1)
     }
 }
+

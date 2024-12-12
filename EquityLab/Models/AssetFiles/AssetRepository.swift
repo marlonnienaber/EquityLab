@@ -26,24 +26,33 @@ class AssetRepository: NSObject {
         return fetchedResultsController.fetchedObjects as? [AssetPool] ?? []
     }
     
-    func fetchAssets() -> [Asset] {
-        let assetFetchRequest = NSFetchRequest<Asset>(entityName: String(describing: "Asset"))
-        return (try? fetchedResultsController.managedObjectContext.fetch(assetFetchRequest)) ?? []
-    }
-    
     func fetchReceivables() -> [Receivable] {
-        let receivableFetchRequest = NSFetchRequest<Receivable>(entityName: String(describing: "Receivable"))
+        let receivableFetchRequest = Receivable.fetchRequest()
         receivableFetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Receivable.grantDate, ascending: true)]
         return (try? fetchedResultsController.managedObjectContext.fetch(receivableFetchRequest)) ?? []
     }
     
-    func fetchAssets(for pool: AssetPool) -> [Asset] {
-        (try? fetchedResultsController.managedObjectContext.fetch(pool.getAssetRequest())) ?? []
+    func fetchPossessions() -> [Possession] {
+        let possessionFetchRequest = Possession.fetchRequest()
+        possessionFetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Possession.name, ascending: true)]
+        return (try? fetchedResultsController.managedObjectContext.fetch(possessionFetchRequest)) ?? []
     }
     
-    func delete(asset: Asset) {
+    func fetchSnapshotStructureItems(for pool: AssetPool) -> [SnapshotStructureItem] {
+        let receivables = (try? fetchedResultsController.managedObjectContext.fetch(pool.getReceivableRequest())) ?? []
+        let possessions = (try? fetchedResultsController.managedObjectContext.fetch(pool.getPossessionRequest())) ?? []
+        return receivables + possessions
+    }
+    
+    func delete(possession: Possession) {
         let context = fetchedResultsController.managedObjectContext
-        context.delete(asset)
+        context.delete(possession)
+        try? context.save()
+    }
+    
+    func delete(receivable: Receivable) {
+        let context = fetchedResultsController.managedObjectContext
+        context.delete(receivable)
         try? context.save()
     }
     
@@ -69,15 +78,15 @@ class AssetRepository: NSObject {
     func updateReceivable(receivable: Receivable,
                           newName: String,
                           newDebtor: String,
-                          newInitialAmount: Double,
-                          newRepaidAmount: Double,
+                          newInitialAmount: Decimal,
+                          newRepaidAmount: Decimal,
                           newGrantDate: Date,
                           newPool: AssetPool) {
         let context = fetchedResultsController.managedObjectContext
         receivable.name = newName
         receivable.debtor = newDebtor
-        receivable.initialAmount = newInitialAmount
-        receivable.repaidAmount = newRepaidAmount
+        receivable.initialAmount = newInitialAmount.nsDecimalNumberValue
+        receivable.repaidAmount = newRepaidAmount.nsDecimalNumberValue
         receivable.grantDate = newGrantDate
         receivable.pool = newPool
         try? context.save()
@@ -94,16 +103,16 @@ class AssetRepository: NSObject {
     func createReceivable(name: String,
                           pool: AssetPool,
                           debtor: String,
-                          initialAmount: Double,
-                          repaidAmount: Double,
+                          initialAmount: Decimal,
+                          repaidAmount: Decimal,
                           grantDate: Date) {
         let context = fetchedResultsController.managedObjectContext
         let receivable = Receivable(usedContext: context)
         receivable.name = name
         receivable.pool = pool
         receivable.debtor = debtor
-        receivable.initialAmount = initialAmount
-        receivable.repaidAmount = repaidAmount
+        receivable.initialAmount = initialAmount.nsDecimalNumberValue
+        receivable.repaidAmount = repaidAmount.nsDecimalNumberValue
         receivable.grantDate = grantDate
         try? context.save()
     }

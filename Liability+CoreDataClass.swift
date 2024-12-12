@@ -1,14 +1,15 @@
+import Foundation
 import CoreData
 
 @objc(Liability)
 public class Liability: NSManagedObject, Codable, Named {
     
-    public var repaymentPercentage: Double {
-        repaidAmount / initialAmount
+    public var repaymentPercentage: Decimal {
+        repaidAmount.decimalValue / initialAmount.decimalValue
     }
     
-    public var openAmount: Double {
-        initialAmount - repaidAmount
+    public var openAmount: Decimal {
+        initialAmount.decimalValue - repaidAmount.decimalValue
     }
     
     enum CodingKeys: String, CodingKey {
@@ -19,6 +20,24 @@ public class Liability: NSManagedObject, Codable, Named {
         case repaidAmount
     }
     
+    var helperInitialAmount: Decimal {
+        get {
+            initialAmount.decimalValue
+        }
+        set {
+            initialAmount = newValue.nsDecimalNumberValue
+        }
+    }
+    
+    var helperRepaidAmount: Decimal {
+        get {
+            repaidAmount.decimalValue
+        }
+        set {
+            repaidAmount = newValue.nsDecimalNumberValue
+        }
+    }
+    
     required convenience public init(from decoder: Decoder) throws {
         self.init(context: ProductionCoreDataStack.shared.context)
         
@@ -26,8 +45,8 @@ public class Liability: NSManagedObject, Codable, Named {
         name = try container.decode(String.self, forKey: .name)
         creditor = try container.decode(String.self, forKey: .creditor)
         grantDate = try container.decode(Date.self, forKey: .grantDate)
-        initialAmount = try container.decode(Double.self, forKey: .initialAmount)
-        repaidAmount = try container.decode(Double.self, forKey: .repaidAmount)
+        helperInitialAmount = try container.decode(Decimal.self, forKey: .initialAmount)
+        helperRepaidAmount = try container.decode(Decimal.self, forKey: .repaidAmount)
     }
     
     public func encode(to encoder: Encoder) throws {
@@ -35,7 +54,7 @@ public class Liability: NSManagedObject, Codable, Named {
         try container.encode(name, forKey: .name)
         try container.encode(creditor, forKey: .creditor)
         try container.encode(grantDate, forKey: .grantDate)
-        try container.encode(initialAmount, forKey: .initialAmount)
-        try container.encode(repaidAmount, forKey: .repaidAmount)
+        try container.encode(helperInitialAmount, forKey: .initialAmount)
+        try container.encode(helperRepaidAmount, forKey: .repaidAmount)
     }
 }

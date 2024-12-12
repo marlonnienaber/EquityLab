@@ -7,26 +7,23 @@ struct Dashboard: View {
     
     var body: some View {
         NavigationView {
-            dashboardContent
-                .navigationTitle("Analytics")
-        }
-    }
-    
-    @ViewBuilder
-    private var dashboardContent: some View {
-        if viewModel.noSnapshotsAvailable {
-            noSnapshotsView
-        } else {
-            GeometryReader { geometry in
-                VStack(spacing: 16) {
-                    equitySection
-                        .frame(height: geometry.size.height * 0.45)
-                    snapshotDetailSection
-                        .frame(height: geometry.size.height * 0.55)
+            Group {
+                if viewModel.noSnapshotsAvailable {
+                    noSnapshotsView
+                } else {
+                    GeometryReader { geometry in
+                        VStack(spacing: 16) {
+                            equitySection
+                                .frame(height: geometry.size.height * 0.45)
+                            snapshotDetailSection
+                                .frame(height: geometry.size.height * 0.55)
+                        }
+                    }
+                    .padding([.top, .leading, .trailing], 16)
+                    .padding(.bottom, 32)
                 }
             }
-            .padding([.top, .leading, .trailing], 16)
-            .padding(.bottom, 32)
+            .navigationTitle("Analytics")
         }
     }
     

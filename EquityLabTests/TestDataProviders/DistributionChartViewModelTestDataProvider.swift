@@ -129,7 +129,7 @@ struct DistributionChartViewModelTestDataProvider {
     }
     
     
-    func createAndPersistTestObjects_computeTotalValue_1(using context: NSManagedObjectContext) -> (Snapshot, Double, Double) {
+    func createAndPersistTestObjects_computeTotalValue_1(using context: NSManagedObjectContext) -> (Snapshot, Decimal, Decimal) {
         let assetPosition1 = DataFactory.createAssetPosition(name: "Sparkasse Konto", poolName: "Bank", value: 1_000_000.0, context: context)
         let liabilityPosition1 = DataFactory.createLiabilityPosition(name: "Auto-Kredit", poolName: "Privat", value: 1_000_000_000.0, context: context)
         
@@ -141,7 +141,7 @@ struct DistributionChartViewModelTestDataProvider {
         return (snapshot, 1_000_000.0, 1_000_000_000.0)
     }
     
-    func createAndPersistTestObjects_computeTotalValue_2(using context: NSManagedObjectContext) -> (Snapshot, Double, Double) {
+    func createAndPersistTestObjects_computeTotalValue_2(using context: NSManagedObjectContext) -> (Snapshot, Decimal, Decimal) {
         let assetPosition1 = DataFactory.createAssetPosition(name: "Sparkasse Konto", poolName: "Bank", value: 1_000_000.0, context: context)
         let assetPosition2 = DataFactory.createAssetPosition(name: "Commerzbank Konto", poolName: "Bank", value: 10.0, context: context)
         let assetPosition3 = DataFactory.createAssetPosition(name: "Reifeisenbank Konto", poolName: "Bank", value: 30_000.0, context: context)
@@ -159,7 +159,7 @@ struct DistributionChartViewModelTestDataProvider {
         return (snapshot, 1_030_010.0, 1_001_340_056.0)
     }
     
-    func createAndPersistTestObjects_computeTotalValue_3(using context: NSManagedObjectContext) -> (Snapshot, Double, Double) {
+    func createAndPersistTestObjects_computeTotalValue_3(using context: NSManagedObjectContext) -> (Snapshot, Decimal, Decimal) {
         let assetPosition1 = DataFactory.createAssetPosition(name: "Sparkasse Konto", poolName: "Bank Inland", value: 76.33, context: context)
         let assetPosition2 = DataFactory.createAssetPosition(name: "Commerzbank Konto", poolName: "Bank Inland", value: 2_672_654.80, context: context)
         let assetPosition3 = DataFactory.createAssetPosition(name: "Reifeisenbank Konto", poolName: "Bank Inland", value: 756_085.95, context: context)
@@ -209,7 +209,7 @@ struct DistributionChartViewModelTestDataProvider {
         return (snapshot, 3_787_983.86, 28_473.20)
     }
     
-    func createAndPersistTestObjects_computeTotalValue_4(using context: NSManagedObjectContext) -> (Snapshot, Double, Double) {
+    func createAndPersistTestObjects_computeTotalValue_4(using context: NSManagedObjectContext) -> (Snapshot, Decimal, Decimal) {
         let assetPosition1 = DataFactory.createAssetPosition(name: "Sparkasse Konto", poolName: "Bank Inland", value: 76.33, context: context)
         let assetPosition2 = DataFactory.createAssetPosition(name: "Commerzbank Konto", poolName: "Bank Inland", value: 2_672_654.80, context: context)
         let assetPosition3 = DataFactory.createAssetPosition(name: "Reifeisenbank Konto", poolName: "Bank Inland", value: 756_085.95, context: context)
@@ -259,7 +259,7 @@ struct DistributionChartViewModelTestDataProvider {
         return (snapshot, 3_731_869.1, 27_322.2)
     }
     
-    func createAndPersistTestObjects_computeTotalValue_5(using context: NSManagedObjectContext) -> (Snapshot, Double, Double) {
+    func createAndPersistTestObjects_computeTotalValue_5(using context: NSManagedObjectContext) -> (Snapshot, Decimal, Decimal) {
         let snapshot = DataFactory.createSnapshotWithoutPositions(for: .now, in: context)
         return (snapshot, 0.0, 0.0)
     }

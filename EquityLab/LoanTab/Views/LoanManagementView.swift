@@ -61,7 +61,7 @@ struct LoanManagementView: View {
     
     func receivableCell(for receivable: Receivable) -> some View {
         HStack {
-            if let initialAmountStringRepresentation = LocalizedCurrencyFormatter.shared.string(from: NSNumber(value: receivable.initialAmount)) {
+            if let initialAmountStringRepresentation = LocalizedCurrencyFormatter.shared.string(from: receivable.initialAmount) {
                 VStack(alignment: .leading) {
                     Text(receivable.name)
                         .foregroundColor(Color.primary)
@@ -81,7 +81,7 @@ struct LoanManagementView: View {
     
     private func liabilityCell(for liability: Liability) -> some View {
         HStack {
-            if let initialAmountStringRepresentation = LocalizedCurrencyFormatter.shared.string(from: NSNumber(value: liability.initialAmount)) {
+            if let initialAmountStringRepresentation = LocalizedCurrencyFormatter.shared.string(from: liability.initialAmount) {
                 VStack(alignment: .leading) {
                     Text(liability.name)
                         .foregroundColor(Color.primary)
@@ -102,10 +102,10 @@ struct LoanManagementView: View {
     @ViewBuilder
     private func updateSheetContent(for sheetType: LoanUpdateSheet) -> some View {
         switch sheetType {
-        case .receivableCreateSheet: ReceivableForm(viewModel: AssetFormViewModel{ viewModel.activeLoanUpdateSheet = nil } )
+        case .receivableCreateSheet: ReceivableForm(viewModel: ReceivableFormViewModel{ viewModel.activeLoanUpdateSheet = nil } )
         case .liabilityCreateSheet: LiabilityForm(viewModel: LiabilityFormViewModel{ viewModel.activeLoanUpdateSheet = nil } )
         case .liabilityUpdateSheet(let liability): LiabilityForm(viewModel: LiabilityFormViewModel(liability: liability){ viewModel.activeLoanUpdateSheet = nil } )
-        case .receivableUpdateSheet(let receivable): ReceivableForm(viewModel: AssetFormViewModel(asset: receivable){ viewModel.activeLoanUpdateSheet = nil } )
+        case .receivableUpdateSheet(let receivable): ReceivableForm(viewModel: ReceivableFormViewModel(receivable: receivable) { viewModel.activeLoanUpdateSheet = nil } )
         }
     }
     

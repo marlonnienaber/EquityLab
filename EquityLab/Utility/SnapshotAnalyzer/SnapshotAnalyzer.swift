@@ -7,20 +7,20 @@ struct SnapshotAnalyzer {
         self.repository = repository
     }
     
-    func calculateEquityValue(for snapshot: Snapshot) -> Double {
+    func calculateEquityValue(for snapshot: Snapshot) -> Decimal {
         let totalLiabilityValue = calculateLiabilityValue(for: snapshot)
         let totalAssetValue = calculateAssetValue(for: snapshot)
         return totalAssetValue - totalLiabilityValue
     }
     
-    func calculateAssetValue(for snapshot: Snapshot) -> Double {
+    func calculateAssetValue(for snapshot: Snapshot) -> Decimal {
         let assetPositions = repository.fetchAssetPositions(of: snapshot)
-        return assetPositions.map{ $0.value }.reduce(0, +)
+        return assetPositions.map{ $0.value.decimalValue }.reduce(0, +)
     }
     
-    func calculateLiabilityValue(for snapshot: Snapshot) -> Double {
+    func calculateLiabilityValue(for snapshot: Snapshot) -> Decimal {
         let liabilityPositions = repository.fetchLiabilityPositions(of: snapshot)
-        return liabilityPositions.map{ $0.value }.reduce(0, +)
+        return liabilityPositions.map{ $0.value.decimalValue }.reduce(0, +)
     }
     
     func getYear(of snapshot: Snapshot) -> Int? {

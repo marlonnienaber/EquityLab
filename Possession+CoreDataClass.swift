@@ -1,12 +1,11 @@
-
+import Foundation
 import CoreData
 
 @objc(Possession)
-public class Possession: Asset, Codable {
+public class Possession: NSManagedObject, Codable {
     enum CodingKeys: String, CodingKey {
         case name
         case volatile
-        case type
     }
     
     required convenience public init(from decoder: Decoder) throws {
@@ -21,7 +20,6 @@ public class Possession: Asset, Codable {
     
     public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(Asset.SubType.possession.rawValue, forKey: .type)
         try container.encode(name, forKey: .name)
         try container.encode(volatile, forKey: .volatile)
     }

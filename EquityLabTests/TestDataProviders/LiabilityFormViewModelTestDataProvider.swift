@@ -39,8 +39,8 @@ struct LiabilityFormViewModelTestDataProvider {
         let initialName = "Auto"
         let initialDate = DateParser.shared.date(from: "2024-04-15T00:00:00")!
         let initialCreditor = "Papa"
-        let initialInitialAmount = 1000.0
-        let initialRepaidAmount = 200.0
+        let initialInitialAmount: Decimal = 1000.0
+        let initialRepaidAmount: Decimal = 200.0
         
         let liability = DataFactory.createLiability(name: initialName,
                                     date: initialDate,

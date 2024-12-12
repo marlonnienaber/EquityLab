@@ -46,25 +46,33 @@ class SnapshotFormViewModel {
     private static func createProxies(for snapshot: Snapshot,
                                       using snapshotRepository: SnapshotRepository) -> ([PositionProxy],[PositionProxy]) {
         let assetPositions = snapshotRepository.fetchAssetPositions(of: snapshot)
-        let assetProxies = assetPositions.map{ PositionProxy(name: $0.name, value: $0.value, pool: $0.poolName) }
+        let assetProxies = assetPositions.map{ PositionProxy(name: $0.name, value: $0.value.decimalValue, pool: $0.poolName) }
         let liabilityPositions = snapshotRepository.fetchLiabilityPositions(of: snapshot)
-        let liabilityProxies = liabilityPositions.map{ PositionProxy(name: $0.name, value: $0.value, pool: $0.poolName) }
+        let liabilityProxies = liabilityPositions.map{ PositionProxy(name: $0.name, value: $0.value.decimalValue, pool: $0.poolName) }
         return (assetProxies,liabilityProxies)
     }
     
     private static func createProxies(using snapshotRepository: SnapshotRepository,
                                       and assetRepository: AssetRepository,
                                       and liabilityRepository: LiabilityRepository) -> ([PositionProxy],[PositionProxy]) {
-        let assets = assetRepository.fetchAssets()
-        let assetProxies = assets.map{ asset in
-            if let possession = asset as? Possession, let pool = possession.pool {
+        let receivables = assetRepository.fetchReceivables()
+        let receivableProxies = receivables.map{ receivable in
+            if let pool = receivable.pool {
+                return PositionProxy(name: receivable.name, value: receivable.openAmount, pool: pool.name)
+            } else {
+                return nil
+            }
+        }.compactMap{ $0 }
+        let possessions = assetRepository.fetchPossessions()
+        let possessionProxies = possessions.map{ possession in
+            if let pool = possession.pool {
                 if possession.volatile {
                     return PositionProxy(name: possession.name, value: 0.0, pool: pool.name)
                 } else {
                     let positions = snapshotRepository.fetchAssetPositions(with: possession.name)
-                    let datesAndValues: [(date:Date,value:Double)] = positions.map{
+                    let datesAndValues: [(date:Date,value:Decimal)] = positions.map{
                         if let date = $0.snapshot?.date {
-                            return (date: date, value: $0.value)
+                            return (date: date, value: $0.value.decimalValue)
                         } else {
                             return nil
                         }
@@ -72,12 +80,12 @@ class SnapshotFormViewModel {
                     let latestValue = datesAndValues.max{ $0.date < $1.date }?.value ?? 0.0
                     return PositionProxy(name: possession.name, value: latestValue, pool: pool.name)
                 }
-            } else if let receivable = asset as? Receivable, let pool = receivable.pool {
-                return PositionProxy(name: receivable.name, value: receivable.openAmount, pool: pool.name)
             } else {
                 return nil
             }
         }.compactMap{ $0 }
+        let assetProxies = receivableProxies + possessionProxies
+        
         let liabilities = liabilityRepository.fetchLiabilities()
         let liabilityProxies = liabilities.map{
             if let pool = $0.pool {
@@ -132,10 +140,10 @@ class SnapshotFormViewModel {
 
 class PositionProxy: Equatable {
     var name: String
-    var value: Double
+    var value: Decimal
     var poolName: String
     
-    init(name: String, value: Double, pool: String) {
+    init(name: String, value: Decimal, pool: String) {
         self.name = name
         self.value = value
         self.poolName = pool

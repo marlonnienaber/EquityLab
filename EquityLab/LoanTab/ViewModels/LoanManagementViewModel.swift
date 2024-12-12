@@ -31,7 +31,7 @@ class LoanManagementViewModel {
     
     func deleteReceivables(for indexSet: IndexSet) {
         Self.logger.debug("deleteReceivables(for indexSet:)")
-        indexSet.map{receivables[$0]}.forEach{assetRepository.delete(asset: $0)}
+        indexSet.map{receivables[$0]}.forEach{assetRepository.delete(receivable: $0)}
     }
     
     func deleteLiabilities(for indexSet: IndexSet) {

@@ -10,8 +10,8 @@ class LiabilityFormViewModel {
     var liability: Liability?
     var liabilityName: String
     var liabilityGrantDate: Date
-    var liabilityInitialAmount: Double
-    var liabilityRepaidAmount: Double
+    var liabilityInitialAmount: Decimal
+    var liabilityRepaidAmount: Decimal
     var liabilityCreditor: String
     var liabilityValidationError: LiabilityValidationError?
     var showValidationErrorAlert = false
@@ -26,8 +26,8 @@ class LiabilityFormViewModel {
         if let liability {
             self.liabilityName = liability.name
             self.liabilityGrantDate = liability.grantDate
-            self.liabilityInitialAmount = liability.initialAmount
-            self.liabilityRepaidAmount = liability.repaidAmount
+            self.liabilityInitialAmount = liability.initialAmount.decimalValue
+            self.liabilityRepaidAmount = liability.repaidAmount.decimalValue
             self.liabilityCreditor = liability.creditor
         } else {
             self.liabilityName = ""

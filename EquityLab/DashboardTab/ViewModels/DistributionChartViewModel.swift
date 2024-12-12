@@ -18,7 +18,7 @@ class DistributionChartViewModel {
     
     var dashboardViewModel: DashboardViewModel
     var selectedCategory: DonutChartCategory?
-    var selectedCumulativeValue: Double?
+    var selectedCumulativeValue: Decimal?
     var color: Color {
         switch distributionChartType {
         case .liabilityDistributionChart: .liabilitiesUnselected
@@ -70,13 +70,13 @@ class DistributionChartViewModel {
     
     func getPercentageString(for pool: Pool) -> String {
         Self.logger.debug("getPercentageString(for pool)")
-        return String(format: "%.1f", pool.percentage) + " %"
+        return pool.percentage.oneDecimalPercentageString
     }
     
     func getSelectedCategoryPercentageString() -> String? {
         Self.logger.debug("getSelectedCategoryPercentageString()")
         guard let selectedCategory else { return nil }
-        return String(format: "%.1f", selectedCategory.percentage) + " %"
+        return selectedCategory.percentage.oneDecimalPercentageString
     }
     
     func calculateFrameLength(for geometry: GeometryProxy) -> CGFloat {
@@ -99,21 +99,21 @@ class DistributionChartViewModel {
     }
     
     
-    func computeTotalValue(for snapshot: Snapshot) -> Double {
+    func computeTotalValue(for snapshot: Snapshot) -> Decimal {
         Self.logger.debug("computeTotalValue(for snapshot)")
         let positions: [Position]
         switch distributionChartType {
         case .assetDistributionChart: positions = repository.fetchAssetPositions(of: snapshot)
         case .liabilityDistributionChart: positions = repository.fetchLiabilityPositions(of: snapshot)
         }
-        let totalValue = positions.map{ $0.value }.reduce(0, +)
+        let totalValue = positions.map{ $0.value.decimalValue }.reduce(0, +)
         return totalValue
     }
     
-    func setSelectedCategoryForNewCumulativeValue(cumulativeValue: Double) {
+    func setSelectedCategoryForNewCumulativeValue(cumulativeValue: Decimal) {
         Self.logger.debug("setSelectedCategoryForNewCumulativeValue(cumulativeValue)")
         var distributionCategories = distributionCategories
-        var cumulativeTotal = 0.0
+        var cumulativeTotal: Decimal = 0
         var category: DonutChartCategory
         repeat {
             category = distributionCategories.removeFirst()
@@ -142,19 +142,19 @@ enum DistributionChartType {
 
 struct DonutChartCategory: Equatable, Hashable {
     var pools: [Pool]
-    var value: Double {
+    var value: Decimal {
         pools.map{ $0.value }.reduce(0, +)
     }
-    var percentage: Double {
+    var percentage: Decimal {
         pools.map{ $0.percentage }.reduce(0, +)
     }
 }
 
 
 struct Pool: Equatable, Hashable {
-    let value: Double
+    let value: Decimal
     let name: String
-    let percentage: Double
+    let percentage: Decimal
     
     static func == (lhs: Pool, rhs: Pool) -> Bool {
         lhs.name == rhs.name

@@ -191,8 +191,8 @@ final class SnapshotFormViewModelTests: XCTestCase {
                                         dismissSheet: {})
         
         let expectedSnapshotDate = DateParser.shared.date(from: "2024-04-15T00:00:00")!
-        let expectedAssetPositionProperties = [("Geldbeutel", 200.0), ("Konto Sparkasse",320.0),("Konto Commerzbank", 111.4)]
-        let expectedLiabilityPositionProperties = [("Auto", 200.0), ("Studium", 250.0)]
+        let expectedAssetPositionProperties: [(String,Decimal)] = [("Geldbeutel", 200.0), ("Konto Sparkasse",320.0),("Konto Commerzbank", 111.4)]
+        let expectedLiabilityPositionProperties: [(String,Decimal)]  = [("Auto", 200.0), ("Studium", 250.0)]
         
         sut.date = expectedSnapshotDate
         let assetProxy1 = try XCTUnwrap(sut.assetProxies.first(where: {$0.name == "Geldbeutel"}))
@@ -212,8 +212,8 @@ final class SnapshotFormViewModelTests: XCTestCase {
         let snapshot = try XCTUnwrap(snapshots.first)
         
         let actualSnapshotDate = snapshot.date
-        let actualAssetPositionProperties = testingSnapshotRepository.fetchAssetPositions(of: snapshot).map{ ($0.name, $0.value) }
-        let actualLiabilityPositionProperties = testingSnapshotRepository.fetchLiabilityPositions(of: snapshot).map{ ($0.name, $0.value) }
+        let actualAssetPositionProperties = testingSnapshotRepository.fetchAssetPositions(of: snapshot).map{ ($0.name, $0.value.decimalValue) }
+        let actualLiabilityPositionProperties = testingSnapshotRepository.fetchLiabilityPositions(of: snapshot).map{ ($0.name, $0.value.decimalValue) }
         
         XCTAssertEqual(expectedSnapshotDate, actualSnapshotDate)
         XCTAssertTrue(expectedAssetPositionProperties ≡ actualAssetPositionProperties)
@@ -232,8 +232,8 @@ final class SnapshotFormViewModelTests: XCTestCase {
                                         dismissSheet: {})
         
         let expectedSnapshotDate = Date.now.startOfDay
-        let expectedAssetPositionProperties = [("Geldbeutel", 50.0), ("Konto Sparkasse",200.0),("Konto Commerzbank", 300.0),("FNZ",0.0)]
-        let expectedLiabilityPositionProperties = [("Auto Papa", 800.0), ("Booth", 100.0),("Studium", 5000.0),("Kaution", 1000.0)]
+        let expectedAssetPositionProperties: [(String,Decimal)] = [("Geldbeutel", 50.0), ("Konto Sparkasse",200.0),("Konto Commerzbank", 300.0),("FNZ",0.0)]
+        let expectedLiabilityPositionProperties: [(String,Decimal)] = [("Auto Papa", 800.0), ("Booth", 100.0),("Studium", 5000.0),("Kaution", 1000.0)]
         
         sut.date = expectedSnapshotDate
         let assetProxy1 = try XCTUnwrap(sut.assetProxies.first(where: {$0.name == "Geldbeutel"}))
@@ -253,8 +253,8 @@ final class SnapshotFormViewModelTests: XCTestCase {
         snapshot = try XCTUnwrap(snapshots.first)
         
         let actualSnapshotDate = snapshot.date
-        let actualAssetPositionProperties = testingSnapshotRepository.fetchAssetPositions(of: snapshot).map{ ($0.name, $0.value) }
-        let actualLiabilityPositionProperties = testingSnapshotRepository.fetchLiabilityPositions(of: snapshot).map{ ($0.name, $0.value) }
+        let actualAssetPositionProperties = testingSnapshotRepository.fetchAssetPositions(of: snapshot).map{ ($0.name, $0.value.decimalValue) }
+        let actualLiabilityPositionProperties = testingSnapshotRepository.fetchLiabilityPositions(of: snapshot).map{ ($0.name, $0.value.decimalValue) }
         
         XCTAssertEqual(expectedSnapshotDate, actualSnapshotDate)
         XCTAssertTrue(expectedAssetPositionProperties ≡ actualAssetPositionProperties)

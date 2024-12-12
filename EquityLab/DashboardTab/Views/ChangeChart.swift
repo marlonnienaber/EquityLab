@@ -17,7 +17,7 @@ struct ChangenChart: View {
                         y: .value("value", category.change)
                     )
                     .annotation(position: .bottom) {
-                        Text(category.change == 0 ? "" :  String(format: "%.1f", category.change) + "%")
+                        Text(category.change == 0 ? "" : category.change.oneDecimalPercentageString)
                             .font(.caption)
                     }
                     .foregroundStyle(viewModel.changeChartColor)
