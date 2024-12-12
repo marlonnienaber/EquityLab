@@ -220,7 +220,7 @@ extension LiabilityPool: SnapshotStructurePool {
     func edit(via viewModel: SnapshotStructureViewModel) {
         viewModel.alertPoolName = name
         viewModel.liabilityPoolToEdit = self
-        viewModel.showEditAssetPoolAlert = true
+        viewModel.showEditLiabilityPoolAlert = true
     }
     
     func retrieveItems(via viewModel: SnapshotStructureViewModel) -> [SnapshotStructureItem] {
