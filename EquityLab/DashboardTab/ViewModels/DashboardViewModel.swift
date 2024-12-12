@@ -1,6 +1,7 @@
 import CoreData
 import os
 import SwiftUI
+import Observation
 
 @Observable
 class DashboardViewModel {
@@ -103,9 +104,9 @@ class DashboardViewModel {
     
     func getBalanceViewModel(for snapshot: Snapshot) -> BalanceViewModel {
         BalanceViewModel(
-            assetValueString: LocalizedCurrencyFormatter.shared.string(from: getAssetValue(of: snapshot) as NSNumber) ?? "",
-            liabilityValueString: LocalizedCurrencyFormatter.shared.string(from: getLiabilityValue(of: snapshot) as NSNumber) ?? "",
-            equityValueString: LocalizedCurrencyFormatter.shared.string(from: getEquityValue(of: snapshot) as NSNumber) ?? ""
+            assetValueString: LocalizedCurrencyFormatter.shared.string(from: getAssetValue(of: snapshot).nsDecimalNumberValue) ?? "",
+            liabilityValueString: LocalizedCurrencyFormatter.shared.string(from: getLiabilityValue(of: snapshot).nsDecimalNumberValue) ?? "",
+            equityValueString: LocalizedCurrencyFormatter.shared.string(from: getEquityValue(of: snapshot).nsDecimalNumberValue) ?? ""
         )
     }
     
