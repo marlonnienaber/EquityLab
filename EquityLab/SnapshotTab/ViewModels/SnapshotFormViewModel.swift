@@ -36,7 +36,7 @@ class SnapshotFormViewModel {
         } else {
             (assetProxies, liabilityProxies) = Self.createProxies(using: snapshotRepository, and: assetRepository, and: liabilityRepository)
             self.date = Date.now.startOfDay
-            self.assetPoolNames = assetRepository.fetchAssetPools().map{ $0.name }
+            self.assetPoolNames = assetRepository.getAssetPools().map{ $0.name }
             self.liabilityPoolNames = liabilityRepository.fetchLiabilityPools().map{ $0.name }
         }
         self.assetProxies = assetProxies
@@ -55,15 +55,16 @@ class SnapshotFormViewModel {
     private static func createProxies(using snapshotRepository: SnapshotRepository,
                                       and assetRepository: AssetRepository,
                                       and liabilityRepository: LiabilityRepository) -> ([PositionProxy],[PositionProxy]) {
-        let receivables = assetRepository.fetchReceivables()
+        let receivables = assetRepository.getReceivables()
+        let receivableAnalyzer = ReceivableAnalyzer(repository: assetRepository)
         let receivableProxies = receivables.map{ receivable in
             if let pool = receivable.pool {
-                return PositionProxy(name: receivable.name, value: receivable.openAmount, pool: pool.name)
+                return PositionProxy(name: receivable.name, value: receivableAnalyzer.calculateOpenAmount(for: receivable), pool: pool.name)
             } else {
                 return nil
             }
         }.compactMap{ $0 }
-        let possessions = assetRepository.fetchPossessions()
+        let possessions = assetRepository.getPossessions()
         let possessionProxies = possessions.map{ possession in
             if let pool = possession.pool {
                 if possession.volatile {
@@ -87,9 +88,10 @@ class SnapshotFormViewModel {
         let assetProxies = receivableProxies + possessionProxies
         
         let liabilities = liabilityRepository.fetchLiabilities()
+        let liabilityAnalyzer = LiabilityAnalyzer(repository: liabilityRepository)
         let liabilityProxies = liabilities.map{
             if let pool = $0.pool {
-                return PositionProxy(name: $0.name, value: $0.openAmount, pool: pool.name)
+                return PositionProxy(name: $0.name, value: liabilityAnalyzer.calculateOpenAmount(for: $0), pool: pool.name)
             } else {
                 return nil
             }

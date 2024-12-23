@@ -37,14 +37,16 @@ class SnapshotStructureViewModel {
         self.assetRepository = assetRepository
         self.liabilityRepository = liabilityRepository
         
-        self.assetPools = assetRepository.fetchAssetPools()
+        self.assetPools = assetRepository.getAssetPools()
         self.assetPoolToAssetsDictionary = [:]
         
         self.liabilityPools = liabilityRepository.fetchLiabilityPools()
         self.liabilityPoolToLiabilitiesDictionary = [:]
         
         for pool in assetPools {
-            assetPoolToAssetsDictionary[pool] = assetRepository.fetchSnapshotStructureItems(for: pool)
+            let receivables = assetRepository.getReceivables().filter{ $0.pool == pool }
+            let possessions = assetRepository.getPossessions().filter{ $0.pool == pool }
+            assetPoolToAssetsDictionary[pool] = receivables + possessions
         }
         for pool in liabilityPools {
             liabilityPoolToLiabilitiesDictionary[pool] = liabilityRepository.fetchSnapshotStructureItems(for: pool)
@@ -55,7 +57,7 @@ class SnapshotStructureViewModel {
     }
     
     private var assetPoolWithSameNameExists: Bool {
-        let assetPools = assetRepository.fetchAssetPools()
+        let assetPools = assetRepository.getAssetPools()
         return assetPools.contains(where: { $0.name == alertPoolName && $0 != assetPoolToEdit })
     }
     
@@ -125,7 +127,7 @@ class SnapshotStructureViewModel {
     }
 }
 
-extension SnapshotStructureViewModel: AssetObserver, LiabilityObserver {
+extension SnapshotStructureViewModel: LiabilityObserver {
     func notifyAfterLiabilityUpdate() {
         Self.logger.debug("notifyAfterLiabilityUpdate()")
         self.liabilityPools = liabilityRepository.fetchLiabilityPools()
@@ -134,13 +136,30 @@ extension SnapshotStructureViewModel: AssetObserver, LiabilityObserver {
             liabilityPoolToLiabilitiesDictionary[pool] = liabilityRepository.fetchSnapshotStructureItems(for: pool)
         }
     }
+}
+
+extension SnapshotStructureViewModel: AssetPoolObserver, ReceivableObserver, PossessionObserver {
+    func notifyAfterAssetPoolUpdate() {
+        assetPools = assetRepository.getAssetPools()
+    }
     
-    func notifyAfterAssetUpdate() {
-        Self.logger.debug("notifyAfterAssetUpdate()")
-        self.assetPools = assetRepository.fetchAssetPools()
+    func notifyAfterReceivableUpdate() {
+        assetPools = assetRepository.getAssetPools()
         self.assetPoolToAssetsDictionary = [:]
         for pool in assetPools {
-            assetPoolToAssetsDictionary[pool] = assetRepository.fetchSnapshotStructureItems(for: pool)
+            let receivables = assetRepository.getReceivables().filter{ $0.pool == pool }
+            let possessions = assetRepository.getPossessions().filter{ $0.pool == pool }
+            assetPoolToAssetsDictionary[pool] = receivables + possessions
+        }
+    }
+    
+    func notifyAfterPossessionUpdate() {
+        assetPools = assetRepository.getAssetPools()
+        self.assetPoolToAssetsDictionary = [:]
+        for pool in assetPools {
+            let receivables = assetRepository.getReceivables().filter{ $0.pool == pool }
+            let possessions = assetRepository.getPossessions().filter{ $0.pool == pool }
+            assetPoolToAssetsDictionary[pool] = receivables + possessions
         }
     }
 }

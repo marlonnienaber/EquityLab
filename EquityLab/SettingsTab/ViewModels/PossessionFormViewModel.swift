@@ -29,8 +29,8 @@ class PossessionFormViewModel {
     
     private var assetWithSameNameDoesExist: Bool {
         Self.logger.debug("assetWithSameNameDoesExist")
-        let possessions = repository.fetchPossessions()
-        let receivables = repository.fetchReceivables()
+        let possessions = repository.getPossessions()
+        let receivables = repository.getReceivables()
         let sameNamedReceivableExists = receivables.contains(where: {$0.name == name})
         let otherSameNamedPossessionExists = possessions.contains(where: {$0.name == name && $0 != possession})
         return otherSameNamedPossessionExists || sameNamedReceivableExists
@@ -83,7 +83,7 @@ class PossessionFormViewModel {
     
     func getAssetPools() -> [AssetPool] {
         Self.logger.debug("getAssetPools()")
-        return repository.fetchAssetPools()
+        return repository.getAssetPools()
     }
 }
 

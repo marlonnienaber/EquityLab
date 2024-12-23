@@ -2,98 +2,145 @@ import CoreData
 
 class AssetRepository: NSObject {
     public static let production = AssetRepository(context: ProductionCoreDataStack.shared.context)
-    private let fetchedResultsController: ObservingFetchedResultsController<AssetPool>
-    private var observers: [WeakAssetObserver]
+    private let context: NSManagedObjectContext
+    private let assetPoolFetchedResultsController: NSFetchedResultsController<AssetPool>
+    private let possessionFetchedResultsController: NSFetchedResultsController<Possession>
+    private let receivableFetchedResultsController: NSFetchedResultsController<Receivable>
+    private let receivableTransactionsFetchedResultsController: NSFetchedResultsController<LoanTransaction>
+    private var observers: [WeakAssetRepositoryObserver]
     
     init(context: NSManagedObjectContext) {
-        let request = ObservingFetchRequest<AssetPool>(entityName: "AssetPool")
-        request.sortDescriptors = [NSSortDescriptor(keyPath: \AssetPool.name, ascending: true)]
-        request.observedRelationships = ["assets"]
-        fetchedResultsController = .init(fetchRequest: request, managedObjectContext: context, sectionNameKeyPath: nil, cacheName: nil)
-        try? fetchedResultsController.performFetch()
+        self.context = context
+        
+        let assetPoolRequest = AssetPool.fetchRequest()
+        assetPoolRequest.sortDescriptors = []
+        assetPoolFetchedResultsController = NSFetchedResultsController(request: assetPoolRequest, context: context)
+        
+        
+        let possessionRequest = Possession.fetchRequest()
+        possessionRequest.sortDescriptors = []
+        possessionFetchedResultsController = NSFetchedResultsController(request: possessionRequest, context: context)
+        
+        let receivableRequest = Receivable.fetchRequest()
+        receivableRequest.sortDescriptors = []
+        receivableFetchedResultsController = NSFetchedResultsController(request: receivableRequest, context: context)
+        
+        let receivableTransactionRequest = LoanTransaction.fetchRequest()
+        receivableTransactionRequest.sortDescriptors = []
+        receivableTransactionRequest.predicate = NSPredicate(format: "receivable != nil")
+        receivableTransactionsFetchedResultsController = .init(request: receivableTransactionRequest, context: context)
+        
         self.observers = []
         super.init()
-        fetchedResultsController.delegate = self
+        
+        try? assetPoolFetchedResultsController.performFetch()
+        try? possessionFetchedResultsController.performFetch()
+        try? receivableFetchedResultsController.performFetch()
+        try? receivableTransactionsFetchedResultsController.performFetch()
+        
+        assetPoolFetchedResultsController.delegate = self
+        possessionFetchedResultsController.delegate = self
+        receivableFetchedResultsController.delegate = self
+        receivableTransactionsFetchedResultsController.delegate = self
     }
     
-    func add(observer: AssetObserver) {
+    func add(observer: AnyObject) {
         guard !observers.contains(where: { $0.observer === observer }) else { return }
-        observers.append(WeakAssetObserver(observer: observer))
+        observers.append(WeakAssetRepositoryObserver(observer: observer))
     }
     
-    func fetchAssetPools() -> [AssetPool] {
-        try? fetchedResultsController.performFetch()
-        return fetchedResultsController.fetchedObjects as? [AssetPool] ?? []
+    func getTransactions() -> [LoanTransaction] {
+        receivableTransactionsFetchedResultsController.fetchedObjects ?? []
     }
     
-    func fetchReceivables() -> [Receivable] {
-        let receivableFetchRequest = Receivable.fetchRequest()
-        receivableFetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Receivable.grantDate, ascending: true)]
-        return (try? fetchedResultsController.managedObjectContext.fetch(receivableFetchRequest)) ?? []
+    func updateReceivableTransaction(
+        transaction: LoanTransaction,
+        amount: Decimal,
+        date: Date,
+        note: String,
+        issuer: LoanPartner?,
+        receivable: Receivable
+    ) {
+        transaction.amount = amount.nsDecimalNumberValue
+        transaction.date = date
+        transaction.emoji = issuer.isNil ? "📤" : "💶"
+        transaction.note = note
+        transaction.issuer = issuer
+        transaction.receivable = receivable
+        try? context.save()
     }
     
-    func fetchPossessions() -> [Possession] {
-        let possessionFetchRequest = Possession.fetchRequest()
-        possessionFetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Possession.name, ascending: true)]
-        return (try? fetchedResultsController.managedObjectContext.fetch(possessionFetchRequest)) ?? []
+    func createReceivableTransaction(
+        amount: Decimal,
+        date: Date,
+        note: String,
+        issuer: LoanPartner?,
+        receivable: Receivable
+    ) {
+        let transaction = LoanTransaction(usedContext: context)
+        transaction.amount = amount.nsDecimalNumberValue
+        transaction.date = date
+        transaction.emoji = issuer.isNil ? "📤" : "💶"
+        transaction.note = note
+        transaction.issuer = issuer
+        transaction.receivable = receivable
+        try? context.save()
     }
     
-    func fetchSnapshotStructureItems(for pool: AssetPool) -> [SnapshotStructureItem] {
-        let receivables = (try? fetchedResultsController.managedObjectContext.fetch(pool.getReceivableRequest())) ?? []
-        let possessions = (try? fetchedResultsController.managedObjectContext.fetch(pool.getPossessionRequest())) ?? []
-        return receivables + possessions
+    func getAssetPools() -> [AssetPool] {
+        assetPoolFetchedResultsController.fetchedObjects ?? []
+    }
+    
+    func getReceivables() -> [Receivable] {
+        receivableFetchedResultsController.fetchedObjects ?? []
+    }
+    
+    func getPossessions() -> [Possession] { /* TODO: let callers treat sorting themselves since sorting was elimintaed here */
+        possessionFetchedResultsController.fetchedObjects ?? []
+    }
+    
+    func delete(transaction: LoanTransaction) {
+        context.delete(transaction)
+        try? context.save()
     }
     
     func delete(possession: Possession) {
-        let context = fetchedResultsController.managedObjectContext
         context.delete(possession)
         try? context.save()
     }
     
     func delete(receivable: Receivable) {
-        let context = fetchedResultsController.managedObjectContext
         context.delete(receivable)
         try? context.save()
     }
     
     func createAssetPool(named name: String) {
-        let context = fetchedResultsController.managedObjectContext
         let pool = AssetPool(usedContext: context)
         pool.name = name
         try? context.save()
     }
     
     func delete(assetPool: AssetPool) {
-        let context = fetchedResultsController.managedObjectContext
         context.delete(assetPool)
         try? context.save()
     }
     
     func update(assetPool: AssetPool, newName: String) {
-        let context = fetchedResultsController.managedObjectContext
         assetPool.name = newName
         try? context.save()
     }
     
     func updateReceivable(receivable: Receivable,
                           newName: String,
-                          newDebtor: String,
-                          newInitialAmount: Decimal,
-                          newRepaidAmount: Decimal,
-                          newGrantDate: Date,
+                          newDebtor: LoanPartner,
                           newPool: AssetPool) {
-        let context = fetchedResultsController.managedObjectContext
         receivable.name = newName
         receivable.debtor = newDebtor
-        receivable.initialAmount = newInitialAmount.nsDecimalNumberValue
-        receivable.repaidAmount = newRepaidAmount.nsDecimalNumberValue
-        receivable.grantDate = newGrantDate
         receivable.pool = newPool
         try? context.save()
     }
     
     func updatePossession(possession: Possession, newName: String, newIsVolatile: Bool, newPool: AssetPool) {
-        let context = fetchedResultsController.managedObjectContext
         possession.name = newName
         possession.volatile = newIsVolatile
         possession.pool = newPool
@@ -101,24 +148,28 @@ class AssetRepository: NSObject {
     }
     
     func createReceivable(name: String,
+                          debtor: LoanPartner,
                           pool: AssetPool,
-                          debtor: String,
-                          initialAmount: Decimal,
-                          repaidAmount: Decimal,
+                          disbursedAmount: Decimal,
                           grantDate: Date) {
-        let context = fetchedResultsController.managedObjectContext
         let receivable = Receivable(usedContext: context)
         receivable.name = name
         receivable.pool = pool
         receivable.debtor = debtor
-        receivable.initialAmount = initialAmount.nsDecimalNumberValue
-        receivable.repaidAmount = repaidAmount.nsDecimalNumberValue
-        receivable.grantDate = grantDate
-        try? context.save()
+        let initialTransaction = LoanTransaction(usedContext: context)
+        initialTransaction.date = grantDate
+        initialTransaction.amount = disbursedAmount.nsDecimalNumberValue
+        initialTransaction.note = "disbursed amount"
+        initialTransaction.emoji = "📤"
+        initialTransaction.receivable = receivable
+        do {
+            try context.save()
+        } catch let error {
+            print(error.localizedDescription)
+        }
     }
     
     func createPossession(name: String, pool: AssetPool, isVolatile: Bool) {
-        let context = fetchedResultsController.managedObjectContext
         let possession = Possession(context: context)
         possession.name = name
         possession.volatile = isVolatile
@@ -130,18 +181,66 @@ class AssetRepository: NSObject {
 extension AssetRepository: NSFetchedResultsControllerDelegate {
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         observers = observers.filter { $0.observer.isNotNil }
-        observers.forEach{ $0.observer?.notifyAfterAssetUpdate()}
+        if controller == assetPoolFetchedResultsController {
+            for weakObserver in observers {
+                if let assetPoolObserver = weakObserver.observer as? AssetPoolObserver {
+                    assetPoolObserver.notifyAfterAssetPoolUpdate()
+                }
+            }
+        }
+        if controller == possessionFetchedResultsController {
+            print("possession changed")
+            for weakObserver in observers {
+                if let possessionObserver = weakObserver.observer as? PossessionObserver {
+                    possessionObserver.notifyAfterPossessionUpdate()
+                }
+            }
+        }
+        if controller == receivableFetchedResultsController {
+            for weakObserver in observers {
+                if let receivableObserver = weakObserver.observer as? ReceivableObserver {
+                    receivableObserver.notifyAfterReceivableUpdate()
+                }
+            }
+        }
+        if controller == receivableTransactionsFetchedResultsController {
+            for weakObserver in observers {
+                if let receivableTransactionObserver = weakObserver.observer as? ReceivableTransactionObserver {
+                    receivableTransactionObserver.notifyAfterReceivableTransactionUpdate()
+                }
+            }
+        }
     }
 }
 
-protocol AssetObserver: AnyObject {
-    /* TODO: will this create a retain cycle or other memory problems */
-    func notifyAfterAssetUpdate()
+/* TODO: will the callback logic create a retain cycle or other memory problems? */
+protocol AssetPoolObserver: AnyObject {
+    func notifyAfterAssetPoolUpdate()
 }
 
-class WeakAssetObserver {
-    weak var observer: AssetObserver?
-    init(observer: AssetObserver?) {
+protocol PossessionObserver: AnyObject {
+    func notifyAfterPossessionUpdate()
+}
+
+protocol ReceivableObserver: AnyObject {
+    func notifyAfterReceivableUpdate()
+}
+
+protocol ReceivableTransactionObserver: AnyObject {
+    func notifyAfterReceivableTransactionUpdate()
+}
+
+class WeakAssetRepositoryObserver {
+    weak var observer: AnyObject?
+    init(observer: AnyObject?) {
         self.observer = observer
     }
 }
+
+/* TODO: move this somewhere where it makes sense */
+extension NSFetchedResultsController {
+    @objc convenience init(request: NSFetchRequest<ResultType>, context: NSManagedObjectContext) {
+        self.init(fetchRequest: request, managedObjectContext: context, sectionNameKeyPath: nil, cacheName: nil)
+    }
+}
+

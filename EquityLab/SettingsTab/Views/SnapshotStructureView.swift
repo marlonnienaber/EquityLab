@@ -126,13 +126,13 @@ struct SnapshotStructureView: View {
         case .createSheetReceivable:
             ReceivableForm(viewModel: ReceivableFormViewModel{ viewModel.activeBalanceItemSheet = nil } )
         case .createSheetLiability:
-            LiabilityForm(viewModel: LiabilityFormViewModel{ viewModel.activeBalanceItemSheet = nil } )
+            EmptyView()
         case .updateSheetPossession(let possession):
             PossessionForm(viewModel: PossessionFormViewModel(possession: possession) { viewModel.activeBalanceItemSheet = nil })
         case .updateSheetReceivable(let receivable):
             ReceivableForm(viewModel: ReceivableFormViewModel(receivable: receivable) { viewModel.activeBalanceItemSheet = nil } )
         case .updateSheetLiability(let liability):
-            LiabilityForm(viewModel: LiabilityFormViewModel(liability: liability) { viewModel.activeBalanceItemSheet = nil } )
+            EmptyView()
         }
     }
     

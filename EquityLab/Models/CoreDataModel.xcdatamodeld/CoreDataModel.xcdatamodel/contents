@@ -23,9 +23,9 @@
     </entity>
     <entity name="LoanPartner" representedClassName="LoanPartner" syncable="YES">
         <attribute name="name" optional="YES" attributeType="String"/>
-        <relationship name="liabilities" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Liability" inverseName="creditor" inverseEntity="Liability"/>
-        <relationship name="receivables" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Receivable" inverseName="debtor" inverseEntity="Receivable"/>
-        <relationship name="transactions" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="LoanTransaction" inverseName="issuer" inverseEntity="LoanTransaction"/>
+        <relationship name="liabilities" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Liability" inverseName="creditor" inverseEntity="Liability"/>
+        <relationship name="receivables" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Receivable" inverseName="debtor" inverseEntity="Receivable"/>
+        <relationship name="transactions" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="LoanTransaction" inverseName="issuer" inverseEntity="LoanTransaction"/>
     </entity>
     <entity name="LoanTransaction" representedClassName="LoanTransaction" syncable="YES">
         <attribute name="amount" optional="YES" attributeType="Decimal" defaultValueString="0.0"/>

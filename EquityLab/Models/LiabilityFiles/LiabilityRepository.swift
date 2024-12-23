@@ -21,9 +21,13 @@ class LiabilityRepository: NSObject {
         observers.append(WeakLiabilityObserver(observer: observer))
     }
     
+    func fetchTransactions(for liability: Liability) -> [LoanTransaction] {
+        [] /* TODO: implement */
+    }
+    
     func fetchLiabilities() -> [Liability] {
-        let liabilityFetchRequest = NSFetchRequest<Liability>(entityName: String(describing: "Liability"))
-        liabilityFetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Liability.grantDate, ascending: true)]
+        let liabilityFetchRequest = Liability.fetchRequest()
+        liabilityFetchRequest.sortDescriptors = []
         return (try? fetchedResultsController.managedObjectContext.fetch(liabilityFetchRequest)) ?? []
     }
     
@@ -63,33 +67,30 @@ class LiabilityRepository: NSObject {
     
     func createLiability(name: String,
                          pool: LiabilityPool,
-                         creditor: String,
+                         creditor: LoanPartner,
                          initialAmount: Decimal,
-                         repaidAmount: Decimal,
                          grantDate: Date) {
         let context = fetchedResultsController.managedObjectContext
         let liability = Liability(usedContext: context)
-        liability.grantDate = grantDate
         liability.creditor = creditor
-        liability.initialAmount = initialAmount.nsDecimalNumberValue
-        liability.repaidAmount = repaidAmount.nsDecimalNumberValue
         liability.name = name
         liability.pool = pool
+        let initialTransaction = LoanTransaction(usedContext: context)
+        initialTransaction.date = grantDate
+        initialTransaction.amount = initialAmount.nsDecimalNumberValue
+        initialTransaction.issuer = creditor
+        initialTransaction.note = "disbursed amount"
+        initialTransaction.emoji = "💶"
+        initialTransaction.liability = liability
         try? context.save()
     }
     
     func updateLiability(liability: Liability,
                          newName: String,
-                         newCreditor: String,
-                         newInitialAmount: Decimal,
-                         newRepaidAmount: Decimal,
-                         newGrantDate: Date,
-                         newPool: LiabilityPool) {
+                         newPool: LiabilityPool,
+                         newCreditor: LoanPartner) {
         let context = fetchedResultsController.managedObjectContext
-        liability.grantDate = newGrantDate.startOfDay
         liability.creditor = newCreditor
-        liability.initialAmount = newInitialAmount.nsDecimalNumberValue
-        liability.repaidAmount = newRepaidAmount.nsDecimalNumberValue
         liability.name = newName
         liability.pool = newPool
         try? context.save()
