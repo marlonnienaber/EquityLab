@@ -19,9 +19,9 @@ struct ReceivableDetailView: View {
         .sheet(item: $viewModel.activeReceivableDetailSheet) { activeSheet in
             switch activeSheet {
             case .addTransactionFormSheet:
-                TransactionForm(viewModel: TransactionFormViewModel(debtor: viewModel.debtor, receivable: viewModel.receivable) { viewModel.activeReceivableDetailSheet = nil })
+                TransactionForm(viewModel: TransactionFormViewModel(loanPartner: viewModel.debtor, transactionAssociate: .receivable(viewModel.receivable)) { viewModel.activeReceivableDetailSheet = nil })
             case .editTransactionFormSheet(let transaction):
-                TransactionForm(viewModel: TransactionFormViewModel(transaction: transaction, debtor: viewModel.debtor, receivable: viewModel.receivable) { viewModel.activeReceivableDetailSheet = nil })
+                TransactionForm(viewModel: TransactionFormViewModel(transaction: transaction, loanPartner: viewModel.debtor, transactionAssociate: .receivable(viewModel.receivable)) { viewModel.activeReceivableDetailSheet = nil })
             case .editReceivableSheet(let receivable):
                 ReceivableForm(viewModel: ReceivableFormViewModel(receivable: receivable) { viewModel.activeReceivableDetailSheet = nil })
             }

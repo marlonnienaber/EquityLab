@@ -2,65 +2,80 @@ import CoreData
 
 class LiabilityRepository: NSObject {
     public static let production = LiabilityRepository(context: ProductionCoreDataStack.shared.context)
-    private let fetchedResultsController: ObservingFetchedResultsController<LiabilityPool>
-    private var observers: [WeakLiabilityObserver]
+    private let context: NSManagedObjectContext
+    private let liabilityPoolFetchedResultsController: NSFetchedResultsController<LiabilityPool>
+    private let liabilityFetchedResultsController: NSFetchedResultsController<Liability>
+    private let liabilityTransactionsFetchedResultsController: NSFetchedResultsController<LoanTransaction>
+    private var observers: [WeakLiabilityRepositoryObserver]
     
     init(context: NSManagedObjectContext) {
-        let request = ObservingFetchRequest<LiabilityPool>(entityName: "LiabilityPool")
-        request.sortDescriptors = [NSSortDescriptor(keyPath: \LiabilityPool.name, ascending: true)]
-        request.observedRelationships = ["liabilities"]
-        fetchedResultsController = .init(fetchRequest: request, managedObjectContext: context, sectionNameKeyPath: nil, cacheName: nil)
-        try? fetchedResultsController.performFetch()
+        self.context = context
+        
+        let liabilityPoolRequest = LiabilityPool.fetchRequest()
+        liabilityPoolRequest.sortDescriptors = []
+        liabilityPoolFetchedResultsController = NSFetchedResultsController(request: liabilityPoolRequest, context: context)
+        
+        let liabilityRequest = Liability.fetchRequest()
+        liabilityRequest.sortDescriptors = []
+        liabilityFetchedResultsController = NSFetchedResultsController(request: liabilityRequest, context: context)
+        
+        let liabilityTransactionRequest = LoanTransaction.fetchRequest()
+        liabilityTransactionRequest.sortDescriptors = []
+        liabilityTransactionRequest.predicate = NSPredicate(format: "liability != nil")
+        liabilityTransactionsFetchedResultsController = .init(request: liabilityTransactionRequest, context: context)
+        
         self.observers = []
         super.init()
-        fetchedResultsController.delegate = self
+        
+        try? liabilityPoolFetchedResultsController.performFetch()
+        try? liabilityFetchedResultsController.performFetch()
+        try? liabilityTransactionsFetchedResultsController.performFetch()
+        
+        liabilityPoolFetchedResultsController.delegate = self
+        liabilityFetchedResultsController.delegate = self
+        liabilityTransactionsFetchedResultsController.delegate = self
     }
     
-    func add(observer: LiabilityObserver) {
+    func add(observer: AnyObject) {
         guard !observers.contains(where: { $0.observer === observer }) else { return }
-        observers.append(WeakLiabilityObserver(observer: observer))
+        observers.append(WeakLiabilityRepositoryObserver(observer: observer))
     }
     
-    func fetchTransactions(for liability: Liability) -> [LoanTransaction] {
-        [] /* TODO: implement */
+    func getLiabilities() -> [Liability] {
+        liabilityFetchedResultsController.fetchedObjects ?? []
     }
     
-    func fetchLiabilities() -> [Liability] {
-        let liabilityFetchRequest = Liability.fetchRequest()
-        liabilityFetchRequest.sortDescriptors = []
-        return (try? fetchedResultsController.managedObjectContext.fetch(liabilityFetchRequest)) ?? []
+    func getLiabilityPools() -> [LiabilityPool] {
+        liabilityPoolFetchedResultsController.fetchedObjects ?? []
     }
     
-    func fetchSnapshotStructureItems(for pool: LiabilityPool) -> [SnapshotStructureItem] {
-        (try? fetchedResultsController.managedObjectContext.fetch(pool.getLiabilityRequest())) ?? []
-    }
-    
-    func fetchLiabilityPools() -> [LiabilityPool] {
-        try? fetchedResultsController.performFetch()
-        return fetchedResultsController.fetchedObjects as? [LiabilityPool] ?? []
+    func getTransactions() -> [LoanTransaction] {
+        liabilityTransactionsFetchedResultsController.fetchedObjects ?? []
     }
     
     func delete(liability: Liability) {
-        let context = fetchedResultsController.managedObjectContext
+        let context = liabilityPoolFetchedResultsController.managedObjectContext
         context.delete(liability)
         try? context.save()
     }
     
     func delete(liabilityPool: LiabilityPool) {
-        let context = fetchedResultsController.managedObjectContext
         context.delete(liabilityPool)
         try? context.save()
     }
     
+    func delete(transaction: LoanTransaction) {
+        context.delete(transaction)
+        try? context.save()
+    }
+    
     func createLiabilityPool(named name: String) {
-        let context = fetchedResultsController.managedObjectContext
         let pool = LiabilityPool(context: context)
         pool.name = name
         try? context.save()
     }
     
     func update(liabilityPool: LiabilityPool, newName: String) {
-        let context = fetchedResultsController.managedObjectContext
         liabilityPool.name = newName
         try? context.save()
     }
@@ -70,7 +85,6 @@ class LiabilityRepository: NSObject {
                          creditor: LoanPartner,
                          initialAmount: Decimal,
                          grantDate: Date) {
-        let context = fetchedResultsController.managedObjectContext
         let liability = Liability(usedContext: context)
         liability.creditor = creditor
         liability.name = name
@@ -89,10 +103,41 @@ class LiabilityRepository: NSObject {
                          newName: String,
                          newPool: LiabilityPool,
                          newCreditor: LoanPartner) {
-        let context = fetchedResultsController.managedObjectContext
         liability.creditor = newCreditor
         liability.name = newName
         liability.pool = newPool
+        try? context.save()
+    }
+    
+    func createLiabilityTransaction(
+        amount: Decimal,
+        date: Date,
+        note: String,
+        issuer: LoanPartner?,
+        liability: Liability
+    ) {
+        let transaction = LoanTransaction(usedContext: context)
+        transaction.amount = amount.nsDecimalNumberValue
+        transaction.date = date
+        transaction.emoji = issuer.isNil ? "🔁" : "💶"
+        transaction.note = note
+        transaction.issuer = issuer
+        transaction.liability = liability
+        try? context.save()
+    }
+    
+    func updateLiabilityTransaction(
+        transaction: LoanTransaction,
+        amount: Decimal,
+        date: Date,
+        note: String,
+        issuer: LoanPartner?
+    ) {
+        transaction.amount = amount.nsDecimalNumberValue
+        transaction.date = date
+        transaction.emoji = issuer.isNil ? "🔁" : "💶"
+        transaction.note = note
+        transaction.issuer = issuer
         try? context.save()
     }
 }
@@ -100,18 +145,46 @@ class LiabilityRepository: NSObject {
 extension LiabilityRepository: NSFetchedResultsControllerDelegate {
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         observers = observers.filter { $0.observer.isNotNil }
-        observers.forEach{ $0.observer?.notifyAfterLiabilityUpdate()}
+        if controller == liabilityPoolFetchedResultsController {
+            for weakObserver in observers {
+                if let liabilityPoolObserver = weakObserver.observer as? LiabilityPoolObserver {
+                    liabilityPoolObserver.notifyAfterLiabilityPoolUpdate()
+                }
+            }
+        }
+        if controller == liabilityFetchedResultsController {
+            for weakObserver in observers {
+                if let liabilityObserver = weakObserver.observer as? LiabilityObserver {
+                    liabilityObserver.notifyAfterLiabilityUpdate()
+                }
+            }
+        }
+        if controller == liabilityTransactionsFetchedResultsController {
+            for weakObserver in observers {
+                if let liabilityTransactionObserver = weakObserver.observer as? LiabilityTransactionObserver {
+                    liabilityTransactionObserver.notifyAfterLiabilityTransactionUpdate()
+                }
+            }
+        }
     }
 }
 
+/* TODO: will the callback logic create a retain cycle or other memory problems? */
+protocol LiabilityPoolObserver: AnyObject {
+    func notifyAfterLiabilityPoolUpdate()
+}
+
 protocol LiabilityObserver: AnyObject {
-    /* TODO: will this create a retain cycle or other memory problems */
     func notifyAfterLiabilityUpdate()
 }
 
-class WeakLiabilityObserver {
-    weak var observer: LiabilityObserver?
-    init(observer: LiabilityObserver?) {
+protocol LiabilityTransactionObserver: AnyObject {
+    func notifyAfterLiabilityTransactionUpdate()
+}
+
+class WeakLiabilityRepositoryObserver {
+    weak var observer: AnyObject?
+    init(observer: AnyObject?) {
         self.observer = observer
     }
 }

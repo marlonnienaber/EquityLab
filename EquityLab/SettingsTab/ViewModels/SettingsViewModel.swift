@@ -35,7 +35,7 @@ class SettingsViewModel {
         }
         do {
             let snapshots = snapshotRepository.fetchSnapshots()
-            let liabilityPools = liabilityRepository.fetchLiabilityPools()
+            let liabilityPools = liabilityRepository.getLiabilityPools()
             let assetPools = assetRepository.getAssetPools()
             let jsonBackup = JsonBackup(snapshots: snapshots, liabilityPools: liabilityPools, assetPools: assetPools)
             let encoder = JSONEncoder()

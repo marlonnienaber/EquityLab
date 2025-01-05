@@ -58,15 +58,13 @@ class AssetRepository: NSObject {
         amount: Decimal,
         date: Date,
         note: String,
-        issuer: LoanPartner?,
-        receivable: Receivable
+        issuer: LoanPartner?
     ) {
         transaction.amount = amount.nsDecimalNumberValue
         transaction.date = date
         transaction.emoji = issuer.isNil ? "📤" : "💶"
         transaction.note = note
         transaction.issuer = issuer
-        transaction.receivable = receivable
         try? context.save()
     }
     
@@ -162,11 +160,7 @@ class AssetRepository: NSObject {
         initialTransaction.note = "disbursed amount"
         initialTransaction.emoji = "📤"
         initialTransaction.receivable = receivable
-        do {
-            try context.save()
-        } catch let error {
-            print(error.localizedDescription)
-        }
+        try? context.save()
     }
     
     func createPossession(name: String, pool: AssetPool, isVolatile: Bool) {
@@ -189,7 +183,6 @@ extension AssetRepository: NSFetchedResultsControllerDelegate {
             }
         }
         if controller == possessionFetchedResultsController {
-            print("possession changed")
             for weakObserver in observers {
                 if let possessionObserver = weakObserver.observer as? PossessionObserver {
                     possessionObserver.notifyAfterPossessionUpdate()
@@ -236,11 +229,3 @@ class WeakAssetRepositoryObserver {
         self.observer = observer
     }
 }
-
-/* TODO: move this somewhere where it makes sense */
-extension NSFetchedResultsController {
-    @objc convenience init(request: NSFetchRequest<ResultType>, context: NSManagedObjectContext) {
-        self.init(fetchRequest: request, managedObjectContext: context, sectionNameKeyPath: nil, cacheName: nil)
-    }
-}
-

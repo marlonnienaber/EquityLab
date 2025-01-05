@@ -9,7 +9,7 @@ struct LoanManagementView: View {
                 if viewModel.receivables.isNotEmpty {
                     Section("Receivables") {
                         ForEach(viewModel.receivables) { receivable in
-                            if let debtor = viewModel.getDebtor(of: receivable) {
+                            if let debtor = receivable.debtor {
                                 NavigationLink(value: Pair(receivable,debtor)) {
                                     receivableCell(for: receivable)
                                 }
@@ -23,10 +23,10 @@ struct LoanManagementView: View {
                 if viewModel.liabilities.isNotEmpty {
                     Section("Liabilities") {
                         ForEach(viewModel.liabilities) { liability in
-                            Button {
-                                
-                            } label: {
-                                liabilityCell(for: liability)
+                            if let creditor = liability.creditor {
+                                NavigationLink(value: Pair(liability,creditor)) {
+                                    liabilityCell(for: liability)
+                                }
                             }
                         }
                         .onDelete { indexSet in
@@ -59,6 +59,9 @@ struct LoanManagementView: View {
             .navigationDestination(for: Pair<Receivable,LoanPartner>.self) { pair in
                 ReceivableDetailView(viewModel: ReceivableDetailViewModel(receivable: pair.first, debtor: pair.second))
             }
+            .navigationDestination(for: Pair<Liability,LoanPartner>.self) { pair in
+                LiabilityDetailView(viewModel: LiabilityDetailViewModel(liability: pair.first, creditor: pair.second))
+            }
         }
     }
     
@@ -68,7 +71,7 @@ struct LoanManagementView: View {
                 VStack(alignment: .leading) {
                     Text(receivable.name)
                         .foregroundColor(Color.primary)
-                    Text(viewModel.getDebtorName(of: receivable))
+                    Text(receivable.debtor?.name ?? "")
                         .font(.footnote)
                         .foregroundColor(Color.gray)
                     Text(disbursedAmountString)
@@ -88,7 +91,7 @@ struct LoanManagementView: View {
                 VStack(alignment: .leading) {
                     Text(liability.name)
                         .foregroundColor(Color.primary)
-                    Text(viewModel.getCreditorName(of: liability))
+                    Text(liability.creditor?.name ?? "")
                         .font(.footnote)
                         .foregroundColor(Color.gray)
                     Text(initialAmountString)
@@ -105,8 +108,8 @@ struct LoanManagementView: View {
     @ViewBuilder
     private func updateSheetContent(for sheetType: LoanCreateSheet) -> some View {
         switch sheetType {
-        case .receivableCreateSheet: ReceivableForm(viewModel: ReceivableFormViewModel { viewModel.activeLoanCreateSheet = nil })
-        case .liabilityCreateSheet: EmptyView()
+        case .receivableCreateSheet: ReceivableForm(viewModel: ReceivableFormViewModel{ viewModel.activeLoanCreateSheet = nil } )
+        case .liabilityCreateSheet: LiabilityForm(viewModel: LiabilityFormViewModel{viewModel.activeLoanCreateSheet = nil} )
         }
     }
     

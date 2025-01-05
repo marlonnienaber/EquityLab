@@ -21,20 +21,19 @@ class LoanManagementViewModel {
     
     init(assetRepository: AssetRepository = .production, liabilityRepository: LiabilityRepository = .production) {
         Self.logger.debug("LoanManagementViewModel()")
-        
+    
         self.assetRepository = assetRepository
         self.liabilityRepository = liabilityRepository
         self.receivableAnalyzer = ReceivableAnalyzer(repository: assetRepository)
         self.liabilityAnalyzer = LiabilityAnalyzer(repository: liabilityRepository)
         
         let unsortedReceivables = assetRepository.getReceivables()
-        let sortedReceivables = unsortedReceivables.sorted(by: receivableSortingPredicate)
-        receivables = sortedReceivables
-        
-        let unsortedLiabilities = liabilityRepository.fetchLiabilities()
-        
+        receivables = unsortedReceivables.sorted(by: receivableSortingPredicate)
+        let unsortedLiabilities = liabilityRepository.getLiabilities()
         liabilities = unsortedLiabilities.sorted(by: liabilitySortingPredicate)
+        
         assetRepository.add(observer: self)
+        liabilityRepository.add(observer: self)
     }
     
     private func receivableSortingPredicate(first: Receivable, second: Receivable) -> Bool {
@@ -47,24 +46,12 @@ class LoanManagementViewModel {
     }
     
     private func liabilitySortingPredicate(first: Liability, second: Liability) -> Bool {
-        let firstTransactions = liabilityRepository.fetchTransactions(for: first)
+        let firstTransactions = liabilityRepository.getTransactions().filter{ $0.liability == first }
         let firstInitialTransactionDate = firstTransactions.map{ $0.date }.min()
-        let secondTransactions = liabilityRepository.fetchTransactions(for: second)
+        let secondTransactions = liabilityRepository.getTransactions().filter{ $0.liability == second }
         let secondInitialTransactionDate = secondTransactions.map{ $0.date }.min()
         
         return firstInitialTransactionDate ?? .distantPast <= secondInitialTransactionDate ?? .distantPast
-    }
-    
-    func getDebtorName(of receivable: Receivable) -> String {
-        receivable.debtor?.name ?? ""
-    }
-    
-    func getCreditorName(of liability: Liability) -> String {
-        liability.creditor?.name ?? ""
-    }
-    
-    func getDebtor(of receivable: Receivable) -> LoanPartner? {
-        receivable.debtor
     }
     
     func deleteReceivables(for indexSet: IndexSet) {
@@ -98,21 +85,21 @@ class LoanManagementViewModel {
 
 extension LoanManagementViewModel: LiabilityObserver {
     func notifyAfterLiabilityUpdate() {
-        liabilities = liabilityRepository.fetchLiabilities().sorted(by: liabilitySortingPredicate)
+        liabilities = liabilityRepository.getLiabilities().sorted(by: liabilitySortingPredicate)
+    }
+    
+    func notifyAfterLiabilityTransactionUpdate() {
+        liabilities = liabilities /// triggers re-rendering of view and therefore recalling of functions calculating stats over transactions
     }
 }
 
 extension LoanManagementViewModel: ReceivableObserver, ReceivableTransactionObserver {
-    func notifyAfterAssetPoolUpdate() {
-        receivables = assetRepository.getReceivables().sorted(by: receivableSortingPredicate)
-    }
-    
     func notifyAfterReceivableUpdate() {
         receivables = assetRepository.getReceivables().sorted(by: receivableSortingPredicate)
     }
     
     func notifyAfterReceivableTransactionUpdate() {
-        receivables = receivables
+        receivables = receivables /// triggers re-rendering of view and therefore recalling of functions calculating stats over transactions
     }
 }
 

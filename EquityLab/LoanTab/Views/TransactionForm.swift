@@ -19,7 +19,7 @@ struct TransactionForm: View {
                     Collapsible(labelText: "Gezahlt von \(viewModel.selectedIssuer?.name ?? "dir")") {
                         Picker("", selection: $viewModel.selectedIssuer) {
                             Text("Du").tag(Optional<LoanPartner>.none)
-                            Text(viewModel.debtor.name).tag(viewModel.debtor)
+                            Text(viewModel.loanPartner.name).tag(viewModel.loanPartner)
                         }
                         .pickerStyle(SegmentedPickerStyle())
                     }

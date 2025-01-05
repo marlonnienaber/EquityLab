@@ -25,5 +25,6 @@ extension Logger {
         case receivableCreateViewModel = "ReceivableCreateViewModel"
         case personSelectionViewModel = "PersonSelectionViewModel"
         case receivableDetailViewModel = "ReceivableDetailViewModel"
+        case liabilityDetailViewModel = "LiabilityDetailViewModel"
     }
 }

@@ -30,3 +30,18 @@ extension Date {
         }
     }
 }
+
+struct MonthYear: Hashable {
+    let month: Date.Month
+    let year: Int
+    
+    init?(date: Date) {
+        var calendar = Calendar.current
+        calendar.locale = Locale(identifier: "en_US")
+        let components = calendar.dateComponents([.month, .year], from: date)
+        guard let monthInt = components.month, let year = components.year else { return nil }
+        guard let month = Date.Month(rawValue: calendar.monthSymbols[monthInt - 1].lowercased()) else { return nil }
+        self.month = month
+        self.year = year
+    }
+}

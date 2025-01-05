@@ -37,7 +37,7 @@ class SnapshotFormViewModel {
             (assetProxies, liabilityProxies) = Self.createProxies(using: snapshotRepository, and: assetRepository, and: liabilityRepository)
             self.date = Date.now.startOfDay
             self.assetPoolNames = assetRepository.getAssetPools().map{ $0.name }
-            self.liabilityPoolNames = liabilityRepository.fetchLiabilityPools().map{ $0.name }
+            self.liabilityPoolNames = liabilityRepository.getLiabilityPools().map{ $0.name }
         }
         self.assetProxies = assetProxies
         self.liabilityProxies = liabilityProxies
@@ -87,7 +87,7 @@ class SnapshotFormViewModel {
         }.compactMap{ $0 }
         let assetProxies = receivableProxies + possessionProxies
         
-        let liabilities = liabilityRepository.fetchLiabilities()
+        let liabilities = liabilityRepository.getLiabilities()
         let liabilityAnalyzer = LiabilityAnalyzer(repository: liabilityRepository)
         let liabilityProxies = liabilities.map{
             if let pool = $0.pool {

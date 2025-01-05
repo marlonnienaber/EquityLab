@@ -22,9 +22,7 @@ struct ReceivableAnalyzer {
     func calculateRepaymentPercentage(for receivable: Receivable) -> Decimal {
         let transactions = repository.getTransactions().filter{ $0.receivable == receivable }
         let disbursedAmount = transactions.filter{ $0.issuer.isNil }.map{ $0.amount.decimalValue }.reduce(0, +)
-        print("disbursedAmount: \(disbursedAmount)")
         let repayedAmount = transactions.filter{ $0.issuer.isNotNil }.map{ $0.amount.decimalValue }.reduce(0, +)
-        print("repayedAmount: \(repayedAmount)")
         return repayedAmount / disbursedAmount
     }
 }

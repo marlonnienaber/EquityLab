@@ -45,7 +45,7 @@ final class LiabilityFormViewModelTests: XCTestCase {
         sut.liabilityPool = liabilityPool
         try sut.saveLiability()
         
-        let liabilities = testingLiabilityRepository.fetchLiabilities()
+        let liabilities = testingLiabilityRepository.getLiabilities()
         XCTAssertTrue(liabilities.count == 1)
         let liability = try XCTUnwrap(liabilities.first)
         
@@ -196,7 +196,7 @@ final class LiabilityFormViewModelTests: XCTestCase {
         sut.liabilityPool = expectedLiabilityPool
         try sut.saveLiability()
         
-        let liabilities = testingLiabilityRepository.fetchLiabilities()
+        let liabilities = testingLiabilityRepository.getLiabilities()
         XCTAssertTrue(liabilities.count == 1)
         let liability = try XCTUnwrap(liabilities.first)
         
@@ -290,7 +290,7 @@ final class LiabilityFormViewModelTests: XCTestCase {
         sut.liability = liabilityToDelete
         sut.deleteLiability()
         
-        let actualLiabilities = testingLiabilityRepository.fetchLiabilities()
+        let actualLiabilities = testingLiabilityRepository.getLiabilities()
         XCTAssertTrue(expectedLiabilities ≡ actualLiabilities)
     }
 }

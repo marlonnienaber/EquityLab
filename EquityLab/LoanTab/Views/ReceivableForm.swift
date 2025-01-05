@@ -47,7 +47,7 @@ struct ReceivableForm: View {
                 )
             } label: {
                 HStack {
-                    Text("Debtor")
+                    Text("debtor")
                     Spacer()
                     Text(viewModel.debtor?.name ?? "none selected")
                 }

@@ -76,7 +76,7 @@ final class LoanManagementViewModelTests: XCTestCase {
         let sut = LoanManagementViewModel(assetRepository: testingAssetRepository, liabilityRepository: testingLiabilityRepository)
         let (indexSet, expectedRemainingLiabilities) = testDataProvider.createAndPersistTestObjects_deleteLiabilitiesWithIndices_1(using: testingCoreDataStack.context)
         sut.deleteLiabilities(for: indexSet)
-        let actualRemainingLiabilities = testingLiabilityRepository.fetchLiabilities()
+        let actualRemainingLiabilities = testingLiabilityRepository.getLiabilities()
         XCTAssertTrue(expectedRemainingLiabilities ≡ actualRemainingLiabilities)
     }
     
@@ -85,7 +85,7 @@ final class LoanManagementViewModelTests: XCTestCase {
         let (indexSet, expectedRemainingLiabilities) = testDataProvider.createAndPersistTestObjects_deleteLiabilitiesWithIndices_2(using: testingCoreDataStack.context)
         let sut = LoanManagementViewModel(assetRepository: testingAssetRepository, liabilityRepository: testingLiabilityRepository)
         sut.deleteLiabilities(for: indexSet)
-        let actualRemainingLiabilities = testingLiabilityRepository.fetchLiabilities()
+        let actualRemainingLiabilities = testingLiabilityRepository.getLiabilities()
         print("expectedRemainingLiabilities")
         expectedRemainingLiabilities.forEach{ print($0.name) }
         print("actualRemainingLiabilities")
@@ -98,7 +98,7 @@ final class LoanManagementViewModelTests: XCTestCase {
         let (indexSet, expectedRemainingLiabilities) = testDataProvider.createAndPersistTestObjects_deleteLiabilitiesWithIndices_3(using: testingCoreDataStack.context)
         let sut = LoanManagementViewModel(assetRepository: testingAssetRepository, liabilityRepository: testingLiabilityRepository)
         sut.deleteLiabilities(for: indexSet)
-        let actualRemainingLiabilities = testingLiabilityRepository.fetchLiabilities()
+        let actualRemainingLiabilities = testingLiabilityRepository.getLiabilities()
         XCTAssertTrue(expectedRemainingLiabilities ≡ actualRemainingLiabilities)
     }
     
@@ -107,7 +107,7 @@ final class LoanManagementViewModelTests: XCTestCase {
         let (indexSet, expectedRemainingLiabilities) = testDataProvider.createAndPersistTestObjects_deleteLiabilitiesWithIndices_4(using: testingCoreDataStack.context)
         let sut = LoanManagementViewModel(assetRepository: testingAssetRepository, liabilityRepository: testingLiabilityRepository)
         sut.deleteLiabilities(for: indexSet)
-        let actualRemainingLiabilities = testingLiabilityRepository.fetchLiabilities()
+        let actualRemainingLiabilities = testingLiabilityRepository.getLiabilities()
         XCTAssertTrue(expectedRemainingLiabilities ≡ actualRemainingLiabilities)
     }
     
@@ -116,7 +116,7 @@ final class LoanManagementViewModelTests: XCTestCase {
         let (indexSet, expectedRemainingLiabilities) = testDataProvider.createAndPersistTestObjects_deleteLiabilitiesWithIndices_5(using: testingCoreDataStack.context)
         let sut = LoanManagementViewModel(assetRepository: testingAssetRepository, liabilityRepository: testingLiabilityRepository)
         sut.deleteLiabilities(for: indexSet)
-        let actualRemainingLiabilities = testingLiabilityRepository.fetchLiabilities()
+        let actualRemainingLiabilities = testingLiabilityRepository.getLiabilities()
         XCTAssertTrue(expectedRemainingLiabilities ≡ actualRemainingLiabilities)
     }
     
@@ -125,7 +125,7 @@ final class LoanManagementViewModelTests: XCTestCase {
         let (indexSet, expectedRemainingLiabilities) = testDataProvider.createAndPersistTestObjects_deleteLiabilitiesWithIndices_6(using: testingCoreDataStack.context)
         let sut = LoanManagementViewModel(assetRepository: testingAssetRepository, liabilityRepository: testingLiabilityRepository)
         sut.deleteLiabilities(for: indexSet)
-        let actualRemainingLiabilities = testingLiabilityRepository.fetchLiabilities()
+        let actualRemainingLiabilities = testingLiabilityRepository.getLiabilities()
         XCTAssertTrue(expectedRemainingLiabilities ≡ actualRemainingLiabilities)
     }
 }

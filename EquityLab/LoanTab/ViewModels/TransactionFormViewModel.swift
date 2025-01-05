@@ -7,10 +7,11 @@ class TransactionFormViewModel {
     private static let logger = Logger(subsystem: .loanManagementTab, component: .transactionFormViewModel)
     
     private let assetRepository: AssetRepository
+    private let liabilityRepository: LiabilityRepository
     
     let transaction: LoanTransaction?
-    let debtor: LoanPartner
-    let receivable: Receivable
+    let loanPartner: LoanPartner
+    let transactionAssociate: TransactionAssociate
     
     var value: Decimal
     var note: String
@@ -21,16 +22,18 @@ class TransactionFormViewModel {
     let dismissSheet: () -> ()
     
     init(
-        transaction: LoanTransaction? = nil,
-        debtor: LoanPartner,
-        receivable: Receivable,
         assetRepository: AssetRepository = .production,
+        liabilityRepository: LiabilityRepository = .production,
+        transaction: LoanTransaction? = nil,
+        loanPartner: LoanPartner,
+        transactionAssociate: TransactionAssociate,
         dismissSheet: @escaping () -> ()
     ) {
         self.assetRepository = assetRepository
+        self.liabilityRepository = liabilityRepository
         self.transaction = transaction
-        self.debtor = debtor
-        self.receivable = receivable
+        self.loanPartner = loanPartner
+        self.transactionAssociate = transactionAssociate
         self.dismissSheet = dismissSheet
         
         self.value = transaction?.amount.decimalValue ?? 0
@@ -40,24 +43,46 @@ class TransactionFormViewModel {
     }
     
     private func updateLoanTransaction(transaction: LoanTransaction) {
-        assetRepository.updateReceivableTransaction(
-            transaction: transaction,
-            amount: value,
-            date: date,
-            note: note,
-            issuer: selectedIssuer,
-            receivable: receivable
-        )
+        switch transactionAssociate {
+        case .receivable(let receivable):
+            assetRepository.updateReceivableTransaction(
+                transaction: transaction,
+                amount: value,
+                date: date,
+                note: note,
+                issuer: selectedIssuer
+            )
+        case .liability(let liability):
+            liabilityRepository.updateLiabilityTransaction(
+                transaction: transaction,
+                amount: value,
+                date: date,
+                note: note,
+                issuer: selectedIssuer
+            )
+        }
+        
     }
     
     private func createLoanTransaction() {
-        assetRepository.createReceivableTransaction(
-            amount: value,
-            date: date,
-            note: note,
-            issuer: selectedIssuer,
-            receivable: receivable
-        )
+        switch transactionAssociate {
+        case .receivable(let receivable):
+            assetRepository.createReceivableTransaction(
+                amount: value,
+                date: date,
+                note: note,
+                issuer: selectedIssuer,
+                receivable: receivable
+            )
+        case .liability(let liability):
+            liabilityRepository.createLiabilityTransaction(
+                amount: value,
+                date: date,
+                note: note,
+                issuer: selectedIssuer,
+                liability: liability
+            )
+        }
     }
     
     func saveLoanTransaction() {
@@ -67,5 +92,10 @@ class TransactionFormViewModel {
             createLoanTransaction()
         }
     }
+}
+
+enum TransactionAssociate {
+    case receivable(Receivable)
+    case liability(Liability)
 }
 
