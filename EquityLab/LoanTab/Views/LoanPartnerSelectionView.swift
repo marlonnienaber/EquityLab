@@ -1,18 +1,18 @@
 import SwiftUI
 
-struct PersonSelectionView: View {
-    @State var viewModel: PersonSelectionViewModel
+struct LoanPartnerSelectionView: View {
+    @State var viewModel: LoanPartnerSelectionViewModel
 
     var body: some View {
         List {
-            ForEach(viewModel.persons, id: \.name) { person in
+            ForEach(viewModel.loanPartners, id: \.name) { loanPartner in
                 Button {
-                    viewModel.selectedPerson = person
+                    viewModel.selectedPerson = loanPartner
                 } label: {
                     HStack {
-                        Text(person.name)
+                        Text(loanPartner.name)
                         Spacer()
-                        if person == viewModel.selectedPerson {
+                        if loanPartner == viewModel.selectedPerson {
                             Image(systemName: "checkmark")
                                 .foregroundColor(.blue)
                         }
@@ -51,7 +51,7 @@ struct PersonSelectionView: View {
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 EditButton()
-                    .disabled(viewModel.persons.isEmpty)
+                    .disabled(viewModel.loanPartners.isEmpty)
             }
             ToolbarItem(placement: .topBarTrailing) {
                 Button {

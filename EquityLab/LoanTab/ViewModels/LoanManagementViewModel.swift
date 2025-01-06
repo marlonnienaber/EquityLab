@@ -83,7 +83,7 @@ class LoanManagementViewModel {
     }
 }
 
-extension LoanManagementViewModel: LiabilityObserver {
+extension LoanManagementViewModel: LiabilityObserver, LiabilityTransactionObserver {
     func notifyAfterLiabilityUpdate() {
         liabilities = liabilityRepository.getLiabilities().sorted(by: liabilitySortingPredicate)
     }

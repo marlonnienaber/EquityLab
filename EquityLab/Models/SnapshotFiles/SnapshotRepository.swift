@@ -2,57 +2,66 @@ import CoreData
 
 class SnapshotRepository: NSObject {
     public static let production = SnapshotRepository(context: ProductionCoreDataStack.shared.context)
-    private let fetchedResultsController: ObservingFetchedResultsController<Snapshot>
-    private var observers: [WeakSnapshotObserver]
+    private let context: NSManagedObjectContext
+    private let snapshotFetchedResultsController: NSFetchedResultsController<Snapshot>
+    private let assetPositionFetchedResultsController: NSFetchedResultsController<AssetPosition>
+    private let liabilityPositionFetchedResultsController: NSFetchedResultsController<LiabilityPosition>
+    private var observers: [WeakSnapshotRepositoryObserver]
     
+    /* TODO: make sure all Observers are registered correctly and implement the correct observer protocols */
     init(context: NSManagedObjectContext) {
-        let request = ObservingFetchRequest<Snapshot>(entityName: "Snapshot")
-        request.sortDescriptors = [NSSortDescriptor(keyPath: \Snapshot.date, ascending: true)]
-        request.observedRelationships = ["assets", "liabilities"]
-        fetchedResultsController = .init(fetchRequest: request, managedObjectContext: context, sectionNameKeyPath: nil, cacheName: nil)
-        try? fetchedResultsController.performFetch()
+        self.context = context
+        
+        let snapshotRequest = Snapshot.fetchRequest()
+        snapshotRequest.sortDescriptors = []
+        snapshotFetchedResultsController = NSFetchedResultsController(request: snapshotRequest, context: context)
+        
+        let assetPositionRequest = NSFetchRequest<AssetPosition>(entityName: "AssetPosition")
+        assetPositionRequest.sortDescriptors = []
+        assetPositionFetchedResultsController = NSFetchedResultsController(request: assetPositionRequest, context: context)
+        
+        let liabilityPositionRequest = NSFetchRequest<LiabilityPosition>(entityName: "LiabilityPosition")
+        liabilityPositionRequest.sortDescriptors = []
+        liabilityPositionFetchedResultsController = NSFetchedResultsController(request: liabilityPositionRequest, context: context)
+        
         self.observers = []
         super.init()
-        fetchedResultsController.delegate = self
+        
+        try? snapshotFetchedResultsController.performFetch()
+        try? assetPositionFetchedResultsController.performFetch()
+        try? liabilityPositionFetchedResultsController.performFetch()
+        
+        snapshotFetchedResultsController.delegate = self
+        assetPositionFetchedResultsController.delegate = self
+        liabilityPositionFetchedResultsController.delegate = self
     }
     
-    func add(observer: SnapshotObserver) {
+    func add(observer: AnyObject) {
         guard !observers.contains(where: { $0.observer === observer }) else { return }
-        observers.append(WeakSnapshotObserver(observer: observer))
+        observers.append(WeakSnapshotRepositoryObserver(observer: observer))
     }
     
     
-    func fetchSnapshots(sortingOrder: SnapshotSortingOrder = .ascending) -> [Snapshot] {
-        try? fetchedResultsController.performFetch()
-        let snapshots = fetchedResultsController.fetchedObjects as? [Snapshot] ?? []
-        switch sortingOrder {
-        case .ascending: return snapshots
-        case .descending: return snapshots.reversed()
-        }
+    func getSnapshots() -> [Snapshot] {
+        snapshotFetchedResultsController.fetchedObjects ?? []
     }
     
-    func fetchAssetPositions(of snapshot: Snapshot) -> [AssetPosition] {
-        (try? fetchedResultsController.managedObjectContext.fetch(snapshot.getAssetPositionRequest())) ?? []
+    func getAssetPositions() -> [AssetPosition] {
+        assetPositionFetchedResultsController.fetchedObjects ?? []
     }
     
-    func fetchAssetPositions(with name: String) -> [AssetPosition] {
-        let request = NSFetchRequest<AssetPosition>(entityName: "AssetPosition")
-        request.predicate = NSPredicate(format: "name == %@", name)
-        return (try? fetchedResultsController.managedObjectContext.fetch(request)) ?? []
-    }
-    
-    func fetchLiabilityPositions(of snapshot: Snapshot) -> [LiabilityPosition] {
-        (try? fetchedResultsController.managedObjectContext.fetch(snapshot.getLiabilityPositionRequest())) ?? []
+    func getLiabilityPositions() -> [LiabilityPosition] {
+        liabilityPositionFetchedResultsController.fetchedObjects ?? []
     }
     
     func delete(snapshot: Snapshot) {
-        let context = fetchedResultsController.managedObjectContext
+        let context = snapshotFetchedResultsController.managedObjectContext
         context.delete(snapshot)
         try? context.save()
     }
     
     func createSnapshot(with date: Date, _ assetProxies: [PositionProxy], and liabilityProxies: [PositionProxy]) {
-        let context = fetchedResultsController.managedObjectContext
+        let context = snapshotFetchedResultsController.managedObjectContext
         let snapshot = Snapshot(usedContext: context)
         snapshot.date = date.startOfDay
         
@@ -80,42 +89,66 @@ class SnapshotRepository: NSObject {
     
     func updateSnapshot(_ snapshot: Snapshot, using date: Date, _ assetProxies: [PositionProxy], and liabilityProxies: [PositionProxy]) {
         snapshot.date = date.startOfDay
-        let assetPositions = fetchAssetPositions(of: snapshot)
+        let assetPositions = getAssetPositions().filter{ $0.snapshot == snapshot }
         assetProxies.forEach { proxy in
             if let position = assetPositions.first(where: { $0.name == proxy.name} ) {
                 position.value = proxy.value.nsDecimalNumberValue
             }
         }
-        let liabilityPositions = fetchLiabilityPositions(of: snapshot)
+        let liabilityPositions = getLiabilityPositions().filter{ $0.snapshot == snapshot }
         liabilityProxies.forEach { proxy in
             if let position = liabilityPositions.first(where: { $0.name == proxy.name} ) {
                 position.value = proxy.value.nsDecimalNumberValue
             }
         }
-        try? fetchedResultsController.managedObjectContext.save()
+        try? snapshotFetchedResultsController.managedObjectContext.save()
     }
 }
 
 extension SnapshotRepository: NSFetchedResultsControllerDelegate {
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         observers = observers.filter { $0.observer.isNotNil }
-        observers.forEach{ $0.observer?.notifyAfterSnapshotUpdate()}
+        if controller == snapshotFetchedResultsController {
+            for weakObserver in observers {
+                if let snapshotObserver = weakObserver.observer as? SnapshotObserver {
+                    snapshotObserver.notifyAfterSnapshotUpdate()
+                }
+            }
+        }
+        if controller == assetPositionFetchedResultsController {
+            for weakObserver in observers {
+                if let assetPositionObserver = weakObserver.observer as? AssetPositionObserver {
+                    assetPositionObserver.notifyAfterAssetPositionUpdate()
+                }
+            }
+        }
+        
+        if controller == liabilityPositionFetchedResultsController {
+            for weakObserver in observers {
+                if let liabilityPositionObserver = weakObserver.observer as? LiabilityPositionObserver {
+                    liabilityPositionObserver.notifyAfterLiabilityPositionUpdate()
+                }
+            }
+        }
     }
 }
 
+/* TODO: will this create a retain cycle or other memory problems? */
 protocol SnapshotObserver: AnyObject {
-    /* TODO: will this create a retain cycle or other memory problems? */
     func notifyAfterSnapshotUpdate()
 }
 
-class WeakSnapshotObserver {
-    weak var observer: SnapshotObserver?
-    init(observer: SnapshotObserver?) {
-        self.observer = observer
-    }
+protocol AssetPositionObserver: AnyObject {
+    func notifyAfterAssetPositionUpdate()
 }
 
-enum SnapshotSortingOrder {
-    case ascending
-    case descending
+protocol LiabilityPositionObserver: AnyObject {
+    func notifyAfterLiabilityPositionUpdate()
+}
+
+class WeakSnapshotRepositoryObserver {
+    weak var observer: AnyObject?
+    init(observer: AnyObject?) {
+        self.observer = observer
+    }
 }

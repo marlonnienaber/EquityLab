@@ -87,7 +87,7 @@
 		73A243022D0F543B0083C6DF /* Receivable+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73A242FF2D0F543B0083C6DF /* Receivable+CoreDataClass.swift */; };
 		73A2430B2D0F56830083C6DF /* ReceivableDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73A243092D0F56830083C6DF /* ReceivableDetailView.swift */; };
 		73A2430D2D0F56830083C6DF /* TransactionForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73A2430A2D0F56830083C6DF /* TransactionForm.swift */; };
-		73A2430E2D0F56830083C6DF /* PersonSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73A243072D0F56830083C6DF /* PersonSelectionView.swift */; };
+		73A2430E2D0F56830083C6DF /* LoanPartnerSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73A243072D0F56830083C6DF /* LoanPartnerSelectionView.swift */; };
 		73A243122D0F57980083C6DF /* Pair.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73A243112D0F57980083C6DF /* Pair.swift */; };
 		73A243142D0F57E50083C6DF /* ReceivableDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73A243132D0F57DE0083C6DF /* ReceivableDetailViewModel.swift */; };
 		73A243162D0F59D00083C6DF /* ReceivableFormViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73A243152D0F59C90083C6DF /* ReceivableFormViewModel.swift */; };
@@ -96,8 +96,8 @@
 		73A2431D2D0F62DA0083C6DF /* TransactionFormViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73A2431C2D0F62CF0083C6DF /* TransactionFormViewModel.swift */; };
 		73A2431F2D0F64E80083C6DF /* CurrencyInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73A2431E2D0F64E10083C6DF /* CurrencyInputView.swift */; };
 		73A243222D0F65EB0083C6DF /* MCEmojiPicker in Frameworks */ = {isa = PBXBuildFile; productRef = 73A243212D0F65EB0083C6DF /* MCEmojiPicker */; };
-		73A243242D0F6D180083C6DF /* PersonSelectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73A243232D0F6D0E0083C6DF /* PersonSelectionViewModel.swift */; };
-		73A243262D0F6EAC0083C6DF /* PersonRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73A243252D0F6EA60083C6DF /* PersonRepository.swift */; };
+		73A243242D0F6D180083C6DF /* LoanPartnerSelectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73A243232D0F6D0E0083C6DF /* LoanPartnerSelectionViewModel.swift */; };
+		73A243262D0F6EAC0083C6DF /* LoanPartnerRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73A243252D0F6EA60083C6DF /* LoanPartnerRepository.swift */; };
 		73A428092C7E3B1F0086181F /* DateParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73A428082C7E3B1F0086181F /* DateParser.swift */; };
 		73ACFA302D209FAF0012E461 /* LiabilityDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73ACFA2F2D209FA90012E461 /* LiabilityDetailView.swift */; };
 		73ACFA322D209FD10012E461 /* LiabilityDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73ACFA312D209FC70012E461 /* LiabilityDetailViewModel.swift */; };
@@ -206,7 +206,7 @@
 		73A242FA2D0F53B60083C6DF /* LoanTransaction+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LoanTransaction+CoreDataProperties.swift"; sourceTree = SOURCE_ROOT; };
 		73A242FF2D0F543B0083C6DF /* Receivable+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Receivable+CoreDataClass.swift"; sourceTree = SOURCE_ROOT; };
 		73A243002D0F543B0083C6DF /* Receivable+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Receivable+CoreDataProperties.swift"; sourceTree = SOURCE_ROOT; };
-		73A243072D0F56830083C6DF /* PersonSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonSelectionView.swift; sourceTree = "<group>"; };
+		73A243072D0F56830083C6DF /* LoanPartnerSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoanPartnerSelectionView.swift; sourceTree = "<group>"; };
 		73A243082D0F56830083C6DF /* ReceivableForm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceivableForm.swift; sourceTree = "<group>"; };
 		73A243092D0F56830083C6DF /* ReceivableDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceivableDetailView.swift; sourceTree = "<group>"; };
 		73A2430A2D0F56830083C6DF /* TransactionForm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionForm.swift; sourceTree = "<group>"; };
@@ -217,8 +217,8 @@
 		73A243182D0F5A4A0083C6DF /* ReceivableAnalyzer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceivableAnalyzer.swift; sourceTree = "<group>"; };
 		73A2431C2D0F62CF0083C6DF /* TransactionFormViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionFormViewModel.swift; sourceTree = "<group>"; };
 		73A2431E2D0F64E10083C6DF /* CurrencyInputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyInputView.swift; sourceTree = "<group>"; };
-		73A243232D0F6D0E0083C6DF /* PersonSelectionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonSelectionViewModel.swift; sourceTree = "<group>"; };
-		73A243252D0F6EA60083C6DF /* PersonRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonRepository.swift; sourceTree = "<group>"; };
+		73A243232D0F6D0E0083C6DF /* LoanPartnerSelectionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoanPartnerSelectionViewModel.swift; sourceTree = "<group>"; };
+		73A243252D0F6EA60083C6DF /* LoanPartnerRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoanPartnerRepository.swift; sourceTree = "<group>"; };
 		73A428082C7E3B1F0086181F /* DateParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateParser.swift; sourceTree = "<group>"; };
 		73ACFA2F2D209FA90012E461 /* LiabilityDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiabilityDetailView.swift; sourceTree = "<group>"; };
 		73ACFA312D209FC70012E461 /* LiabilityDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiabilityDetailViewModel.swift; sourceTree = "<group>"; };
@@ -305,7 +305,7 @@
 				73A243132D0F57DE0083C6DF /* ReceivableDetailViewModel.swift */,
 				73A243152D0F59C90083C6DF /* ReceivableFormViewModel.swift */,
 				73A2431C2D0F62CF0083C6DF /* TransactionFormViewModel.swift */,
-				73A243232D0F6D0E0083C6DF /* PersonSelectionViewModel.swift */,
+				73A243232D0F6D0E0083C6DF /* LoanPartnerSelectionViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -316,7 +316,7 @@
 				73ACFA2F2D209FA90012E461 /* LiabilityDetailView.swift */,
 				73037F6B2CC3B23C005DD105 /* LoanManagementView.swift */,
 				73A243092D0F56830083C6DF /* ReceivableDetailView.swift */,
-				73A243072D0F56830083C6DF /* PersonSelectionView.swift */,
+				73A243072D0F56830083C6DF /* LoanPartnerSelectionView.swift */,
 				73A243082D0F56830083C6DF /* ReceivableForm.swift */,
 				73ACFA352D20BAF80012E461 /* LiabilityForm.swift */,
 				73A2430A2D0F56830083C6DF /* TransactionForm.swift */,
@@ -371,7 +371,7 @@
 		7342ED342C44754E00BA20A4 /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				73A243252D0F6EA60083C6DF /* PersonRepository.swift */,
+				73A243252D0F6EA60083C6DF /* LoanPartnerRepository.swift */,
 				7342ED3A2C44782700BA20A4 /* SnapshotFiles */,
 				7342ED382C44781000BA20A4 /* AssetFiles */,
 				7342ED392C44781D00BA20A4 /* LiabilityFiles */,
@@ -526,9 +526,9 @@
 		7342EDC02C44898800BA20A4 /* ViewModels */ = {
 			isa = PBXGroup;
 			children = (
-				73823CDE2C62B2EE0049D03C /* ChangeChartViewModel.swift */,
 				7342EDC22C4489AC00BA20A4 /* DashboardViewModel.swift */,
 				73823CDC2C6154930049D03C /* DistributionChartViewModel.swift */,
+				73823CDE2C62B2EE0049D03C /* ChangeChartViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -582,14 +582,14 @@
 		73B8119F2CA7261D003B1973 /* Tests */ = {
 			isa = PBXGroup;
 			children = (
+				7363DDF12CA758D1009F3412 /* DashboardViewModelTests.swift */,
+				733473862C8DEC950050C656 /* DistributionChartViewModelTests.swift */,
 				737967142D034FAA0001278D /* PossessionFormViewModelTests.swift */,
 				737967122D034F9F0001278D /* ReceivableFormViewModelTests.swift */,
 				73332B952CC67E7D0020839D /* LoanManagementViewModelTests.swift */,
 				73037F612CC2E19E005DD105 /* SnapshotStructureViewModelTests.swift */,
 				7366CD1D2CB1EAEF0066ACC3 /* LiabilityFormViewModelTests.swift */,
 				7363DDF92CA99557009F3412 /* SnapshotFormViewModelTests.swift */,
-				7363DDF12CA758D1009F3412 /* DashboardViewModelTests.swift */,
-				733473862C8DEC950050C656 /* DistributionChartViewModelTests.swift */,
 				73B811992CA6D3E3003B1973 /* SnapshotLedgerViewModelTests.swift */,
 			);
 			path = Tests;
@@ -788,7 +788,7 @@
 				7342EDBA2C4484FC00BA20A4 /* SnapshotFormViewModel.swift in Sources */,
 				73A2430B2D0F56830083C6DF /* ReceivableDetailView.swift in Sources */,
 				73A2430D2D0F56830083C6DF /* TransactionForm.swift in Sources */,
-				73A2430E2D0F56830083C6DF /* PersonSelectionView.swift in Sources */,
+				73A2430E2D0F56830083C6DF /* LoanPartnerSelectionView.swift in Sources */,
 				7342ED782C447BDC00BA20A4 /* CurrencyInputField.swift in Sources */,
 				73037F502CC00EC2005DD105 /* SettingsView.swift in Sources */,
 				7342ED842C447D7E00BA20A4 /* UIColorArrayExtension.swift in Sources */,
@@ -799,7 +799,7 @@
 				73037F602CC2CF79005DD105 /* Optional+Extension.swift in Sources */,
 				73037F722CC59414005DD105 /* SettingsViewModel.swift in Sources */,
 				73A243192D0F5A4A0083C6DF /* LiabilityAnalyzer.swift in Sources */,
-				73A243242D0F6D180083C6DF /* PersonSelectionViewModel.swift in Sources */,
+				73A243242D0F6D180083C6DF /* LoanPartnerSelectionViewModel.swift in Sources */,
 				73A2431A2D0F5A4A0083C6DF /* ReceivableAnalyzer.swift in Sources */,
 				7342ED872C447E5000BA20A4 /* LocalizedCurrencyFormatter.swift in Sources */,
 				7342ED742C447B7200BA20A4 /* ProductionCoreDataStack.swift in Sources */,
@@ -825,7 +825,7 @@
 				73037F5E2CC12101005DD105 /* PossessionForm.swift in Sources */,
 				7342ED892C447E7000BA20A4 /* LocalizedShortDateFormatter.swift in Sources */,
 				73B811982CA6CF4B003B1973 /* SnapshotAnalyzer.swift in Sources */,
-				73A243262D0F6EAC0083C6DF /* PersonRepository.swift in Sources */,
+				73A243262D0F6EAC0083C6DF /* LoanPartnerRepository.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

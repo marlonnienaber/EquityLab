@@ -40,8 +40,8 @@ struct ReceivableForm: View {
         Section {
             TextField("name", text: $viewModel.name)
             NavigationLink {
-                PersonSelectionView(viewModel:
-                    PersonSelectionViewModel(selectedPerson: viewModel.debtor) { selectedPerson in
+                LoanPartnerSelectionView(viewModel:
+                    LoanPartnerSelectionViewModel(selectedPerson: viewModel.debtor) { selectedPerson in
                         viewModel.debtor = selectedPerson
                     }
                 )

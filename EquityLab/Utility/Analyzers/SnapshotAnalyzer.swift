@@ -14,12 +14,12 @@ struct SnapshotAnalyzer {
     }
     
     func calculateAssetValue(for snapshot: Snapshot) -> Decimal {
-        let assetPositions = repository.fetchAssetPositions(of: snapshot)
+        let assetPositions = repository.getAssetPositions().filter{ $0.snapshot == snapshot }
         return assetPositions.map{ $0.value.decimalValue }.reduce(0, +)
     }
     
     func calculateLiabilityValue(for snapshot: Snapshot) -> Decimal {
-        let liabilityPositions = repository.fetchLiabilityPositions(of: snapshot)
+        let liabilityPositions = repository.getLiabilityPositions().filter{ $0.snapshot == snapshot }
         return liabilityPositions.map{ $0.value.decimalValue }.reduce(0, +)
     }
     

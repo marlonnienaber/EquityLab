@@ -45,9 +45,9 @@ class SnapshotFormViewModel {
     
     private static func createProxies(for snapshot: Snapshot,
                                       using snapshotRepository: SnapshotRepository) -> ([PositionProxy],[PositionProxy]) {
-        let assetPositions = snapshotRepository.fetchAssetPositions(of: snapshot)
+        let assetPositions = snapshotRepository.getAssetPositions().filter{ $0.snapshot == snapshot }
         let assetProxies = assetPositions.map{ PositionProxy(name: $0.name, value: $0.value.decimalValue, pool: $0.poolName) }
-        let liabilityPositions = snapshotRepository.fetchLiabilityPositions(of: snapshot)
+        let liabilityPositions = snapshotRepository.getLiabilityPositions().filter{ $0.snapshot == snapshot }
         let liabilityProxies = liabilityPositions.map{ PositionProxy(name: $0.name, value: $0.value.decimalValue, pool: $0.poolName) }
         return (assetProxies,liabilityProxies)
     }
@@ -70,7 +70,7 @@ class SnapshotFormViewModel {
                 if possession.volatile {
                     return PositionProxy(name: possession.name, value: 0.0, pool: pool.name)
                 } else {
-                    let positions = snapshotRepository.fetchAssetPositions(with: possession.name)
+                    let positions = snapshotRepository.getAssetPositions().filter{ $0.name == possession.name }
                     let datesAndValues: [(date:Date,value:Decimal)] = positions.map{
                         if let date = $0.snapshot?.date {
                             return (date: date, value: $0.value.decimalValue)
@@ -100,7 +100,7 @@ class SnapshotFormViewModel {
     }
     
     private var snapshotWithSameDateDoesExist: Bool {
-        let snapshots = snapshotRepository.fetchSnapshots()
+        let snapshots = snapshotRepository.getSnapshots()
         return snapshots.contains(where: { $0.date == date.startOfDay && $0 != snapshot })
     }
     

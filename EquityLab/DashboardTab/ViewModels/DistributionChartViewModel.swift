@@ -103,8 +103,8 @@ class DistributionChartViewModel {
         Self.logger.debug("computeTotalValue(for snapshot)")
         let positions: [Position]
         switch distributionChartType {
-        case .assetDistributionChart: positions = repository.fetchAssetPositions(of: snapshot)
-        case .liabilityDistributionChart: positions = repository.fetchLiabilityPositions(of: snapshot)
+        case .assetDistributionChart: positions = repository.getAssetPositions().filter{ $0.snapshot == snapshot }
+        case .liabilityDistributionChart: positions = repository.getLiabilityPositions().filter{ $0.snapshot == snapshot }
         }
         let totalValue = positions.map{ $0.value.decimalValue }.reduce(0, +)
         return totalValue
@@ -128,8 +128,18 @@ class DistributionChartViewModel {
     }
 }
 
-extension DistributionChartViewModel: SnapshotObserver {
+extension DistributionChartViewModel: SnapshotObserver, AssetPositionObserver, LiabilityPositionObserver {
     func notifyAfterSnapshotUpdate() {
+        Self.logger.debug("notifyAfterLiabilityPositionUpdate()")
+        selectedCategory = distributionCategories.first
+    }
+    
+    func notifyAfterAssetPositionUpdate() {
+        Self.logger.debug("notifyAfterAssetPositionUpdate()")
+        selectedCategory = distributionCategories.first
+    }
+    
+    func notifyAfterLiabilityPositionUpdate() {
         Self.logger.debug("notifyAfterSnapshotUpdate()")
         selectedCategory = distributionCategories.first
     }

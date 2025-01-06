@@ -3,11 +3,11 @@ import SwiftUI
 import CoreData
 
 @Observable
-class PersonSelectionViewModel {
+class LoanPartnerSelectionViewModel {
     @ObservationIgnored private static let logger = Logger(subsystem: .loanManagementTab, component: .personSelectionViewModel)
     
-    @ObservationIgnored private var personRepository: PersonRepository
-    var persons = [LoanPartner]()
+    @ObservationIgnored private var personRepository: LoanPartnerRepository
+    var loanPartners = [LoanPartner]()
     var selectedPerson: LoanPartner?
     var personValidationError: PersonValidationError?
     var showCreatePersonAlert = false
@@ -16,7 +16,7 @@ class PersonSelectionViewModel {
     let setInParentViewModel: (LoanPartner?) -> ()
     
     init(
-        personRepository: PersonRepository = .production,
+        personRepository: LoanPartnerRepository = .production,
         selectedPerson: LoanPartner?,
         onDismiss: @escaping (LoanPartner?) -> ()
     ) {
@@ -24,7 +24,7 @@ class PersonSelectionViewModel {
         self.personRepository = personRepository
         self.selectedPerson = selectedPerson
         self.setInParentViewModel = onDismiss
-        self.persons = personRepository.fetchPersons()
+        self.loanPartners = personRepository.fetchPersons()
         personRepository.add(observer: self)
     }
     
@@ -61,10 +61,10 @@ class PersonSelectionViewModel {
 //    }
 }
 
-extension PersonSelectionViewModel: PersonObserver {
-    func notifyAfterPersonUpdate() {
+extension LoanPartnerSelectionViewModel: LoanPartnerObserver {
+    func notifyAfterLoanPartnerUpdate() {
         Self.logger.debug("notifyAfterPersonUpdate")
-        persons = personRepository.fetchPersons()
+        loanPartners = personRepository.fetchPersons()
     }
 }
 

@@ -21,7 +21,7 @@ class SnapshotLedgerViewModel {
         self.repository = repository
         self.snapshotAnalyzer = SnapshotAnalyzer(repository: repository)
         self.repository.add(observer: self)
-        snapshots = repository.fetchSnapshots(sortingOrder: .descending)
+        snapshots = repository.getSnapshots().sorted{ $0.date ?? .distantFuture > $1.date ?? .distantFuture }
         for snapshot in snapshots {
             equityValueCache[snapshot] = snapshotAnalyzer.calculateEquityValue(for: snapshot)
             if let year = snapshotAnalyzer.getYear(of: snapshot) {
@@ -62,12 +62,55 @@ class SnapshotLedgerViewModel {
     }
 }
 
-extension SnapshotLedgerViewModel: SnapshotObserver {
+extension SnapshotLedgerViewModel: SnapshotObserver, AssetPositionObserver, LiabilityPositionObserver {
+    /* TODO: repetitive code */
     func notifyAfterSnapshotUpdate() {
         Self.logger.debug("notifyAfterSnapshotUpdate()")
         yearToSnapshotDictionary = [Int:[Snapshot]]()
         years = [Int]()
-        self.snapshots = repository.fetchSnapshots(sortingOrder: .descending)
+        self.snapshots = repository.getSnapshots().sorted{ $0.date ?? .distantFuture > $1.date ?? .distantFuture }
+        for snapshot in snapshots {
+            equityValueCache[snapshot] = snapshotAnalyzer.calculateEquityValue(for: snapshot)
+            if let year = snapshotAnalyzer.getYear(of: snapshot) {
+                if !yearToSnapshotDictionary.keys.contains(year) {
+                    years.append(year)
+                }
+                if var associatedSnapshots = yearToSnapshotDictionary[year] {
+                    associatedSnapshots.append(snapshot)
+                    yearToSnapshotDictionary[year] = associatedSnapshots
+                } else {
+                    yearToSnapshotDictionary[year] = [snapshot]
+                }
+            }
+        }
+    }
+    
+    func notifyAfterAssetPositionUpdate() {
+        Self.logger.debug("notifyAfterAssetPositionUpdate()")
+        yearToSnapshotDictionary = [Int:[Snapshot]]()
+        years = [Int]()
+        self.snapshots = repository.getSnapshots().sorted{ $0.date ?? .distantFuture > $1.date ?? .distantFuture }
+        for snapshot in snapshots {
+            equityValueCache[snapshot] = snapshotAnalyzer.calculateEquityValue(for: snapshot)
+            if let year = snapshotAnalyzer.getYear(of: snapshot) {
+                if !yearToSnapshotDictionary.keys.contains(year) {
+                    years.append(year)
+                }
+                if var associatedSnapshots = yearToSnapshotDictionary[year] {
+                    associatedSnapshots.append(snapshot)
+                    yearToSnapshotDictionary[year] = associatedSnapshots
+                } else {
+                    yearToSnapshotDictionary[year] = [snapshot]
+                }
+            }
+        }
+    }
+    
+    func notifyAfterLiabilityPositionUpdate() {
+        Self.logger.debug("notifyAfterLiabilityPositionUpdate()")
+        yearToSnapshotDictionary = [Int:[Snapshot]]()
+        years = [Int]()
+        self.snapshots = repository.getSnapshots().sorted{ $0.date ?? .distantFuture > $1.date ?? .distantFuture }
         for snapshot in snapshots {
             equityValueCache[snapshot] = snapshotAnalyzer.calculateEquityValue(for: snapshot)
             if let year = snapshotAnalyzer.getYear(of: snapshot) {
