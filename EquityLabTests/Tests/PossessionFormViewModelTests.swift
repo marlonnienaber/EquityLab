@@ -40,7 +40,7 @@ final class PossessionFormViewModelTests: XCTestCase {
         sut.assetPool = expectedAssetPool
         try sut.savePossession()
 
-        let persistedPossessions = testingAssetRepository.fetchPossessions()
+        let persistedPossessions = testingAssetRepository.getPossessions()
         XCTAssertTrue(persistedPossessions.count == 1)
         possession = try XCTUnwrap(persistedPossessions.first)
 
@@ -77,8 +77,35 @@ final class PossessionFormViewModelTests: XCTestCase {
         }
     }
 
+    /// update a Possession with a name of another existing Possession. The correct error should be thrown
+    func test_updatePossessionsWithSameName_1() throws {
+        let (possessionToUpdate, occupiedName) = testDataProvider.createAndPersistTestObjects_updatePossessionsWithSameName_1(context: testingCoreDataStack.context)
+        let sut = PossessionFormViewModel(possession: possessionToUpdate,repository: testingAssetRepository, dismissSheet: {})
+        sut.name = occupiedName
+        XCTAssertThrowsError(try sut.savePossession()) { error in
+            XCTAssertEqual(error as? PossessionValidationError, PossessionValidationError.sameNameAlreadyExists)
+        }
+    }
+    
+    /// update a Possession with a name of another existing Receivable. The correct error should be thrown
+    func test_updatePossessionsWithSameName_2() throws {
+        let (possessionToUpdate, occupiedName) = testDataProvider.createAndPersistTestObjects_updatePossessionsWithSameName_2(context: testingCoreDataStack.context)
+        let sut = PossessionFormViewModel(possession: possessionToUpdate,repository: testingAssetRepository, dismissSheet: {})
+        sut.name = occupiedName
+        XCTAssertThrowsError(try sut.savePossession()) { error in
+            XCTAssertEqual(error as? PossessionValidationError, PossessionValidationError.sameNameAlreadyExists)
+        }
+    }
+    
+    /// update a Possession with a its own name. No error should be thrown
+    func test_updatePossessionsWithSameName_3() throws {
+        let possessionToUpdate = testDataProvider.createAndPersistTestObjects_updatePossessionsWithSameName_3(context: testingCoreDataStack.context)
+        let sut = PossessionFormViewModel(possession: possessionToUpdate,repository: testingAssetRepository, dismissSheet: {})
+        try sut.savePossession()
+    }
 
-
+    
+    
     /// create a Possession
     func test_createPossession_1() throws {
         let assetPool = testDataProvider.createAndPersistTestObjects_createPossessions_multipurpose(context: testingCoreDataStack.context)
@@ -93,7 +120,7 @@ final class PossessionFormViewModelTests: XCTestCase {
         sut.assetPool = assetPool
         try sut.savePossession()
 
-        let persistedPossessions = testingAssetRepository.fetchPossessions()
+        let persistedPossessions = testingAssetRepository.getPossessions()
         XCTAssertTrue(persistedPossessions.count == 1)
         let possession = try XCTUnwrap(persistedPossessions.first)
 
@@ -136,8 +163,6 @@ final class PossessionFormViewModelTests: XCTestCase {
         }
     }
 
-
-
     /// create 2 Possessions of the same name. Only the first one should be persisted
     func test_createPossessionsWithSameName_1() throws {
         let assetPool = testDataProvider.createAndPersistTestObjects_createPossessions_multipurpose(context: testingCoreDataStack.context)
@@ -162,7 +187,7 @@ final class PossessionFormViewModelTests: XCTestCase {
             XCTAssertEqual(error as? PossessionValidationError, PossessionValidationError.sameNameAlreadyExists)
         }
 
-        let persistedPossessions = testingAssetRepository.fetchPossessions()
+        let persistedPossessions = testingAssetRepository.getPossessions()
         XCTAssertTrue(persistedPossessions.count == 1)
         let possession = try XCTUnwrap(persistedPossessions.first)
 
@@ -186,17 +211,15 @@ final class PossessionFormViewModelTests: XCTestCase {
             XCTAssertEqual(error as? PossessionValidationError, PossessionValidationError.sameNameAlreadyExists)
         }
 
-        let persistedReceivables = testingAssetRepository.fetchReceivables()
+        let persistedReceivables = testingAssetRepository.getReceivables()
         XCTAssertTrue(persistedReceivables.count == 1)
         let actualReceivable = try XCTUnwrap(persistedReceivables.first)
 
         XCTAssertEqual(expectedReceivable.name, actualReceivable.name)
         XCTAssertEqual(expectedReceivable.debtor, actualReceivable.debtor)
-        XCTAssertEqual(expectedReceivable.grantDate, actualReceivable.grantDate)
-        XCTAssertEqual(expectedReceivable.initialAmount, actualReceivable.initialAmount)
-        XCTAssertEqual(expectedReceivable.repaidAmount, actualReceivable.repaidAmount)
+        XCTAssertEqual(expectedReceivable.pool, actualReceivable.pool)
     }
-
+    
 
 
     /// delete one possession and test viewModel interface providing data to view as well as persisted data
@@ -207,9 +230,7 @@ final class PossessionFormViewModelTests: XCTestCase {
         sut.possession = possessionToDelete
         sut.deletePossession()
 
-        let actualPossessions = testingAssetRepository.fetchPossessions()
+        let actualPossessions = testingAssetRepository.getPossessions()
         XCTAssertTrue(expectedPossessions ≡ actualPossessions)
     }
 }
-
-

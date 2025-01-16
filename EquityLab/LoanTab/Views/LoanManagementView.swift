@@ -43,7 +43,7 @@ struct LoanManagementView: View {
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button {
-                        viewModel.showLoanUpdatePickerSheet = true
+                        viewModel.showLoanCreatePickerSheet = true
                     } label: {
                         Image(systemName: "plus")
                     }
@@ -52,8 +52,8 @@ struct LoanManagementView: View {
             .sheet(item: $viewModel.activeLoanCreateSheet) { activeSheet in
                 updateSheetContent(for: activeSheet)
             }
-            .sheet(isPresented: $viewModel.showLoanUpdatePickerSheet) {
-                loanUpdatePickerMenu
+            .sheet(isPresented: $viewModel.showLoanCreatePickerSheet) {
+                loanCreatePickerMenu
                     .presentationDetents([.fraction(0.25)])
             }
             .navigationDestination(for: Pair<Receivable,LoanPartner>.self) { pair in
@@ -113,7 +113,7 @@ struct LoanManagementView: View {
         }
     }
     
-    private var loanUpdatePickerMenu: some View {
+    private var loanCreatePickerMenu: some View {
         NavigationView {
             VStack {
                 Text("Which kind of loan would you like to add?")
@@ -127,12 +127,12 @@ struct LoanManagementView: View {
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button("Cancel") {
-                        viewModel.showLoanUpdatePickerSheet = false
+                        viewModel.showLoanCreatePickerSheet = false
                     }
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button("OK") {
-                        viewModel.showLoanUpdatePickerSheet = false
+                        viewModel.showLoanCreatePickerSheet = false
                         guard let selectedLoanType = viewModel.selectedLoanType else { return }
                         switch selectedLoanType {
                         case .receivable: viewModel.activeLoanCreateSheet = .receivableCreateSheet

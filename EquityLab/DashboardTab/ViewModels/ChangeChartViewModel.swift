@@ -16,12 +16,6 @@ class ChangeChartViewModel {
         }
     }
     var dashboardViewModel: DashboardViewModel
-    var changeChartColor: Color {
-        switch changeChartType {
-        case .liabilityChangeChart: .liabilitiesUnselected
-        case .assetChangeChart: .assetsUnselected
-        }
-    }
     var changeCategories: [BarChartCategory] {
         guard let selectedShot = dashboardViewModel.selectedSnapshot, let beforeShot = computeShotBeforeSelectedShot() else { return [] }
         
@@ -42,13 +36,19 @@ class ChangeChartViewModel {
         let changeCategories = changedPoolValues.map{ BarChartCategory(change: $0.value, name: $0.key) }
         return changeCategories
     }
-    var noChangesToLastSnapshot: Bool {
-        changeCategories.first(where: { $0.change != 0.0 }) == nil
-    }
     var maxChangePercentage: Decimal {
         let maxChange = changeCategories.map{ abs($0.change) }.max()
         guard let maxChange, !maxChange.isNaN, maxChange.isFinite else { return 0.0 }
         return maxChange
+    }
+    var changeChartColor: Color {
+        switch changeChartType {
+        case .liabilityChangeChart: .liabilitiesUnselected
+        case .assetChangeChart: .assetsUnselected
+        }
+    }
+    var noChangesToLastSnapshot: Bool {
+        changeCategories.first(where: { $0.change != 0.0 }) == nil
     }
     
     

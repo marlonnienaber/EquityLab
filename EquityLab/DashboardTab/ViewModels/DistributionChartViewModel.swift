@@ -17,15 +17,6 @@ class DistributionChartViewModel {
     }
     
     var dashboardViewModel: DashboardViewModel
-    var selectedCategory: DonutChartCategory?
-    var selectedCumulativeValue: Decimal?
-    var color: Color {
-        switch distributionChartType {
-        case .liabilityDistributionChart: .liabilitiesUnselected
-        case .assetDistributionChart: .assetsUnselected
-        }
-    }
-    var showPopover: Bool = false
     var distributionCategories: [DonutChartCategory] {
         Self.logger.debug("distributionCategories")
         guard let selectedSnapshot = dashboardViewModel.selectedSnapshot else { return [] }
@@ -43,6 +34,15 @@ class DistributionChartViewModel {
         }
         return categories
     }
+    var selectedCategory: DonutChartCategory?
+    var selectedCumulativeValue: Decimal?
+    var color: Color {
+        switch distributionChartType {
+        case .liabilityDistributionChart: .liabilitiesUnselected
+        case .assetDistributionChart: .assetsUnselected
+        }
+    }
+    var showPopover: Bool = false
     var noValuesRecordedForThisSnapshot: Bool {
         distributionCategories.first(where: { $0.value > 0.0 }) == nil
     }
@@ -60,6 +60,35 @@ class DistributionChartViewModel {
         self.repository = repository
         self.selectedCategory = distributionCategories.first
         self.repository.add(observer: self)
+    }
+    
+    
+    func computeTotalValue(for snapshot: Snapshot) -> Decimal {
+        Self.logger.debug("computeTotalValue(for snapshot)")
+        let positions: [Position]
+        switch distributionChartType {
+        case .assetDistributionChart: positions = repository.getAssetPositions().filter{ $0.snapshot == snapshot }
+        case .liabilityDistributionChart: positions = repository.getLiabilityPositions().filter{ $0.snapshot == snapshot }
+        }
+        let totalValue = positions.map{ $0.value.decimalValue }.reduce(0, +)
+        return totalValue
+    }
+    
+    func setSelectedCategoryForNewCumulativeValue(cumulativeValue: Decimal) {
+        Self.logger.debug("setSelectedCategoryForNewCumulativeValue(cumulativeValue)")
+        var distributionCategories = distributionCategories
+        var cumulativeTotal: Decimal = 0
+        var category: DonutChartCategory
+        repeat {
+            category = distributionCategories.removeFirst()
+            cumulativeTotal += category.value
+        } while cumulativeValue > cumulativeTotal
+        selectedCategory = category
+    }
+    
+    func setSelectedCategoryForNewSnapshot() {
+        Self.logger.debug("setSelectedCategoryForNewSnapshot()")
+        selectedCategory = distributionCategories.first(where: {$0 == selectedCategory}) ?? distributionCategories.first
     }
     
     
@@ -97,35 +126,6 @@ class DistributionChartViewModel {
             return selectedCategory == category ? 70 : 63
         }
     }
-    
-    
-    func computeTotalValue(for snapshot: Snapshot) -> Decimal {
-        Self.logger.debug("computeTotalValue(for snapshot)")
-        let positions: [Position]
-        switch distributionChartType {
-        case .assetDistributionChart: positions = repository.getAssetPositions().filter{ $0.snapshot == snapshot }
-        case .liabilityDistributionChart: positions = repository.getLiabilityPositions().filter{ $0.snapshot == snapshot }
-        }
-        let totalValue = positions.map{ $0.value.decimalValue }.reduce(0, +)
-        return totalValue
-    }
-    
-    func setSelectedCategoryForNewCumulativeValue(cumulativeValue: Decimal) {
-        Self.logger.debug("setSelectedCategoryForNewCumulativeValue(cumulativeValue)")
-        var distributionCategories = distributionCategories
-        var cumulativeTotal: Decimal = 0
-        var category: DonutChartCategory
-        repeat {
-            category = distributionCategories.removeFirst()
-            cumulativeTotal += category.value
-        } while cumulativeValue > cumulativeTotal
-        selectedCategory = category
-    }
-    
-    func setSelectedCategoryForNewSnapshot() {
-        Self.logger.debug("setSelectedCategoryForNewSnapshot()")
-        selectedCategory = distributionCategories.first(where: {$0 == selectedCategory}) ?? distributionCategories.first
-    }
 }
 
 extension DistributionChartViewModel: SnapshotObserver, AssetPositionObserver, LiabilityPositionObserver {
@@ -159,7 +159,6 @@ struct DonutChartCategory: Equatable, Hashable {
         pools.map{ $0.percentage }.reduce(0, +)
     }
 }
-
 
 struct Pool: Equatable, Hashable {
     let value: Decimal

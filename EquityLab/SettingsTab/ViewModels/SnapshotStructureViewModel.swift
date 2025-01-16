@@ -7,8 +7,8 @@ class SnapshotStructureViewModel {
     
     @ObservationIgnored private let assetRepository: AssetRepository
     @ObservationIgnored private let liabilityRepository: LiabilityRepository
-    @ObservationIgnored private var assetPoolToAssetsDictionary: [AssetPool:[SnapshotStructureItem]] /* TODO: rename */
-    @ObservationIgnored private var liabilityPoolToLiabilitiesDictionary: [LiabilityPool:[SnapshotStructureItem]] /* TODO: rename */
+    @ObservationIgnored private var assetPoolToSnapshotStructureItemDictionary: [AssetPool:[SnapshotStructureItem]]
+    @ObservationIgnored private var liabilityPoolToSnapshotStructureItemDictionary: [LiabilityPool:[SnapshotStructureItem]]
     var assetPools: [AssetPool]
     var liabilityPools: [LiabilityPool]
     
@@ -38,23 +38,27 @@ class SnapshotStructureViewModel {
         self.liabilityRepository = liabilityRepository
         
         self.assetPools = assetRepository.getAssetPools()
-        self.assetPoolToAssetsDictionary = [:]
+        self.assetPoolToSnapshotStructureItemDictionary = [:]
         
         self.liabilityPools = liabilityRepository.getLiabilityPools()
-        self.liabilityPoolToLiabilitiesDictionary = [:]
+        self.liabilityPoolToSnapshotStructureItemDictionary = [:]
         
         for pool in assetPools {
             let receivables = assetRepository.getReceivables().filter{ $0.pool == pool }
             let possessions = assetRepository.getPossessions().filter{ $0.pool == pool }
-            assetPoolToAssetsDictionary[pool] = receivables + possessions
+            assetPoolToSnapshotStructureItemDictionary[pool] = receivables + possessions
         }
         for pool in liabilityPools {
             let liabilities = liabilityRepository.getLiabilities().filter{ $0.pool == pool }
-            liabilityPoolToLiabilitiesDictionary[pool] = liabilities
+            liabilityPoolToSnapshotStructureItemDictionary[pool] = liabilities
         }
         
         self.assetRepository.add(observer: self)
         self.liabilityRepository.add(observer: self)
+    }
+    
+    private var poolNameIsEmpty: Bool {
+        alertPoolName.isEmpty
     }
     
     private var assetPoolWithSameNameExists: Bool {
@@ -68,14 +72,18 @@ class SnapshotStructureViewModel {
     }
     
     private func validateAssetPool() throws {
-        /* TODO: add empty name validation case */
+        if poolNameIsEmpty {
+            throw AssetPoolValidationError.emptyName
+        }
         if assetPoolWithSameNameExists {
             throw AssetPoolValidationError.poolWithSameNameAlreadyExists
         }
     }
     
     private func validateLiabilityPool() throws {
-        /* TODO: add empty name validation case */
+        if poolNameIsEmpty {
+            throw LiabilityPoolValidationError.emptyName
+        }
         if liabilityPoolWithSameNameExists {
             throw LiabilityPoolValidationError.poolWithSameNameAlreadyExists
         }
@@ -94,7 +102,7 @@ class SnapshotStructureViewModel {
         assetRepository.update(assetPool: assetPoolToEdit, newName: alertPoolName)
     }
     
-    func delete(assetPool: AssetPool) {
+    func deleteAssetPool(_ assetPool: AssetPool) {
         Self.logger.debug("delete(assetPool)")
         assetRepository.delete(assetPool: assetPool)
     }
@@ -112,19 +120,19 @@ class SnapshotStructureViewModel {
         liabilityRepository.update(liabilityPool: liabilityPoolToEdit, newName: alertPoolName)
     }
     
-    func delete(liabilityPool: LiabilityPool) {
+    func deleteLiabilityPool(_ liabilityPool: LiabilityPool) {
         Self.logger.debug("delete()liabilityPool")
         liabilityRepository.delete(liabilityPool: liabilityPool)
     }
     
     func getAssetsForAssetPool(_ pool: AssetPool) -> [SnapshotStructureItem] {
         Self.logger.debug("getAssetsForAssetPool(_ pool)")
-        return assetPoolToAssetsDictionary[pool] ?? []
+        return assetPoolToSnapshotStructureItemDictionary[pool] ?? []
     }
     
     func getLiabilitiesForLiabilityPool(_ pool: LiabilityPool) -> [SnapshotStructureItem] {
         Self.logger.debug("getliabilitiesForLiabilityPool(_ pool)")
-        return liabilityPoolToLiabilitiesDictionary[pool] ?? []
+        return liabilityPoolToSnapshotStructureItemDictionary[pool] ?? []
     }
 }
 
@@ -135,10 +143,10 @@ extension SnapshotStructureViewModel: LiabilityPoolObserver, LiabilityObserver {
     
     func notifyAfterLiabilityUpdate() {
         liabilityPools = liabilityRepository.getLiabilityPools()
-        liabilityPoolToLiabilitiesDictionary = [:]
+        liabilityPoolToSnapshotStructureItemDictionary = [:]
         for pool in liabilityPools {
             let liabilities = liabilityRepository.getLiabilities().filter{ $0.pool == pool }
-            liabilityPoolToLiabilitiesDictionary[pool] = liabilities
+            liabilityPoolToSnapshotStructureItemDictionary[pool] = liabilities
         }
     }
 }
@@ -150,26 +158,26 @@ extension SnapshotStructureViewModel: AssetPoolObserver, ReceivableObserver, Pos
     
     func notifyAfterReceivableUpdate() {
         assetPools = assetRepository.getAssetPools()
-        assetPoolToAssetsDictionary = [:]
+        assetPoolToSnapshotStructureItemDictionary = [:]
         for pool in assetPools {
             let receivables = assetRepository.getReceivables().filter{ $0.pool == pool }
             let possessions = assetRepository.getPossessions().filter{ $0.pool == pool }
-            assetPoolToAssetsDictionary[pool] = receivables + possessions
+            assetPoolToSnapshotStructureItemDictionary[pool] = receivables + possessions
         }
     }
     
     func notifyAfterPossessionUpdate() {
         assetPools = assetRepository.getAssetPools()
-        assetPoolToAssetsDictionary = [:]
+        assetPoolToSnapshotStructureItemDictionary = [:]
         for pool in assetPools {
             let receivables = assetRepository.getReceivables().filter{ $0.pool == pool }
             let possessions = assetRepository.getPossessions().filter{ $0.pool == pool }
-            assetPoolToAssetsDictionary[pool] = receivables + possessions
+            assetPoolToSnapshotStructureItemDictionary[pool] = receivables + possessions
         }
     }
 }
 
-protocol Named {
+protocol Named { /* TODO: remove if not needed*/
     var name: String { get }
 }
 
@@ -207,6 +215,7 @@ enum BalanceItemType {
 }
 
 enum AssetPoolValidationError: String, LocalizedError {
+    case emptyName = "No name was chosen!"
     case poolWithSameNameAlreadyExists = "A pool with the same name already exists!"
     var errorDescription: String? {
         return self.rawValue
@@ -214,6 +223,7 @@ enum AssetPoolValidationError: String, LocalizedError {
 }
 
 enum LiabilityPoolValidationError: String, LocalizedError {
+    case emptyName = "No name was chosen!"
     case poolWithSameNameAlreadyExists = "A pool with the same name already exists!"
     var errorDescription: String? {
         return self.rawValue

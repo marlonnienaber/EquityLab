@@ -17,7 +17,7 @@ final class ReceivableFormViewModelTests: XCTestCase {
     func test_getAssetPools_1() throws {
         let expectedPools = testDataProvider.createAndPersitsTestObjects_getAssetPools_1(using: testingCoreDataStack.context)
 
-        let sut = ReceivableFormViewModel(repository: testingAssetRepository, dismissSheet: {})
+        let sut = ReceivableFormViewModel(assetRepository: testingAssetRepository, dismissSheet: {})
 
         let actualPools = sut.getAssetPools()
         XCTAssertTrue(expectedPools ≡ actualPools)
@@ -25,170 +25,65 @@ final class ReceivableFormViewModelTests: XCTestCase {
 
 
 
-    /// update a receivable
-    func test_updateReceivable_1() throws {
-        var receivable = testDataProvider.createAndPersistTestObjects_updateReceivable_multipurpose(context: testingCoreDataStack.context)
-
-        let sut = ReceivableFormViewModel(receivable: receivable, repository: testingAssetRepository, dismissSheet: {})
-
-        let expectedName = "Rote Sonne"
-        let expectedDebtor = "Philipp"
-        let expectedGrantDate = DateParser.shared.date(from: "2024-07-23T00:00:00")!
-        let expectedInitialAmount: Decimal = 200.0
-        let expectedRepaidAmount: Decimal = 40.0
-        let expectedAssetPool = DataFactory.createAssetPool(named: "Some other pool", possessions: [], receivables: [], in: testingCoreDataStack.context)
-
-        sut.name = expectedName
-        sut.debtor = expectedDebtor
-        sut.grantDate = expectedGrantDate
-        sut.initialAmount = expectedInitialAmount
-        sut.repaidAmount = expectedRepaidAmount
-        sut.assetPool = expectedAssetPool
-        try sut.saveReceivable()
-
-        let persistedReceivables = testingAssetRepository.fetchReceivables()
-        XCTAssertTrue(persistedReceivables.count == 1)
-        receivable = try XCTUnwrap(persistedReceivables.first)
-
-        let actualName = receivable.name
-        let actualDebtor = receivable.debtor
-        let actualGrantDate = receivable.grantDate
-        let actualInitialAmount = receivable.initialAmount.decimalValue
-        let actualRepaidAmount = receivable.repaidAmount.decimalValue
-        let actualAssetPool = receivable.pool
-
-        XCTAssertEqual(expectedName, actualName)
-        XCTAssertEqual(expectedDebtor, actualDebtor)
-        XCTAssertEqual(expectedGrantDate, actualGrantDate)
-        XCTAssertEqual(expectedInitialAmount, actualInitialAmount)
-        XCTAssertEqual(expectedRepaidAmount, actualRepaidAmount)
-        XCTAssertEqual(expectedAssetPool, actualAssetPool)
-    }
-
-    /// update a receivable with an empty name and check whether the correct error is thrown
-    func test_updateReceivable_2() throws {
-        let receivable = testDataProvider.createAndPersistTestObjects_updateReceivable_multipurpose(context: testingCoreDataStack.context)
-
-        let sut = ReceivableFormViewModel(receivable: receivable, repository: testingAssetRepository, dismissSheet: {})
-
-        sut.name = ""
-
-        XCTAssertThrowsError(try sut.saveReceivable()) { error in
-            XCTAssertEqual(error as? ReceivableValidationError, ReceivableValidationError.emptyName)
-        }
-    }
-
-    /// update a receivable with an debtor and check whether the correct error is thrown
-    func test_updateReceivable_3() throws {
-        let receivable = testDataProvider.createAndPersistTestObjects_updateReceivable_multipurpose(context: testingCoreDataStack.context)
-
-        let sut = ReceivableFormViewModel(receivable: receivable, repository: testingAssetRepository, dismissSheet: {})
-
-        sut.debtor = ""
-
-        XCTAssertThrowsError(try sut.saveReceivable()) { error in
-            XCTAssertEqual(error as? ReceivableValidationError, ReceivableValidationError.emptyDebtor)
-        }
-    }
-
-    /// update a receivable with an initial amount which is not strictly positive and check whether the correct error is thrown
-    func test_updateReceivable_4() throws {
-        let receivable = testDataProvider.createAndPersistTestObjects_updateReceivable_multipurpose(context: testingCoreDataStack.context)
-
-        let sut = ReceivableFormViewModel(receivable: receivable, repository: testingAssetRepository, dismissSheet: {})
-
-        sut.initialAmount = 0.0
-        sut.repaidAmount = 0.0
-
-        XCTAssertThrowsError(try sut.saveReceivable()) { error in
-            XCTAssertEqual(error as? ReceivableValidationError, ReceivableValidationError.initialAmountNotStrictlyPositive)
-        }
-    }
-
-    /// update a receivable such that the repaid amount is bigger than the repaid amount and check whether the correct error is thrown
-    func test_updateReceivable_5() throws {
-        let receivable = testDataProvider.createAndPersistTestObjects_updateReceivable_multipurpose(context: testingCoreDataStack.context)
-
-        let sut = ReceivableFormViewModel(receivable: receivable, repository: testingAssetRepository, dismissSheet: {})
-
-        sut.initialAmount = 10.0
-        sut.repaidAmount = 20.0
-
-        XCTAssertThrowsError(try sut.saveReceivable()) { error in
-            XCTAssertEqual(error as? ReceivableValidationError, ReceivableValidationError.repaidSurpassesInitialAmount)
-        }
-    }
-
-    /// update a receivable such that no assetPool is selected and check whether the correct error is thrown
-    func test_updateReceivable_6() throws {
-        let receivable = testDataProvider.createAndPersistTestObjects_updateReceivable_multipurpose(context: testingCoreDataStack.context)
-
-        let sut = ReceivableFormViewModel(receivable: receivable, repository: testingAssetRepository, dismissSheet: {})
-
-        sut.assetPool = nil
-
-        XCTAssertThrowsError(try sut.saveReceivable()) { error in
-            XCTAssertEqual(error as? ReceivableValidationError, ReceivableValidationError.noAssetPoolSelected)
-        }
-    }
-
-
-
     /// create a Receivable
     func test_createReceivable_1() throws {
-        let assetPool = testDataProvider.createAndPersistTestObjects_createReceivable_multipurpose(context: testingCoreDataStack.context)
+        let (assetPool,debtor) = testDataProvider.createAndPersistTestObjects_createReceivable_multipurpose(context: testingCoreDataStack.context)
 
-        let sut = ReceivableFormViewModel(repository: testingAssetRepository, dismissSheet: {})
+        let sut = ReceivableFormViewModel(assetRepository: testingAssetRepository, dismissSheet: {})
 
+        
         let expectedName = "Rote Sonne"
-        let expectedDebtor = "Philipp"
-        let expectedGrantDate = DateParser.shared.date(from: "2024-07-23T00:00:00")!
-        let expectedInitialAmount: Decimal = 200.0
-        let expectedRepaidAmount: Decimal = 40.0
+        let expectedDebtor = debtor
+        let expectedPool = assetPool
+        let expectedDisbursedAmount: Decimal = 200.0
+        let expectedDate = DateParser.shared.date(from: "2024-07-23T00:00:00")!
 
         sut.name = expectedName
         sut.debtor = expectedDebtor
-        sut.grantDate = expectedGrantDate
-        sut.initialAmount = expectedInitialAmount
-        sut.repaidAmount = expectedRepaidAmount
-        sut.assetPool = assetPool
+        sut.assetPool = expectedPool
+        sut.disbursedAmount = expectedDisbursedAmount
+        sut.grantDate = expectedDate
         try sut.saveReceivable()
 
-        let persistedReceivables = testingAssetRepository.fetchReceivables()
+        let persistedReceivables = testingAssetRepository.getReceivables()
         XCTAssertTrue(persistedReceivables.count == 1)
         let receivable = try XCTUnwrap(persistedReceivables.first)
 
         let actualName = receivable.name
         let actualDebtor = receivable.debtor
-        let actualGrantDate = receivable.grantDate
-        let actualInitialAmount = receivable.initialAmount.decimalValue
-        let actualRepaidAmount = receivable.repaidAmount.decimalValue
+        let actualPool = receivable.pool
 
         XCTAssertEqual(expectedName, actualName)
         XCTAssertEqual(expectedDebtor, actualDebtor)
-        XCTAssertEqual(expectedGrantDate, actualGrantDate)
-        XCTAssertEqual(expectedInitialAmount, actualInitialAmount)
-        XCTAssertEqual(expectedRepaidAmount, actualRepaidAmount)
+        XCTAssertEqual(expectedPool, actualPool)
+        
+        let transactions = testingAssetRepository.getTransactions()
+        XCTAssertTrue(transactions.count == 1)
+        let transaction = try XCTUnwrap(transactions.filter{ $0.receivable == receivable }.first)
+        let actualDisbursedAmount = transaction.amount.decimalValue
+        let actualDate = transaction.date
+        XCTAssertEqual(expectedDisbursedAmount, actualDisbursedAmount)
+        XCTAssertEqual(expectedDate, actualDate)
     }
 
     /// create a Receivable with an empty name and check whether the correct error is thrown
     func test_createReceivable_2() throws {
-        let assetPool = testDataProvider.createAndPersistTestObjects_createReceivable_multipurpose(context: testingCoreDataStack.context)
+        let (assetPool,debtor) = testDataProvider.createAndPersistTestObjects_createReceivable_multipurpose(context: testingCoreDataStack.context)
 
-        let sut = ReceivableFormViewModel(repository: testingAssetRepository, dismissSheet: {})
+        let sut = ReceivableFormViewModel(assetRepository: testingAssetRepository, dismissSheet: {})
 
+        
         let expectedName = ""
-        let expectedDebtor = "Philipp"
-        let expectedGrantDate = DateParser.shared.date(from: "2024-07-23T00:00:00")!
-        let expectedInitialAmount: Decimal = 200.0
-        let expectedRepaidAmount: Decimal = 40.0
+        let expectedDebtor = debtor
+        let expectedPool = assetPool
+        let expectedDisbursedAmount: Decimal = 200.0
+        let expectedDate = DateParser.shared.date(from: "2024-07-23T00:00:00")!
 
         sut.name = expectedName
         sut.debtor = expectedDebtor
-        sut.grantDate = expectedGrantDate
-        sut.initialAmount = expectedInitialAmount
-        sut.repaidAmount = expectedRepaidAmount
-        sut.assetPool = assetPool
+        sut.assetPool = expectedPool
+        sut.disbursedAmount = expectedDisbursedAmount
+        sut.grantDate = expectedDate
         XCTAssertThrowsError(try sut.saveReceivable()) { error in
             XCTAssertEqual(error as? ReceivableValidationError, ReceivableValidationError.emptyName)
         }
@@ -196,190 +91,205 @@ final class ReceivableFormViewModelTests: XCTestCase {
 
     /// create a Receivable without debtor and check whether the correct error is thrown
     func test_createReceivable_3() throws {
-        let assetPool = testDataProvider.createAndPersistTestObjects_createReceivable_multipurpose(context: testingCoreDataStack.context)
+        let (assetPool,_) = testDataProvider.createAndPersistTestObjects_createReceivable_multipurpose(context: testingCoreDataStack.context)
 
-        let sut = ReceivableFormViewModel(repository: testingAssetRepository, dismissSheet: {})
+        let sut = ReceivableFormViewModel(assetRepository: testingAssetRepository, dismissSheet: {})
 
-        let expectedName = "Some name"
-        let expectedGrantDate = DateParser.shared.date(from: "2024-07-23T00:00:00")!
-        let expectedInitialAmount: Decimal = 200.0
-        let expectedRepaidAmount: Decimal = 40.0
+        
+        let expectedName = "Rote Sonne"
+        let expectedPool = assetPool
+        let expectedDisbursedAmount: Decimal = 200.0
+        let expectedDate = DateParser.shared.date(from: "2024-07-23T00:00:00")!
 
         sut.name = expectedName
-        sut.grantDate = expectedGrantDate
-        sut.initialAmount = expectedInitialAmount
-        sut.repaidAmount = expectedRepaidAmount
-        sut.assetPool = assetPool
+        sut.assetPool = expectedPool
+        sut.disbursedAmount = expectedDisbursedAmount
+        sut.grantDate = expectedDate
         XCTAssertThrowsError(try sut.saveReceivable()) { error in
-            XCTAssertEqual(error as? ReceivableValidationError, ReceivableValidationError.emptyDebtor)
+            XCTAssertEqual(error as? ReceivableValidationError, ReceivableValidationError.noDebtorSelected)
         }
     }
 
-    /// create a Receivable where the repaid amount surpasses the  initial amount and check whether the correct error is thrown
-    func test_createReceivable_4() throws {
-        let assetPool = testDataProvider.createAndPersistTestObjects_createReceivable_multipurpose(context: testingCoreDataStack.context)
-
-        let sut = ReceivableFormViewModel(repository: testingAssetRepository, dismissSheet: {})
-
-        let expectedName = "Some name"
-        let expectedDebtor = "Someone"
-        let expectedGrantDate = DateParser.shared.date(from: "2024-07-23T00:00:00")!
-        let expectedInitialAmount: Decimal = 40.0
-        let expectedRepaidAmount: Decimal = 200.0
-
-        sut.name = expectedName
-        sut.debtor = expectedDebtor
-        sut.grantDate = expectedGrantDate
-        sut.initialAmount = expectedInitialAmount
-        sut.repaidAmount = expectedRepaidAmount
-        sut.assetPool = assetPool
-        XCTAssertThrowsError(try sut.saveReceivable()) { error in
-            XCTAssertEqual(error as? ReceivableValidationError, ReceivableValidationError.repaidSurpassesInitialAmount)
-        }
-    }
-
-    /// create a Receivable where the initial amount is not strictly positive and check whether the correct error is thrown
+    /// create a Receivable where the disbursed amount is not strictly positive and check whether the correct error is thrown
     func test_createReceivable_5() throws {
-        let assetPool = testDataProvider.createAndPersistTestObjects_createReceivable_multipurpose(context: testingCoreDataStack.context)
+        let (assetPool,debtor) = testDataProvider.createAndPersistTestObjects_createReceivable_multipurpose(context: testingCoreDataStack.context)
 
-        let sut = ReceivableFormViewModel(repository: testingAssetRepository, dismissSheet: {})
+        let sut = ReceivableFormViewModel(assetRepository: testingAssetRepository, dismissSheet: {})
 
-        let expectedName = "Some name"
-        let expectedDebtor = "Someone"
-        let expectedGrantDate = DateParser.shared.date(from: "2024-07-23T00:00:00")!
-        let expectedInitialAmount: Decimal = 0.0
-        let expectedRepaidAmount: Decimal = 0.0
+        
+        let expectedName = "Rote Sonne"
+        let expectedDebtor = debtor
+        let expectedPool = assetPool
+        let expectedDisbursedAmount: Decimal = 0
+        let expectedDate = DateParser.shared.date(from: "2024-07-23T00:00:00")!
 
         sut.name = expectedName
         sut.debtor = expectedDebtor
-        sut.grantDate = expectedGrantDate
-        sut.initialAmount = expectedInitialAmount
-        sut.repaidAmount = expectedRepaidAmount
-        sut.assetPool = assetPool
+        sut.assetPool = expectedPool
+        sut.disbursedAmount = expectedDisbursedAmount
+        sut.grantDate = expectedDate
         XCTAssertThrowsError(try sut.saveReceivable()) { error in
-            XCTAssertEqual(error as? ReceivableValidationError, ReceivableValidationError.initialAmountNotStrictlyPositive)
+            XCTAssertEqual(error as? ReceivableValidationError, ReceivableValidationError.disbursedAmountNotStrictlyPositive)
         }
     }
 
     /// create a Receivable such that no assetPool is selected and check whether the correct error is thrown
     func test_createReceivable_6() throws {
-        let sut = ReceivableFormViewModel(repository: testingAssetRepository, dismissSheet: {})
+        let (_,debtor) = testDataProvider.createAndPersistTestObjects_createReceivable_multipurpose(context: testingCoreDataStack.context)
 
-        let expectedName = "Some name"
-        let expectedDebtor = "Someone"
-        let expectedGrantDate = DateParser.shared.date(from: "2024-07-23T00:00:00")!
-        let expectedInitialAmount: Decimal = 20.0
-        let expectedRepaidAmount: Decimal = 0.0
+        let sut = ReceivableFormViewModel(assetRepository: testingAssetRepository, dismissSheet: {})
+
+        
+        let expectedName = "Rote Sonne"
+        let expectedDebtor = debtor
+        let expectedDisbursedAmount: Decimal = 200.0
+        let expectedDate = DateParser.shared.date(from: "2024-07-23T00:00:00")!
 
         sut.name = expectedName
         sut.debtor = expectedDebtor
-        sut.grantDate = expectedGrantDate
-        sut.initialAmount = expectedInitialAmount
-        sut.repaidAmount = expectedRepaidAmount
+        sut.disbursedAmount = expectedDisbursedAmount
+        sut.grantDate = expectedDate
+        XCTAssertThrowsError(try sut.saveReceivable()) { error in
+            XCTAssertEqual(error as? ReceivableValidationError, ReceivableValidationError.noAssetPoolSelected)
+        }
+    }
+    
+    /// create a Receivable with a name that is already taken by a different Receivable
+    func test_createReceivable_7() throws {
+        let occupiedName = testDataProvider.createAndPersistTestObjects_createReceivablesWithSameName_1(context: testingCoreDataStack.context)
+        
+        let sut = ReceivableFormViewModel(assetRepository: testingAssetRepository, dismissSheet: {})
+        
+        sut.name = occupiedName
+        sut.grantDate = DateParser.shared.date(from: "2024-04-15T00:00:00")!
+        sut.debtor = DataFactory.createLoanPartner(name: "Papa", context: testingCoreDataStack.context)
+        sut.disbursedAmount = 100
+        sut.assetPool = DataFactory.createAssetPool(named: "Privat", possessions: [], receivables: [], in: testingCoreDataStack.context)
+        XCTAssertThrowsError(try sut.saveReceivable()) { error in
+            XCTAssertEqual(error as? ReceivableValidationError, ReceivableValidationError.sameNameAlreadyExists)
+        }
+    }
+
+    /// create a Receivable with a name that is already taken by a Possession
+    func test_createReceivable_8() throws {
+        let occupiedName = testDataProvider.createAndPersistTestObjects_createReceivablesWithSameName_2(context: testingCoreDataStack.context)
+
+        let sut = ReceivableFormViewModel(assetRepository: testingAssetRepository, dismissSheet: {})
+        
+        sut.name = occupiedName
+        sut.grantDate = DateParser.shared.date(from: "2024-04-15T00:00:00")!
+        sut.debtor = DataFactory.createLoanPartner(name: "Papa", context: testingCoreDataStack.context)
+        sut.disbursedAmount = 100
+        sut.assetPool = DataFactory.createAssetPool(named: "Privat", possessions: [], receivables: [], in: testingCoreDataStack.context)
+        XCTAssertThrowsError(try sut.saveReceivable()) { error in
+            XCTAssertEqual(error as? ReceivableValidationError, ReceivableValidationError.sameNameAlreadyExists)
+        }
+
+    }
+    
+    
+    
+    /// update a Receivable
+    func test_updateReceivable_1() throws {
+        var receivable = testDataProvider.createAndPersistTestObjects_updateReceivable_multipurpose(context: testingCoreDataStack.context)
+
+        let sut = ReceivableFormViewModel(assetRepository: testingAssetRepository, receivable: receivable, dismissSheet: {})
+
+        let expectedName = "Rote Sonne"
+        let expectedDebtor = DataFactory.createLoanPartner(name: "Philipp", context: testingCoreDataStack.context)
+        let expectedAssetPool = DataFactory.createAssetPool(named: "Some other pool", possessions: [], receivables: [], in: testingCoreDataStack.context)
+
+        sut.name = expectedName
+        sut.debtor = expectedDebtor
+        sut.assetPool = expectedAssetPool
+        try sut.saveReceivable()
+        
+        let persistedReceivables = testingAssetRepository.getReceivables()
+        XCTAssertTrue(persistedReceivables.count == 1)
+        receivable = try XCTUnwrap(persistedReceivables.first)
+
+        let actualName = receivable.name
+        let actualDebtor = receivable.debtor
+        let actualAssetPool = receivable.pool
+
+        XCTAssertEqual(expectedName, actualName)
+        XCTAssertEqual(expectedDebtor, actualDebtor)
+        XCTAssertEqual(expectedAssetPool, actualAssetPool)
+    }
+
+    /// update a Receivable with an empty name and check whether the correct error is thrown
+    func test_updateReceivable_2() throws {
+        let receivable = testDataProvider.createAndPersistTestObjects_updateReceivable_multipurpose(context: testingCoreDataStack.context)
+
+        let sut = ReceivableFormViewModel(assetRepository: testingAssetRepository, receivable: receivable, dismissSheet: {})
+
+        let expectedDebtor = DataFactory.createLoanPartner(name: "Philipp", context: testingCoreDataStack.context)
+        let expectedAssetPool = DataFactory.createAssetPool(named: "Some other pool", possessions: [], receivables: [], in: testingCoreDataStack.context)
+
+        sut.name = ""
+        sut.debtor = expectedDebtor
+        sut.assetPool = expectedAssetPool
+        XCTAssertThrowsError(try sut.saveReceivable()) { error in
+            XCTAssertEqual(error as? ReceivableValidationError, ReceivableValidationError.emptyName)
+        }
+    }
+
+    /// update a Receivable with a non-selected debtor and check whether the correct error is thrown
+    func test_updateReceivable_3() throws {
+        let receivable = testDataProvider.createAndPersistTestObjects_updateReceivable_multipurpose(context: testingCoreDataStack.context)
+
+        let sut = ReceivableFormViewModel(assetRepository: testingAssetRepository, receivable: receivable, dismissSheet: {})
+
+        let expectedName = "Rote Sonne"
+        let expectedAssetPool = DataFactory.createAssetPool(named: "Some other pool", possessions: [], receivables: [], in: testingCoreDataStack.context)
+
+        sut.name = expectedName
+        sut.debtor = nil
+        sut.assetPool = expectedAssetPool
+        XCTAssertThrowsError(try sut.saveReceivable()) { error in
+            XCTAssertEqual(error as? ReceivableValidationError, ReceivableValidationError.noDebtorSelected)
+        }
+    }
+
+    /// update a Receivable such that no assetPool is selected and check whether the correct error is thrown
+    func test_updateReceivable_6() throws {
+        let receivable = testDataProvider.createAndPersistTestObjects_updateReceivable_multipurpose(context: testingCoreDataStack.context)
+
+        let sut = ReceivableFormViewModel(assetRepository: testingAssetRepository, receivable: receivable, dismissSheet: {})
+
+        let expectedName = "Rote Sonne"
+        let expectedDebtor = DataFactory.createLoanPartner(name: "Philipp", context: testingCoreDataStack.context)
+
+        sut.name = expectedName
+        sut.debtor = expectedDebtor
         sut.assetPool = nil
         XCTAssertThrowsError(try sut.saveReceivable()) { error in
             XCTAssertEqual(error as? ReceivableValidationError, ReceivableValidationError.noAssetPoolSelected)
         }
     }
-
-
-
-    /// create 2 Receivables of the same name. Only the first one should be persisted
-    func test_createReceivablesWithSameName_1() throws {
-        let assetPool = testDataProvider.createAndPersistTestObjects_createReceivable_multipurpose(context: testingCoreDataStack.context)
-
-        let sut = ReceivableFormViewModel(repository: testingAssetRepository, dismissSheet: {})
-
-        let firstExpectedName = "Rote Sonne"
-        let firstExpectedDebtor = "Philipp"
-        let firstExpectedGrantDate = DateParser.shared.date(from: "2024-07-23T00:00:00")!
-        let firstExpectedInitialAmount: Decimal = 200.0
-        let firstExpectedRepaidAmount: Decimal = 40.0
-
-        sut.name = firstExpectedName
-        sut.debtor = firstExpectedDebtor
-        sut.grantDate = firstExpectedGrantDate
-        sut.initialAmount = firstExpectedInitialAmount
-        sut.repaidAmount = firstExpectedRepaidAmount
-        sut.assetPool = assetPool
-        try sut.saveReceivable()
-
-        let secondExpectedName = "Rote Sonne"
-        let secondExpectedDebtor = "Lenni"
-        let secondExpectedGrantDate = DateParser.shared.date(from: "2024-07-22T00:00:00")!
-        let secondExpectedInitialAmount: Decimal = 100.0
-        let secondExpectedRepaidAmount: Decimal = 20.0
-
-        sut.name = secondExpectedName
-        sut.debtor = secondExpectedDebtor
-        sut.grantDate = secondExpectedGrantDate
-        sut.initialAmount = secondExpectedInitialAmount
-        sut.repaidAmount = secondExpectedRepaidAmount
-        sut.assetPool = assetPool
+    
+    /// update a Receivable with a name that already exists and check whether the correct error is thrown
+    func test_updateLiability_7() throws {
+        let (receivable,occupiedName) = testDataProvider.createAndPersistTestObjects_updateReceivablesWithSameName_1(context: testingCoreDataStack.context)
+  
+        let sut = ReceivableFormViewModel(assetRepository: testingAssetRepository, receivable: receivable, dismissSheet: {})
+        
+        sut.name = occupiedName
         XCTAssertThrowsError(try sut.saveReceivable()) { error in
             XCTAssertEqual(error as? ReceivableValidationError, ReceivableValidationError.sameNameAlreadyExists)
         }
-
-        let persistedReceivables = testingAssetRepository.fetchReceivables()
-        XCTAssertTrue(persistedReceivables.count == 1)
-        let receivable = try XCTUnwrap(persistedReceivables.first)
-
-
-        let actualName = receivable.name
-        let actualDebtor = receivable.debtor
-        let actualGrantDate = receivable.grantDate
-        let actualInitialAmount = receivable.initialAmount.decimalValue
-        let actualRepaidAmount = receivable.repaidAmount.decimalValue
-
-        XCTAssertEqual(firstExpectedName, actualName)
-        XCTAssertEqual(firstExpectedDebtor, actualDebtor)
-        XCTAssertEqual(firstExpectedGrantDate, actualGrantDate)
-        XCTAssertEqual(firstExpectedInitialAmount, actualInitialAmount)
-        XCTAssertEqual(firstExpectedRepaidAmount, actualRepaidAmount)
     }
-
-    /// create 1 Possession and then 1 Receivable of the same name. Only the first one created should be persisted
-    func test_createReceivablesWithSameName_2() throws {
-        let (expectedPossession,assetPool) = testDataProvider.createAndPersistTestObjects_createReceivablesWithSameName_2(context: testingCoreDataStack.context)
-
-        let sut = ReceivableFormViewModel(repository: testingAssetRepository, dismissSheet: {})
-
-        let secondExpectedName = "Commerzbank Konto"
-        let secondExpectedDebtor = "Lenni"
-        let secondExpectedGrantDate = DateParser.shared.date(from: "2024-07-22T00:00:00")!
-        let secondExpectedInitialAmount: Decimal = 100.0
-        let secondExpectedRepaidAmount: Decimal = 20.0
-
-        sut.name = secondExpectedName
-        sut.debtor = secondExpectedDebtor
-        sut.grantDate = secondExpectedGrantDate
-        sut.initialAmount = secondExpectedInitialAmount
-        sut.repaidAmount = secondExpectedRepaidAmount
-        sut.assetPool = assetPool
+    
+    /// update a Receivable with its previous name and check that no error is thrown
+    func test_updateLiability_8() throws {
+        let (receivable,occupiedName) = testDataProvider.createAndPersistTestObjects_updateReceivablesWithSameName_2(context: testingCoreDataStack.context)
+  
+        let sut = ReceivableFormViewModel(assetRepository: testingAssetRepository, receivable: receivable, dismissSheet: {})
+        
+        sut.name = occupiedName
         XCTAssertThrowsError(try sut.saveReceivable()) { error in
             XCTAssertEqual(error as? ReceivableValidationError, ReceivableValidationError.sameNameAlreadyExists)
         }
-
-        let persistedPossessions = testingAssetRepository.fetchPossessions()
-        XCTAssertTrue(persistedPossessions.count == 1)
-        let actualPossession = try XCTUnwrap(persistedPossessions.first)
-
-        XCTAssertEqual(expectedPossession.name, actualPossession.name)
-        XCTAssertEqual(expectedPossession.volatile, actualPossession.volatile)
-    }
-
-
-
-    /// delete one asset and test viewModel interface providing data to view as well as persisted data
-    func test_deleteReceivable_1() throws {
-        let (receivableToDelete, expectedReceivables) = testDataProvider.createAndPersistTestObjects_deleteReceivable_1(using: testingCoreDataStack.context)
-
-        let sut = ReceivableFormViewModel(repository: testingAssetRepository, dismissSheet: {})
-        sut.receivable = receivableToDelete
-        sut.deleteReceivable()
-
-        let actualReceivables = testingAssetRepository.fetchReceivables()
-        XCTAssertTrue(expectedReceivables ≡ actualReceivables)
     }
 }
 

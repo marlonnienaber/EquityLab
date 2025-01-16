@@ -14,7 +14,7 @@ class LoanManagementViewModel {
     var receivables = [Receivable]()
     var activeLoanCreateSheet: LoanCreateSheet?
     var selectedLoanType: LoanType?
-    var showLoanUpdatePickerSheet = false
+    var showLoanCreatePickerSheet = false
     var hasNoLoans: Bool {
         liabilities.isEmpty && receivables.isEmpty
     }
@@ -27,10 +27,8 @@ class LoanManagementViewModel {
         self.receivableAnalyzer = ReceivableAnalyzer(repository: assetRepository)
         self.liabilityAnalyzer = LiabilityAnalyzer(repository: liabilityRepository)
         
-        let unsortedReceivables = assetRepository.getReceivables()
-        receivables = unsortedReceivables.sorted(by: receivableSortingPredicate)
-        let unsortedLiabilities = liabilityRepository.getLiabilities()
-        liabilities = unsortedLiabilities.sorted(by: liabilitySortingPredicate)
+        receivables = assetRepository.getReceivables().sorted(by: receivableSortingPredicate)
+        liabilities = liabilityRepository.getLiabilities().sorted(by: liabilitySortingPredicate)
         
         assetRepository.add(observer: self)
         liabilityRepository.add(observer: self)
@@ -103,14 +101,11 @@ extension LoanManagementViewModel: ReceivableObserver, ReceivableTransactionObse
     }
 }
 
-enum LoanCreateSheet: Identifiable {
+enum LoanCreateSheet: String, Identifiable {
     case receivableCreateSheet
     case liabilityCreateSheet
     var id: String {
-        switch self {
-        case .receivableCreateSheet: return "receivableCreateSheet"
-        case .liabilityCreateSheet: return "liabilityCreateSheet"
-        }
+        self.rawValue
     }
 }
 

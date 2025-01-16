@@ -584,13 +584,13 @@
 			children = (
 				7363DDF12CA758D1009F3412 /* DashboardViewModelTests.swift */,
 				733473862C8DEC950050C656 /* DistributionChartViewModelTests.swift */,
-				737967142D034FAA0001278D /* PossessionFormViewModelTests.swift */,
-				737967122D034F9F0001278D /* ReceivableFormViewModelTests.swift */,
-				73332B952CC67E7D0020839D /* LoanManagementViewModelTests.swift */,
-				73037F612CC2E19E005DD105 /* SnapshotStructureViewModelTests.swift */,
-				7366CD1D2CB1EAEF0066ACC3 /* LiabilityFormViewModelTests.swift */,
-				7363DDF92CA99557009F3412 /* SnapshotFormViewModelTests.swift */,
 				73B811992CA6D3E3003B1973 /* SnapshotLedgerViewModelTests.swift */,
+				7363DDF92CA99557009F3412 /* SnapshotFormViewModelTests.swift */,
+				73332B952CC67E7D0020839D /* LoanManagementViewModelTests.swift */,
+				7366CD1D2CB1EAEF0066ACC3 /* LiabilityFormViewModelTests.swift */,
+				737967122D034F9F0001278D /* ReceivableFormViewModelTests.swift */,
+				73037F612CC2E19E005DD105 /* SnapshotStructureViewModelTests.swift */,
+				737967142D034FAA0001278D /* PossessionFormViewModelTests.swift */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -598,15 +598,15 @@
 		73B811A02CA72624003B1973 /* TestDataProviders */ = {
 			isa = PBXGroup;
 			children = (
-				737967182D0350130001278D /* ReceivableFormViewModelTestDataProvider.swift */,
-				737967162D03500C0001278D /* PossessionFormViewModelTestDataProvider.swift */,
-				73332B972CC67E980020839D /* LoanManagementViewModelTestDataProvider.swift */,
-				73037F632CC2E230005DD105 /* SnapshotStructureViewModelTestDataProvider.swift */,
-				7366CD1F2CB1EB0C0066ACC3 /* LiabilityFormViewModelTestDataProvider.swift */,
-				7363DDFB2CA9F0A9009F3412 /* SnapshotFormViewModelTestDataProvider.swift */,
 				73B811A12CA72644003B1973 /* DashboardViewModelTestDataProvider.swift */,
 				73B811A52CA72670003B1973 /* DistributionChartViewModelTestDataProvider.swift */,
 				73B811A32CA72655003B1973 /* SnapshotLedgerViewModelTestDataProvider.swift */,
+				7363DDFB2CA9F0A9009F3412 /* SnapshotFormViewModelTestDataProvider.swift */,
+				73332B972CC67E980020839D /* LoanManagementViewModelTestDataProvider.swift */,
+				7366CD1F2CB1EB0C0066ACC3 /* LiabilityFormViewModelTestDataProvider.swift */,
+				737967182D0350130001278D /* ReceivableFormViewModelTestDataProvider.swift */,
+				73037F632CC2E230005DD105 /* SnapshotStructureViewModelTestDataProvider.swift */,
+				737967162D03500C0001278D /* PossessionFormViewModelTestDataProvider.swift */,
 			);
 			path = TestDataProviders;
 			sourceTree = "<group>";

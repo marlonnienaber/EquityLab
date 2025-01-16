@@ -15,13 +15,12 @@ class SnapshotFormViewModel {
     let dismissSheet: () -> ()
     
     init(
-            snapshot: Snapshot? = nil,
-            snapshotRepository: SnapshotRepository = .production,
-            assetRepository: AssetRepository = .production,
-            liabilityRepository: LiabilityRepository = .production,
-            dismissSheet: @escaping () -> ()
-        )
-    {
+        snapshot: Snapshot? = nil,
+        snapshotRepository: SnapshotRepository = .production,
+        assetRepository: AssetRepository = .production,
+        liabilityRepository: LiabilityRepository = .production,
+        dismissSheet: @escaping () -> ()
+    ){
         self.snapshotRepository = snapshotRepository
         self.snapshot = snapshot
         self.dismissSheet = dismissSheet
@@ -43,8 +42,10 @@ class SnapshotFormViewModel {
         self.liabilityProxies = liabilityProxies
     }
     
-    private static func createProxies(for snapshot: Snapshot,
-                                      using snapshotRepository: SnapshotRepository) -> ([PositionProxy],[PositionProxy]) {
+    private static func createProxies(
+        for snapshot: Snapshot,
+        using snapshotRepository: SnapshotRepository
+    ) -> ([PositionProxy],[PositionProxy]) {
         let assetPositions = snapshotRepository.getAssetPositions().filter{ $0.snapshot == snapshot }
         let assetProxies = assetPositions.map{ PositionProxy(name: $0.name, value: $0.value.decimalValue, pool: $0.poolName) }
         let liabilityPositions = snapshotRepository.getLiabilityPositions().filter{ $0.snapshot == snapshot }
@@ -52,9 +53,11 @@ class SnapshotFormViewModel {
         return (assetProxies,liabilityProxies)
     }
     
-    private static func createProxies(using snapshotRepository: SnapshotRepository,
-                                      and assetRepository: AssetRepository,
-                                      and liabilityRepository: LiabilityRepository) -> ([PositionProxy],[PositionProxy]) {
+    private static func createProxies(
+        using snapshotRepository: SnapshotRepository,
+        and assetRepository: AssetRepository,
+        and liabilityRepository: LiabilityRepository
+    ) -> ([PositionProxy],[PositionProxy]) {
         let receivables = assetRepository.getReceivables()
         let receivableAnalyzer = ReceivableAnalyzer(repository: assetRepository)
         let receivableProxies = receivables.map{ receivable in

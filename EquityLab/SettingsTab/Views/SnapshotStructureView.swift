@@ -36,7 +36,7 @@ struct SnapshotStructureView: View {
                     viewModel.assetPoolValidationError = error
                     viewModel.showAssetPoolValidationErrorAlert = true
                 },
-                deleteAction: { viewModel.delete(assetPool: $0) },
+                deleteAction: { viewModel.deleteAssetPool($0) },
                 cleanUpAction: {
                     viewModel.assetPoolToEdit = nil
                     viewModel.alertPoolName = ""
@@ -52,7 +52,7 @@ struct SnapshotStructureView: View {
                     viewModel.liabilityPoolValidationError = error
                     viewModel.showLiabilityPoolValidationErrorAlert = true
                 },
-                deleteAction: { viewModel.delete(liabilityPool: $0) },
+                deleteAction: { viewModel.deleteLiabilityPool($0) },
                 cleanUpAction: {
                     viewModel.assetPoolToEdit = nil
                     viewModel.alertPoolName = ""
