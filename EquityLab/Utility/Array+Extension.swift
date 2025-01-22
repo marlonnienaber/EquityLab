@@ -27,30 +27,17 @@ extension Array where Element: Hashable {
 
 
 /// a function which checks whether two arrays are equivalent in the sense that they contain equivalent elements regardless of their order. Equivalence of elements is defined
-/// by equality of the properties passed via the KeyPath array
-func checkEquivalence<ElementType, PropertyType: Equatable>(
+/// by the passed closure
+func checkEquivalence<ElementType>(
     of first: [ElementType],
     and second: [ElementType],
-    by keyPaths: [KeyPath<ElementType, PropertyType>]
+    by areEquivalent: (ElementType, ElementType) -> Bool
 ) -> Bool {
     guard first.count == second.count else { return false }
     for element in first {
-        if !second.containsEquivalentElement(to: element, by: keyPaths) {
+        if !second.contains(where: { areEquivalent(element, $0) }) {
             return false
         }
     }
     return true
-}
-
-fileprivate extension Array {
-    func containsEquivalentElement<PropertyType: Equatable>(to element: Element, by keyPaths: [KeyPath<Element, PropertyType>]) -> Bool {
-        self.contains(where: { otherElement in
-            for keyPath in keyPaths {
-                if element[keyPath: keyPath] != otherElement[keyPath: keyPath] {
-                    return false
-                }
-            }
-            return true
-        })
-    }
 }

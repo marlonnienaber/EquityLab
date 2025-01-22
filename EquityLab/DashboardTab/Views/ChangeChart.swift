@@ -11,7 +11,7 @@ struct ChangenChart: View {
                 .multilineTextAlignment(.center)
         } else {
             Chart {
-                ForEach(viewModel.changeCategories) { category in
+                ForEach(viewModel.changeCategories, id: \.name) { category in
                     BarMark(
                         x: .value("category", category.name),
                         y: .value("value", category.change)

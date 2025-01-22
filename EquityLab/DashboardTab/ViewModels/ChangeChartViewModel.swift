@@ -4,10 +4,7 @@ import os
 
 @Observable
 class ChangeChartViewModel {
-    @ObservationIgnored private static let logger = Logger(
-        subsystem: Bundle.main.bundleIdentifier ?? "",
-        category: String(describing: ChangeChartViewModel.self)
-    )
+    @ObservationIgnored private static let logger = Logger(subsystem: .dashboardTab, component: .changeChartViewModel)
     @ObservationIgnored private var changeChartType: ChangeChartType
     @ObservationIgnored private var positionType: PositionType {
         switch changeChartType {
@@ -17,29 +14,25 @@ class ChangeChartViewModel {
     }
     var dashboardViewModel: DashboardViewModel
     var changeCategories: [BarChartCategory] {
-        guard let selectedShot = dashboardViewModel.selectedSnapshot, let beforeShot = computeShotBeforeSelectedShot() else { return [] }
+        guard let selectedShot = dashboardViewModel.selectedSnapshot, let beforeShot = computeSnapshotBeforeSelectedSnapshot() else { return [] }
         
         let poolValuesSelectedShot = dashboardViewModel.computeValueByPool(for: positionType, using: selectedShot)
         let poolValuesBeforeShot = dashboardViewModel.computeValueByPool(for: positionType, using: beforeShot)
         
         let beforeShotKeySet = Set(poolValuesBeforeShot.keys)
         
-        var changedPoolValues = poolValuesSelectedShot.filter{ beforeShotKeySet.contains($0.key)}
+        var changedPoolValues = poolValuesSelectedShot.filter{ beforeShotKeySet.contains($0.key) }
         
         changedPoolValues.forEach{ key,value in
-            var changePercentage = ((value / poolValuesBeforeShot[key]!) - 1) * 100
-            if changePercentage.isNaN || changePercentage.isInfinite {
-                changePercentage = 0.0
-            }
+            let beforeValue = poolValuesBeforeShot[key]!
+            var changePercentage = beforeValue == 0 ? 0 : ((value / beforeValue) - 1) * 100
             changedPoolValues[key] = changePercentage
         }
         let changeCategories = changedPoolValues.map{ BarChartCategory(change: $0.value, name: $0.key) }
         return changeCategories
     }
     var maxChangePercentage: Decimal {
-        let maxChange = changeCategories.map{ abs($0.change) }.max()
-        guard let maxChange, !maxChange.isNaN, maxChange.isFinite else { return 0.0 }
-        return maxChange
+        changeCategories.map{ abs($0.change) }.max() ?? 0
     }
     var changeChartColor: Color {
         switch changeChartType {
@@ -48,7 +41,7 @@ class ChangeChartViewModel {
         }
     }
     var noChangesToLastSnapshot: Bool {
-        changeCategories.first(where: { $0.change != 0.0 }) == nil
+        changeCategories.first(where: { $0.change != 0 }).isNil
     }
     
     
@@ -58,7 +51,7 @@ class ChangeChartViewModel {
     }
     
     
-    func computeShotBeforeSelectedShot() -> Snapshot? {
+    func computeSnapshotBeforeSelectedSnapshot() -> Snapshot? {
         if let selectedDate = dashboardViewModel.selectedDate {
             if let index = dashboardViewModel.filteredSnapshots.firstIndex(where: {$0.date == selectedDate} ) {
                 return index == 0 ? nil : dashboardViewModel.filteredSnapshots[index - 1]
@@ -73,8 +66,7 @@ enum ChangeChartType {
     case assetChangeChart
 }
 
-struct BarChartCategory: Identifiable {
+struct BarChartCategory {
     let change: Decimal
     let name: String
-    let id = UUID()
 }

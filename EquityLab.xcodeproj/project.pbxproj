@@ -28,6 +28,8 @@
 		73204B462D023842007F6E21 /* Possession+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73204B422D023842007F6E21 /* Possession+CoreDataProperties.swift */; };
 		732588562CCD03BB002031CF /* AlertToast in Frameworks */ = {isa = PBXBuildFile; productRef = 732588552CCD03BB002031CF /* AlertToast */; };
 		732588592CCD3839002031CF /* ObservableProperties in Frameworks */ = {isa = PBXBuildFile; productRef = 732588582CCD3839002031CF /* ObservableProperties */; };
+		732CE5262D3A76EA00DB53ED /* ChangeChartViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 732CE5252D3A76E300DB53ED /* ChangeChartViewModelTests.swift */; };
+		732CE5282D3A7F9500DB53ED /* ChangeChartViewModelTestDataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 732CE5272D3A7F8600DB53ED /* ChangeChartViewModelTestDataProvider.swift */; };
 		73332B962CC67E860020839D /* LoanManagementViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73332B952CC67E7D0020839D /* LoanManagementViewModelTests.swift */; };
 		73332B982CC67EA70020839D /* LoanManagementViewModelTestDataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73332B972CC67E980020839D /* LoanManagementViewModelTestDataProvider.swift */; };
 		733473872C8DEC950050C656 /* DistributionChartViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 733473862C8DEC950050C656 /* DistributionChartViewModelTests.swift */; };
@@ -148,6 +150,8 @@
 		7314FD6E2C7510E100483835 /* TestingCoreDataStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestingCoreDataStack.swift; sourceTree = "<group>"; };
 		73204B412D023842007F6E21 /* Possession+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Possession+CoreDataClass.swift"; sourceTree = SOURCE_ROOT; };
 		73204B422D023842007F6E21 /* Possession+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Possession+CoreDataProperties.swift"; sourceTree = SOURCE_ROOT; };
+		732CE5252D3A76E300DB53ED /* ChangeChartViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangeChartViewModelTests.swift; sourceTree = "<group>"; };
+		732CE5272D3A7F8600DB53ED /* ChangeChartViewModelTestDataProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangeChartViewModelTestDataProvider.swift; sourceTree = "<group>"; };
 		73332B952CC67E7D0020839D /* LoanManagementViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoanManagementViewModelTests.swift; sourceTree = "<group>"; };
 		73332B972CC67E980020839D /* LoanManagementViewModelTestDataProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoanManagementViewModelTestDataProvider.swift; sourceTree = "<group>"; };
 		733473862C8DEC950050C656 /* DistributionChartViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DistributionChartViewModelTests.swift; sourceTree = "<group>"; };
@@ -584,6 +588,7 @@
 			children = (
 				7363DDF12CA758D1009F3412 /* DashboardViewModelTests.swift */,
 				733473862C8DEC950050C656 /* DistributionChartViewModelTests.swift */,
+				732CE5252D3A76E300DB53ED /* ChangeChartViewModelTests.swift */,
 				73B811992CA6D3E3003B1973 /* SnapshotLedgerViewModelTests.swift */,
 				7363DDF92CA99557009F3412 /* SnapshotFormViewModelTests.swift */,
 				73332B952CC67E7D0020839D /* LoanManagementViewModelTests.swift */,
@@ -600,6 +605,7 @@
 			children = (
 				73B811A12CA72644003B1973 /* DashboardViewModelTestDataProvider.swift */,
 				73B811A52CA72670003B1973 /* DistributionChartViewModelTestDataProvider.swift */,
+				732CE5272D3A7F8600DB53ED /* ChangeChartViewModelTestDataProvider.swift */,
 				73B811A32CA72655003B1973 /* SnapshotLedgerViewModelTestDataProvider.swift */,
 				7363DDFB2CA9F0A9009F3412 /* SnapshotFormViewModelTestDataProvider.swift */,
 				73332B972CC67E980020839D /* LoanManagementViewModelTestDataProvider.swift */,
@@ -721,9 +727,11 @@
 				73B811A62CA7267B003B1973 /* DistributionChartViewModelTestDataProvider.swift in Sources */,
 				73B8119C2CA72359003B1973 /* DataFactory.swift in Sources */,
 				7363DDFA2CA99562009F3412 /* SnapshotFormViewModelTests.swift in Sources */,
+				732CE5262D3A76EA00DB53ED /* ChangeChartViewModelTests.swift in Sources */,
 				7363DDF22CA758D7009F3412 /* DashboardViewModelTests.swift in Sources */,
 				737967132D034FA70001278D /* ReceivableFormViewModelTests.swift in Sources */,
 				73B811A42CA72668003B1973 /* SnapshotLedgerViewModelTestDataProvider.swift in Sources */,
+				732CE5282D3A7F9500DB53ED /* ChangeChartViewModelTestDataProvider.swift in Sources */,
 				73332B982CC67EA70020839D /* LoanManagementViewModelTestDataProvider.swift in Sources */,
 				737967172D03500F0001278D /* PossessionFormViewModelTestDataProvider.swift in Sources */,
 				73037F622CC2E1AB005DD105 /* SnapshotStructureViewModelTests.swift in Sources */,
