@@ -128,4 +128,40 @@ final class LoanManagementViewModelTests: XCTestCase {
         let actualRemainingLiabilities = testingLiabilityRepository.getLiabilities()
         XCTAssertTrue(expectedRemainingLiabilities ≡ actualRemainingLiabilities)
     }
+    
+    
+    
+    /// test disbursed amount string for receivable
+    func test_getDisbursedAmountString_receivable() throws {
+        let (receivable, expectedAmountString) = testDataProvider.createAndPersistTestObjects_getDisbursedAmountString_1(context: testingCoreDataStack.context)
+        let sut = LoanManagementViewModel(assetRepository: testingAssetRepository, liabilityRepository: testingLiabilityRepository)
+        let actualLocalizedCurrencyFormattedString = sut.getDisbursedAmountString(for: receivable)
+        let actualAmountString = actualLocalizedCurrencyFormattedString!.dropLast(2).string
+        XCTAssertEqual(expectedAmountString, actualAmountString)
+    }
+    
+    /// test repayment percentage for receivable
+    func test_getRepaymentPercentage_receivable() throws {
+        let (receivable, expectedPercentage) = testDataProvider.createAndPersistTestObjects_getRepaymentPercentage_1(context: testingCoreDataStack.context)
+        let sut = LoanManagementViewModel(assetRepository: testingAssetRepository, liabilityRepository: testingLiabilityRepository)
+        let actualPercentage = sut.getRepaymentPercentage(for: receivable)
+        XCTAssertEqual(expectedPercentage, actualPercentage)
+    }
+    
+    /// test disbursed amount string for liability
+    func test_getDisbursedAmountString_liability() throws {
+        let (liability, expectedAmountString) = testDataProvider.createAndPersistTestObjects_getDisbursedAmountString_2(context: testingCoreDataStack.context)
+        let sut = LoanManagementViewModel(assetRepository: testingAssetRepository, liabilityRepository: testingLiabilityRepository)
+        let actualLocalizedCurrencyFormattedString = sut.getDisbursedAmountString(for: liability)
+        let actualAmountString = actualLocalizedCurrencyFormattedString!.dropLast(2).string
+        XCTAssertEqual(expectedAmountString, actualAmountString)
+    }
+    
+    /// test repayment percentage for liability
+    func test_getRepaymentPercentage_liability() throws {
+        let (liability, expectedPercentage) = testDataProvider.createAndPersistTestObjects_getRepaymentPercentage_2(context: testingCoreDataStack.context)
+        let sut = LoanManagementViewModel(assetRepository: testingAssetRepository, liabilityRepository: testingLiabilityRepository)
+        let actualPercentage = sut.getRepaymentPercentage(for: liability)
+        XCTAssertEqual(expectedPercentage, actualPercentage)
+    }
 }

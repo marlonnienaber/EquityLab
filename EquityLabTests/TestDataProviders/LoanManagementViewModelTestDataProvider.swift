@@ -246,4 +246,172 @@ struct LoanManagementViewModelTestDataProvider {
         let (liability1,liability2,liability3,liability4) = createAndPersistFourLiabilities(using: context)
         return (IndexSet(0...3),[])
     }
+    
+    func createAndPersistTestObjects_getDisbursedAmountString_1(context: NSManagedObjectContext) -> (Receivable,String) {
+        let name1 = "Blitz"
+        let person1 = DataFactory.createLoanPartner(name: "Lenni", context: context)
+        let receivable1FirstTransaction = DataFactory.createLoanTransaction(
+            date: DateParser.shared.date(from: "2024-04-15T00:00:00")!,
+            amount: 100,
+            note: "first disbursement",
+            emoji: "📤",
+            context: context
+        )
+        let receivable1SecondTransaction = DataFactory.createLoanTransaction(
+            issuer: person1,
+            date: DateParser.shared.date(from: "2024-04-17T00:00:00")!,
+            amount: 20,
+            note: "first repayment",
+            emoji: "💶",
+            context: context
+        )
+        let receivable1ThirdTransaction = DataFactory.createLoanTransaction(
+            date: DateParser.shared.date(from: "2024-04-17T00:00:00")!,
+            amount: 50,
+            note: "second disbursemen",
+            emoji: "📤",
+            context: context
+        )
+        let receivable1FourthTransaction = DataFactory.createLoanTransaction(
+            issuer: person1,
+            date: DateParser.shared.date(from: "2024-04-17T00:00:00")!,
+            amount: 60,
+            note: "second repayment",
+            emoji: "💶",
+            context: context
+        )
+        let receivable1 = DataFactory.createReceivable(
+            name: name1,
+            debtor: person1,
+            transactions: [receivable1FirstTransaction,receivable1SecondTransaction,receivable1ThirdTransaction,receivable1FourthTransaction],
+            context: context
+        )
+        return (receivable1, "150,00")
+    }
+    
+    func createAndPersistTestObjects_getRepaymentPercentage_1(context: NSManagedObjectContext) -> (Receivable,Decimal) {
+        let name1 = "Blitz"
+        let person1 = DataFactory.createLoanPartner(name: "Lenni", context: context)
+        let receivable1FirstTransaction = DataFactory.createLoanTransaction(
+            date: DateParser.shared.date(from: "2024-04-15T00:00:00")!,
+            amount: 100,
+            note: "first disbursement",
+            emoji: "📤",
+            context: context
+        )
+        let receivable1SecondTransaction = DataFactory.createLoanTransaction(
+            issuer: person1,
+            date: DateParser.shared.date(from: "2024-04-17T00:00:00")!,
+            amount: 20,
+            note: "first repayment",
+            emoji: "💶",
+            context: context
+        )
+        let receivable1ThirdTransaction = DataFactory.createLoanTransaction(
+            date: DateParser.shared.date(from: "2024-04-17T00:00:00")!,
+            amount: 50,
+            note: "second disbursemen",
+            emoji: "📤",
+            context: context
+        )
+        let receivable1FourthTransaction = DataFactory.createLoanTransaction(
+            issuer: person1,
+            date: DateParser.shared.date(from: "2024-04-17T00:00:00")!,
+            amount: 60,
+            note: "second repayment",
+            emoji: "💶",
+            context: context
+        )
+        let receivable1 = DataFactory.createReceivable(
+            name: name1,
+            debtor: person1,
+            transactions: [receivable1FirstTransaction,receivable1SecondTransaction,receivable1ThirdTransaction,receivable1FourthTransaction],
+            context: context
+        )
+        return (receivable1, 0.533)
+    }
+    
+    func createAndPersistTestObjects_getDisbursedAmountString_2(context: NSManagedObjectContext) -> (Liability,String) {
+        let name1 = "Blitz"
+        let person1 = DataFactory.createLoanPartner(name: "Lenni", context: context)
+        let liability1FirstTransaction = DataFactory.createLoanTransaction(
+            issuer: person1,
+            date: DateParser.shared.date(from: "1966-10-21T00:00:00")!,
+            amount: 100,
+            note: "first disbursement",
+            emoji: "📤",
+            context: context
+        )
+        let liability1SecondTransaction = DataFactory.createLoanTransaction(
+            date: DateParser.shared.date(from: "1966-10-22T00:00:00")!,
+            amount: 20,
+            note: "first repayment",
+            emoji: "💶",
+            context: context
+        )
+        let liability1ThirdTransaction = DataFactory.createLoanTransaction(
+            issuer: person1,
+            date: DateParser.shared.date(from: "1966-10-23T00:00:00")!,
+            amount: 50,
+            note: "second disbursement",
+            emoji: "📤",
+            context: context
+        )
+        let liability1FourthTransaction = DataFactory.createLoanTransaction(
+            date: DateParser.shared.date(from: "1966-10-24T00:00:00")!,
+            amount: 60,
+            note: "second repayment",
+            emoji: "💶",
+            context: context
+        )
+        let liability1 = DataFactory.createLiability(
+            name: name1,
+            creditor: person1,
+            transactions: [liability1FirstTransaction,liability1SecondTransaction,liability1ThirdTransaction,liability1FourthTransaction],
+            context: context
+        )
+        return (liability1,"150,00")
+    }
+    
+    func createAndPersistTestObjects_getRepaymentPercentage_2(context: NSManagedObjectContext) -> (Liability,Decimal) {
+        let name1 = "Blitz"
+        let person1 = DataFactory.createLoanPartner(name: "Lenni", context: context)
+        let liability1FirstTransaction = DataFactory.createLoanTransaction(
+            issuer: person1,
+            date: DateParser.shared.date(from: "1966-10-21T00:00:00")!,
+            amount: 100,
+            note: "first disbursement",
+            emoji: "📤",
+            context: context
+        )
+        let liability1SecondTransaction = DataFactory.createLoanTransaction(
+            date: DateParser.shared.date(from: "1966-10-22T00:00:00")!,
+            amount: 20,
+            note: "first repayment",
+            emoji: "💶",
+            context: context
+        )
+        let liability1ThirdTransaction = DataFactory.createLoanTransaction(
+            issuer: person1,
+            date: DateParser.shared.date(from: "1966-10-23T00:00:00")!,
+            amount: 50,
+            note: "second disbursement",
+            emoji: "📤",
+            context: context
+        )
+        let liability1FourthTransaction = DataFactory.createLoanTransaction(
+            date: DateParser.shared.date(from: "1966-10-24T00:00:00")!,
+            amount: 60,
+            note: "second repayment",
+            emoji: "💶",
+            context: context
+        )
+        let liability1 = DataFactory.createLiability(
+            name: name1,
+            creditor: person1,
+            transactions: [liability1FirstTransaction,liability1SecondTransaction,liability1ThirdTransaction,liability1FourthTransaction],
+            context: context
+        )
+        return (liability1,0.533)
+    }
 }

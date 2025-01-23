@@ -73,11 +73,11 @@ class LoanManagementViewModel {
     }
     
     func getRepaymentPercentage(for receivable: Receivable) -> Decimal {
-        receivableAnalyzer.calculateRepaymentPercentage(for: receivable)
+        receivableAnalyzer.calculateRepaymentPercentage(for: receivable).roundTo(decimalPlace: 3)
     }
     
     func getRepaymentPercentage(for liability: Liability) -> Decimal {
-        liabilityAnalyzer.calculateRepaymentPercentage(for: liability)
+        liabilityAnalyzer.calculateRepaymentPercentage(for: liability).roundTo(decimalPlace: 3)
     }
 }
 
