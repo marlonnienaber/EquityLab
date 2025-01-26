@@ -9,6 +9,7 @@ class LiabilityDetailViewModel {
     private let liabilityRepository: LiabilityRepository
     
     @ObservationIgnored private var monthYearToTransactionsDictionary: [MonthYear:[LoanTransaction]] = [:]
+    @ObservationIgnored private var loanTransactionAnalyzer: LoanTransactionAnalyzer
     @ObservationIgnored let liability: Liability
     @ObservationIgnored let creditor: LoanPartner
     var monthYears: [MonthYear] = []
@@ -21,6 +22,7 @@ class LiabilityDetailViewModel {
     ) {
         Self.logger.debug("LiabilityDetailViewModel()")
         self.liabilityRepository = liabilityRepository
+        self.loanTransactionAnalyzer = LoanTransactionAnalyzer()
         self.liability = liability
         self.creditor = creditor
         populateMonthYearsAndTransactions()
@@ -62,22 +64,16 @@ class LiabilityDetailViewModel {
         indexSet.forEach{ liabilityRepository.delete(transaction: monthYearTransactions[$0]) }
     }
     
-    func getDayString(for transaction: LoanTransaction) -> String { /* TODO: repetitive code */
-        let date = transaction.date
-        let calendar = Calendar.current
-        let dayComponent = calendar.component(.day, from: date)
-        return String(dayComponent)
+    func getDayString(for transaction: LoanTransaction) -> String {
+        loanTransactionAnalyzer.getDayString(for: transaction)
     }
     
-    func getMonthString(for transaction: LoanTransaction) -> String { /* TODO: repetitive code */
-        let date = transaction.date
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "MMM"
-        return dateFormatter.string(from: date)
+    func getMonthString(for transaction: LoanTransaction) -> String {
+        loanTransactionAnalyzer.getMonthString(for: transaction)
     }
     
-    func getAmountString(for transaction: LoanTransaction) -> String? { /* TODO: repetitive code */
-        LocalizedCurrencyFormatter.shared.string(from: transaction.amount as NSNumber)
+    func getAmountString(for transaction: LoanTransaction) -> String? {
+        loanTransactionAnalyzer.getAmountString(for: transaction)
     }
 }
 

@@ -44,4 +44,9 @@ struct MonthYear: Hashable {
         self.month = month
         self.year = year
     }
+    
+    init(month: Date.Month, year: Int) {
+        self.month = month
+        self.year = year
+    }
 }

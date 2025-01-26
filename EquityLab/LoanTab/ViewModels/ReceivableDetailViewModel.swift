@@ -9,6 +9,7 @@ class ReceivableDetailViewModel {
     private let assetRepository: AssetRepository
     
     @ObservationIgnored private var monthYearToTransactionsDictionary: [MonthYear:[LoanTransaction]] = [:]
+    @ObservationIgnored private var loanTransactionAnalyzer: LoanTransactionAnalyzer
     @ObservationIgnored let receivable: Receivable
     @ObservationIgnored let debtor: LoanPartner
     var monthYears: [MonthYear] = []
@@ -21,6 +22,7 @@ class ReceivableDetailViewModel {
     ) {
         Self.logger.debug("ReceivableDetailViewModel()")
         self.assetRepository = assetRepository
+        self.loanTransactionAnalyzer = LoanTransactionAnalyzer()
         self.receivable = receivable
         self.debtor = debtor
         populateMonthYearsAndTransactions()
@@ -62,22 +64,16 @@ class ReceivableDetailViewModel {
         indexSet.forEach{ assetRepository.delete(transaction: monthYearTransactions[$0]) }
     }
     
-    func getDayString(for transaction: LoanTransaction) -> String { /* TODO: repetitive code*/
-        let date = transaction.date
-        let calendar = Calendar.current
-        let dayComponent = calendar.component(.day, from: date)
-        return String(dayComponent)
+    func getDayString(for transaction: LoanTransaction) -> String {
+        loanTransactionAnalyzer.getDayString(for: transaction)
     }
     
-    func getMonthString(for transaction: LoanTransaction) -> String { /* TODO: repetitive code*/
-        let date = transaction.date
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "MMM"
-        return dateFormatter.string(from: date)
+    func getMonthString(for transaction: LoanTransaction) -> String {
+        loanTransactionAnalyzer.getMonthString(for: transaction)
     }
     
-    func getAmountString(for transaction: LoanTransaction) -> String? { /* TODO: repetitive code */
-        LocalizedCurrencyFormatter.shared.string(from: transaction.amount as NSNumber)
+    func getAmountString(for transaction: LoanTransaction) -> String? {
+        loanTransactionAnalyzer.getAmountString(for: transaction)
     }
 }
 
