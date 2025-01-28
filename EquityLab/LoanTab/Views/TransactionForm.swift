@@ -35,11 +35,21 @@ struct TransactionForm: View {
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button("Save") {
-                        viewModel.saveLoanTransaction()
-                        viewModel.dismissSheet()
+                        do {
+                            try viewModel.saveLoanTransaction()
+                            viewModel.dismissSheet()
+                        } catch let error as TransactionValidationError  {
+                            viewModel.transactionValidationError = error
+                            viewModel.showValidationErrorAlert = true
+                        } catch {}
                     }
                 }
             }
+            .alert(isPresented: $viewModel.showValidationErrorAlert, error: viewModel.transactionValidationError) { _ in
+                Button("OK", role: .cancel) {
+                    viewModel.transactionValidationError = nil
+                }
+            } message: { _ in }
         }
     }
 }

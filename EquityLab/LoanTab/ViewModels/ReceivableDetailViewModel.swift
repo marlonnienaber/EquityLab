@@ -59,7 +59,7 @@ class ReceivableDetailViewModel {
         monthYearToTransactionsDictionary[monthYear] ?? []
     }
     
-    func deleteTransactions(at indexSet: IndexSet, for monthYear: MonthYear) {
+    func deleteTransactions(at indexSet: IndexSet, for monthYear: MonthYear) { /* TODO: add validation here (there must always remain an initial disbursement )*/
         guard let monthYearTransactions = monthYearToTransactionsDictionary[monthYear] else { return }
         indexSet.forEach{ assetRepository.delete(transaction: monthYearTransactions[$0]) }
     }

@@ -18,8 +18,11 @@ class TransactionFormViewModel {
     var date: Date
     var selectedIssuer: LoanPartner?
     
+    var transactionValidationError: TransactionValidationError?
+    var showValidationErrorAlert = false
     var issuerOptionsOpen = false
     let dismissSheet: () -> ()
+    
     
     init(
         assetRepository: AssetRepository = .production,
@@ -41,8 +44,76 @@ class TransactionFormViewModel {
         self.date = transaction?.date ?? .now
         self.selectedIssuer = transaction?.issuer
     }
+
     
-    private func updateLoanTransaction(transaction: LoanTransaction) {
+    private func getTransactionsOfAssociate() -> [LoanTransaction] {
+        switch transactionAssociate {
+        case .receivable(let receivable):
+            return assetRepository.getTransactions().filter{ $0.receivable == receivable }
+        case .liability(let liability):
+            return liabilityRepository.getTransactions().filter{ $0.liability == liability }
+        }
+    }
+    
+    private var isRepayment: Bool {
+        switch transactionAssociate {
+        case .receivable(_): selectedIssuer.isNotNil
+        case .liability(_): selectedIssuer.isNil
+        }
+    }
+    
+    private var repaymenBeforeOrConcurrentToFirstDisbursement: Bool {
+        guard isRepayment else { return false }
+        guard let firstTransaction = getTransactionsOfAssociate().min(by: { $0.date < $1.date} ) else { return true }
+        return date <= firstTransaction.date
+    }
+    
+    private var wouldMakeBalanceNegative: Bool {
+        let otherTransactionsConnectedToAssociate = getTransactionsOfAssociate().filter{ $0 != transaction }
+        switch transactionAssociate {
+        case .receivable(_):
+            let debtorTransactions = otherTransactionsConnectedToAssociate.filter{ $0.issuer.isNotNil }
+            let ownTransactions: [LoanTransaction] = Array(Set(otherTransactionsConnectedToAssociate).subtracting(debtorTransactions))
+            var disbursedAmount = ownTransactions.map{ $0.amount.decimalValue }.reduce(0, +)
+            var repayedAmount = debtorTransactions.map{ $0.amount.decimalValue }.reduce(0, +)
+            if selectedIssuer.isNotNil {
+                repayedAmount += value
+            } else {
+                disbursedAmount += value
+            }
+            return (disbursedAmount - repayedAmount) < 0
+        case .liability(_):
+            let creditorTransactions = otherTransactionsConnectedToAssociate.filter{ $0.issuer.isNotNil }
+            let ownTransactions = Array(Set(otherTransactionsConnectedToAssociate).subtracting(creditorTransactions))
+            var disbursedAmount = creditorTransactions.map{ $0.amount.decimalValue }.reduce(0, +)
+            var repayedAmount = ownTransactions.map{ $0.amount.decimalValue }.reduce(0, +)
+            if selectedIssuer.isNil {
+                repayedAmount += value
+            } else {
+                disbursedAmount += value
+            }
+            return (disbursedAmount - repayedAmount) < 0
+        }
+    }
+    
+    private var valueIsNotStrictlyPositive: Bool {
+        value <= 0
+    }
+    
+    private func validateTransaction() throws {
+        if valueIsNotStrictlyPositive {
+            throw TransactionValidationError.valueNotStrictlyPositive
+        }
+        if repaymenBeforeOrConcurrentToFirstDisbursement {
+            throw TransactionValidationError.repaymentBeforeOrConcurrentToFirstDisbursement
+        }
+        if wouldMakeBalanceNegative {
+            throw TransactionValidationError.negativeBalance
+        }
+    }
+    
+    private func updateLoanTransaction(transaction: LoanTransaction) throws {
+        try validateTransaction()
         switch transactionAssociate {
         case .receivable(let receivable):
             assetRepository.updateReceivableTransaction(
@@ -64,7 +135,8 @@ class TransactionFormViewModel {
         
     }
     
-    private func createLoanTransaction() {
+    private func createLoanTransaction() throws {
+        try validateTransaction()
         switch transactionAssociate {
         case .receivable(let receivable):
             assetRepository.createReceivableTransaction(
@@ -85,11 +157,11 @@ class TransactionFormViewModel {
         }
     }
     
-    func saveLoanTransaction() {
+    func saveLoanTransaction() throws {
         if let transaction {
-            updateLoanTransaction(transaction: transaction)
+            try updateLoanTransaction(transaction: transaction)
         } else {
-            createLoanTransaction()
+            try createLoanTransaction()
         }
     }
 }
@@ -97,5 +169,14 @@ class TransactionFormViewModel {
 enum TransactionAssociate {
     case receivable(Receivable)
     case liability(Liability)
+}
+
+enum TransactionValidationError: String, LocalizedError {
+    case valueNotStrictlyPositive = "A transaction must have a value greater than zero!"
+    case repaymentBeforeOrConcurrentToFirstDisbursement = "Repayments must take place after the first disbursement!"
+    case negativeBalance = "This transaction is not supported. It would make the balance of the associated loan negative!"
+    var errorDescription: String? {
+        self.rawValue
+    }
 }
 
