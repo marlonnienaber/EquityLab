@@ -27,7 +27,7 @@ class LoanPartnerRepository: NSObject {
         observers.append(WeakPersonRepositoryObserver(observer: observer))
     }
     
-    func fetchPersons() -> [LoanPartner] {
+    func getLoanPartners() -> [LoanPartner] {
         loanPartnerFetchedResultsController.fetchedObjects ?? []
     }
     

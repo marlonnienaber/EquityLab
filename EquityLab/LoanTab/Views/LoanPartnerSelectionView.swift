@@ -7,12 +7,12 @@ struct LoanPartnerSelectionView: View {
         List {
             ForEach(viewModel.loanPartners, id: \.name) { loanPartner in
                 Button {
-                    viewModel.selectedPerson = loanPartner
+                    viewModel.selectedLoanPartner = loanPartner
                 } label: {
                     HStack {
                         Text(loanPartner.name)
                         Spacer()
-                        if loanPartner == viewModel.selectedPerson {
+                        if loanPartner == viewModel.selectedLoanPartner {
                             Image(systemName: "checkmark")
                                 .foregroundColor(.blue)
                         }
@@ -26,26 +26,26 @@ struct LoanPartnerSelectionView: View {
 //            }
         }
         .navigationTitle("Select Debtor")
-        .alert("What should the name of the new person be?", isPresented: $viewModel.showCreatePersonAlert) {
-            TextField("Value", text: $viewModel.name)
+        .alert("What should the name of the new person be?", isPresented: $viewModel.showCreateLoanPartnerAlert) {
+            TextField("Value", text: $viewModel.newLoanPartnerName)
             Button("Cancel") {
-                viewModel.showCreatePersonAlert = false
-                viewModel.name = ""
+                viewModel.showCreateLoanPartnerAlert = false
+                viewModel.newLoanPartnerName = ""
             }
             Button("Save") {
                 do {
-                    try viewModel.savePerson()
-                    viewModel.name = ""
-                } catch let error as PersonValidationError {
-                    viewModel.personValidationError = error
-                    viewModel.showPersonValidationErrorAlert = true
+                    try viewModel.createLoanPartner()
+                    viewModel.newLoanPartnerName = ""
+                } catch let error as LoanPartnerValidationError {
+                    viewModel.loanPartnerValidationError = error
+                    viewModel.showLoanPartnerValidationErrorAlert = true
                 } catch {}
             }
         }
-        .alert(isPresented: $viewModel.showPersonValidationErrorAlert, error: viewModel.personValidationError) { _ in
+        .alert(isPresented: $viewModel.showLoanPartnerValidationErrorAlert, error: viewModel.loanPartnerValidationError) { _ in
             Button("OK", role: .cancel) {
-                viewModel.personValidationError = nil
-                viewModel.showCreatePersonAlert = true
+                viewModel.loanPartnerValidationError = nil
+                viewModel.showCreateLoanPartnerAlert = true
             }
         } message: { _ in }
         .toolbar {
@@ -55,14 +55,14 @@ struct LoanPartnerSelectionView: View {
             }
             ToolbarItem(placement: .topBarTrailing) {
                 Button {
-                    viewModel.showCreatePersonAlert = true
+                    viewModel.showCreateLoanPartnerAlert = true
                 } label: {
                     Image(systemName: "plus")
                 }
             }
         }
         .onDisappear() {
-            viewModel.setInParentViewModel(viewModel.selectedPerson)
+            viewModel.setInParentViewModel(viewModel.selectedLoanPartner)
         }
     }
 }

@@ -41,7 +41,7 @@ struct LiabilityForm: View {
             TextField("name", text: $viewModel.name)
             NavigationLink {
                 LoanPartnerSelectionView(viewModel:
-                    LoanPartnerSelectionViewModel(selectedPerson: viewModel.creditor) { selectedPerson in
+                    LoanPartnerSelectionViewModel(selectedLoanPartner: viewModel.creditor) { selectedPerson in
                         viewModel.creditor = selectedPerson
                     }
                 )
