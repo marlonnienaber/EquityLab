@@ -138,10 +138,12 @@ class SnapshotStructureViewModel {
 
 extension SnapshotStructureViewModel: LiabilityPoolObserver, LiabilityObserver {
     func notifyAfterLiabilityPoolUpdate() {
+        Self.logger.debug("notifyAfterLiabilityPoolUpdate()")
         liabilityPools = liabilityRepository.getLiabilityPools()
     }
     
     func notifyAfterLiabilityUpdate() {
+        Self.logger.debug("notifyAfterLiabilityUpdate()")
         liabilityPools = liabilityRepository.getLiabilityPools()
         liabilityPoolToSnapshotStructureItemDictionary = [:]
         for pool in liabilityPools {
@@ -153,10 +155,12 @@ extension SnapshotStructureViewModel: LiabilityPoolObserver, LiabilityObserver {
 
 extension SnapshotStructureViewModel: AssetPoolObserver, ReceivableObserver, PossessionObserver {
     func notifyAfterAssetPoolUpdate() {
+        Self.logger.debug("notifyAfterAssetPoolUpdate()")
         assetPools = assetRepository.getAssetPools()
     }
     
     func notifyAfterReceivableUpdate() {
+        Self.logger.debug("notifyAfterReceivableUpdate()")
         assetPools = assetRepository.getAssetPools()
         assetPoolToSnapshotStructureItemDictionary = [:]
         for pool in assetPools {
@@ -167,6 +171,7 @@ extension SnapshotStructureViewModel: AssetPoolObserver, ReceivableObserver, Pos
     }
     
     func notifyAfterPossessionUpdate() {
+        Self.logger.debug("notifyAfterPossessionUpdate()")
         assetPools = assetRepository.getAssetPools()
         assetPoolToSnapshotStructureItemDictionary = [:]
         for pool in assetPools {

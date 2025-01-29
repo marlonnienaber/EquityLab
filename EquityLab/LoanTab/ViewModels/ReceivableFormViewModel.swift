@@ -3,7 +3,7 @@ import CoreData
 
 @Observable
 class ReceivableFormViewModel {
-    @ObservationIgnored private static let logger = Logger(subsystem: .settingsTab, component: .receivableCreateViewModel)
+    @ObservationIgnored private static let logger = Logger(subsystem: .settingsTab, component: .receivableFormViewModel)
     
     @ObservationIgnored private let assetRepository: AssetRepository
     
@@ -36,7 +36,6 @@ class ReceivableFormViewModel {
     
     
     private var assetWithSameNameDoesExist: Bool {
-        Self.logger.debug("assetWithSameNameDoesExist")
         let possessions = assetRepository.getPossessions()
         let receivables = assetRepository.getReceivables()
         let sameNamedReceivableExists = receivables.contains(where: {$0.name == name && $0 != receivable})
@@ -45,17 +44,14 @@ class ReceivableFormViewModel {
     }
     
     private var disbursedAmountNotStrictlyPositive: Bool {
-        Self.logger.debug("disbursedAmountNotStrictlyPositive")
         return disbursedAmount <= .zero
     }
     
     private var nameIsEmpty: Bool {
-        Self.logger.debug("nameIsEmpty")
         return name.isEmpty
     }
     
     private func validateReceivable() throws -> (AssetPool,LoanPartner) {
-        Self.logger.debug("validateReceivable()")
         if assetWithSameNameDoesExist {
             throw ReceivableValidationError.sameNameAlreadyExists
         }
@@ -71,7 +67,6 @@ class ReceivableFormViewModel {
     }
     
     private func createReceivable() throws {
-        Self.logger.debug("createReceivable()")
         let (assetPool,debtor) = try validateReceivable()
         assetRepository.createReceivable(name: name,
                                          debtor: debtor,
@@ -81,12 +76,12 @@ class ReceivableFormViewModel {
     }
     
     private func updateReceivable(receivable: Receivable) throws {
-        Self.logger.debug("updateReceivable()")
         let (assetPool,debtor) = try validateReceivable()
         assetRepository.updateReceivable(receivable: receivable, newName: name, newDebtor: debtor, newPool: assetPool)
     }
     
     func saveReceivable() throws {
+        Self.logger.debug("saveReceivable()")
         if let receivable {
             try updateReceivable(receivable: receivable)
         } else {

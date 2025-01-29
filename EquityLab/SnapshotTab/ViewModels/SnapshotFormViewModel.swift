@@ -1,8 +1,10 @@
-
+import os
 import CoreData
 
 @Observable
 class SnapshotFormViewModel {
+    @ObservationIgnored private static let logger = Logger(subsystem: .snapshotTab, component: .snapshotFormViewModel)
+    
     @ObservationIgnored private var snapshotRepository: SnapshotRepository
     @ObservationIgnored private let snapshot: Snapshot?
     var date: Date
@@ -20,7 +22,8 @@ class SnapshotFormViewModel {
         assetRepository: AssetRepository = .production,
         liabilityRepository: LiabilityRepository = .production,
         dismissSheet: @escaping () -> ()
-    ){
+    ) {
+        Self.logger.debug("SnapshotFormViewModel()")
         self.snapshotRepository = snapshotRepository
         self.snapshot = snapshot
         self.dismissSheet = dismissSheet
@@ -127,6 +130,7 @@ class SnapshotFormViewModel {
     
     
     func saveSnapshot() throws {
+        Self.logger.debug("saveSnapshot()")
         if snapshot.isNotNil {
             try updateSnapshot()
         } else {
@@ -135,11 +139,13 @@ class SnapshotFormViewModel {
     }
     
     func getAssetProxies(for poolName: String) -> [PositionProxy] {
-        assetProxies.filter{ $0.poolName == poolName}
+        Self.logger.debug("getAssetProxies()")
+        return assetProxies.filter{ $0.poolName == poolName}
     }
     
     func getLiabilityProxies(for poolName: String) -> [PositionProxy] {
-        liabilityProxies.filter{ $0.poolName == poolName}
+        Self.logger.debug("getLiabilityProxies()")
+        return liabilityProxies.filter{ $0.poolName == poolName}
     }
 }
 

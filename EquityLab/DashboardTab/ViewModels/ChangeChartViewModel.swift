@@ -14,6 +14,7 @@ class ChangeChartViewModel {
     }
     var dashboardViewModel: DashboardViewModel
     var changeCategories: [BarChartCategory] {
+        Self.logger.debug("changeCategories")
         guard let selectedShot = dashboardViewModel.selectedSnapshot, let beforeShot = computeSnapshotBeforeSelectedSnapshot() else { return [] }
         
         let poolValuesSelectedShot = dashboardViewModel.computeValueByPool(for: positionType, using: selectedShot)
@@ -32,7 +33,8 @@ class ChangeChartViewModel {
         return changeCategories
     }
     var maxChangePercentage: Decimal {
-        changeCategories.map{ abs($0.change) }.max() ?? 0
+        Self.logger.debug("maxChangePercentage")
+        return changeCategories.map{ abs($0.change) }.max() ?? 0
     }
     var changeChartColor: Color {
         switch changeChartType {
@@ -41,17 +43,20 @@ class ChangeChartViewModel {
         }
     }
     var noChangesToLastSnapshot: Bool {
-        changeCategories.first(where: { $0.change != 0 }).isNil
+        Self.logger.debug("noChangesToLastSnapshot")
+        return changeCategories.first(where: { $0.change != 0 }).isNil
     }
     
     
     init(changeChartType: ChangeChartType, dashboardViewModel: DashboardViewModel) {
+        Self.logger.debug("ChangeChartViewModel()")
         self.changeChartType = changeChartType
         self.dashboardViewModel = dashboardViewModel
     }
     
     
     func computeSnapshotBeforeSelectedSnapshot() -> Snapshot? {
+        Self.logger.debug("computeSnapshotBeforeSelectedSnapshot()")
         if let selectedDate = dashboardViewModel.selectedDate {
             if let index = dashboardViewModel.filteredSnapshots.firstIndex(where: {$0.date == selectedDate} ) {
                 return index == 0 ? nil : dashboardViewModel.filteredSnapshots[index - 1]

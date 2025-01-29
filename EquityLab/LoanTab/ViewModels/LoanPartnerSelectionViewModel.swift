@@ -46,6 +46,7 @@ class LoanPartnerSelectionViewModel {
     }
     
     func createLoanPartner() throws {
+        Self.logger.debug("createLoanPartner()")
         try validateLoanPartner()
         loanPartnerRepository.createPerson(with: newLoanPartnerName)
     }

@@ -32,6 +32,7 @@ class TransactionFormViewModel {
         transactionAssociate: TransactionAssociate,
         dismissSheet: @escaping () -> ()
     ) {
+        Self.logger.debug("TransactionFormViewModel()")
         self.assetRepository = assetRepository
         self.liabilityRepository = liabilityRepository
         self.transaction = transaction
@@ -158,6 +159,7 @@ class TransactionFormViewModel {
     }
     
     func saveLoanTransaction() throws {
+        Self.logger.debug("saveLoanTransaction()")
         if let transaction {
             try updateLoanTransaction(transaction: transaction)
         } else {

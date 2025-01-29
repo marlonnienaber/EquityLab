@@ -12,7 +12,8 @@ class SnapshotLedgerViewModel {
     private var yearToSnapshotDictionary = [Int:[Snapshot]]()
     var years = [Int]()
     var hasNoSnapshots: Bool {
-        years.isEmpty
+        Self.logger.debug("hasNoSnapshots")
+        return years.isEmpty
     }
     var activeSheet: SnapshotSheetType? = nil
     

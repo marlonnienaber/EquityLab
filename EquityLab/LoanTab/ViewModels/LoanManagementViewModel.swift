@@ -16,7 +16,8 @@ class LoanManagementViewModel {
     var selectedLoanType: LoanType?
     var showLoanCreatePickerSheet = false
     var hasNoLoans: Bool {
-        liabilities.isEmpty && receivables.isEmpty
+        Self.logger.debug("hasNoLoans")
+        return liabilities.isEmpty && receivables.isEmpty
     }
     
     init(assetRepository: AssetRepository = .production, liabilityRepository: LiabilityRepository = .production) {
@@ -63,40 +64,48 @@ class LoanManagementViewModel {
     }
     
     func getDisbursedAmountString(for receivable: Receivable) -> String? {
+        Self.logger.debug("getDisbursedAmountString(for receivable)")
         let disbursedAmount = receivableAnalyzer.calculateDisbursedAmount(for: receivable)
         return LocalizedCurrencyFormatter.shared.string(from: disbursedAmount.nsDecimalNumberValue)
     }
     
     func getDisbursedAmountString(for liability: Liability) -> String? {
+        Self.logger.debug("getDisbursedAmountString(for liability)")
         let disbursedAmount = liabilityAnalyzer.calculateDisbursedAmount(for: liability)
         return LocalizedCurrencyFormatter.shared.string(from: disbursedAmount.nsDecimalNumberValue)
     }
     
     func getRepaymentPercentage(for receivable: Receivable) -> Decimal {
-        receivableAnalyzer.calculateRepaymentPercentage(for: receivable).roundTo(decimalPlace: 3)
+        Self.logger.debug("getRepaymentPercentage(for receivable)")
+        return receivableAnalyzer.calculateRepaymentPercentage(for: receivable).roundTo(decimalPlace: 3)
     }
     
     func getRepaymentPercentage(for liability: Liability) -> Decimal {
-        liabilityAnalyzer.calculateRepaymentPercentage(for: liability).roundTo(decimalPlace: 3)
+        Self.logger.debug("getRepaymentPercentage(for liability)")
+        return liabilityAnalyzer.calculateRepaymentPercentage(for: liability).roundTo(decimalPlace: 3)
     }
 }
 
 extension LoanManagementViewModel: LiabilityObserver, LiabilityTransactionObserver {
     func notifyAfterLiabilityUpdate() {
+        Self.logger.debug("notifyAfterLiabilityUpdate()")
         liabilities = liabilityRepository.getLiabilities().sorted(by: liabilitySortingPredicate)
     }
     
     func notifyAfterLiabilityTransactionUpdate() {
+        Self.logger.debug("notifyAfterLiabilityTransactionUpdate()")
         liabilities = liabilities /// triggers re-rendering of view and therefore recalling of functions calculating stats over transactions
     }
 }
 
 extension LoanManagementViewModel: ReceivableObserver, ReceivableTransactionObserver {
     func notifyAfterReceivableUpdate() {
+        Self.logger.debug("notifyAfterReceivableUpdate()")
         receivables = assetRepository.getReceivables().sorted(by: receivableSortingPredicate)
     }
     
     func notifyAfterReceivableTransactionUpdate() {
+        Self.logger.debug("notifyAfterReceivableTransactionUpdate()")
         receivables = receivables /// triggers re-rendering of view and therefore recalling of functions calculating stats over transactions
     }
 }

@@ -76,7 +76,6 @@ class DashboardViewModel {
     
     
     private func getAssetValue(of snapshot: Snapshot) -> Decimal {
-        Self.logger.debug("getAssetValue(of snapshot)")
         if let assetValue = assetValueCache[snapshot] {
             return assetValue
         } else {
@@ -87,7 +86,6 @@ class DashboardViewModel {
     }
     
     private func getLiabilityValue(of snapshot: Snapshot) -> Decimal {
-        Self.logger.debug("getLiabilityValue(of snapshot)")
         if let liabilityValue = liabilityValueCache[snapshot] {
             return liabilityValue
         } else {
@@ -103,7 +101,8 @@ class DashboardViewModel {
     }
     
     func getBalanceViewModel(for snapshot: Snapshot) -> BalanceViewModel {
-        BalanceViewModel(
+        Self.logger.debug("getBalanceViewModel(for snapshot)")
+        return BalanceViewModel(
             assetValueString: LocalizedCurrencyFormatter.shared.string(from: getAssetValue(of: snapshot).nsDecimalNumberValue) ?? "",
             liabilityValueString: LocalizedCurrencyFormatter.shared.string(from: getLiabilityValue(of: snapshot).nsDecimalNumberValue) ?? "",
             equityValueString: LocalizedCurrencyFormatter.shared.string(from: getEquityValue(of: snapshot).nsDecimalNumberValue) ?? ""
@@ -111,7 +110,7 @@ class DashboardViewModel {
     }
     
     func initializeSelectedSnapshot() {
-        Self.logger.debug("")
+        Self.logger.debug("initializeSelectedSnapshot()")
         if let selectedSnapshot, !snapshots.contains(selectedSnapshot){
             self.selectedSnapshot = snapshots.last
         }

@@ -44,16 +44,16 @@ class DistributionChartViewModel {
     }
     var showPopover: Bool = false
     var noValuesRecordedForThisSnapshot: Bool {
-        distributionCategories.first(where: { $0.value > 0.0 }) == nil
+        Self.logger.debug("noValuesRecordedForThisSnapshot")
+        return distributionCategories.first(where: { $0.value > 0.0 }) == nil
     }
 
     
     init(
-            distributionChartType: DistributionChartType,
-            dashboardViewModel: DashboardViewModel,
-            repository: SnapshotRepository = .production
-        )
-    {
+        distributionChartType: DistributionChartType,
+        dashboardViewModel: DashboardViewModel,
+        repository: SnapshotRepository = .production
+    ) {
         Self.logger.debug("DistributionChartViewModel()")
         self.distributionChartType = distributionChartType
         self.dashboardViewModel = dashboardViewModel

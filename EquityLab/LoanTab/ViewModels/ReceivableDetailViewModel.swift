@@ -56,24 +56,29 @@ class ReceivableDetailViewModel {
     }
     
     func getTransactions(fallingInto monthYear: MonthYear) -> [LoanTransaction] {
-        monthYearToTransactionsDictionary[monthYear] ?? []
+        Self.logger.debug("getTransactions(fallingInto montYear)")
+        return monthYearToTransactionsDictionary[monthYear] ?? []
     }
     
     func deleteTransactions(at indexSet: IndexSet, for monthYear: MonthYear) { /* TODO: add validation here (there must always remain an initial disbursement )*/
+        Self.logger.debug("deleteTransactions(at indexSet, for monthYear)")
         guard let monthYearTransactions = monthYearToTransactionsDictionary[monthYear] else { return }
         indexSet.forEach{ assetRepository.delete(transaction: monthYearTransactions[$0]) }
     }
     
     func getDayString(for transaction: LoanTransaction) -> String {
-        loanTransactionAnalyzer.getDayString(for: transaction)
+        Self.logger.debug("getDayString(for transaction)")
+        return loanTransactionAnalyzer.getDayString(for: transaction)
     }
     
     func getMonthString(for transaction: LoanTransaction) -> String {
-        loanTransactionAnalyzer.getMonthString(for: transaction)
+        Self.logger.debug("getMonthString(for transaction)")
+        return loanTransactionAnalyzer.getMonthString(for: transaction)
     }
     
     func getAmountString(for transaction: LoanTransaction) -> String? {
-        loanTransactionAnalyzer.getAmountString(for: transaction)
+        Self.logger.debug("getAmountString(for transaction)")
+        return loanTransactionAnalyzer.getAmountString(for: transaction)
     }
 }
 
@@ -96,6 +101,7 @@ enum ReceivableDetailSheetType: Identifiable {
 
 extension ReceivableDetailViewModel: ReceivableTransactionObserver {
     func notifyAfterReceivableTransactionUpdate() {
+        Self.logger.debug("notifyAfterReceivableTransactionUpdate()")
         populateMonthYearsAndTransactions()
     }
 }
