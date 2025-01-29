@@ -54,6 +54,7 @@ struct TransactionForm: View {
     }
 }
 
+/* TODO: extract to Utility */
 struct Collapsible<Content: View>: View {
     @State private var isExpanded: Bool = false
     let labelText: String

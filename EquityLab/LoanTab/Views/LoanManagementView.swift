@@ -50,7 +50,7 @@ struct LoanManagementView: View {
                 }
             }
             .sheet(item: $viewModel.activeLoanCreateSheet) { activeSheet in
-                updateSheetContent(for: activeSheet)
+                loanCreateSheetContent(for: activeSheet)
             }
             .sheet(isPresented: $viewModel.showLoanCreatePickerSheet) {
                 loanCreatePickerMenu
@@ -106,7 +106,7 @@ struct LoanManagementView: View {
     }
     
     @ViewBuilder
-    private func updateSheetContent(for sheetType: LoanCreateSheet) -> some View {
+    private func loanCreateSheetContent(for sheetType: LoanCreateSheet) -> some View {
         switch sheetType {
         case .receivableCreateSheet: ReceivableForm(viewModel: ReceivableFormViewModel{ viewModel.activeLoanCreateSheet = nil } )
         case .liabilityCreateSheet: LiabilityForm(viewModel: LiabilityFormViewModel{viewModel.activeLoanCreateSheet = nil} )

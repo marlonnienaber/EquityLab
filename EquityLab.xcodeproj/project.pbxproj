@@ -393,10 +393,10 @@
 		7342ED342C44754E00BA20A4 /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				73A243252D0F6EA60083C6DF /* LoanPartnerRepository.swift */,
 				7342ED3A2C44782700BA20A4 /* SnapshotFiles */,
 				7342ED382C44781000BA20A4 /* AssetFiles */,
 				7342ED392C44781D00BA20A4 /* LiabilityFiles */,
+				73A243252D0F6EA60083C6DF /* LoanPartnerRepository.swift */,
 				73980F452AA57A4500CA4849 /* CoreDataModel.xcdatamodeld */,
 				7342ED732C447B7200BA20A4 /* ProductionCoreDataStack.swift */,
 				7314FD6E2C7510E100483835 /* TestingCoreDataStack.swift */,
@@ -605,18 +605,18 @@
 		73B8119F2CA7261D003B1973 /* Tests */ = {
 			isa = PBXGroup;
 			children = (
-				735F7B632D4AE36D00121E6A /* LoanPartnerSelectionViewModelTests.swift */,
-				73D88C0C2D48444100011772 /* TransactionFormViewModelTests.swift */,
-				732828FB2D46EAF000D778E9 /* ReceivableDetailViewModelTests.swift */,
-				732828F12D46D3AA00D778E9 /* LiabilityDetailViewModelTests.swift */,
 				7363DDF12CA758D1009F3412 /* DashboardViewModelTests.swift */,
 				733473862C8DEC950050C656 /* DistributionChartViewModelTests.swift */,
 				732CE5252D3A76E300DB53ED /* ChangeChartViewModelTests.swift */,
 				73B811992CA6D3E3003B1973 /* SnapshotLedgerViewModelTests.swift */,
 				7363DDF92CA99557009F3412 /* SnapshotFormViewModelTests.swift */,
 				73332B952CC67E7D0020839D /* LoanManagementViewModelTests.swift */,
+				732828F12D46D3AA00D778E9 /* LiabilityDetailViewModelTests.swift */,
 				7366CD1D2CB1EAEF0066ACC3 /* LiabilityFormViewModelTests.swift */,
+				732828FB2D46EAF000D778E9 /* ReceivableDetailViewModelTests.swift */,
 				737967122D034F9F0001278D /* ReceivableFormViewModelTests.swift */,
+				73D88C0C2D48444100011772 /* TransactionFormViewModelTests.swift */,
+				735F7B632D4AE36D00121E6A /* LoanPartnerSelectionViewModelTests.swift */,
 				73037F612CC2E19E005DD105 /* SnapshotStructureViewModelTests.swift */,
 				737967142D034FAA0001278D /* PossessionFormViewModelTests.swift */,
 			);
@@ -626,18 +626,18 @@
 		73B811A02CA72624003B1973 /* TestDataProviders */ = {
 			isa = PBXGroup;
 			children = (
-				735F7B652D4AE37C00121E6A /* LoanPartnerSelectionViewModelTestDataProvider.swift */,
-				73D88C0E2D48445000011772 /* TransactionFormViewModelTestDataProvider.swift */,
-				732828F92D46E9E400D778E9 /* ReceivableDetailViewModelTestDataProvider.swift */,
-				732828F32D46D44D00D778E9 /* LiabilityDetailViewModelTestDataProvider.swift */,
 				73B811A12CA72644003B1973 /* DashboardViewModelTestDataProvider.swift */,
 				73B811A52CA72670003B1973 /* DistributionChartViewModelTestDataProvider.swift */,
 				732CE5272D3A7F8600DB53ED /* ChangeChartViewModelTestDataProvider.swift */,
 				73B811A32CA72655003B1973 /* SnapshotLedgerViewModelTestDataProvider.swift */,
 				7363DDFB2CA9F0A9009F3412 /* SnapshotFormViewModelTestDataProvider.swift */,
 				73332B972CC67E980020839D /* LoanManagementViewModelTestDataProvider.swift */,
+				732828F32D46D44D00D778E9 /* LiabilityDetailViewModelTestDataProvider.swift */,
 				7366CD1F2CB1EB0C0066ACC3 /* LiabilityFormViewModelTestDataProvider.swift */,
+				732828F92D46E9E400D778E9 /* ReceivableDetailViewModelTestDataProvider.swift */,
 				737967182D0350130001278D /* ReceivableFormViewModelTestDataProvider.swift */,
+				73D88C0E2D48445000011772 /* TransactionFormViewModelTestDataProvider.swift */,
+				735F7B652D4AE37C00121E6A /* LoanPartnerSelectionViewModelTestDataProvider.swift */,
 				73037F632CC2E230005DD105 /* SnapshotStructureViewModelTestDataProvider.swift */,
 				737967162D03500C0001278D /* PossessionFormViewModelTestDataProvider.swift */,
 			);
