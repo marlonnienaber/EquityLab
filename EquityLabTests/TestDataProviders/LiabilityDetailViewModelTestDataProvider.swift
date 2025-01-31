@@ -142,7 +142,7 @@ struct LiabilityDetailViewModelTestDataProvider {
         return (person,liability,monthYearTotransactionsDictionary)
     }
     
-    func createAndPersistTestObjects_deleteTransactions_1(context: NSManagedObjectContext) -> (LoanPartner,Liability,[LoanTransaction]) {
+    func createAndPersistTestObjects_batchDeleteTransactions(context: NSManagedObjectContext) -> (LoanPartner,Liability,[LoanTransaction]) {
         let person = DataFactory.createLoanPartner(name: "Papa", context: context)
         let liabilityTransaction1 = DataFactory.createLoanTransaction(
             issuer: person,
@@ -201,10 +201,10 @@ struct LiabilityDetailViewModelTestDataProvider {
             ],
             context: context
         )
-        return (person,liability,[liabilityTransaction3,liabilityTransaction4,liabilityTransaction5,liabilityTransaction6])
+        return (person,liability,[liabilityTransaction1,liabilityTransaction2,liabilityTransaction3,liabilityTransaction4,liabilityTransaction5,liabilityTransaction6])
     }
     
-    func createAndPersistTestObjects_deleteTransactions_2(context: NSManagedObjectContext) -> (LoanPartner,Liability,[LoanTransaction]) {
+    func createAndPersistTestObjects_deleteTransactions(context: NSManagedObjectContext) -> (LoanPartner,Liability,[LoanTransaction]) {
         let person = DataFactory.createLoanPartner(name: "Papa", context: context)
         let liabilityTransaction1 = DataFactory.createLoanTransaction(
             issuer: person,
@@ -264,6 +264,68 @@ struct LiabilityDetailViewModelTestDataProvider {
             context: context
         )
         return (person,liability,[liabilityTransaction1,liabilityTransaction3,liabilityTransaction4,liabilityTransaction5,liabilityTransaction6])
+    }
+    
+    func createAndPersistTestObjects_deleteTransactionsNegativeBalanceThroughDeletion(context: NSManagedObjectContext) -> (LoanPartner,Liability,[LoanTransaction]) {
+        let person = DataFactory.createLoanPartner(name: "Papa", context: context)
+        let liabilityTransaction1 = DataFactory.createLoanTransaction(
+            issuer: person,
+            date: DateParser.shared.date(from: "2024-04-15T00:00:00")!,
+            amount: 3000,
+            note: "disbursed amount",
+            emoji: "💶",
+            context: context
+        )
+        let liabilityTransaction2 = DataFactory.createLoanTransaction(
+            date: DateParser.shared.date(from: "2024-04-17T00:00:00")!,
+            amount: 100,
+            note: "repayment",
+            emoji: "🔁",
+            context: context
+        )
+        let liabilityTransaction3 = DataFactory.createLoanTransaction(
+            date: DateParser.shared.date(from: "2024-07-11T00:00:00")!,
+            amount: 100,
+            note: "repayment",
+            emoji: "🔁",
+            context: context
+        )
+        let liabilityTransaction4 = DataFactory.createLoanTransaction(
+            issuer: person,
+            date: DateParser.shared.date(from: "2024-07-27T00:00:00")!,
+            amount: 1000,
+            note: "disbursed amount",
+            emoji: "💶",
+            context: context
+        )
+        let liabilityTransaction5 = DataFactory.createLoanTransaction(
+            date: DateParser.shared.date(from: "2024-12-01T00:00:00")!,
+            amount: 100,
+            note: "repayment",
+            emoji: "🔁",
+            context: context
+        )
+        let liabilityTransaction6 = DataFactory.createLoanTransaction(
+            date: DateParser.shared.date(from: "2025-01-03T00:00:00")!,
+            amount: 100,
+            note: "repayment",
+            emoji: "🔁",
+            context: context
+        )
+        let liability = DataFactory.createLiability(
+            name: "Studium",
+            creditor: person,
+            transactions: [
+                liabilityTransaction1,
+                liabilityTransaction2,
+                liabilityTransaction3,
+                liabilityTransaction4,
+                liabilityTransaction5,
+                liabilityTransaction6,
+            ],
+            context: context
+        )
+        return (person,liability,[liabilityTransaction1,liabilityTransaction2,liabilityTransaction3,liabilityTransaction4,liabilityTransaction5,liabilityTransaction6])
     }
 }
 

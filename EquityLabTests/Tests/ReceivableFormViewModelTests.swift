@@ -291,6 +291,20 @@ final class ReceivableFormViewModelTests: XCTestCase {
             XCTAssertEqual(error as? ReceivableValidationError, ReceivableValidationError.sameNameAlreadyExists)
         }
     }
+    
+    
+    
+    /// delete a Receivable
+    func test_deleteReceivable() throws {
+        let receivableToDelete = testDataProvider.createAndPersistTestObjects_updateReceivable_multipurpose(context: testingCoreDataStack.context)
+  
+        let sut = ReceivableFormViewModel(assetRepository: testingAssetRepository, receivable: receivableToDelete, dismissSheet: {})
+        
+        sut.deleteReceivable()
+        
+        let receivables = testingAssetRepository.getReceivables()
+        XCTAssertTrue(receivables.isEmpty)
+    }
 }
 
 

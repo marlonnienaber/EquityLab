@@ -26,6 +26,11 @@ struct ReceivableDetailView: View {
                 ReceivableForm(viewModel: ReceivableFormViewModel(receivable: receivable) { viewModel.activeReceivableDetailSheet = nil })
             }
         }
+        .alert(isPresented: $viewModel.showTransactionValidationErrorAlert, error: viewModel.transactionValidationError) { _ in
+            Button("OK", role: .cancel) {
+                viewModel.transactionValidationError = nil
+            }
+        } message: { _ in }
     }
     
     private var headerOptions: some View {
@@ -75,7 +80,12 @@ struct ReceivableDetailView: View {
             .listRowSeparator(.hidden)
         }
         .onDelete { indices in
-            viewModel.deleteTransactions(at: indices, for: monthYear)
+            do {
+                try viewModel.deleteTransactions(at: indices, for: monthYear)
+            } catch let error as TransactionValidationError {
+                viewModel.transactionValidationError = error
+                viewModel.showTransactionValidationErrorAlert = true
+            } catch {}
         }
     }
     

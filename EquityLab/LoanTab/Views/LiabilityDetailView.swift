@@ -23,9 +23,14 @@ struct LiabilityDetailView: View {
             case .editTransactionFormSheet(let transaction):
                 TransactionForm(viewModel: TransactionFormViewModel(transaction: transaction, loanPartner: viewModel.creditor, transactionAssociate: .liability(viewModel.liability)) { viewModel.activeLiabilityDetailSheet = nil })
             case .editLiabilitySheet(let liability):
-                EmptyView() /* TODO: implement */
+                LiabilityForm(viewModel: LiabilityFormViewModel(liability: liability) { viewModel.activeLiabilityDetailSheet = nil })
             }
         }
+        .alert(isPresented: $viewModel.showTransactionValidationErrorAlert, error: viewModel.transactionValidationError) { _ in
+            Button("OK", role: .cancel) {
+                viewModel.transactionValidationError = nil
+            }
+        } message: { _ in }
     }
     
     private var headerOptions: some View {
@@ -75,7 +80,12 @@ struct LiabilityDetailView: View {
             .listRowSeparator(.hidden)
         }
         .onDelete { indices in
-            viewModel.deleteTransactions(at: indices, for: monthYear)
+            do {
+                try viewModel.deleteTransactions(at: indices, for: monthYear)
+            } catch let error as TransactionValidationError {
+                viewModel.transactionValidationError = error
+                viewModel.showTransactionValidationErrorAlert = true
+            } catch {}
         }
     }
     

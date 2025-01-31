@@ -169,7 +169,6 @@ extension LiabilityRepository: NSFetchedResultsControllerDelegate {
     }
 }
 
-/* TODO: will the callback logic create a retain cycle or other memory problems? */
 protocol LiabilityPoolObserver: AnyObject {
     func notifyAfterLiabilityPoolUpdate()
 }

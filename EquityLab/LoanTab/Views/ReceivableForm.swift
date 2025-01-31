@@ -13,7 +13,9 @@ struct ReceivableForm: View {
                     if viewModel.receivable.isNil {
                         dataSection
                     }
-                    /* TODO: add delete button for SnapshotStructureView */
+                    if viewModel.deletionPossible {
+                        deletionButton
+                    }
                 }
             }
             .navigationTitle(viewModel.receivable.isNil ? "New Receivable" : "Edit Receivable")
@@ -71,6 +73,15 @@ struct ReceivableForm: View {
             }
             DatePicker("date", selection: $viewModel.grantDate, in: ...Date(), displayedComponents: .date)
         }
+    }
+    
+    private var deletionButton: some View {
+        Button("Delete") {
+            viewModel.deleteReceivable()
+            viewModel.dismissSheet()
+        }
+        .frame(maxWidth: .infinity, alignment: .center)
+        .foregroundStyle(.red)
     }
     
     private var cancelButton: some View {

@@ -15,12 +15,14 @@ class ReceivableFormViewModel {
     var disbursedAmount: Decimal
     var receivableValidationError: ReceivableValidationError?
     var showValidationErrorAlert = false
+    let deletionPossible: Bool
     let dismissSheet: () -> ()
     
     
     init(
         assetRepository: AssetRepository = .production,
         receivable: Receivable? = nil,
+        deletionPossible: Bool = false,
         dismissSheet: @escaping () -> ()
     ) {
         Self.logger.debug("ReceivableCreateViewModel()")
@@ -31,6 +33,7 @@ class ReceivableFormViewModel {
         self.debtor = receivable?.debtor
         self.grantDate = .now
         self.disbursedAmount = 0.0
+        self.deletionPossible = deletionPossible
         self.dismissSheet = dismissSheet
     }
     
@@ -87,6 +90,12 @@ class ReceivableFormViewModel {
         } else {
             try createReceivable()
         }
+    }
+    
+    func deleteReceivable() {
+        Self.logger.debug("getAssetPools()")
+        guard let receivable else { return }
+        assetRepository.delete(receivable: receivable)
     }
     
     func getAssetPools() -> [AssetPool] {

@@ -15,12 +15,14 @@ class LiabilityFormViewModel {
     var disbursedAmount: Decimal
     var liabilityValidationError: LiabilityValidationError?
     var showValidationErrorAlert = false
+    let deletionPossible: Bool
     let dismissSheet: () -> ()
     
     
     init(
         liabilityRepository: LiabilityRepository = .production,
         liability: Liability? = nil,
+        deletionPossible: Bool = false,
         dismissSheet: @escaping () -> ()
     ) {
         Self.logger.debug("LiabilityFormViewModel()")
@@ -31,6 +33,7 @@ class LiabilityFormViewModel {
         self.creditor = liability?.creditor
         self.grantDate = .now
         self.disbursedAmount = 0.0
+        self.deletionPossible = deletionPossible
         self.dismissSheet = dismissSheet
     }
     
@@ -97,6 +100,12 @@ class LiabilityFormViewModel {
         } else {
             try updateLiability()
         }
+    }
+    
+    func deleteLiability() {
+        Self.logger.debug("getAssetPools()")
+        guard let liability else { return }
+        liabilityRepository.delete(liability: liability)
     }
     
     func getLiabilityPools() -> [LiabilityPool] {

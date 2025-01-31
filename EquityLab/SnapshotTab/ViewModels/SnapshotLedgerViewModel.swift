@@ -51,11 +51,6 @@ class SnapshotLedgerViewModel {
         indexSet.map{sectionSnapshots[$0]}.forEach{repository.delete(snapshot: $0)}
     }
     
-    func deleteSnapshots(withIndices indexSet: IndexSet) {
-        Self.logger.debug("deleteSnapshots(withIndices indexSet)")
-        indexSet.map{snapshots[$0]}.forEach{repository.delete(snapshot: $0)}
-    }
-    
     func getEquityValue(of snapshot: Snapshot) -> NSNumber {
         Self.logger.debug("getEquityValue(of snapshot)")
         let equityValue = equityValueCache[snapshot] ?? 0.0

@@ -146,7 +146,7 @@ final class LiabilityFormViewModelTests: XCTestCase {
     
     /// update a Liability
     func test_updateLiability_1() throws {
-        let liabilityToUpdate = testDataProvider.createAndPersistTestObjects_updateLiability_1(context: testingCoreDataStack.context)
+        let liabilityToUpdate = testDataProvider.createAndPersistTestObjects_updateOrDeleteLiability_1(context: testingCoreDataStack.context)
   
         let sut = LiabilityFormViewModel(liabilityRepository: testingLiabilityRepository, liability: liabilityToUpdate, dismissSheet: {})
         
@@ -174,7 +174,7 @@ final class LiabilityFormViewModelTests: XCTestCase {
     
     /// update a Liability with an empty name and check whether the correct error is thrown
     func test_updateLiability_2() throws {
-        let liabilityToUpdate = testDataProvider.createAndPersistTestObjects_updateLiability_1(context: testingCoreDataStack.context)
+        let liabilityToUpdate = testDataProvider.createAndPersistTestObjects_updateOrDeleteLiability_1(context: testingCoreDataStack.context)
   
         let sut = LiabilityFormViewModel(liabilityRepository: testingLiabilityRepository, liability: liabilityToUpdate, dismissSheet: {})
         
@@ -186,7 +186,7 @@ final class LiabilityFormViewModelTests: XCTestCase {
     
     /// update a Liability with non-selected creditor and check whether the correct error is thrown
     func test_updateLiability_3() throws {
-        let liabilityToUpdate = testDataProvider.createAndPersistTestObjects_updateLiability_1(context: testingCoreDataStack.context)
+        let liabilityToUpdate = testDataProvider.createAndPersistTestObjects_updateOrDeleteLiability_1(context: testingCoreDataStack.context)
   
         let sut = LiabilityFormViewModel(liabilityRepository: testingLiabilityRepository, liability: liabilityToUpdate, dismissSheet: {})
         
@@ -198,7 +198,7 @@ final class LiabilityFormViewModelTests: XCTestCase {
     
     /// update a Liability such that no liabilityPool is selected and check whether the correct error is thrown
     func test_updateLiability_6() throws {
-        let liabilityToUpdate = testDataProvider.createAndPersistTestObjects_updateLiability_1(context: testingCoreDataStack.context)
+        let liabilityToUpdate = testDataProvider.createAndPersistTestObjects_updateOrDeleteLiability_1(context: testingCoreDataStack.context)
   
         let sut = LiabilityFormViewModel(liabilityRepository: testingLiabilityRepository, liability: liabilityToUpdate, dismissSheet: {})
         
@@ -222,10 +222,24 @@ final class LiabilityFormViewModelTests: XCTestCase {
     
     /// update a Liability with its previous name and check that no error is thrown
     func test_updateLiability_8() throws {
-        let liabilityToUpdate = testDataProvider.createAndPersistTestObjects_updateLiability_1(context: testingCoreDataStack.context)
+        let liabilityToUpdate = testDataProvider.createAndPersistTestObjects_updateOrDeleteLiability_1(context: testingCoreDataStack.context)
   
         let sut = LiabilityFormViewModel(liabilityRepository: testingLiabilityRepository, liability: liabilityToUpdate, dismissSheet: {})
         
         try sut.saveLiability()
+    }
+    
+    
+    
+    /// delete a Liability
+    func test_deleteLiability() throws {
+        let liabilityToDelete = testDataProvider.createAndPersistTestObjects_updateOrDeleteLiability_1(context: testingCoreDataStack.context)
+  
+        let sut = LiabilityFormViewModel(liabilityRepository: testingLiabilityRepository, liability: liabilityToDelete, dismissSheet: {})
+        
+        sut.deleteLiability()
+        
+        let liabilities = testingLiabilityRepository.getLiabilities()
+        XCTAssertTrue(liabilities.isEmpty)
     }
 }

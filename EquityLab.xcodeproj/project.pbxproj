@@ -123,6 +123,7 @@
 		73D2C5922C5FBE3B0019A800 /* LocalizedLongDateFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73D2C5912C5FBE3B0019A800 /* LocalizedLongDateFormatter.swift */; };
 		73D88C0D2D48444C00011772 /* TransactionFormViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73D88C0C2D48444100011772 /* TransactionFormViewModelTests.swift */; };
 		73D88C0F2D48445C00011772 /* TransactionFormViewModelTestDataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73D88C0E2D48445000011772 /* TransactionFormViewModelTestDataProvider.swift */; };
+		73E6341E2D4C2B8900302D93 /* Collapsible.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73E6341D2D4C2B8000302D93 /* Collapsible.swift */; };
 		73FE1F782D19CD51000FC969 /* ReceivableForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73A243082D0F56830083C6DF /* ReceivableForm.swift */; };
 		73FE1F7B2D19E459000FC969 /* LoanPartner+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73FE1F792D19E459000FC969 /* LoanPartner+CoreDataClass.swift */; };
 		73FE1F7C2D19E459000FC969 /* LoanPartner+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73FE1F7A2D19E459000FC969 /* LoanPartner+CoreDataProperties.swift */; };
@@ -255,6 +256,7 @@
 		73D2C5912C5FBE3B0019A800 /* LocalizedLongDateFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalizedLongDateFormatter.swift; sourceTree = "<group>"; };
 		73D88C0C2D48444100011772 /* TransactionFormViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionFormViewModelTests.swift; sourceTree = "<group>"; };
 		73D88C0E2D48445000011772 /* TransactionFormViewModelTestDataProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionFormViewModelTestDataProvider.swift; sourceTree = "<group>"; };
+		73E6341D2D4C2B8000302D93 /* Collapsible.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Collapsible.swift; sourceTree = "<group>"; };
 		73FE1F792D19E459000FC969 /* LoanPartner+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LoanPartner+CoreDataClass.swift"; sourceTree = SOURCE_ROOT; };
 		73FE1F7A2D19E459000FC969 /* LoanPartner+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LoanPartner+CoreDataProperties.swift"; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
@@ -361,7 +363,6 @@
 			children = (
 				7342ED252C44750200BA20A4 /* EquityLab */,
 				7314FD662C75106500483835 /* EquityLabTests */,
-				73A243202D0F65EB0083C6DF /* Frameworks */,
 				7342ED242C44750200BA20A4 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -453,6 +454,7 @@
 		7342ED752C447BA300BA20A4 /* Utility */ = {
 			isa = PBXGroup;
 			children = (
+				73E6341D2D4C2B8000302D93 /* Collapsible.swift */,
 				73ACFA332D20ABCA0012E461 /* NSFetchedResultsController+Extension.swift */,
 				73A243112D0F57980083C6DF /* Pair.swift */,
 				7311776A2CFA769200A595DE /* Decimal+Extension.swift */,
@@ -573,13 +575,6 @@
 				7363D3D82C86416600EC9F16 /* Logger.swift */,
 			);
 			path = Logging;
-			sourceTree = "<group>";
-		};
-		73A243202D0F65EB0083C6DF /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = Frameworks;
 			sourceTree = "<group>";
 		};
 		73A428072C7E3B090086181F /* Utility */ = {
@@ -805,6 +800,7 @@
 				73A242FC2D0F53B60083C6DF /* LoanTransaction+CoreDataClass.swift in Sources */,
 				73A243122D0F57980083C6DF /* Pair.swift in Sources */,
 				73A242FD2D0F53B60083C6DF /* LoanTransaction+CoreDataProperties.swift in Sources */,
+				73E6341E2D4C2B8900302D93 /* Collapsible.swift in Sources */,
 				7363DE022CAC74AC009F3412 /* NSManagedObject+Extension.swift in Sources */,
 				7342EDB52C44842100BA20A4 /* AssetPosition+CoreDataClass.swift in Sources */,
 				73037F6C2CC3B23F005DD105 /* LoanManagementView.swift in Sources */,

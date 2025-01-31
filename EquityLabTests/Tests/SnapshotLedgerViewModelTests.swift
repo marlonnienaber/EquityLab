@@ -1,7 +1,6 @@
 import XCTest
 @testable import EquityLab
 
-/* TODO: test interface providing data to view after CRUD operation on model (ATM it is only tested whether persisted data is correct, not whether the change is reflected in the viewModels data) */
 final class SnapshotLedgerViewModelTests: XCTestCase {
     private var testingCoreDataStack: TestingCoreDataStack!
     private var testingSnapshotRepository: SnapshotRepository!
@@ -63,62 +62,6 @@ final class SnapshotLedgerViewModelTests: XCTestCase {
         let sut = SnapshotLedgerViewModel(repository: testingSnapshotRepository)
         let (year, indexSet, expectedRemainingSnapshots) = testDataProvider.createAndPersistTestObjects_deleteSnapshotsInYear_3(using: testingCoreDataStack.context)
         sut.deleteSnapshots(in: year, for: indexSet)
-        let actualRemainingSnapshots = testingSnapshotRepository.getSnapshots()
-        XCTAssertTrue(expectedRemainingSnapshots ≡ actualRemainingSnapshots)
-    }
-    
-    
-    
-    /// no indices
-    func test_deleteSnapshotsWithIndices_1() throws {
-        let sut = SnapshotLedgerViewModel(repository: testingSnapshotRepository)
-        let (indexSet, expectedRemainingSnapshots) = testDataProvider.createAndPersistTestObjects_deleteSnapshotsWithIndices_1(using: testingCoreDataStack.context)
-        sut.deleteSnapshots(withIndices: indexSet)
-        let actualRemainingSnapshots = testingSnapshotRepository.getSnapshots()
-        XCTAssertTrue(expectedRemainingSnapshots ≡ actualRemainingSnapshots)
-    }
-    
-    /// first index
-    func test_deleteSnapshotsWithIndices_2() throws {
-        let sut = SnapshotLedgerViewModel(repository: testingSnapshotRepository)
-        let (indexSet, expectedRemainingSnapshots) = testDataProvider.createAndPersistTestObjects_deleteSnapshotsWithIndices_2(using: testingCoreDataStack.context)
-        sut.deleteSnapshots(withIndices: indexSet)
-        let actualRemainingSnapshots = testingSnapshotRepository.getSnapshots()
-        XCTAssertTrue(expectedRemainingSnapshots ≡ actualRemainingSnapshots)
-    }
-    
-    /// last index
-    func test_deleteSnapshotsWithIndices_3() throws {
-        let sut = SnapshotLedgerViewModel(repository: testingSnapshotRepository)
-        let (indexSet, expectedRemainingSnapshots) = testDataProvider.createAndPersistTestObjects_deleteSnapshotsWithIndices_3(using: testingCoreDataStack.context)
-        sut.deleteSnapshots(withIndices: indexSet)
-        let actualRemainingSnapshots = testingSnapshotRepository.getSnapshots()
-        XCTAssertTrue(expectedRemainingSnapshots ≡ actualRemainingSnapshots)
-    }
-    
-    /// some middle index
-    func test_deleteSnapshotsWithIndices_4() throws {
-        let sut = SnapshotLedgerViewModel(repository: testingSnapshotRepository)
-        let (indexSet, expectedRemainingSnapshots) = testDataProvider.createAndPersistTestObjects_deleteSnapshotsWithIndices_4(using: testingCoreDataStack.context)
-        sut.deleteSnapshots(withIndices: indexSet)
-        let actualRemainingSnapshots = testingSnapshotRepository.getSnapshots()
-        XCTAssertTrue(expectedRemainingSnapshots ≡ actualRemainingSnapshots)
-    }
-    
-    /// multiple indices
-    func test_deleteSnapshotsWithIndices_5() throws {
-        let sut = SnapshotLedgerViewModel(repository: testingSnapshotRepository)
-        let (indexSet, expectedRemainingSnapshots) = testDataProvider.createAndPersistTestObjects_deleteSnapshotsWithIndices_5(using: testingCoreDataStack.context)
-        sut.deleteSnapshots(withIndices: indexSet)
-        let actualRemainingSnapshots = testingSnapshotRepository.getSnapshots()
-        XCTAssertTrue(expectedRemainingSnapshots ≡ actualRemainingSnapshots)
-    }
-    
-    /// all indices
-    func test_deleteSnapshotsWithIndices_6() throws {
-        let sut = SnapshotLedgerViewModel(repository: testingSnapshotRepository)
-        let (indexSet, expectedRemainingSnapshots) = testDataProvider.createAndPersistTestObjects_deleteSnapshotsWithIndices_6(using: testingCoreDataStack.context)
-        sut.deleteSnapshots(withIndices: indexSet)
         let actualRemainingSnapshots = testingSnapshotRepository.getSnapshots()
         XCTAssertTrue(expectedRemainingSnapshots ≡ actualRemainingSnapshots)
     }

@@ -109,7 +109,7 @@ class TransactionFormViewModel {
             throw TransactionValidationError.repaymentBeforeOrConcurrentToFirstDisbursement
         }
         if wouldMakeBalanceNegative {
-            throw TransactionValidationError.negativeBalance
+            throw TransactionValidationError.negativeBalanceThroughCreation
         }
     }
     
@@ -176,7 +176,8 @@ enum TransactionAssociate {
 enum TransactionValidationError: String, LocalizedError {
     case valueNotStrictlyPositive = "A transaction must have a value greater than zero!"
     case repaymentBeforeOrConcurrentToFirstDisbursement = "Repayments must take place after the first disbursement!"
-    case negativeBalance = "This transaction is not supported. It would make the balance of the associated loan negative!"
+    case negativeBalanceThroughCreation = "This transaction is not supported. It would make the balance of the associated loan negative!"
+    case negativeBalanceThroughDeletion = "The deletion of this transaction would cause a negative balance at some time during th duration of the loan. This is not supported."
     var errorDescription: String? {
         self.rawValue
     }

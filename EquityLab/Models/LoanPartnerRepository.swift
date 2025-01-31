@@ -31,19 +31,16 @@ class LoanPartnerRepository: NSObject {
         loanPartnerFetchedResultsController.fetchedObjects ?? []
     }
     
-    func createPerson(with name: String) {
-        let context = loanPartnerFetchedResultsController.managedObjectContext
+    func createLoanPartner(with name: String) {
         let loanPartner = LoanPartner(usedContext: context)
         loanPartner.name = name
         try? context.save()
     }
     
-    /* TODO: ensure consistency of models -> only delete if all relationships allow for it! */
-//    func deletePerson(person: Person) {
-//        let context = fetchedResultsController.managedObjectContext
-//        context.delete(person)
-//        try? context.save()
-//    }
+    func deleteLoanPartner(_ loanPartner: LoanPartner) {
+        context.delete(loanPartner)
+        try? context.save()
+    }
 }
 
 extension LoanPartnerRepository: NSFetchedResultsControllerDelegate {
@@ -58,7 +55,6 @@ extension LoanPartnerRepository: NSFetchedResultsControllerDelegate {
 }
 
 protocol LoanPartnerObserver: AnyObject {
-    /* TODO: will this create a retain cycle or other memory problems */
     func notifyAfterLoanPartnerUpdate()
 }
 

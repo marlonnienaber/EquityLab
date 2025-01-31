@@ -146,7 +146,7 @@ struct ReceivableDetailViewModelTestDataProvider {
         return (person,receivable,monthYearTotransactionsDictionary)
     }
     
-    func createAndPersistTestObjects_deleteTransactions_1(context: NSManagedObjectContext) -> (LoanPartner,Receivable,[LoanTransaction]) {
+    func createAndPersistTestObjects_deleteTransactions(context: NSManagedObjectContext) -> (LoanPartner,Receivable,[LoanTransaction]) {
         let person = DataFactory.createLoanPartner(name: "Papa", context: context)
         let receivableTransaction1 = DataFactory.createLoanTransaction(
             date: DateParser.shared.date(from: "2024-04-15T00:00:00")!,
@@ -188,68 +188,6 @@ struct ReceivableDetailViewModelTestDataProvider {
         )
         let receivableTransaction6 = DataFactory.createLoanTransaction(
             issuer: person,
-            date: DateParser.shared.date(from: "2025-01-03T00:00:00")!,
-            amount: 100,
-            note: "repayment",
-            emoji: "🔁",
-            context: context
-        )
-        let receivable = DataFactory.createReceivable(
-            name: "Studium",
-            debtor: person,
-            transactions: [
-                receivableTransaction1,
-                receivableTransaction2,
-                receivableTransaction3,
-                receivableTransaction4,
-                receivableTransaction5,
-                receivableTransaction6,
-            ],
-            context: context
-        )
-        return (person,receivable,[receivableTransaction3,receivableTransaction4,receivableTransaction5,receivableTransaction6])
-    }
-    
-    func createAndPersistTestObjects_deleteTransactions_2(context: NSManagedObjectContext) -> (LoanPartner,Receivable,[LoanTransaction]) {
-        let person = DataFactory.createLoanPartner(name: "Papa", context: context)
-        let receivableTransaction1 = DataFactory.createLoanTransaction(
-            issuer: person,
-            date: DateParser.shared.date(from: "2024-04-15T00:00:00")!,
-            amount: 3000,
-            note: "disbursed amount",
-            emoji: "💶",
-            context: context
-        )
-        let receivableTransaction2 = DataFactory.createLoanTransaction(
-            date: DateParser.shared.date(from: "2024-04-17T00:00:00")!,
-            amount: 100,
-            note: "repayment",
-            emoji: "🔁",
-            context: context
-        )
-        let receivableTransaction3 = DataFactory.createLoanTransaction(
-            date: DateParser.shared.date(from: "2024-07-11T00:00:00")!,
-            amount: 100,
-            note: "repayment",
-            emoji: "🔁",
-            context: context
-        )
-        let receivableTransaction4 = DataFactory.createLoanTransaction(
-            issuer: person,
-            date: DateParser.shared.date(from: "2024-07-27T00:00:00")!,
-            amount: 1000,
-            note: "disbursed amount",
-            emoji: "💶",
-            context: context
-        )
-        let receivableTransaction5 = DataFactory.createLoanTransaction(
-            date: DateParser.shared.date(from: "2024-12-01T00:00:00")!,
-            amount: 100,
-            note: "repayment",
-            emoji: "🔁",
-            context: context
-        )
-        let receivableTransaction6 = DataFactory.createLoanTransaction(
             date: DateParser.shared.date(from: "2025-01-03T00:00:00")!,
             amount: 100,
             note: "repayment",
@@ -270,5 +208,129 @@ struct ReceivableDetailViewModelTestDataProvider {
             context: context
         )
         return (person,receivable,[receivableTransaction1,receivableTransaction3,receivableTransaction4,receivableTransaction5,receivableTransaction6])
+    }
+    
+    func createAndPersistTestObjects_batchDeleteTransactions(context: NSManagedObjectContext) -> (LoanPartner,Receivable,[LoanTransaction]) {
+        let person = DataFactory.createLoanPartner(name: "Papa", context: context)
+        let receivableTransaction1 = DataFactory.createLoanTransaction(
+            issuer: person,
+            date: DateParser.shared.date(from: "2024-04-15T00:00:00")!,
+            amount: 3000,
+            note: "disbursed amount",
+            emoji: "💶",
+            context: context
+        )
+        let receivableTransaction2 = DataFactory.createLoanTransaction(
+            date: DateParser.shared.date(from: "2024-04-17T00:00:00")!,
+            amount: 100,
+            note: "repayment",
+            emoji: "🔁",
+            context: context
+        )
+        let receivableTransaction3 = DataFactory.createLoanTransaction(
+            date: DateParser.shared.date(from: "2024-07-11T00:00:00")!,
+            amount: 100,
+            note: "repayment",
+            emoji: "🔁",
+            context: context
+        )
+        let receivableTransaction4 = DataFactory.createLoanTransaction(
+            issuer: person,
+            date: DateParser.shared.date(from: "2024-07-27T00:00:00")!,
+            amount: 1000,
+            note: "disbursed amount",
+            emoji: "💶",
+            context: context
+        )
+        let receivableTransaction5 = DataFactory.createLoanTransaction(
+            date: DateParser.shared.date(from: "2024-12-01T00:00:00")!,
+            amount: 100,
+            note: "repayment",
+            emoji: "🔁",
+            context: context
+        )
+        let receivableTransaction6 = DataFactory.createLoanTransaction(
+            date: DateParser.shared.date(from: "2025-01-03T00:00:00")!,
+            amount: 100,
+            note: "repayment",
+            emoji: "🔁",
+            context: context
+        )
+        let receivable = DataFactory.createReceivable(
+            name: "Studium",
+            debtor: person,
+            transactions: [
+                receivableTransaction1,
+                receivableTransaction2,
+                receivableTransaction3,
+                receivableTransaction4,
+                receivableTransaction5,
+                receivableTransaction6,
+            ],
+            context: context
+        )
+        return (person,receivable,[receivableTransaction1,receivableTransaction2,receivableTransaction3,receivableTransaction4,receivableTransaction5,receivableTransaction6])
+    }
+    
+    func createAndPersistTestObjects_deleteTransactionsNegativeBalanceThroughDeletion(context: NSManagedObjectContext) -> (LoanPartner,Receivable,[LoanTransaction]) {
+        let person = DataFactory.createLoanPartner(name: "Papa", context: context)
+        let receivableTransaction1 = DataFactory.createLoanTransaction(
+            issuer: person,
+            date: DateParser.shared.date(from: "2024-04-15T00:00:00")!,
+            amount: 3000,
+            note: "disbursed amount",
+            emoji: "💶",
+            context: context
+        )
+        let receivableTransaction2 = DataFactory.createLoanTransaction(
+            date: DateParser.shared.date(from: "2024-04-17T00:00:00")!,
+            amount: 100,
+            note: "repayment",
+            emoji: "🔁",
+            context: context
+        )
+        let receivableTransaction3 = DataFactory.createLoanTransaction(
+            date: DateParser.shared.date(from: "2024-07-11T00:00:00")!,
+            amount: 100,
+            note: "repayment",
+            emoji: "🔁",
+            context: context
+        )
+        let receivableTransaction4 = DataFactory.createLoanTransaction(
+            issuer: person,
+            date: DateParser.shared.date(from: "2024-07-27T00:00:00")!,
+            amount: 1000,
+            note: "disbursed amount",
+            emoji: "💶",
+            context: context
+        )
+        let receivableTransaction5 = DataFactory.createLoanTransaction(
+            date: DateParser.shared.date(from: "2024-12-01T00:00:00")!,
+            amount: 100,
+            note: "repayment",
+            emoji: "🔁",
+            context: context
+        )
+        let receivableTransaction6 = DataFactory.createLoanTransaction(
+            date: DateParser.shared.date(from: "2025-01-03T00:00:00")!,
+            amount: 100,
+            note: "repayment",
+            emoji: "🔁",
+            context: context
+        )
+        let receivable = DataFactory.createReceivable(
+            name: "Studium",
+            debtor: person,
+            transactions: [
+                receivableTransaction1,
+                receivableTransaction2,
+                receivableTransaction3,
+                receivableTransaction4,
+                receivableTransaction5,
+                receivableTransaction6,
+            ],
+            context: context
+        )
+        return (person,receivable,[receivableTransaction1,receivableTransaction2,receivableTransaction3,receivableTransaction4,receivableTransaction5,receivableTransaction6])
     }
 }

@@ -114,7 +114,7 @@ struct LiabilityFormViewModelTestDataProvider {
         return liabilityName
     }
     
-    func createAndPersistTestObjects_updateLiability_1(context: NSManagedObjectContext) -> Liability {
+    func createAndPersistTestObjects_updateOrDeleteLiability_1(context: NSManagedObjectContext) -> Liability {
         let person1 = DataFactory.createLoanPartner(name: "Papa", context: context)
         let liability1FirstTransaction = DataFactory.createLoanTransaction(
             issuer: person1,

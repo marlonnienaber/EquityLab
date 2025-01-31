@@ -20,10 +20,14 @@ struct LoanPartnerSelectionView: View {
                 }
                 .foregroundStyle(.primary)
             }
-            /* TODO: unly usable once function in PersonRepo implemented */
-//            .onDelete { indexSet in
-//                viewModel.deletePersons(withIndices: indexSet)
-//            }
+            .onDelete { indexSet in
+                do {
+                    try viewModel.deleteLoanPartners(withIndices: indexSet)
+                } catch let error as LoanPartnerValidationError {
+                    viewModel.loanPartnerValidationError = error
+                    viewModel.showLoanPartnerValidationErrorAlert = true
+                } catch {}
+            }
         }
         .navigationTitle("Select Debtor")
         .alert("What should the name of the new person be?", isPresented: $viewModel.showCreateLoanPartnerAlert) {
@@ -45,7 +49,6 @@ struct LoanPartnerSelectionView: View {
         .alert(isPresented: $viewModel.showLoanPartnerValidationErrorAlert, error: viewModel.loanPartnerValidationError) { _ in
             Button("OK", role: .cancel) {
                 viewModel.loanPartnerValidationError = nil
-                viewModel.showCreateLoanPartnerAlert = true
             }
         } message: { _ in }
         .toolbar {

@@ -13,7 +13,9 @@ struct LiabilityForm: View {
                     if viewModel.liability.isNil {
                         dataSection
                     }
-                    /* TODO: add delete button for SnapshotStructureView */
+                    if viewModel.deletionPossible {
+                        deletionButton
+                    }
                 }
             }
             .navigationTitle(viewModel.liability.isNil ? "New Liability" : "Edit Liability")
@@ -71,6 +73,15 @@ struct LiabilityForm: View {
             }
             DatePicker("date", selection: $viewModel.grantDate, in: ...Date(), displayedComponents: .date)
         }
+    }
+    
+    private var deletionButton: some View {
+        Button("Delete") {
+            viewModel.deleteLiability()
+            viewModel.dismissSheet()
+        }
+        .frame(maxWidth: .infinity, alignment: .center)
+        .foregroundStyle(.red)
     }
     
     private var cancelButton: some View {

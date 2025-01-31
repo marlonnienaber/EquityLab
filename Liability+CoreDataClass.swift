@@ -2,7 +2,7 @@ import Foundation
 import CoreData
 
 @objc(Liability)
-public class Liability: NSManagedObject, Codable, Named {
+public class Liability: NSManagedObject, Codable {
     enum CodingKeys: String, CodingKey {
         case name
     }

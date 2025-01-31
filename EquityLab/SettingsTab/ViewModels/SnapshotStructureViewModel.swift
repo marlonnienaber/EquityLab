@@ -182,10 +182,6 @@ extension SnapshotStructureViewModel: AssetPoolObserver, ReceivableObserver, Pos
     }
 }
 
-protocol Named { /* TODO: remove if not needed*/
-    var name: String { get }
-}
-
 enum BalanceItemSheet: Identifiable {
     case createSheetPossession
     case createSheetReceivable

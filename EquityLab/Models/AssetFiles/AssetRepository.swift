@@ -93,7 +93,7 @@ class AssetRepository: NSObject {
         receivableFetchedResultsController.fetchedObjects ?? []
     }
     
-    func getPossessions() -> [Possession] { /* TODO: let callers treat sorting themselves since sorting was elimintaed here */
+    func getPossessions() -> [Possession] {
         possessionFetchedResultsController.fetchedObjects ?? []
     }
     
@@ -206,7 +206,6 @@ extension AssetRepository: NSFetchedResultsControllerDelegate {
     }
 }
 
-/* TODO: will the callback logic create a retain cycle or other memory problems? */
 protocol AssetPoolObserver: AnyObject {
     func notifyAfterAssetPoolUpdate()
 }

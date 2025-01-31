@@ -16,15 +16,13 @@ public class Receivable: NSManagedObject, Codable {
         
         self.init(usedContext: ProductionCoreDataStack.shared.context)
         self.name = name
-        self.debtor = nil /* TODO: implement */
-        /* TODO: implement transactions */
+        self.debtor = nil
     }
     
     public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(name, forKey: .name)
         try container.encode(debtor?.name, forKey: .debtor)
-        /* TODO: implement transactions */
     }
 
 }

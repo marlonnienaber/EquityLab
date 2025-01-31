@@ -13,6 +13,8 @@ class LiabilityDetailViewModel {
     @ObservationIgnored let liability: Liability
     @ObservationIgnored let creditor: LoanPartner
     var monthYears: [MonthYear] = []
+    var showTransactionValidationErrorAlert = false
+    var transactionValidationError: TransactionValidationError?
     var activeLiabilityDetailSheet: LiabilityDetailSheetType? = nil
     
     init(
@@ -60,10 +62,33 @@ class LiabilityDetailViewModel {
         return monthYearToTransactionsDictionary[monthYear] ?? []
     }
     
-    func deleteTransactions(at indexSet: IndexSet, for monthYear: MonthYear) { /* TODO: add validation here (there must always remain an initial disbursement )*/
+    func deleteTransactions(at indexSet: IndexSet, for monthYear: MonthYear) throws {
         Self.logger.debug("deleteTransactions(at indexSet, for monthYear)")
-        guard let monthYearTransactions = monthYearToTransactionsDictionary[monthYear] else { return }
-        indexSet.forEach{ liabilityRepository.delete(transaction: monthYearTransactions[$0]) }
+        guard indexSet.count == 1, let index = indexSet.first, let monthYearTransactions = monthYearToTransactionsDictionary[monthYear] else { return }
+        let transactionToDelete = monthYearTransactions[index]
+        
+        /// a transaction can only be removed if after its removal it is still guaranteed that at no point in time during the loan there was a negative balance
+        /// ->  get transactions in displayed order and remove the transactionToDelete
+        /// ->  reverse the ordering (display order is newest transaction first)
+        /// ->  check if the validation criterion is met. Throw error if not
+        var transactions = liabilityRepository.getTransactions().filter{ $0.liability == liability }.sorted{ $0.date > $1.date }
+        if let removeIndex = transactions.firstIndex(of: transactionToDelete) {
+            transactions.remove(at: removeIndex)
+        }
+        transactions.reverse()
+        var balance: Decimal = 0
+        for transaction in transactions {
+            if transaction.issuer.isNil {
+                balance -= transaction.amount.decimalValue
+            } else {
+                balance += transaction.amount.decimalValue
+            }
+            if balance < 0 {
+                throw TransactionValidationError.negativeBalanceThroughDeletion
+            }
+        }
+        
+        liabilityRepository.delete(transaction: transactionToDelete)
     }
     
     func getDayString(for transaction: LoanTransaction) -> String {

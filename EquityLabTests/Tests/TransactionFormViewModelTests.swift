@@ -290,7 +290,7 @@ final class TransactionFormViewModelTests: XCTestCase {
         sut.value = 200
         
         XCTAssertThrowsError(try sut.saveLoanTransaction()) { error in
-            XCTAssertEqual(error as? TransactionValidationError, TransactionValidationError.negativeBalance)
+            XCTAssertEqual(error as? TransactionValidationError, TransactionValidationError.negativeBalanceThroughCreation)
         }
     }
     
@@ -401,7 +401,7 @@ final class TransactionFormViewModelTests: XCTestCase {
         sut.value = 200
         
         XCTAssertThrowsError(try sut.saveLoanTransaction()) { error in
-            XCTAssertEqual(error as? TransactionValidationError, TransactionValidationError.negativeBalance)
+            XCTAssertEqual(error as? TransactionValidationError, TransactionValidationError.negativeBalanceThroughCreation)
         }
     }
 }

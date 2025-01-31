@@ -7,6 +7,8 @@ class LoanPartnerSelectionViewModel {
     @ObservationIgnored private static let logger = Logger(subsystem: .loanManagementTab, component: .personSelectionViewModel)
     
     @ObservationIgnored private var loanPartnerRepository: LoanPartnerRepository
+    @ObservationIgnored private var assetRepository: AssetRepository
+    @ObservationIgnored private var liabilityRepository: LiabilityRepository
     var loanPartners = [LoanPartner]()
     var selectedLoanPartner: LoanPartner?
     var newLoanPartnerName = ""
@@ -17,11 +19,15 @@ class LoanPartnerSelectionViewModel {
     
     init(
         loanPartnerRepository: LoanPartnerRepository = .production,
+        assetRepository: AssetRepository = .production,
+        liabilityRepository: LiabilityRepository = .production,
         selectedLoanPartner: LoanPartner?,
         onDismiss: @escaping (LoanPartner?) -> ()
     ) {
         Self.logger.debug("PersonSelectionViewModel()")
         self.loanPartnerRepository = loanPartnerRepository
+        self.assetRepository = assetRepository
+        self.liabilityRepository = liabilityRepository
         self.selectedLoanPartner = selectedLoanPartner
         self.setInParentViewModel = onDismiss
         self.loanPartners = loanPartnerRepository.getLoanPartners()
@@ -48,18 +54,23 @@ class LoanPartnerSelectionViewModel {
     func createLoanPartner() throws {
         Self.logger.debug("createLoanPartner()")
         try validateLoanPartner()
-        loanPartnerRepository.createPerson(with: newLoanPartnerName)
+        loanPartnerRepository.createLoanPartner(with: newLoanPartnerName)
     }
     
-    /* TODO: implement (UI for resolving conflicts must be implemented because LoanPartners have relations to other entities which can not be nil) */
-//    func deletePersons(withIndices indexSet: IndexSet) {
-//        indexSet.map{persons[$0]}.forEach{
-//            if selectedPerson == $0 {
-//                selectedPerson = nil
-//            }
-//            personRepository.deletePerson(person: $0)
-//        }
-//    }
+    func deleteLoanPartners(withIndices indexSet: IndexSet) throws {
+        Self.logger.debug("deleteLoanPartners(withIndices indexSet)")
+        guard indexSet.count == 1, let index = indexSet.first else { return }
+        let loanParnter = loanPartners[index]
+        let associatedReceivables = assetRepository.getReceivables().filter{ $0.debtor == loanParnter }
+        let associatedLiabilities = liabilityRepository.getLiabilities().filter{ $0.creditor == loanParnter }
+        if associatedReceivables.isNotEmpty || associatedLiabilities.isNotEmpty {
+            throw LoanPartnerValidationError.canNotBeDeleted
+        }
+        if loanParnter == selectedLoanPartner {
+            selectedLoanPartner = nil
+        }
+        loanPartnerRepository.deleteLoanPartner(loanParnter)
+    }
 }
 
 extension LoanPartnerSelectionViewModel: LoanPartnerObserver {
@@ -72,6 +83,7 @@ extension LoanPartnerSelectionViewModel: LoanPartnerObserver {
 enum LoanPartnerValidationError: String, LocalizedError {
     case emptyName = "No name was chosen!"
     case loanPartnerWithSameNameAlreadyExists = "A person with the same name already exists!"
+    case canNotBeDeleted = "The person is associated to at least one receivable or liability and can therefore not be deleted!"
     var errorDescription: String? {
         return self.rawValue
     }

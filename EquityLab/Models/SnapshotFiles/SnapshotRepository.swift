@@ -8,7 +8,6 @@ class SnapshotRepository: NSObject {
     private let liabilityPositionFetchedResultsController: NSFetchedResultsController<LiabilityPosition>
     private var observers: [WeakSnapshotRepositoryObserver]
     
-    /* TODO: make sure all Observers are registered correctly and implement the correct observer protocols */
     init(context: NSManagedObjectContext) {
         self.context = context
         
@@ -133,7 +132,6 @@ extension SnapshotRepository: NSFetchedResultsControllerDelegate {
     }
 }
 
-/* TODO: will this create a retain cycle or other memory problems? */
 protocol SnapshotObserver: AnyObject {
     func notifyAfterSnapshotUpdate()
 }

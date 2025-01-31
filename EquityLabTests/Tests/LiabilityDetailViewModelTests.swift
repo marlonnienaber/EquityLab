@@ -34,26 +34,43 @@ final class LiabilityDetailViewModelTests: XCTestCase {
     
     
     
-    /// delete all transactions from within a MonthYear and check whether the correct transactions are persisted and whether the interface of the sut has updates accordingly
-    func test_deleteTransactions_1() throws {
-        let (creditor,liability,expectedTransactions) = testDataProvider.createAndPersistTestObjects_deleteTransactions_1(context: testingCoreDataStack.context)
+    /// delete one transaction within a MonthYear and check whether the correct transactions are persisted and whether the interface of the sut has updates accordingly
+    func test_deleteTransactions() throws {
+        let (creditor,liability,expectedTransactions) = testDataProvider.createAndPersistTestObjects_deleteTransactions(context: testingCoreDataStack.context)
         let sut = LiabilityDetailViewModel(liabilityRepository: testingLiabilityRepository, liability: liability, creditor: creditor)
-        sut.deleteTransactions(at: IndexSet(0...1), for: MonthYear(month: .april, year: 2024))
+        try sut.deleteTransactions(at: IndexSet(integer: 0), for: MonthYear(month: .april, year: 2024))
         let actualPersitedTransactions = testingLiabilityRepository.getTransactions()
         XCTAssertTrue(expectedTransactions ≡ actualPersitedTransactions)
         let actualSutTransactions = sut.monthYears.map{ sut.getTransactions(fallingInto: $0) }.reduce([], +)
         XCTAssertTrue(expectedTransactions ≡ actualSutTransactions)
     }
     
-    /// delete one transaction within a MonthYear and check whether the correct transactions are persisted and whether the interface of the sut has updates accordingly
-    func test_deleteTransactions_2() throws {
-        let (creditor,liability,expectedTransactions) = testDataProvider.createAndPersistTestObjects_deleteTransactions_2(context: testingCoreDataStack.context)
+    /// batch-delete Transactions. The operation should have no effect since only single deletions should be supported.
+    func test_batchDeleteTransactions() throws {
+        let (creditor,liability,expectedTransactions) = testDataProvider.createAndPersistTestObjects_batchDeleteTransactions(context: testingCoreDataStack.context)
         let sut = LiabilityDetailViewModel(liabilityRepository: testingLiabilityRepository, liability: liability, creditor: creditor)
-        sut.deleteTransactions(at: IndexSet(integer: 0), for: MonthYear(month: .april, year: 2024))
+        try sut.deleteTransactions(at: IndexSet(0...1), for: MonthYear(month: .april, year: 2024))
         let actualPersitedTransactions = testingLiabilityRepository.getTransactions()
         XCTAssertTrue(expectedTransactions ≡ actualPersitedTransactions)
         let actualSutTransactions = sut.monthYears.map{ sut.getTransactions(fallingInto: $0) }.reduce([], +)
         XCTAssertTrue(expectedTransactions ≡ actualSutTransactions)
     }
+    
+    /// delete a Transaction that would cause a negative balance at some point of time during the loan
+    func test_deleteTransactionsNegativeBalanceThroughDeletion() throws {
+        let (creditor,liability,expectedTransactions) = testDataProvider.createAndPersistTestObjects_deleteTransactionsNegativeBalanceThroughDeletion(context: testingCoreDataStack.context)
+        let sut = LiabilityDetailViewModel(liabilityRepository: testingLiabilityRepository, liability: liability, creditor: creditor)
+        
+        XCTAssertThrowsError(try sut.deleteTransactions(at: IndexSet(integer: 1), for: MonthYear(month: .april, year: 2024))) { error in
+            XCTAssertEqual(error as? TransactionValidationError, TransactionValidationError.negativeBalanceThroughDeletion)
+        }
+        
+        let actualPersitedTransactions = testingLiabilityRepository.getTransactions()
+        XCTAssertTrue(expectedTransactions ≡ actualPersitedTransactions)
+        
+        let actualSutTransactions = sut.monthYears.map{ sut.getTransactions(fallingInto: $0) }.reduce([], +)
+        XCTAssertTrue(expectedTransactions ≡ actualSutTransactions)
+    }
+    
 }
 
