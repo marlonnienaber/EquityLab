@@ -348,6 +348,46 @@
 			path = Views;
 			sourceTree = "<group>";
 		};
+		7306F0082D4ED9980034423F /* Repositories */ = {
+			isa = PBXGroup;
+			children = (
+				7363D3D52C85F85200EC9F16 /* SnapshotRepository.swift */,
+				7363DDF52CA89752009F3412 /* AssetRepository.swift */,
+				7363DDF72CA89CD2009F3412 /* LiabilityRepository.swift */,
+				73A243252D0F6EA60083C6DF /* LoanPartnerRepository.swift */,
+			);
+			path = Repositories;
+			sourceTree = "<group>";
+		};
+		7306F0092D4EDA2B0034423F /* Entities */ = {
+			isa = PBXGroup;
+			children = (
+				73FE1F792D19E459000FC969 /* LoanPartner+CoreDataClass.swift */,
+				73FE1F7A2D19E459000FC969 /* LoanPartner+CoreDataProperties.swift */,
+				73A242F92D0F53B60083C6DF /* LoanTransaction+CoreDataClass.swift */,
+				73A242FA2D0F53B60083C6DF /* LoanTransaction+CoreDataProperties.swift */,
+				73A242F32D0F53760083C6DF /* Liability+CoreDataClass.swift */,
+				73A242F42D0F53760083C6DF /* Liability+CoreDataProperties.swift */,
+				7342ED4B2C44789A00BA20A4 /* LiabilityPool+CoreDataClass.swift */,
+				7342ED4C2C44789A00BA20A4 /* LiabilityPool+CoreDataProperties.swift */,
+				7311776C2CFA779C00A595DE /* Position+CoreDataClass.swift */,
+				7311776D2CFA779C00A595DE /* Position+CoreDataProperties.swift */,
+				7342EDAD2C44838C00BA20A4 /* Snapshot+CoreDataClass.swift */,
+				7342EDAE2C44838C00BA20A4 /* Snapshot+CoreDataProperties.swift */,
+				7342EDB12C44842100BA20A4 /* AssetPosition+CoreDataClass.swift */,
+				7342EDB22C44842100BA20A4 /* AssetPosition+CoreDataProperties.swift */,
+				7342EDB32C44842100BA20A4 /* LiabilityPosition+CoreDataClass.swift */,
+				7342EDB42C44842100BA20A4 /* LiabilityPosition+CoreDataProperties.swift */,
+				73A242FF2D0F543B0083C6DF /* Receivable+CoreDataClass.swift */,
+				73A243002D0F543B0083C6DF /* Receivable+CoreDataProperties.swift */,
+				730B6A742D023A1C00403C5C /* AssetPool+CoreDataClass.swift */,
+				730B6A752D023A1C00403C5C /* AssetPool+CoreDataProperties.swift */,
+				73204B412D023842007F6E21 /* Possession+CoreDataClass.swift */,
+				73204B422D023842007F6E21 /* Possession+CoreDataProperties.swift */,
+			);
+			path = Entities;
+			sourceTree = "<group>";
+		};
 		7314FD662C75106500483835 /* EquityLabTests */ = {
 			isa = PBXGroup;
 			children = (
@@ -384,71 +424,23 @@
 				7342EDA82C44828B00BA20A4 /* SnapshotTab */,
 				73037F672CC3B18C005DD105 /* LoanTab */,
 				73037F4C2CC00E36005DD105 /* SettingsTab */,
-				7342ED342C44754E00BA20A4 /* Models */,
+				7342ED342C44754E00BA20A4 /* Model */,
 				7342ED752C447BA300BA20A4 /* Utility */,
 				7342ED2A2C44750300BA20A4 /* Assets.xcassets */,
 			);
 			path = EquityLab;
 			sourceTree = "<group>";
 		};
-		7342ED342C44754E00BA20A4 /* Models */ = {
+		7342ED342C44754E00BA20A4 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				7342ED3A2C44782700BA20A4 /* SnapshotFiles */,
-				7342ED382C44781000BA20A4 /* AssetFiles */,
-				7342ED392C44781D00BA20A4 /* LiabilityFiles */,
-				73A243252D0F6EA60083C6DF /* LoanPartnerRepository.swift */,
+				7306F0092D4EDA2B0034423F /* Entities */,
+				7306F0082D4ED9980034423F /* Repositories */,
 				73980F452AA57A4500CA4849 /* CoreDataModel.xcdatamodeld */,
 				7342ED732C447B7200BA20A4 /* ProductionCoreDataStack.swift */,
 				7314FD6E2C7510E100483835 /* TestingCoreDataStack.swift */,
 			);
-			path = Models;
-			sourceTree = "<group>";
-		};
-		7342ED382C44781000BA20A4 /* AssetFiles */ = {
-			isa = PBXGroup;
-			children = (
-				73A242FF2D0F543B0083C6DF /* Receivable+CoreDataClass.swift */,
-				73A243002D0F543B0083C6DF /* Receivable+CoreDataProperties.swift */,
-				730B6A742D023A1C00403C5C /* AssetPool+CoreDataClass.swift */,
-				730B6A752D023A1C00403C5C /* AssetPool+CoreDataProperties.swift */,
-				73204B412D023842007F6E21 /* Possession+CoreDataClass.swift */,
-				73204B422D023842007F6E21 /* Possession+CoreDataProperties.swift */,
-				7363DDF52CA89752009F3412 /* AssetRepository.swift */,
-			);
-			path = AssetFiles;
-			sourceTree = "<group>";
-		};
-		7342ED392C44781D00BA20A4 /* LiabilityFiles */ = {
-			isa = PBXGroup;
-			children = (
-				73FE1F792D19E459000FC969 /* LoanPartner+CoreDataClass.swift */,
-				73FE1F7A2D19E459000FC969 /* LoanPartner+CoreDataProperties.swift */,
-				73A242F92D0F53B60083C6DF /* LoanTransaction+CoreDataClass.swift */,
-				73A242FA2D0F53B60083C6DF /* LoanTransaction+CoreDataProperties.swift */,
-				73A242F32D0F53760083C6DF /* Liability+CoreDataClass.swift */,
-				73A242F42D0F53760083C6DF /* Liability+CoreDataProperties.swift */,
-				7342ED4B2C44789A00BA20A4 /* LiabilityPool+CoreDataClass.swift */,
-				7342ED4C2C44789A00BA20A4 /* LiabilityPool+CoreDataProperties.swift */,
-				7363DDF72CA89CD2009F3412 /* LiabilityRepository.swift */,
-			);
-			path = LiabilityFiles;
-			sourceTree = "<group>";
-		};
-		7342ED3A2C44782700BA20A4 /* SnapshotFiles */ = {
-			isa = PBXGroup;
-			children = (
-				7311776C2CFA779C00A595DE /* Position+CoreDataClass.swift */,
-				7311776D2CFA779C00A595DE /* Position+CoreDataProperties.swift */,
-				7342EDAD2C44838C00BA20A4 /* Snapshot+CoreDataClass.swift */,
-				7342EDAE2C44838C00BA20A4 /* Snapshot+CoreDataProperties.swift */,
-				7342EDB12C44842100BA20A4 /* AssetPosition+CoreDataClass.swift */,
-				7342EDB22C44842100BA20A4 /* AssetPosition+CoreDataProperties.swift */,
-				7342EDB32C44842100BA20A4 /* LiabilityPosition+CoreDataClass.swift */,
-				7342EDB42C44842100BA20A4 /* LiabilityPosition+CoreDataProperties.swift */,
-				7363D3D52C85F85200EC9F16 /* SnapshotRepository.swift */,
-			);
-			path = SnapshotFiles;
+			path = Model;
 			sourceTree = "<group>";
 		};
 		7342ED752C447BA300BA20A4 /* Utility */ = {

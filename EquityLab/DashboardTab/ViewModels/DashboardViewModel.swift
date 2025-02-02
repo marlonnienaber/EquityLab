@@ -194,6 +194,7 @@ extension Date {
 
 struct JsonBackup: Codable {
     let snapshots: [Snapshot]
+    let loanPartners: [LoanPartner]
     let liabilityPools: [LiabilityPool]
     let assetPools: [AssetPool]
 }
