@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct SnapshotLedger: View {
-    @State private var viewModel = SnapshotLedgerViewModelNew()
+    @State private var viewModel = SnapshotLedgerViewModel()
     
     var body: some View {
         NavigationView {

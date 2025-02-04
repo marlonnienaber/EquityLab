@@ -3,12 +3,12 @@ import XCTest
 
 final class SnapshotLedgerViewModelTests: XCTestCase {
     private var testingCoreDataStack: TestingCoreDataStack!
-    private var testingSnapshotRepository: SnapshotRepository!
+    private var testingSnapshotRepository: SnapshotRepositoryNew!
     private let testDataProvider = SnapshotLedgerViewModelTestDataProvider()
     
     override func setUpWithError() throws {
         testingCoreDataStack = TestingCoreDataStack()
-        testingSnapshotRepository = SnapshotRepository(context: testingCoreDataStack.context)
+        testingSnapshotRepository = SnapshotRepositoryNew(context: testingCoreDataStack.context)
     }
     
     
@@ -44,7 +44,7 @@ final class SnapshotLedgerViewModelTests: XCTestCase {
         let sut = SnapshotLedgerViewModel(repository: testingSnapshotRepository)
         let (year, indexSet, expectedRemainingSnapshots) = testDataProvider.createAndPersistTestObjects_deleteSnapshotsInYear_1(using: testingCoreDataStack.context)
         sut.deleteSnapshots(in: year, for: indexSet)
-        let actualRemainingSnapshots = testingSnapshotRepository.getSnapshots()
+        let actualRemainingSnapshots = testingSnapshotRepository.snapshots
         XCTAssertTrue(expectedRemainingSnapshots ≡ actualRemainingSnapshots)
     }
     
@@ -53,7 +53,7 @@ final class SnapshotLedgerViewModelTests: XCTestCase {
         let sut = SnapshotLedgerViewModel(repository: testingSnapshotRepository)
         let (year, indexSet, expectedRemainingSnapshots) = testDataProvider.createAndPersistTestObjects_deleteSnapshotsInYear_2(using: testingCoreDataStack.context)
         sut.deleteSnapshots(in: year, for: indexSet)
-        let actualRemainingSnapshots = testingSnapshotRepository.getSnapshots()
+        let actualRemainingSnapshots = testingSnapshotRepository.snapshots
         XCTAssertTrue(expectedRemainingSnapshots ≡ actualRemainingSnapshots)
     }
     
@@ -62,7 +62,7 @@ final class SnapshotLedgerViewModelTests: XCTestCase {
         let sut = SnapshotLedgerViewModel(repository: testingSnapshotRepository)
         let (year, indexSet, expectedRemainingSnapshots) = testDataProvider.createAndPersistTestObjects_deleteSnapshotsInYear_3(using: testingCoreDataStack.context)
         sut.deleteSnapshots(in: year, for: indexSet)
-        let actualRemainingSnapshots = testingSnapshotRepository.getSnapshots()
+        let actualRemainingSnapshots = testingSnapshotRepository.snapshots
         XCTAssertTrue(expectedRemainingSnapshots ≡ actualRemainingSnapshots)
     }
     
