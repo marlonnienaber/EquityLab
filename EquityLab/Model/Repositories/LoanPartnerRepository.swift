@@ -1,5 +1,4 @@
 import CoreData
-import ObservableProperties
 
 class LoanPartnerRepository: NSObject {
     public static let production = LoanPartnerRepository(context: ProductionCoreDataStack.shared.context)

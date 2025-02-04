@@ -86,6 +86,8 @@
 		73823CDD2C6154930049D03C /* DistributionChartViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73823CDC2C6154930049D03C /* DistributionChartViewModel.swift */; };
 		73823CDF2C62B2EE0049D03C /* ChangeChartViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73823CDE2C62B2EE0049D03C /* ChangeChartViewModel.swift */; };
 		73823CE12C68023E0049D03C /* BalanceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73823CE02C68023E0049D03C /* BalanceView.swift */; };
+		7387C2412D5175F400352252 /* SnapshotRepositoryNew.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7387C2402D5175EC00352252 /* SnapshotRepositoryNew.swift */; };
+		7387C2442D52101300352252 /* SnapshotLedgerViewModelNew.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7387C2432D52100A00352252 /* SnapshotLedgerViewModelNew.swift */; };
 		73980F472AA57A4500CA4849 /* CoreDataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 73980F452AA57A4500CA4849 /* CoreDataModel.xcdatamodeld */; };
 		73A242F52D0F53760083C6DF /* Liability+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73A242F32D0F53760083C6DF /* Liability+CoreDataClass.swift */; };
 		73A242F62D0F53760083C6DF /* Liability+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73A242F42D0F53760083C6DF /* Liability+CoreDataProperties.swift */; };
@@ -123,6 +125,9 @@
 		73D88C0D2D48444C00011772 /* TransactionFormViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73D88C0C2D48444100011772 /* TransactionFormViewModelTests.swift */; };
 		73D88C0F2D48445C00011772 /* TransactionFormViewModelTestDataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73D88C0E2D48445000011772 /* TransactionFormViewModelTestDataProvider.swift */; };
 		73E6341E2D4C2B8900302D93 /* Collapsible.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73E6341D2D4C2B8000302D93 /* Collapsible.swift */; };
+		73EBA0A92D527FD600C7D83D /* SnapshotAnalyzerNew.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73EBA0A82D527FCC00C7D83D /* SnapshotAnalyzerNew.swift */; };
+		73EBA0AB2D528C8000C7D83D /* CoreDataObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73EBA0AA2D528C7C00C7D83D /* CoreDataObserver.swift */; };
+		73EBA0B12D529C4900C7D83D /* Retrievers in Frameworks */ = {isa = PBXBuildFile; productRef = 73EBA0B02D529C4900C7D83D /* Retrievers */; };
 		73FE1F782D19CD51000FC969 /* ReceivableForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73A243082D0F56830083C6DF /* ReceivableForm.swift */; };
 		73FE1F7B2D19E459000FC969 /* LoanPartner+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73FE1F792D19E459000FC969 /* LoanPartner+CoreDataClass.swift */; };
 		73FE1F7C2D19E459000FC969 /* LoanPartner+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73FE1F7A2D19E459000FC969 /* LoanPartner+CoreDataProperties.swift */; };
@@ -219,6 +224,8 @@
 		73823CDC2C6154930049D03C /* DistributionChartViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DistributionChartViewModel.swift; sourceTree = "<group>"; };
 		73823CDE2C62B2EE0049D03C /* ChangeChartViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangeChartViewModel.swift; sourceTree = "<group>"; };
 		73823CE02C68023E0049D03C /* BalanceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BalanceView.swift; sourceTree = "<group>"; };
+		7387C2402D5175EC00352252 /* SnapshotRepositoryNew.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapshotRepositoryNew.swift; sourceTree = "<group>"; };
+		7387C2432D52100A00352252 /* SnapshotLedgerViewModelNew.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapshotLedgerViewModelNew.swift; sourceTree = "<group>"; };
 		73980F462AA57A4500CA4849 /* CoreDataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = CoreDataModel.xcdatamodel; sourceTree = "<group>"; };
 		73A242F32D0F53760083C6DF /* Liability+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Liability+CoreDataClass.swift"; sourceTree = SOURCE_ROOT; };
 		73A242F42D0F53760083C6DF /* Liability+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Liability+CoreDataProperties.swift"; sourceTree = SOURCE_ROOT; };
@@ -256,6 +263,8 @@
 		73D88C0C2D48444100011772 /* TransactionFormViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionFormViewModelTests.swift; sourceTree = "<group>"; };
 		73D88C0E2D48445000011772 /* TransactionFormViewModelTestDataProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionFormViewModelTestDataProvider.swift; sourceTree = "<group>"; };
 		73E6341D2D4C2B8000302D93 /* Collapsible.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Collapsible.swift; sourceTree = "<group>"; };
+		73EBA0A82D527FCC00C7D83D /* SnapshotAnalyzerNew.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapshotAnalyzerNew.swift; sourceTree = "<group>"; };
+		73EBA0AA2D528C7C00C7D83D /* CoreDataObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataObserver.swift; sourceTree = "<group>"; };
 		73FE1F792D19E459000FC969 /* LoanPartner+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LoanPartner+CoreDataClass.swift"; sourceTree = SOURCE_ROOT; };
 		73FE1F7A2D19E459000FC969 /* LoanPartner+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LoanPartner+CoreDataProperties.swift"; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
@@ -274,6 +283,7 @@
 			files = (
 				732588562CCD03BB002031CF /* AlertToast in Frameworks */,
 				73A243222D0F65EB0083C6DF /* MCEmojiPicker in Frameworks */,
+				73EBA0B12D529C4900C7D83D /* Retrievers in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -349,6 +359,7 @@
 		7306F0082D4ED9980034423F /* Repositories */ = {
 			isa = PBXGroup;
 			children = (
+				7387C2402D5175EC00352252 /* SnapshotRepositoryNew.swift */,
 				7363D3D52C85F85200EC9F16 /* SnapshotRepository.swift */,
 				7363DDF52CA89752009F3412 /* AssetRepository.swift */,
 				7363DDF72CA89CD2009F3412 /* LiabilityRepository.swift */,
@@ -401,6 +412,7 @@
 			children = (
 				7342ED252C44750200BA20A4 /* EquityLab */,
 				7314FD662C75106500483835 /* EquityLabTests */,
+				73EBA0AF2D529C4900C7D83D /* Frameworks */,
 				7342ED242C44750200BA20A4 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -444,6 +456,7 @@
 		7342ED752C447BA300BA20A4 /* Utility */ = {
 			isa = PBXGroup;
 			children = (
+				73EBA0AA2D528C7C00C7D83D /* CoreDataObserver.swift */,
 				73E6341D2D4C2B8000302D93 /* Collapsible.swift */,
 				73ACFA332D20ABCA0012E461 /* NSFetchedResultsController+Extension.swift */,
 				73A243112D0F57980083C6DF /* Pair.swift */,
@@ -513,6 +526,7 @@
 		7342EDA92C44829500BA20A4 /* ViewModels */ = {
 			isa = PBXGroup;
 			children = (
+				7387C2432D52100A00352252 /* SnapshotLedgerViewModelNew.swift */,
 				7342EDAB2C4482C700BA20A4 /* SnapshotLedgerViewModel.swift */,
 				7342EDB92C4484FC00BA20A4 /* SnapshotFormViewModel.swift */,
 			);
@@ -579,6 +593,7 @@
 		73B811962CA6CF3A003B1973 /* Analyzers */ = {
 			isa = PBXGroup;
 			children = (
+				73EBA0A82D527FCC00C7D83D /* SnapshotAnalyzerNew.swift */,
 				732828F72D46E3DB00D778E9 /* LoanTransactionAnalyzer.swift */,
 				73B811972CA6CF44003B1973 /* SnapshotAnalyzer.swift */,
 				73A243172D0F5A4A0083C6DF /* LiabilityAnalyzer.swift */,
@@ -627,6 +642,13 @@
 				737967162D03500C0001278D /* PossessionFormViewModelTestDataProvider.swift */,
 			);
 			path = TestDataProviders;
+			sourceTree = "<group>";
+		};
+		73EBA0AF2D529C4900C7D83D /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -698,6 +720,7 @@
 			packageReferences = (
 				732588542CCD03BB002031CF /* XCRemoteSwiftPackageReference "AlertToast" */,
 				73A2431B2D0F62820083C6DF /* XCRemoteSwiftPackageReference "MCEmojiPicker" */,
+				73EBA0AE2D529BE100C7D83D /* XCRemoteSwiftPackageReference "Retrievers" */,
 			);
 			productRefGroup = 7342ED242C44750200BA20A4 /* Products */;
 			projectDirPath = "";
@@ -790,6 +813,7 @@
 				73A243122D0F57980083C6DF /* Pair.swift in Sources */,
 				73A242FD2D0F53B60083C6DF /* LoanTransaction+CoreDataProperties.swift in Sources */,
 				73E6341E2D4C2B8900302D93 /* Collapsible.swift in Sources */,
+				7387C2412D5175F400352252 /* SnapshotRepositoryNew.swift in Sources */,
 				7363DE022CAC74AC009F3412 /* NSManagedObject+Extension.swift in Sources */,
 				7342EDB52C44842100BA20A4 /* AssetPosition+CoreDataClass.swift in Sources */,
 				73037F6C2CC3B23F005DD105 /* LoanManagementView.swift in Sources */,
@@ -808,6 +832,7 @@
 				7314FD6F2C7510E100483835 /* TestingCoreDataStack.swift in Sources */,
 				73204B452D023842007F6E21 /* Possession+CoreDataClass.swift in Sources */,
 				73204B462D023842007F6E21 /* Possession+CoreDataProperties.swift in Sources */,
+				7387C2442D52101300352252 /* SnapshotLedgerViewModelNew.swift in Sources */,
 				73A243162D0F59D00083C6DF /* ReceivableFormViewModel.swift in Sources */,
 				73D2C5922C5FBE3B0019A800 /* LocalizedLongDateFormatter.swift in Sources */,
 				73ACFA302D209FAF0012E461 /* LiabilityDetailView.swift in Sources */,
@@ -823,6 +848,7 @@
 				73037F702CC3BAE8005DD105 /* Collection+Extension.swift in Sources */,
 				73A243142D0F57E50083C6DF /* ReceivableDetailViewModel.swift in Sources */,
 				73A243012D0F543B0083C6DF /* Receivable+CoreDataProperties.swift in Sources */,
+				73EBA0AB2D528C8000C7D83D /* CoreDataObserver.swift in Sources */,
 				73A243022D0F543B0083C6DF /* Receivable+CoreDataClass.swift in Sources */,
 				73037F602CC2CF79005DD105 /* Optional+Extension.swift in Sources */,
 				73037F722CC59414005DD105 /* SettingsViewModel.swift in Sources */,
@@ -838,6 +864,7 @@
 				7342EDAF2C44838C00BA20A4 /* Snapshot+CoreDataClass.swift in Sources */,
 				730B6A762D023A1C00403C5C /* AssetPool+CoreDataClass.swift in Sources */,
 				73A2431D2D0F62DA0083C6DF /* TransactionFormViewModel.swift in Sources */,
+				73EBA0A92D527FD600C7D83D /* SnapshotAnalyzerNew.swift in Sources */,
 				730B6A772D023A1C00403C5C /* AssetPool+CoreDataProperties.swift in Sources */,
 				732828F82D46E3EB00D778E9 /* LoanTransactionAnalyzer.swift in Sources */,
 				7342EDB02C44838C00BA20A4 /* Snapshot+CoreDataProperties.swift in Sources */,
@@ -1130,6 +1157,14 @@
 				minimumVersion = 1.2.3;
 			};
 		};
+		73EBA0AE2D529BE100C7D83D /* XCRemoteSwiftPackageReference "Retrievers" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/marlonnienaber/Retrievers";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -1142,6 +1177,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 73A2431B2D0F62820083C6DF /* XCRemoteSwiftPackageReference "MCEmojiPicker" */;
 			productName = MCEmojiPicker;
+		};
+		73EBA0B02D529C4900C7D83D /* Retrievers */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 73EBA0AE2D529BE100C7D83D /* XCRemoteSwiftPackageReference "Retrievers" */;
+			productName = Retrievers;
 		};
 /* End XCSwiftPackageProductDependency section */
 
