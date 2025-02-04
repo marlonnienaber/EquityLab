@@ -27,7 +27,6 @@
 		73204B452D023842007F6E21 /* Possession+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73204B412D023842007F6E21 /* Possession+CoreDataClass.swift */; };
 		73204B462D023842007F6E21 /* Possession+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73204B422D023842007F6E21 /* Possession+CoreDataProperties.swift */; };
 		732588562CCD03BB002031CF /* AlertToast in Frameworks */ = {isa = PBXBuildFile; productRef = 732588552CCD03BB002031CF /* AlertToast */; };
-		732588592CCD3839002031CF /* ObservableProperties in Frameworks */ = {isa = PBXBuildFile; productRef = 732588582CCD3839002031CF /* ObservableProperties */; };
 		732828F22D46D3B700D778E9 /* LiabilityDetailViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 732828F12D46D3AA00D778E9 /* LiabilityDetailViewModelTests.swift */; };
 		732828F42D46D45C00D778E9 /* LiabilityDetailViewModelTestDataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 732828F32D46D44D00D778E9 /* LiabilityDetailViewModelTestDataProvider.swift */; };
 		732828F82D46E3EB00D778E9 /* LoanTransactionAnalyzer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 732828F72D46E3DB00D778E9 /* LoanTransactionAnalyzer.swift */; };
@@ -273,7 +272,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				732588592CCD3839002031CF /* ObservableProperties in Frameworks */,
 				732588562CCD03BB002031CF /* AlertToast in Frameworks */,
 				73A243222D0F65EB0083C6DF /* MCEmojiPicker in Frameworks */,
 			);
@@ -699,7 +697,6 @@
 			mainGroup = 7342ED1A2C44750200BA20A4;
 			packageReferences = (
 				732588542CCD03BB002031CF /* XCRemoteSwiftPackageReference "AlertToast" */,
-				732588572CCD3839002031CF /* XCRemoteSwiftPackageReference "ObservableProperties" */,
 				73A2431B2D0F62820083C6DF /* XCRemoteSwiftPackageReference "MCEmojiPicker" */,
 			);
 			productRefGroup = 7342ED242C44750200BA20A4 /* Products */;
@@ -1125,14 +1122,6 @@
 				minimumVersion = 1.3.9;
 			};
 		};
-		732588572CCD3839002031CF /* XCRemoteSwiftPackageReference "ObservableProperties" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/marlonnienaber/ObservableProperties";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 0.1.0;
-			};
-		};
 		73A2431B2D0F62820083C6DF /* XCRemoteSwiftPackageReference "MCEmojiPicker" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/izyumkin/MCEmojiPicker";
@@ -1148,11 +1137,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 732588542CCD03BB002031CF /* XCRemoteSwiftPackageReference "AlertToast" */;
 			productName = AlertToast;
-		};
-		732588582CCD3839002031CF /* ObservableProperties */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 732588572CCD3839002031CF /* XCRemoteSwiftPackageReference "ObservableProperties" */;
-			productName = ObservableProperties;
 		};
 		73A243212D0F65EB0083C6DF /* MCEmojiPicker */ = {
 			isa = XCSwiftPackageProductDependency;
