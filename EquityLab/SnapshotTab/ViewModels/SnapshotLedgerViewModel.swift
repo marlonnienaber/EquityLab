@@ -12,7 +12,8 @@ class SnapshotLedgerViewModel {
     private var yearToSnapshotDictionary = [Int:[Snapshot]]()
     var years = [Int]()
     var hasNoSnapshots: Bool {
-        years.isEmpty
+        Self.logger.debug("hasNoSnapshots")
+        return years.isEmpty
     }
     var activeSheet: SnapshotSheetType? = nil
     
@@ -21,7 +22,7 @@ class SnapshotLedgerViewModel {
         self.repository = repository
         self.snapshotAnalyzer = SnapshotAnalyzer(repository: repository)
         self.repository.add(observer: self)
-        snapshots = repository.fetchSnapshots(sortingOrder: .descending)
+        snapshots = repository.getSnapshots().sorted{ $0.date ?? .distantFuture > $1.date ?? .distantFuture }
         for snapshot in snapshots {
             equityValueCache[snapshot] = snapshotAnalyzer.calculateEquityValue(for: snapshot)
             if let year = snapshotAnalyzer.getYear(of: snapshot) {
@@ -50,11 +51,6 @@ class SnapshotLedgerViewModel {
         indexSet.map{sectionSnapshots[$0]}.forEach{repository.delete(snapshot: $0)}
     }
     
-    func deleteSnapshots(withIndices indexSet: IndexSet) {
-        Self.logger.debug("deleteSnapshots(withIndices indexSet)")
-        indexSet.map{snapshots[$0]}.forEach{repository.delete(snapshot: $0)}
-    }
-    
     func getEquityValue(of snapshot: Snapshot) -> NSNumber {
         Self.logger.debug("getEquityValue(of snapshot)")
         let equityValue = equityValueCache[snapshot] ?? 0.0
@@ -62,12 +58,26 @@ class SnapshotLedgerViewModel {
     }
 }
 
-extension SnapshotLedgerViewModel: SnapshotObserver {
+extension SnapshotLedgerViewModel: SnapshotObserver, AssetPositionObserver, LiabilityPositionObserver {
     func notifyAfterSnapshotUpdate() {
         Self.logger.debug("notifyAfterSnapshotUpdate()")
+        updateSnapshotState()
+    }
+    
+    func notifyAfterAssetPositionUpdate() {
+        Self.logger.debug("notifyAfterAssetPositionUpdate()")
+        updateSnapshotState()
+    }
+    
+    func notifyAfterLiabilityPositionUpdate() {
+        Self.logger.debug("notifyAfterLiabilityPositionUpdate()")
+        updateSnapshotState()
+    }
+    
+    private func updateSnapshotState() {
         yearToSnapshotDictionary = [Int:[Snapshot]]()
         years = [Int]()
-        self.snapshots = repository.fetchSnapshots(sortingOrder: .descending)
+        self.snapshots = repository.getSnapshots().sorted{ $0.date ?? .distantFuture > $1.date ?? .distantFuture }
         for snapshot in snapshots {
             equityValueCache[snapshot] = snapshotAnalyzer.calculateEquityValue(for: snapshot)
             if let year = snapshotAnalyzer.getYear(of: snapshot) {

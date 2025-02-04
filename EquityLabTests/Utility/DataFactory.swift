@@ -62,14 +62,17 @@ struct DataFactory {
         return pool
     }
     
-    static func createReceivable(name: String, date: Date, debtor: String, initialAmount: Decimal, repaidAmount: Decimal, context: NSManagedObjectContext) -> Receivable {
+    static func createReceivable(name: String, debtor: LoanPartner, transactions: [LoanTransaction], context: NSManagedObjectContext) -> Receivable {
         let receivable = Receivable(usedContext: context)
         receivable.name = name
-        receivable.grantDate = date
         receivable.debtor = debtor
-        receivable.initialAmount = initialAmount.nsDecimalNumberValue
-        receivable.repaidAmount = repaidAmount.nsDecimalNumberValue
+        
+        for transaction in transactions {
+            transaction.receivable = receivable
+        }
+        
         try? context.save()
+        
         return receivable
     }
     
@@ -81,14 +84,35 @@ struct DataFactory {
         return possession
     }
     
-    static func createLiability(name: String, date: Date, creditor: String, initialAmount: Decimal, repaidAmount: Decimal, context: NSManagedObjectContext) -> Liability {
+    static func createLiability(name: String, creditor: LoanPartner, transactions: [LoanTransaction], context: NSManagedObjectContext) -> Liability {
         let liability = Liability(usedContext: context)
         liability.name = name
         liability.creditor = creditor
-        liability.grantDate = date
-        liability.initialAmount = initialAmount.nsDecimalNumberValue
-        liability.repaidAmount = repaidAmount.nsDecimalNumberValue
+        
+        for transaction in transactions {
+            transaction.liability = liability
+        }
+        
         try? context.save()
+        
         return liability
+    }
+    
+    static func createLoanPartner(name: String, context: NSManagedObjectContext) -> LoanPartner {
+        let partner = LoanPartner(usedContext: context)
+        partner.name = name
+        try? context.save()
+        return partner
+    }
+    
+    static func createLoanTransaction(issuer: LoanPartner? = nil, date: Date, amount: Decimal, note: String, emoji: String, context: NSManagedObjectContext) -> LoanTransaction {
+        let transaction = LoanTransaction(usedContext: context)
+        transaction.issuer = issuer
+        transaction.date = date
+        transaction.amount = amount.nsDecimalNumberValue
+        transaction.note = note
+        transaction.emoji = emoji
+        try? context.save()
+        return transaction
     }
 }

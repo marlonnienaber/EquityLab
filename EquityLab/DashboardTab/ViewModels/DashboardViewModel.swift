@@ -59,7 +59,7 @@ class DashboardViewModel {
     }
     var selectedTimeHorizon: TimeHorizon = .all
     var selectedSnapshotDetailView: SnapshotDetailView = .balanceDetailView
-    var selectedDetailPage: DetailPage = .changeDetailPage
+    var selectedSnapshotDetailPage: SnapshotDetailPage = .changeDetailPage
     
     
     init(snapshotRepository: SnapshotRepository = .production) {
@@ -67,7 +67,7 @@ class DashboardViewModel {
         self.snapshotRepository = snapshotRepository
         self.snapshotAnalyzer = SnapshotAnalyzer(repository: snapshotRepository)
         self.snapshotRepository.add(observer: self)
-        self.snapshots = snapshotRepository.fetchSnapshots()
+        self.snapshots = snapshotRepository.getSnapshots().sorted{ $0.date ?? .distantFuture < $1.date ?? .distantFuture }
         for snapshot in snapshots {
             equityValueCache[snapshot] = snapshotAnalyzer.calculateEquityValue(for: snapshot)
         }
@@ -76,7 +76,6 @@ class DashboardViewModel {
     
     
     private func getAssetValue(of snapshot: Snapshot) -> Decimal {
-        Self.logger.debug("getAssetValue(of snapshot)")
         if let assetValue = assetValueCache[snapshot] {
             return assetValue
         } else {
@@ -87,7 +86,6 @@ class DashboardViewModel {
     }
     
     private func getLiabilityValue(of snapshot: Snapshot) -> Decimal {
-        Self.logger.debug("getLiabilityValue(of snapshot)")
         if let liabilityValue = liabilityValueCache[snapshot] {
             return liabilityValue
         } else {
@@ -103,7 +101,8 @@ class DashboardViewModel {
     }
     
     func getBalanceViewModel(for snapshot: Snapshot) -> BalanceViewModel {
-        BalanceViewModel(
+        Self.logger.debug("getBalanceViewModel(for snapshot)")
+        return BalanceViewModel(
             assetValueString: LocalizedCurrencyFormatter.shared.string(from: getAssetValue(of: snapshot).nsDecimalNumberValue) ?? "",
             liabilityValueString: LocalizedCurrencyFormatter.shared.string(from: getLiabilityValue(of: snapshot).nsDecimalNumberValue) ?? "",
             equityValueString: LocalizedCurrencyFormatter.shared.string(from: getEquityValue(of: snapshot).nsDecimalNumberValue) ?? ""
@@ -111,7 +110,7 @@ class DashboardViewModel {
     }
     
     func initializeSelectedSnapshot() {
-        Self.logger.debug("")
+        Self.logger.debug("initializeSelectedSnapshot()")
         if let selectedSnapshot, !snapshots.contains(selectedSnapshot){
             self.selectedSnapshot = snapshots.last
         }
@@ -120,12 +119,12 @@ class DashboardViewModel {
     func computeValueByPool(for positionType: PositionType, using snapshot: Snapshot) -> [String:Decimal] {
         Self.logger.debug("computeValueByPool(for positionType, using snapshot)")
         if positionType == .assets {
-            let assetPositions = snapshotRepository.fetchAssetPositions(of: snapshot)
+            let assetPositions = snapshotRepository.getAssetPositions().filter{ $0.snapshot == snapshot }
             return Dictionary(grouping: assetPositions, by: { $0.poolName }).mapValues { array in
                 array.map { $0.value.decimalValue }.reduce(0, +)
             }
         } else {
-            let liabilityPositions = snapshotRepository.fetchLiabilityPositions(of: snapshot)
+            let liabilityPositions = snapshotRepository.getLiabilityPositions().filter{ $0.snapshot == snapshot }
             return Dictionary(grouping: liabilityPositions, by: { $0.poolName }).mapValues { array in
                 array.map { $0.value.decimalValue }.reduce(0, +)
             }
@@ -133,10 +132,24 @@ class DashboardViewModel {
     }
 }
 
-extension DashboardViewModel: SnapshotObserver {
+extension DashboardViewModel: SnapshotObserver, AssetPositionObserver, LiabilityPositionObserver {
     func notifyAfterSnapshotUpdate() {
         Self.logger.debug("notifyAfterSnapshotUpdate()")
-        self.snapshots = snapshotRepository.fetchSnapshots(sortingOrder: .ascending)
+        updateSnapshotState()
+    }
+    
+    func notifyAfterAssetPositionUpdate() {
+        Self.logger.debug("notifyAfterAssetPositionUpdate()")
+        updateSnapshotState()
+    }
+    
+    func notifyAfterLiabilityPositionUpdate() {
+        Self.logger.debug("notifyAfterLiabilityPositionUpdate()")
+        updateSnapshotState()
+    }
+    
+    private func updateSnapshotState() {
+        self.snapshots = snapshotRepository.getSnapshots().sorted{ $0.date ?? .distantFuture < $1.date ?? .distantFuture }
         guard let selectedSnapshot else { return }
         self.selectedSnapshot = snapshots.first(where: { $0 == selectedSnapshot })
     }
@@ -163,7 +176,7 @@ enum SnapshotDetailView: String, CaseIterable, Identifiable {
     var id: String { self.rawValue }
 }
 
-enum DetailPage {
+enum SnapshotDetailPage {
     case changeDetailPage
     case distributionDetailPage
 }
@@ -181,6 +194,7 @@ extension Date {
 
 struct JsonBackup: Codable {
     let snapshots: [Snapshot]
+    let loanPartners: [LoanPartner]
     let liabilityPools: [LiabilityPool]
     let assetPools: [AssetPool]
 }

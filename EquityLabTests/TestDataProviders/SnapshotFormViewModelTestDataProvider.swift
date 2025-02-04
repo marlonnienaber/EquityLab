@@ -3,13 +3,21 @@ import CoreData
 
 struct SnapshotFormViewModelTestDataProvider {
     func createAndPersistTestObjects_poolNames_1(using context: NSManagedObjectContext) -> (Date,[String],[String],[PositionProxy],[PositionProxy]) {
-        let person1 = "Lenni"
-        let asset1 = DataFactory.createReceivable(name: "Blitz",
-                                                  date: DateParser.shared.date(from: "2024-04-15T00:00:00")!,
-                                                  debtor: person1,
-                                                  initialAmount: 20.0,
-                                                  repaidAmount: 0.0,
-                                                  context: context)
+        let person1 = DataFactory.createLoanPartner(name: "Lenni", context: context)
+        let asset1FirstTransaction = DataFactory.createLoanTransaction(
+            date: DateParser.shared.date(from: "2024-04-15T00:00:00")!,
+            amount: 20,
+            note: "disbursed amount",
+            emoji: "📤",
+            context: context
+        )
+        let asset1 = DataFactory.createReceivable(
+            name: "Blitz",
+            debtor: person1,
+            transactions: [asset1FirstTransaction],
+            context: context
+        )
+        
         let asset2 = DataFactory.createPossession(name: "Geldbeutel", volatile: true, context: context)
         let asset3 = DataFactory.createPossession(name: "Konto Sparkasse", volatile: true, context: context)
         let asset4 = DataFactory.createPossession(name: "Konto Commerzbank", volatile: true, context: context)
@@ -24,25 +32,64 @@ struct SnapshotFormViewModelTestDataProvider {
         let assetPool3 = DataFactory.createAssetPool(named: assetPoolName3, possessions: [asset5], receivables: [], in: context)
         let assetPool4 = DataFactory.createAssetPool(named: assetPoolName4,  possessions: [], receivables: [asset1], in: context)
         
-        let person2 = "Papa"
-        let liability1 = DataFactory.createLiability(name: "Auto",
-                                                     date: DateParser.shared.date(from: "2023-03-15T00:00:00")!,
-                                                     creditor: person2,
-                                                     initialAmount: 1000.0,
-                                                     repaidAmount: 200.0,
-                                                     context: context)
-        let liability2 = DataFactory.createLiability(name: "Booth",
-                                                     date: DateParser.shared.date(from: "2024-07-23T00:00:00")!,
-                                                     creditor: person2,
-                                                     initialAmount: 300.0,
-                                                     repaidAmount: 0.0,
-                                                     context: context)
-        let liability3 = DataFactory.createLiability(name: "Studium",
-                                                     date: DateParser.shared.date(from: "2024-07-23T00:00:00")!,
-                                                     creditor: person2,
-                                                     initialAmount: 5000.0,
-                                                     repaidAmount: 1022.41,
-                                                     context: context)
+        let person2 = DataFactory.createLoanPartner(name: "Papa", context: context)
+        let liability1FirstTransaction = DataFactory.createLoanTransaction(
+            issuer: person2,
+            date: DateParser.shared.date(from: "2023-03-15T00:00:00")!,
+            amount: 1000,
+            note: "disbursed amount",
+            emoji: "💶",
+            context: context
+        )
+        let liability1SecondTransaction = DataFactory.createLoanTransaction(
+            date: DateParser.shared.date(from: "2023-03-16T00:00:00")!,
+            amount: 200,
+            note: "repayment",
+            emoji: "🔁",
+            context: context
+        )
+        let liability1 = DataFactory.createLiability(
+            name: "Auto",
+            creditor: person2,
+            transactions: [liability1FirstTransaction, liability1SecondTransaction],
+            context: context
+        )
+        let liability2FirstTransaction = DataFactory.createLoanTransaction(
+            issuer: person2,
+            date: DateParser.shared.date(from: "2024-07-23T00:00:00")!,
+            amount: 300,
+            note: "disbursed amount",
+            emoji: "💶",
+            context: context
+        )
+        let liability2 = DataFactory.createLiability(
+            name: "Booth",
+            creditor: person2,
+            transactions: [liability2FirstTransaction],
+            context: context
+        )
+        let liability3FirstTransaction = DataFactory.createLoanTransaction(
+            issuer: person2,
+            date: DateParser.shared.date(from: "2024-07-23T00:00:00")!,
+            amount: 5000,
+            note: "disbursed amount",
+            emoji: "💶",
+            context: context
+        )
+        let liability3SecondTransaction = DataFactory.createLoanTransaction(
+            date: DateParser.shared.date(from: "2024-07-25T00:00:00")!,
+            amount: 1022.41,
+            note: "repayment",
+            emoji: "🔁",
+            context: context
+        )
+        let liability3 = DataFactory.createLiability(
+            name: "Studium",
+            creditor: person2,
+            transactions: [liability3FirstTransaction, liability3SecondTransaction],
+            context: context
+        )
+        
         
         let liabilityPoolName1 = "Privat"
         let liabilityPoolName2 = "Staatlich"
@@ -68,13 +115,21 @@ struct SnapshotFormViewModelTestDataProvider {
     }
     
     func createAndPersistTestObjects_poolNames_2(using context: NSManagedObjectContext) -> (Date,[String],[String],[PositionProxy],[PositionProxy]) {
-        let person1 = "Lenni"
-        let asset1 = DataFactory.createReceivable(name: "Blitz",
-                                                  date: DateParser.shared.date(from: "2024-04-15T00:00:00")!,
-                                                  debtor: person1,
-                                                  initialAmount: 20.0,
-                                                  repaidAmount: 0.0,
-                                                  context: context)
+        let person1 = DataFactory.createLoanPartner(name: "Lenni", context: context)
+        let asset1FirstTransaction = DataFactory.createLoanTransaction(
+            date: DateParser.shared.date(from: "2024-04-15T00:00:00")!,
+            amount: 20,
+            note: "disbursed amount",
+            emoji: "📤",
+            context: context
+        )
+        let asset1 = DataFactory.createReceivable(
+            name: "Blitz",
+            debtor: person1,
+            transactions: [asset1FirstTransaction],
+            context: context
+        )
+        
         let asset2 = DataFactory.createPossession(name: "Geldbeutel", volatile: true, context: context)
         let asset3 = DataFactory.createPossession(name: "Konto Sparkasse", volatile: true, context: context)
         let asset4 = DataFactory.createPossession(name: "Konto Commerzbank", volatile: true, context: context)
@@ -89,25 +144,63 @@ struct SnapshotFormViewModelTestDataProvider {
         let assetPool3 = DataFactory.createAssetPool(named: assetPoolName3, possessions: [asset5], receivables: [], in: context)
         let assetPool4 = DataFactory.createAssetPool(named: assetPoolName4,  possessions: [], receivables: [asset1], in: context)
         
-        let person2 = "Papa"
-        let liability1 = DataFactory.createLiability(name: "Auto",
-                                                     date: DateParser.shared.date(from: "2023-03-15T00:00:00")!,
-                                                     creditor: person2,
-                                                     initialAmount: 1000.0,
-                                                     repaidAmount: 200.0,
-                                                     context: context)
-        let liability2 = DataFactory.createLiability(name: "Booth",
-                                                     date: DateParser.shared.date(from: "2024-07-23T00:00:00")!,
-                                                     creditor: person2,
-                                                     initialAmount: 300.0,
-                                                     repaidAmount: 0.0,
-                                                     context: context)
-        let liability3 = DataFactory.createLiability(name: "Studium",
-                                                     date: DateParser.shared.date(from: "2024-07-23T00:00:00")!,
-                                                     creditor: person2,
-                                                     initialAmount: 5000.0,
-                                                     repaidAmount: 1022.41,
-                                                     context: context)
+        let person2 = DataFactory.createLoanPartner(name: "Papa", context: context)
+        let liability1FirstTransaction = DataFactory.createLoanTransaction(
+            issuer: person2,
+            date: DateParser.shared.date(from: "2023-03-15T00:00:00")!,
+            amount: 1000,
+            note: "disbursed amount",
+            emoji: "💶",
+            context: context
+        )
+        let liability1SecondTransaction = DataFactory.createLoanTransaction(
+            date: DateParser.shared.date(from: "2023-03-16T00:00:00")!,
+            amount: 200,
+            note: "repayment",
+            emoji: "🔁",
+            context: context
+        )
+        let liability1 = DataFactory.createLiability(
+            name: "Auto",
+            creditor: person2,
+            transactions: [liability1FirstTransaction, liability1SecondTransaction],
+            context: context
+        )
+        let liability2FirstTransaction = DataFactory.createLoanTransaction(
+            issuer: person2,
+            date: DateParser.shared.date(from: "2024-07-23T00:00:00")!,
+            amount: 300,
+            note: "disbursed amount",
+            emoji: "💶",
+            context: context
+        )
+        let liability2 = DataFactory.createLiability(
+            name: "Booth",
+            creditor: person2,
+            transactions: [liability2FirstTransaction],
+            context: context
+        )
+        let liability3FirstTransaction = DataFactory.createLoanTransaction(
+            issuer: person2,
+            date: DateParser.shared.date(from: "2024-07-23T00:00:00")!,
+            amount: 5000,
+            note: "disbursed amount",
+            emoji: "💶",
+            context: context
+        )
+        let liability3SecondTransaction = DataFactory.createLoanTransaction(
+            date: DateParser.shared.date(from: "2024-07-25T00:00:00")!,
+            amount: 1022.41,
+            note: "repayment",
+            emoji: "🔁",
+            context: context
+        )
+        let liability3 = DataFactory.createLiability(
+            name: "Studium",
+            creditor: person2,
+            transactions: [liability3FirstTransaction, liability3SecondTransaction],
+            context: context
+        )
         
         let liabilityPoolName1 = "Privat"
         let liabilityPoolName2 = "Staatlich"
@@ -179,13 +272,21 @@ struct SnapshotFormViewModelTestDataProvider {
     }
     
     func createAndPersistTestObjects_getProxies_1(using context: NSManagedObjectContext) -> ([String:[PositionProxy]],[String:[PositionProxy]]) {
-        let person1 = "Lenni"
-        let asset1 = DataFactory.createReceivable(name: "Blitz",
-                                                  date: DateParser.shared.date(from: "2024-04-15T00:00:00")!,
-                                                  debtor: person1,
-                                                  initialAmount: 20.0,
-                                                  repaidAmount: 0.0,
-                                                  context: context)
+        let person1 = DataFactory.createLoanPartner(name: "Lenni", context: context)
+        let asset1FirstTransaction = DataFactory.createLoanTransaction(
+            date: DateParser.shared.date(from: "2024-04-15T00:00:00")!,
+            amount: 20,
+            note: "disbursed amount",
+            emoji: "📤",
+            context: context
+        )
+        let asset1 = DataFactory.createReceivable(
+            name: "Blitz",
+            debtor: person1,
+            transactions: [asset1FirstTransaction],
+            context: context
+        )
+        
         let asset2 = DataFactory.createPossession(name: "Geldbeutel", volatile: true, context: context)
         let asset3 = DataFactory.createPossession(name: "Konto Sparkasse", volatile: true, context: context)
         let asset4 = DataFactory.createPossession(name: "Konto Commerzbank", volatile: true, context: context)
@@ -200,25 +301,63 @@ struct SnapshotFormViewModelTestDataProvider {
         let assetPool3 = DataFactory.createAssetPool(named: assetPoolName3, possessions: [asset5], receivables: [], in: context)
         let assetPool4 = DataFactory.createAssetPool(named: assetPoolName4,  possessions: [], receivables: [asset1], in: context)
         
-        let person2 = "Papa"
-        let liability1 = DataFactory.createLiability(name: "Auto",
-                                                     date: DateParser.shared.date(from: "2023-03-15T00:00:00")!,
-                                                     creditor: person2,
-                                                     initialAmount: 1000.0,
-                                                     repaidAmount: 200.0,
-                                                     context: context)
-        let liability2 = DataFactory.createLiability(name: "Booth",
-                                                     date: DateParser.shared.date(from: "2024-07-23T00:00:00")!,
-                                                     creditor: person2,
-                                                     initialAmount: 300.0,
-                                                     repaidAmount: 0.0,
-                                                     context: context)
-        let liability3 = DataFactory.createLiability(name: "Studium",
-                                                     date: DateParser.shared.date(from: "2024-07-23T00:00:00")!,
-                                                     creditor: person2,
-                                                     initialAmount: 5000.0,
-                                                     repaidAmount: 1022.41,
-                                                     context: context)
+        let person2 = DataFactory.createLoanPartner(name: "Papa", context: context)
+        let liability1FirstTransaction = DataFactory.createLoanTransaction(
+            issuer: person2,
+            date: DateParser.shared.date(from: "2023-03-15T00:00:00")!,
+            amount: 1000,
+            note: "disbursed amount",
+            emoji: "💶",
+            context: context
+        )
+        let liability1SecondTransaction = DataFactory.createLoanTransaction(
+            date: DateParser.shared.date(from: "2023-03-16T00:00:00")!,
+            amount: 200,
+            note: "repayment",
+            emoji: "🔁",
+            context: context
+        )
+        let liability1 = DataFactory.createLiability(
+            name: "Auto",
+            creditor: person2,
+            transactions: [liability1FirstTransaction, liability1SecondTransaction],
+            context: context
+        )
+        let liability2FirstTransaction = DataFactory.createLoanTransaction(
+            issuer: person2,
+            date: DateParser.shared.date(from: "2024-07-23T00:00:00")!,
+            amount: 300,
+            note: "disbursed amount",
+            emoji: "💶",
+            context: context
+        )
+        let liability2 = DataFactory.createLiability(
+            name: "Booth",
+            creditor: person2,
+            transactions: [liability2FirstTransaction],
+            context: context
+        )
+        let liability3FirstTransaction = DataFactory.createLoanTransaction(
+            issuer: person2,
+            date: DateParser.shared.date(from: "2024-07-23T00:00:00")!,
+            amount: 5000,
+            note: "disbursed amount",
+            emoji: "💶",
+            context: context
+        )
+        let liability3SecondTransaction = DataFactory.createLoanTransaction(
+            date: DateParser.shared.date(from: "2024-07-25T00:00:00")!,
+            amount: 1022.41,
+            note: "repayment",
+            emoji: "🔁",
+            context: context
+        )
+        let liability3 = DataFactory.createLiability(
+            name: "Studium",
+            creditor: person2,
+            transactions: [liability3FirstTransaction, liability3SecondTransaction],
+            context: context
+        )
         
         let liabilityPoolName1 = "Privat"
         let liabilityPoolName2 = "Staatlich"
@@ -304,19 +443,49 @@ struct SnapshotFormViewModelTestDataProvider {
         let _ = DataFactory.createAssetPool(named: assetPoolName1, possessions: [asset1], receivables: [], in: context)
         let _ = DataFactory.createAssetPool(named: assetPoolName2, possessions: [asset2,asset3], receivables: [], in: context)
         
-        let person2 = "Papa"
-        let liability1 = DataFactory.createLiability(name: "Auto",
-                                                     date: DateParser.shared.date(from: "2023-03-15T00:00:00")!,
-                                                     creditor: person2,
-                                                     initialAmount: 1000.0,
-                                                     repaidAmount: 200.0,
-                                                     context: context)
-        let liability2 = DataFactory.createLiability(name: "Studium",
-                                                     date: DateParser.shared.date(from: "2024-07-23T00:00:00")!,
-                                                     creditor: person2,
-                                                     initialAmount: 5000.0,
-                                                     repaidAmount: 1022.41,
-                                                     context: context)
+        let person2 = DataFactory.createLoanPartner(name: "Papa", context: context)
+        let liability1FirstTransaction = DataFactory.createLoanTransaction(
+            issuer: person2,
+            date: DateParser.shared.date(from: "2023-03-15T00:00:00")!,
+            amount: 1000,
+            note: "disbursed amount",
+            emoji: "💶",
+            context: context
+        )
+        let liability1SecondTransaction = DataFactory.createLoanTransaction(
+            date: DateParser.shared.date(from: "2023-03-16T00:00:00")!,
+            amount: 200,
+            note: "repayment",
+            emoji: "🔁",
+            context: context
+        )
+        let liability1 = DataFactory.createLiability(
+            name: "Auto",
+            creditor: person2,
+            transactions: [liability1FirstTransaction, liability1SecondTransaction],
+            context: context
+        )
+        let liability2FirstTransaction = DataFactory.createLoanTransaction(
+            issuer: person2,
+            date: DateParser.shared.date(from: "2024-07-23T00:00:00")!,
+            amount: 5000,
+            note: "disbursed amount",
+            emoji: "💶",
+            context: context
+        )
+        let liability2SecondTransaction = DataFactory.createLoanTransaction(
+            date: DateParser.shared.date(from: "2024-07-25T00:00:00")!,
+            amount: 1022.41,
+            note: "repayment",
+            emoji: "🔁",
+            context: context
+        )
+        let liability2 = DataFactory.createLiability(
+            name: "Studium",
+            creditor: person2,
+            transactions: [liability2FirstTransaction, liability2SecondTransaction],
+            context: context
+        )
     
         let liabilityPoolName1 = "Privat"
         let liabilityPoolName2 = "Staatlich"

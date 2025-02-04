@@ -49,7 +49,9 @@ struct SnapshotForm: View {
             ForEach(viewModel.assetPoolNames, id: \.self) { poolName in
                 ForEach(viewModel.getAssetProxies(for: poolName), id: \.name) { proxy in
                     if let index = viewModel.assetProxies.firstIndex(where: { $0.name == proxy.name }) {
-                        MonetaryInputView(positionName: proxy.name, positionPool: proxy.poolName, positionValue: $viewModel.assetProxies[index].value)
+                        CurrencyInputView(value: $viewModel.assetProxies[index].value) {
+                            positionDescriptionLabel(name: proxy.name, pool: proxy.poolName)
+                        }
                     }
                 }
             }
@@ -61,30 +63,21 @@ struct SnapshotForm: View {
             ForEach(viewModel.liabilityPoolNames, id: \.self) { poolName in
                 ForEach(viewModel.getLiabilityProxies(for: poolName), id: \.name) { proxy in
                     if let index = viewModel.liabilityProxies.firstIndex(where: { $0.name == proxy.name }) {
-                        MonetaryInputView(positionName: proxy.name, positionPool: proxy.poolName, positionValue: $viewModel.liabilityProxies[index].value)
+                        CurrencyInputView(value: $viewModel.liabilityProxies[index].value) {
+                            positionDescriptionLabel(name: proxy.name, pool: proxy.poolName)
+                        }
                     }
                 }
             }
         }
     }
     
-    struct MonetaryInputView: View {
-        let positionName: String
-        let positionPool: String
-        @Binding var positionValue: Decimal
-        
-        var body: some View {
-            HStack {
-                VStack(alignment: .leading) {
-                    Text(positionName)
-                        .fontWeight(.heavy)
-                    Text(positionPool)
-                        .font(.footnote)
-                }
-                Spacer()
-                CurrencyInputField(value: $positionValue)
-                    .padding(6)
-            }
+    func positionDescriptionLabel(name: String, pool: String) -> some View {
+        VStack(alignment: .leading) {
+            Text(name)
+                .fontWeight(.heavy)
+            Text(pool)
+                .font(.footnote)
         }
     }
 }

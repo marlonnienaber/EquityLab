@@ -1,11 +1,11 @@
 import CoreData
 
 @objc(LiabilityPool)
-public class LiabilityPool: NSManagedObject, Codable, Named {
+public class LiabilityPool: NSManagedObject, Codable {
     
     func getLiabilityRequest() -> NSFetchRequest<Liability> {
         let request = Liability.fetchRequest()
-        request.sortDescriptors = [NSSortDescriptor(keyPath: \Liability.grantDate, ascending: true)]
+        request.sortDescriptors = []
         request.predicate = NSPredicate(format: "pool = %@", self)
         return request
     }

@@ -10,10 +10,11 @@ struct ReceivableForm: View {
                     .frame(maxHeight: 16)
                 Form {
                     descriptionSection
-                    amountSection
-                    dateSection
-                    if viewModel.receivable.isNotNil {
-                        deleteSection
+                    if viewModel.receivable.isNil {
+                        dataSection
+                    }
+                    if viewModel.deletionPossible {
+                        deletionButton
                     }
                 }
             }
@@ -40,7 +41,19 @@ struct ReceivableForm: View {
     private var descriptionSection: some View {
         Section {
             TextField("name", text: $viewModel.name)
-            TextField("debtor", text: $viewModel.debtor)
+            NavigationLink {
+                LoanPartnerSelectionView(viewModel:
+                    LoanPartnerSelectionViewModel(selectedLoanPartner: viewModel.debtor) { selectedPerson in
+                        viewModel.debtor = selectedPerson
+                    }
+                )
+            } label: {
+                HStack {
+                    Text("debtor")
+                    Spacer()
+                    Text(viewModel.debtor?.name ?? "none selected")
+                }
+            }
             Picker("AssetPool", selection: $viewModel.assetPool) {
                 ForEach(viewModel.getAssetPools()) { pool in
                     Text(pool.name).tag(pool)
@@ -50,43 +63,25 @@ struct ReceivableForm: View {
         }
     }
     
-    private var amountSection: some View {
+    private var dataSection: some View {
         Section {
             HStack {
                 Text("initial amount")
                 Spacer()
-                CurrencyInputField(value: $viewModel.initialAmount)
+                CurrencyInputField(value: $viewModel.disbursedAmount)
                     .padding(6)
             }
-            HStack {
-                Text("repaid amount")
-                Spacer()
-                CurrencyInputField(value: $viewModel.repaidAmount)
-                    .padding(6)
-            }
-        }
-    }
-    
-    private var dateSection: some View {
-        Section {
             DatePicker("date", selection: $viewModel.grantDate, in: ...Date(), displayedComponents: .date)
         }
     }
     
-    private var deleteSection: some View {
-        Section {
-            HStack(alignment: .center) {
-                Spacer()
-                Button {
-                    viewModel.deleteReceivable()
-                    viewModel.dismissSheet()
-                } label: {
-                    Text("Delete")
-                        .foregroundStyle(.red)
-                }
-                Spacer()
-            }
+    private var deletionButton: some View {
+        Button("Delete") {
+            viewModel.deleteReceivable()
+            viewModel.dismissSheet()
         }
+        .frame(maxWidth: .infinity, alignment: .center)
+        .foregroundStyle(.red)
     }
     
     private var cancelButton: some View {

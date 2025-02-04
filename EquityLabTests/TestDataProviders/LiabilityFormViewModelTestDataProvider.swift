@@ -3,24 +3,74 @@ import CoreData
 
 struct LiabilityFormViewModelTestDataProvider {
     func createAndPersistTestObjects_getLiabilityPools_1(using context: NSManagedObjectContext) -> [LiabilityPool] {
-        let liability1 = DataFactory.createLiability(name: "Auto",
-                                                     date: DateParser.shared.date(from: "2024-04-15T00:00:00")!,
-                                                     creditor: "Papa",
-                                                     initialAmount: 1000.0,
-                                                     repaidAmount: 100.0,
-                                                     context: context)
-        let liability2 = DataFactory.createLiability(name: "Booth",
-                                                     date: DateParser.shared.date(from: "2024-09-15T00:00:00")!,
-                                                     creditor: "Mama",
-                                                     initialAmount: 300.0,
-                                                     repaidAmount: 50.0,
-                                                     context: context)
-        let liability3 = DataFactory.createLiability(name: "Studium",
-                                                     date: DateParser.shared.date(from: "2024-04-15T00:00:00")!,
-                                                     creditor: "Bayerische Landesregierung",
-                                                     initialAmount: 5000.0,
-                                                     repaidAmount: 1300.0,
-                                                     context: context)
+        let person1 = DataFactory.createLoanPartner(name: "Papa", context: context)
+        let liability1FirstTransaction = DataFactory.createLoanTransaction(
+            issuer: person1,
+            date: DateParser.shared.date(from: "2024-04-15T00:00:00")!,
+            amount: 1000,
+            note: "disbursed amount",
+            emoji: "💶",
+            context: context
+        )
+        let liability1SecondTransaction = DataFactory.createLoanTransaction(
+            date: DateParser.shared.date(from: "2024-04-17T00:00:00")!,
+            amount: 100,
+            note: "repayment",
+            emoji: "🔁",
+            context: context
+        )
+        let liability1 = DataFactory.createLiability(
+            name: "Auto",
+            creditor: person1,
+            transactions: [liability1FirstTransaction, liability1SecondTransaction],
+            context: context
+        )
+        
+        let person2 = DataFactory.createLoanPartner(name: "Mama", context: context)
+        let liability2FirstTransaction = DataFactory.createLoanTransaction(
+            issuer: person2,
+            date: DateParser.shared.date(from: "2024-09-15T00:00:00")!,
+            amount: 300,
+            note: "disbursed amount",
+            emoji: "💶",
+            context: context
+        )
+        let liability2SecondTransaction = DataFactory.createLoanTransaction(
+            date: DateParser.shared.date(from: "2024-09-16T00:00:00")!,
+            amount: 50,
+            note: "repayment",
+            emoji: "🔁",
+            context: context
+        )
+        let liability2 = DataFactory.createLiability(
+            name: "Booth",
+            creditor: person2,
+            transactions: [liability2FirstTransaction,liability2SecondTransaction],
+            context: context
+        )
+        
+        let person3 = DataFactory.createLoanPartner(name: "Bayerische Landesregierung", context: context)
+        let liability3FirstTransaction = DataFactory.createLoanTransaction(
+            issuer: person3,
+            date: DateParser.shared.date(from: "2024-04-15T00:00:00")!,
+            amount: 5000,
+            note: "disbursed amount",
+            emoji: "💶",
+            context: context
+        )
+        let liability3SecondTransaction = DataFactory.createLoanTransaction(
+            date: DateParser.shared.date(from: "2024-07-25T00:00:00")!,
+            amount: 1300,
+            note: "repayment",
+            emoji: "🔁",
+            context: context
+        )
+        let liability3 = DataFactory.createLiability(
+            name: "Studium",
+            creditor: person3,
+            transactions: [liability3FirstTransaction, liability3SecondTransaction],
+            context: context
+        )
         
         let liabilityPoolName1 = "Privat"
         let liabilityPoolName2 = "Staatlich"
@@ -31,50 +81,118 @@ struct LiabilityFormViewModelTestDataProvider {
         return [liabilityPool1,liabilityPool2]
     }
     
-    func createAndPersistTestObjects_createLiability_1(context: NSManagedObjectContext) -> LiabilityPool {
-        DataFactory.createLiabilityPool(named: "Privat", liabilities: [], in: context)
+    func createAndPersistTestObjects_createLiability_1(context: NSManagedObjectContext) -> (LiabilityPool, LoanPartner) {
+        let liabilityPool = DataFactory.createLiabilityPool(named: "Privat", liabilities: [], in: context)
+        let partner = DataFactory.createLoanPartner(name: "Papa", context: context)
+        return (liabilityPool,partner)
     }
     
-    func createAndPersistTestObjects_updateLiability_1(context: NSManagedObjectContext) -> Liability {
-        let initialName = "Auto"
-        let initialDate = DateParser.shared.date(from: "2024-04-15T00:00:00")!
-        let initialCreditor = "Papa"
-        let initialInitialAmount: Decimal = 1000.0
-        let initialRepaidAmount: Decimal = 200.0
-        
-        let liability = DataFactory.createLiability(name: initialName,
-                                    date: initialDate,
-                                    creditor: initialCreditor,
-                                    initialAmount: initialInitialAmount,
-                                    repaidAmount: initialRepaidAmount,
-                                    context: context)
-        
-        let _ = DataFactory.createLiabilityPool(named: "Privat", liabilities: [liability], in: context)
-        
-        return liability
+    func createAndPersistTestObjects_createLiability_2(using context: NSManagedObjectContext) -> String {
+        let liabilityName = "Auto"
+        let person1 = DataFactory.createLoanPartner(name: "Papa", context: context)
+        let liability1FirstTransaction = DataFactory.createLoanTransaction(
+            issuer: person1,
+            date: DateParser.shared.date(from: "2024-04-15T00:00:00")!,
+            amount: 1000,
+            note: "disbursed amount",
+            emoji: "💶",
+            context: context
+        )
+        let liability1SecondTransaction = DataFactory.createLoanTransaction(
+            date: DateParser.shared.date(from: "2024-04-17T00:00:00")!,
+            amount: 100,
+            note: "repayment",
+            emoji: "🔁",
+            context: context
+        )
+        let liability1 = DataFactory.createLiability(
+            name: liabilityName,
+            creditor: person1,
+            transactions: [liability1FirstTransaction, liability1SecondTransaction],
+            context: context
+        )
+        return liabilityName
     }
     
-    func createAndPersistTestObjects_deleteLiabilities_1(using context: NSManagedObjectContext) -> (Liability,[Liability]) {
-        let liability1 = DataFactory.createLiability(name: "Auto",
-                                                     date: DateParser.shared.date(from: "2024-04-15T00:00:00")!,
-                                                     creditor: "Papa",
-                                                     initialAmount: 1000.0,
-                                                     repaidAmount: 100.0,
-                                                     context: context)
-        let liability2 = DataFactory.createLiability(name: "Booth",
-                                                     date: DateParser.shared.date(from: "2024-09-15T00:00:00")!,
-                                                     creditor: "Mama",
-                                                     initialAmount: 300.0,
-                                                     repaidAmount: 50.0,
-                                                     context: context)
-        let liability3 = DataFactory.createLiability(name: "Studium",
-                                                     date: DateParser.shared.date(from: "2024-04-15T00:00:00")!,
-                                                     creditor: "Bayerische Landesregierung",
-                                                     initialAmount: 5000.0,
-                                                     repaidAmount: 1300.0,
-                                                     context: context)
+    func createAndPersistTestObjects_updateOrDeleteLiability_1(context: NSManagedObjectContext) -> Liability {
+        let person1 = DataFactory.createLoanPartner(name: "Papa", context: context)
+        let liability1FirstTransaction = DataFactory.createLoanTransaction(
+            issuer: person1,
+            date: DateParser.shared.date(from: "2024-04-15T00:00:00")!,
+            amount: 1000,
+            note: "disbursed amount",
+            emoji: "💶",
+            context: context
+        )
+        let liability1SecondTransaction = DataFactory.createLoanTransaction(
+            date: DateParser.shared.date(from: "2024-04-17T00:00:00")!,
+            amount: 200,
+            note: "repayment",
+            emoji: "🔁",
+            context: context
+        )
+        let liability1 = DataFactory.createLiability(
+            name: "Auto",
+            creditor: person1,
+            transactions: [liability1FirstTransaction, liability1SecondTransaction],
+            context: context
+        )
         
-        let expectedLiabilities = [liability2,liability3]
-        return (liability1,expectedLiabilities)
+        let _ = DataFactory.createLiabilityPool(named: "Privat", liabilities: [liability1], in: context)
+        
+        return liability1
+    }
+    
+    func createAndPersistTestObjects_updateLiability_2(context: NSManagedObjectContext) -> (Liability,String) {
+        let person1 = DataFactory.createLoanPartner(name: "Papa", context: context)
+        let liability1FirstTransaction = DataFactory.createLoanTransaction(
+            issuer: person1,
+            date: DateParser.shared.date(from: "2024-04-15T00:00:00")!,
+            amount: 1000,
+            note: "disbursed amount",
+            emoji: "💶",
+            context: context
+        )
+        let liability1SecondTransaction = DataFactory.createLoanTransaction(
+            date: DateParser.shared.date(from: "2024-04-17T00:00:00")!,
+            amount: 200,
+            note: "repayment",
+            emoji: "🔁",
+            context: context
+        )
+        let liability1 = DataFactory.createLiability(
+            name: "Auto",
+            creditor: person1,
+            transactions: [liability1FirstTransaction, liability1SecondTransaction],
+            context: context
+        )
+        
+        let occupiedName = "Booth"
+        let person2 = DataFactory.createLoanPartner(name: "Mama", context: context)
+        let liability2FirstTransaction = DataFactory.createLoanTransaction(
+            issuer: person2,
+            date: DateParser.shared.date(from: "2024-09-15T00:00:00")!,
+            amount: 300,
+            note: "disbursed amount",
+            emoji: "💶",
+            context: context
+        )
+        let liability2SecondTransaction = DataFactory.createLoanTransaction(
+            date: DateParser.shared.date(from: "2024-09-16T00:00:00")!,
+            amount: 50,
+            note: "repayment",
+            emoji: "🔁",
+            context: context
+        )
+        let liability2 = DataFactory.createLiability(
+            name: occupiedName,
+            creditor: person2,
+            transactions: [liability2FirstTransaction,liability2SecondTransaction],
+            context: context
+        )
+        
+        let _ = DataFactory.createLiabilityPool(named: "Privat", liabilities: [liability1], in: context)
+        
+        return (liability1,occupiedName)
     }
 }

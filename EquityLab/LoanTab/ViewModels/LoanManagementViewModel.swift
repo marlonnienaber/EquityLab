@@ -7,26 +7,50 @@ class LoanManagementViewModel {
     
     @ObservationIgnored private let assetRepository: AssetRepository
     @ObservationIgnored private let liabilityRepository: LiabilityRepository
-    var liabilities: [Liability]
-    var receivables: [Receivable]
-    var activeLoanUpdateSheet: LoanUpdateSheet?
+    @ObservationIgnored private let receivableAnalyzer: ReceivableAnalyzer
+    @ObservationIgnored private let liabilityAnalyzer: LiabilityAnalyzer
+    
+    var liabilities = [Liability]()
+    var receivables = [Receivable]()
+    var activeLoanCreateSheet: LoanCreateSheet?
     var selectedLoanType: LoanType?
-    var showLoanUpdatePickerSheet = false
+    var showLoanCreatePickerSheet = false
     var hasNoLoans: Bool {
-        liabilities.isEmpty && receivables.isEmpty
+        Self.logger.debug("hasNoLoans")
+        return liabilities.isEmpty && receivables.isEmpty
     }
     
     init(assetRepository: AssetRepository = .production, liabilityRepository: LiabilityRepository = .production) {
         Self.logger.debug("LoanManagementViewModel()")
-        
+    
         self.assetRepository = assetRepository
         self.liabilityRepository = liabilityRepository
+        self.receivableAnalyzer = ReceivableAnalyzer(repository: assetRepository)
+        self.liabilityAnalyzer = LiabilityAnalyzer(repository: liabilityRepository)
         
-        self.receivables = assetRepository.fetchReceivables()
-        self.liabilities = liabilityRepository.fetchLiabilities()
-
+        receivables = assetRepository.getReceivables().sorted(by: receivableSortingPredicate)
+        liabilities = liabilityRepository.getLiabilities().sorted(by: liabilitySortingPredicate)
+        
         assetRepository.add(observer: self)
         liabilityRepository.add(observer: self)
+    }
+    
+    private func receivableSortingPredicate(first: Receivable, second: Receivable) -> Bool {
+        let firstTransactions = assetRepository.getTransactions().filter{ $0.receivable == first }
+        let firstInitialTransactionDate = firstTransactions.map{ $0.date }.min()
+        let secondTransactions = assetRepository.getTransactions().filter{ $0.receivable == second }
+        let secondInitialTransactionDate = secondTransactions.map{ $0.date }.min()
+        
+        return firstInitialTransactionDate ?? .distantPast <= secondInitialTransactionDate ?? .distantPast
+    }
+    
+    private func liabilitySortingPredicate(first: Liability, second: Liability) -> Bool {
+        let firstTransactions = liabilityRepository.getTransactions().filter{ $0.liability == first }
+        let firstInitialTransactionDate = firstTransactions.map{ $0.date }.min()
+        let secondTransactions = liabilityRepository.getTransactions().filter{ $0.liability == second }
+        let secondInitialTransactionDate = secondTransactions.map{ $0.date }.min()
+        
+        return firstInitialTransactionDate ?? .distantPast <= secondInitialTransactionDate ?? .distantPast
     }
     
     func deleteReceivables(for indexSet: IndexSet) {
@@ -38,32 +62,59 @@ class LoanManagementViewModel {
         Self.logger.debug("deleteLiabilities(for indexSet:)")
         indexSet.map{liabilities[$0]}.forEach{liabilityRepository.delete(liability: $0)}
     }
-}
-
-extension LoanManagementViewModel: AssetObserver, LiabilityObserver {
-    func notifyAfterAssetUpdate() {
-        Self.logger.debug("notifyAfterAssetUpdate()")
-        self.receivables = assetRepository.fetchReceivables()
+    
+    func getDisbursedAmountString(for receivable: Receivable) -> String? {
+        Self.logger.debug("getDisbursedAmountString(for receivable)")
+        let disbursedAmount = receivableAnalyzer.calculateDisbursedAmount(for: receivable)
+        return LocalizedCurrencyFormatter.shared.string(from: disbursedAmount.nsDecimalNumberValue)
     }
     
-    func notifyAfterLiabilityUpdate() {
-        Self.logger.debug("notifyAfterLiabilityUpdate()")
-        self.liabilities = liabilityRepository.fetchLiabilities()
+    func getDisbursedAmountString(for liability: Liability) -> String? {
+        Self.logger.debug("getDisbursedAmountString(for liability)")
+        let disbursedAmount = liabilityAnalyzer.calculateDisbursedAmount(for: liability)
+        return LocalizedCurrencyFormatter.shared.string(from: disbursedAmount.nsDecimalNumberValue)
+    }
+    
+    func getRepaymentPercentage(for receivable: Receivable) -> Decimal {
+        Self.logger.debug("getRepaymentPercentage(for receivable)")
+        return receivableAnalyzer.calculateRepaymentPercentage(for: receivable).roundTo(decimalPlace: 3)
+    }
+    
+    func getRepaymentPercentage(for liability: Liability) -> Decimal {
+        Self.logger.debug("getRepaymentPercentage(for liability)")
+        return liabilityAnalyzer.calculateRepaymentPercentage(for: liability).roundTo(decimalPlace: 3)
     }
 }
 
-enum LoanUpdateSheet: Identifiable {
+extension LoanManagementViewModel: LiabilityObserver, LiabilityTransactionObserver {
+    func notifyAfterLiabilityUpdate() {
+        Self.logger.debug("notifyAfterLiabilityUpdate()")
+        liabilities = liabilityRepository.getLiabilities().sorted(by: liabilitySortingPredicate)
+    }
+    
+    func notifyAfterLiabilityTransactionUpdate() {
+        Self.logger.debug("notifyAfterLiabilityTransactionUpdate()")
+        liabilities = liabilities /// triggers re-rendering of view and therefore recalling of functions calculating stats over transactions
+    }
+}
+
+extension LoanManagementViewModel: ReceivableObserver, ReceivableTransactionObserver {
+    func notifyAfterReceivableUpdate() {
+        Self.logger.debug("notifyAfterReceivableUpdate()")
+        receivables = assetRepository.getReceivables().sorted(by: receivableSortingPredicate)
+    }
+    
+    func notifyAfterReceivableTransactionUpdate() {
+        Self.logger.debug("notifyAfterReceivableTransactionUpdate()")
+        receivables = receivables /// triggers re-rendering of view and therefore recalling of functions calculating stats over transactions
+    }
+}
+
+enum LoanCreateSheet: String, Identifiable {
     case receivableCreateSheet
     case liabilityCreateSheet
-    case receivableUpdateSheet(Receivable)
-    case liabilityUpdateSheet(Liability)
     var id: String {
-        switch self {
-        case .receivableCreateSheet: return "receivableCreateSheet"
-        case .liabilityCreateSheet: return "liabilityCreateSheet"
-        case .liabilityUpdateSheet(let liability): return "liabilityUpdateSheet-\(liability)"
-        case .receivableUpdateSheet(let receivable): return "receivableUpdateSheet\(receivable)"
-        }
+        self.rawValue
     }
 }
 
@@ -71,3 +122,4 @@ enum LoanType {
     case receivable
     case liability
 }
+

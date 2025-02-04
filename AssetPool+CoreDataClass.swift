@@ -2,7 +2,7 @@ import Foundation
 import CoreData
 
 @objc(AssetPool)
-public class AssetPool: NSManagedObject, Codable, Named {
+public class AssetPool: NSManagedObject, Codable {
 
     func getReceivableRequest() -> NSFetchRequest<Receivable> {
         let request = Receivable.fetchRequest()

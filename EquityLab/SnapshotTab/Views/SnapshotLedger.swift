@@ -80,8 +80,6 @@ struct SnapshotLedger: View {
                     Image(systemName: "chevron.right").font(.body)
                 }
             }
-        } else {
-            Text("something went wrong while loading this snapshot!")
         }
     }
 }

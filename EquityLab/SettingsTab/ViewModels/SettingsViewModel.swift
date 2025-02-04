@@ -7,6 +7,7 @@ class SettingsViewModel {
     @ObservationIgnored private static let logger = Logger(subsystem: .settingsTab, component: .settingsViewModel)
     
     @ObservationIgnored private var snapshotRepository: SnapshotRepository
+    @ObservationIgnored private var loanPartnerRepository: LoanPartnerRepository
     @ObservationIgnored private var assetRepository: AssetRepository
     @ObservationIgnored private var liabilityRepository: LiabilityRepository
     var isSerializingState = false
@@ -19,11 +20,13 @@ class SettingsViewModel {
     
     init(
         snapshotRepository: SnapshotRepository = .production,
+        loanPartnerRepository: LoanPartnerRepository = .production,
         assetRepository: AssetRepository = .production,
         liabilityRepository: LiabilityRepository = .production
     ) {
         Self.logger.debug("DashboardViewModel()")
         self.snapshotRepository = snapshotRepository
+        self.loanPartnerRepository = loanPartnerRepository
         self.assetRepository = assetRepository
         self.liabilityRepository = liabilityRepository
     }
@@ -34,10 +37,11 @@ class SettingsViewModel {
             isSerializingState = true
         }
         do {
-            let snapshots = snapshotRepository.fetchSnapshots()
-            let liabilityPools = liabilityRepository.fetchLiabilityPools()
-            let assetPools = assetRepository.fetchAssetPools()
-            let jsonBackup = JsonBackup(snapshots: snapshots, liabilityPools: liabilityPools, assetPools: assetPools)
+            let snapshots = snapshotRepository.getSnapshots()
+            let loanPartners = loanPartnerRepository.getLoanPartners()
+            let liabilityPools = liabilityRepository.getLiabilityPools()
+            let assetPools = assetRepository.getAssetPools()
+            let jsonBackup = JsonBackup(snapshots: snapshots, loanPartners: loanPartners, liabilityPools: liabilityPools, assetPools: assetPools)
             let encoder = JSONEncoder()
             encoder.outputFormatting = .prettyPrinted
             let jsonData = try encoder.encode(jsonBackup)
@@ -67,13 +71,23 @@ class SettingsViewModel {
         do {
             let context = ProductionCoreDataStack.shared.context
             
-            let entityTypes = [Snapshot.self,Position.self,AssetPool.self, Receivable.self, Possession.self, LiabilityPool.self,Liability.self]
+            let entityTypes = [
+                Snapshot.self,
+                Position.self,
+                AssetPool.self,
+                Receivable.self,
+                Possession.self,
+                LiabilityPool.self,
+                Liability.self,
+                LoanPartner.self,
+                LoanTransaction.self
+            ]
             for entityType in entityTypes {
                 let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: String(describing: entityType))
                 let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
                 guard let _ = try? context.execute(deleteRequest) else { return }
             }
-            try context.save()
+            context.reset()
             
             let data = try Data(contentsOf: url)
             guard !data.isEmpty else { throw EmptyDataError() }
@@ -84,6 +98,7 @@ class SettingsViewModel {
             operationSucceeded = true
         } catch let error {
             operationFailedDescription = error.localizedDescription
+            print(error.localizedDescription)
             operationFailed = true
         }
     }

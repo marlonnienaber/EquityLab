@@ -28,21 +28,18 @@ class PossessionFormViewModel {
     
     
     private var assetWithSameNameDoesExist: Bool {
-        Self.logger.debug("assetWithSameNameDoesExist")
-        let possessions = repository.fetchPossessions()
-        let receivables = repository.fetchReceivables()
+        let possessions = repository.getPossessions()
+        let receivables = repository.getReceivables()
         let sameNamedReceivableExists = receivables.contains(where: {$0.name == name})
         let otherSameNamedPossessionExists = possessions.contains(where: {$0.name == name && $0 != possession})
         return otherSameNamedPossessionExists || sameNamedReceivableExists
     }
     
     private var nameIsEmpty: Bool {
-        Self.logger.debug("nameIsEmpty")
-        return name.isEmpty
+        name.isEmpty
     }
     
     private func validatePossession() throws -> AssetPool {
-        Self.logger.debug("validatePossession()")
         if assetWithSameNameDoesExist {
             throw PossessionValidationError.sameNameAlreadyExists
         }
@@ -54,13 +51,11 @@ class PossessionFormViewModel {
     }
     
     private func createPossession() throws {
-        Self.logger.debug("createPossession()")
         let assetPool = try validatePossession()
         repository.createPossession(name: name, pool: assetPool, isVolatile: isVolatile)
     }
     
     private func updatePossession() throws {
-        Self.logger.debug("updatePossession()")
         guard let possession else { return }
         let assetPool = try validatePossession()
         repository.updatePossession(possession: possession, newName: name, newIsVolatile: isVolatile, newPool: assetPool)
@@ -83,7 +78,7 @@ class PossessionFormViewModel {
     
     func getAssetPools() -> [AssetPool] {
         Self.logger.debug("getAssetPools()")
-        return repository.fetchAssetPools()
+        return repository.getAssetPools()
     }
 }
 

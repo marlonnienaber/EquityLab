@@ -20,7 +20,7 @@ final class LoanManagementViewModelTests: XCTestCase {
         let sut = LoanManagementViewModel(assetRepository: testingAssetRepository, liabilityRepository: testingLiabilityRepository)
         let (indexSet, expectedRemainingReceivables) = testDataProvider.createAndPersistTestObjects_deleteReceivablesWithIndices_1(using: testingCoreDataStack.context)
         sut.deleteReceivables(for: indexSet)
-        let actualRemainingReceivables = testingAssetRepository.fetchReceivables()
+        let actualRemainingReceivables = testingAssetRepository.getReceivables()
         XCTAssertTrue(expectedRemainingReceivables ≡ actualRemainingReceivables)
     }
     
@@ -29,7 +29,7 @@ final class LoanManagementViewModelTests: XCTestCase {
         let (indexSet, expectedRemainingReceivables) = testDataProvider.createAndPersistTestObjects_deleteReceivablesWithIndices_2(using: testingCoreDataStack.context)
         let sut = LoanManagementViewModel(assetRepository: testingAssetRepository, liabilityRepository: testingLiabilityRepository)
         sut.deleteReceivables(for: indexSet)
-        let actualRemainingReceivables = testingAssetRepository.fetchReceivables()
+        let actualRemainingReceivables = testingAssetRepository.getReceivables()
         XCTAssertTrue(expectedRemainingReceivables ≡ actualRemainingReceivables)
     }
     
@@ -38,7 +38,7 @@ final class LoanManagementViewModelTests: XCTestCase {
         let (indexSet, expectedRemainingReceivables) = testDataProvider.createAndPersistTestObjects_deleteReceivablesWithIndices_3(using: testingCoreDataStack.context)
         let sut = LoanManagementViewModel(assetRepository: testingAssetRepository, liabilityRepository: testingLiabilityRepository)
         sut.deleteReceivables(for: indexSet)
-        let actualRemainingReceivables = testingAssetRepository.fetchReceivables()
+        let actualRemainingReceivables = testingAssetRepository.getReceivables()
         XCTAssertTrue(expectedRemainingReceivables ≡ actualRemainingReceivables)
     }
     
@@ -47,7 +47,7 @@ final class LoanManagementViewModelTests: XCTestCase {
         let (indexSet, expectedRemainingReceivables) = testDataProvider.createAndPersistTestObjects_deleteReceivablesWithIndices_4(using: testingCoreDataStack.context)
         let sut = LoanManagementViewModel(assetRepository: testingAssetRepository, liabilityRepository: testingLiabilityRepository)
         sut.deleteReceivables(for: indexSet)
-        let actualRemainingReceivables = testingAssetRepository.fetchReceivables()
+        let actualRemainingReceivables = testingAssetRepository.getReceivables()
         XCTAssertTrue(expectedRemainingReceivables ≡ actualRemainingReceivables)
     }
     
@@ -56,7 +56,7 @@ final class LoanManagementViewModelTests: XCTestCase {
         let (indexSet, expectedRemainingReceivables) = testDataProvider.createAndPersistTestObjects_deleteReceivablesWithIndices_5(using: testingCoreDataStack.context)
         let sut = LoanManagementViewModel(assetRepository: testingAssetRepository, liabilityRepository: testingLiabilityRepository)
         sut.deleteReceivables(for: indexSet)
-        let actualRemainingReceivables = testingAssetRepository.fetchReceivables()
+        let actualRemainingReceivables = testingAssetRepository.getReceivables()
         XCTAssertTrue(expectedRemainingReceivables ≡ actualRemainingReceivables)
     }
     
@@ -65,7 +65,7 @@ final class LoanManagementViewModelTests: XCTestCase {
         let (indexSet, expectedRemainingReceivables) = testDataProvider.createAndPersistTestObjects_deleteReceivablesWithIndices_6(using: testingCoreDataStack.context)
         let sut = LoanManagementViewModel(assetRepository: testingAssetRepository, liabilityRepository: testingLiabilityRepository)
         sut.deleteReceivables(for: indexSet)
-        let actualRemainingReceivables = testingAssetRepository.fetchReceivables()
+        let actualRemainingReceivables = testingAssetRepository.getReceivables()
         XCTAssertTrue(expectedRemainingReceivables ≡ actualRemainingReceivables)
     }
     
@@ -76,7 +76,7 @@ final class LoanManagementViewModelTests: XCTestCase {
         let sut = LoanManagementViewModel(assetRepository: testingAssetRepository, liabilityRepository: testingLiabilityRepository)
         let (indexSet, expectedRemainingLiabilities) = testDataProvider.createAndPersistTestObjects_deleteLiabilitiesWithIndices_1(using: testingCoreDataStack.context)
         sut.deleteLiabilities(for: indexSet)
-        let actualRemainingLiabilities = testingLiabilityRepository.fetchLiabilities()
+        let actualRemainingLiabilities = testingLiabilityRepository.getLiabilities()
         XCTAssertTrue(expectedRemainingLiabilities ≡ actualRemainingLiabilities)
     }
     
@@ -85,7 +85,7 @@ final class LoanManagementViewModelTests: XCTestCase {
         let (indexSet, expectedRemainingLiabilities) = testDataProvider.createAndPersistTestObjects_deleteLiabilitiesWithIndices_2(using: testingCoreDataStack.context)
         let sut = LoanManagementViewModel(assetRepository: testingAssetRepository, liabilityRepository: testingLiabilityRepository)
         sut.deleteLiabilities(for: indexSet)
-        let actualRemainingLiabilities = testingLiabilityRepository.fetchLiabilities()
+        let actualRemainingLiabilities = testingLiabilityRepository.getLiabilities()
         print("expectedRemainingLiabilities")
         expectedRemainingLiabilities.forEach{ print($0.name) }
         print("actualRemainingLiabilities")
@@ -98,7 +98,7 @@ final class LoanManagementViewModelTests: XCTestCase {
         let (indexSet, expectedRemainingLiabilities) = testDataProvider.createAndPersistTestObjects_deleteLiabilitiesWithIndices_3(using: testingCoreDataStack.context)
         let sut = LoanManagementViewModel(assetRepository: testingAssetRepository, liabilityRepository: testingLiabilityRepository)
         sut.deleteLiabilities(for: indexSet)
-        let actualRemainingLiabilities = testingLiabilityRepository.fetchLiabilities()
+        let actualRemainingLiabilities = testingLiabilityRepository.getLiabilities()
         XCTAssertTrue(expectedRemainingLiabilities ≡ actualRemainingLiabilities)
     }
     
@@ -107,7 +107,7 @@ final class LoanManagementViewModelTests: XCTestCase {
         let (indexSet, expectedRemainingLiabilities) = testDataProvider.createAndPersistTestObjects_deleteLiabilitiesWithIndices_4(using: testingCoreDataStack.context)
         let sut = LoanManagementViewModel(assetRepository: testingAssetRepository, liabilityRepository: testingLiabilityRepository)
         sut.deleteLiabilities(for: indexSet)
-        let actualRemainingLiabilities = testingLiabilityRepository.fetchLiabilities()
+        let actualRemainingLiabilities = testingLiabilityRepository.getLiabilities()
         XCTAssertTrue(expectedRemainingLiabilities ≡ actualRemainingLiabilities)
     }
     
@@ -116,7 +116,7 @@ final class LoanManagementViewModelTests: XCTestCase {
         let (indexSet, expectedRemainingLiabilities) = testDataProvider.createAndPersistTestObjects_deleteLiabilitiesWithIndices_5(using: testingCoreDataStack.context)
         let sut = LoanManagementViewModel(assetRepository: testingAssetRepository, liabilityRepository: testingLiabilityRepository)
         sut.deleteLiabilities(for: indexSet)
-        let actualRemainingLiabilities = testingLiabilityRepository.fetchLiabilities()
+        let actualRemainingLiabilities = testingLiabilityRepository.getLiabilities()
         XCTAssertTrue(expectedRemainingLiabilities ≡ actualRemainingLiabilities)
     }
     
@@ -125,7 +125,43 @@ final class LoanManagementViewModelTests: XCTestCase {
         let (indexSet, expectedRemainingLiabilities) = testDataProvider.createAndPersistTestObjects_deleteLiabilitiesWithIndices_6(using: testingCoreDataStack.context)
         let sut = LoanManagementViewModel(assetRepository: testingAssetRepository, liabilityRepository: testingLiabilityRepository)
         sut.deleteLiabilities(for: indexSet)
-        let actualRemainingLiabilities = testingLiabilityRepository.fetchLiabilities()
+        let actualRemainingLiabilities = testingLiabilityRepository.getLiabilities()
         XCTAssertTrue(expectedRemainingLiabilities ≡ actualRemainingLiabilities)
+    }
+    
+    
+    
+    /// test disbursed amount string for receivable
+    func test_getDisbursedAmountString_receivable() throws {
+        let (receivable, expectedAmountString) = testDataProvider.createAndPersistTestObjects_getDisbursedAmountString_1(context: testingCoreDataStack.context)
+        let sut = LoanManagementViewModel(assetRepository: testingAssetRepository, liabilityRepository: testingLiabilityRepository)
+        let actualLocalizedCurrencyFormattedString = sut.getDisbursedAmountString(for: receivable)
+        let actualAmountString = actualLocalizedCurrencyFormattedString!.dropLast(2).string
+        XCTAssertEqual(expectedAmountString, actualAmountString)
+    }
+    
+    /// test repayment percentage for receivable
+    func test_getRepaymentPercentage_receivable() throws {
+        let (receivable, expectedPercentage) = testDataProvider.createAndPersistTestObjects_getRepaymentPercentage_1(context: testingCoreDataStack.context)
+        let sut = LoanManagementViewModel(assetRepository: testingAssetRepository, liabilityRepository: testingLiabilityRepository)
+        let actualPercentage = sut.getRepaymentPercentage(for: receivable)
+        XCTAssertEqual(expectedPercentage, actualPercentage)
+    }
+    
+    /// test disbursed amount string for liability
+    func test_getDisbursedAmountString_liability() throws {
+        let (liability, expectedAmountString) = testDataProvider.createAndPersistTestObjects_getDisbursedAmountString_2(context: testingCoreDataStack.context)
+        let sut = LoanManagementViewModel(assetRepository: testingAssetRepository, liabilityRepository: testingLiabilityRepository)
+        let actualLocalizedCurrencyFormattedString = sut.getDisbursedAmountString(for: liability)
+        let actualAmountString = actualLocalizedCurrencyFormattedString!.dropLast(2).string
+        XCTAssertEqual(expectedAmountString, actualAmountString)
+    }
+    
+    /// test repayment percentage for liability
+    func test_getRepaymentPercentage_liability() throws {
+        let (liability, expectedPercentage) = testDataProvider.createAndPersistTestObjects_getRepaymentPercentage_2(context: testingCoreDataStack.context)
+        let sut = LoanManagementViewModel(assetRepository: testingAssetRepository, liabilityRepository: testingLiabilityRepository)
+        let actualPercentage = sut.getRepaymentPercentage(for: liability)
+        XCTAssertEqual(expectedPercentage, actualPercentage)
     }
 }

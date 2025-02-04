@@ -3,13 +3,21 @@ import CoreData
 
 struct PossessionFormViewModelTestDataProvider {
     func createAndPersitsTestObjects_getAssetPools_1(using context: NSManagedObjectContext) -> [AssetPool] {
-        let person1 = "Lenni"
-        let asset1 = DataFactory.createReceivable(name: "Blitz",
-                                                  date: DateParser.shared.date(from: "2024-04-15T00:00:00")!,
-                                                  debtor: person1,
-                                                  initialAmount: 20.0,
-                                                  repaidAmount: 0.0,
-                                                  context: context)
+        let name1 = "Blitz"
+        let person1 = DataFactory.createLoanPartner(name: "Lenni", context: context)
+        let receivable1FirstTransaction = DataFactory.createLoanTransaction(
+            date: DateParser.shared.date(from: "2024-04-15T00:00:00")!,
+            amount: 20,
+            note: "disbursed amount",
+            emoji: "📤",
+            context: context
+        )
+        let asset1 = DataFactory.createReceivable(
+            name: name1,
+            debtor: person1,
+            transactions: [receivable1FirstTransaction],
+            context: context
+        )
         let asset2 = DataFactory.createPossession(name: "Geldbeutel", volatile: true, context: context)
         let asset3 = DataFactory.createPossession(name: "Konto Sparkasse", volatile: true, context: context)
         let asset4 = DataFactory.createPossession(name: "Konto Commerzbank", volatile: true, context: context)
@@ -38,17 +46,74 @@ struct PossessionFormViewModelTestDataProvider {
     }
     
     func createAndPersistTestObjects_createPossessionsWithSameName_2(context: NSManagedObjectContext) -> (Receivable,AssetPool) {
-        let person2 = "Philipp"
-        let receivable = DataFactory.createReceivable(
-            name: "Rote Sonne",
+        let name1 = "Rote Sonne"
+        let person1 = DataFactory.createLoanPartner(name: "Philipp", context: context)
+        let receivable1FirstTransaction = DataFactory.createLoanTransaction(
             date: DateParser.shared.date(from: "2024-07-23T00:00:00")!,
-            debtor: person2,
-            initialAmount: 200.0,
-            repaidAmount: 40.0,
+            amount: 200,
+            note: "disbursed amount",
+            emoji: "📤",
+            context: context
+        )
+        let receivable1SecondTransaction = DataFactory.createLoanTransaction(
+            issuer: person1,
+            date: DateParser.shared.date(from: "2024-07-25T00:00:00")!,
+            amount: 40,
+            note: "repayment",
+            emoji: "💶",
+            context: context
+        )
+        let receivable = DataFactory.createReceivable(
+            name: name1,
+            debtor: person1,
+            transactions: [receivable1FirstTransaction,receivable1SecondTransaction],
             context: context
         )
         let assetPool = DataFactory.createAssetPool(named: "Privat", possessions: [], receivables: [receivable], in: context)
         return (receivable,assetPool)
+    }
+    
+    func createAndPersistTestObjects_updatePossessionsWithSameName_1(context: NSManagedObjectContext) -> (Possession,String) {
+        let occupiedName = "Sparkasse Konto"
+        let possession1 = DataFactory.createPossession(name: occupiedName, volatile: true, context: context)
+        let possession2 = DataFactory.createPossession(name: "Commerzbank Konto", volatile: true, context: context)
+        let _ = DataFactory.createAssetPool(named: "Darlehen", possessions: [possession1,possession2], receivables: [], in: context)
+        return (possession2,occupiedName)
+    }
+    
+    func createAndPersistTestObjects_updatePossessionsWithSameName_2(context: NSManagedObjectContext) -> (Possession,String) {
+        let occupiedName = "Rote Sonne"
+        let person1 = DataFactory.createLoanPartner(name: "Philipp", context: context)
+        let receivable1FirstTransaction = DataFactory.createLoanTransaction(
+            date: DateParser.shared.date(from: "2024-07-23T00:00:00")!,
+            amount: 200,
+            note: "disbursed amount",
+            emoji: "📤",
+            context: context
+        )
+        let receivable1SecondTransaction = DataFactory.createLoanTransaction(
+            issuer: person1,
+            date: DateParser.shared.date(from: "2024-07-25T00:00:00")!,
+            amount: 40,
+            note: "repayment",
+            emoji: "💶",
+            context: context
+        )
+        let receivable = DataFactory.createReceivable(
+            name: occupiedName,
+            debtor: person1,
+            transactions: [receivable1FirstTransaction,receivable1SecondTransaction],
+            context: context
+        )
+        let possession = DataFactory.createPossession(name: "Commerzbank Konto", volatile: true, context: context)
+        let _ = DataFactory.createAssetPool(named: "Darlehen", possessions: [possession], receivables: [receivable], in: context)
+        return (possession,occupiedName)
+    }
+    
+    func createAndPersistTestObjects_updatePossessionsWithSameName_3(context: NSManagedObjectContext) -> Possession {
+        let possession = DataFactory.createPossession(name: "Commerzbank Konto", volatile: true, context: context)
+        let _ = DataFactory.createAssetPool(named: "Darlehen", possessions: [possession], receivables: [], in: context)
+        return possession
     }
     
     func createAndPersistTestObjects_deletePossession_1(using context: NSManagedObjectContext) -> (Possession,[Possession]) {

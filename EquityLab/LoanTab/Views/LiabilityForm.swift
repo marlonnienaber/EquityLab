@@ -1,4 +1,3 @@
-
 import SwiftUI
 
 struct LiabilityForm: View {
@@ -11,10 +10,11 @@ struct LiabilityForm: View {
                     .frame(maxHeight: 16)
                 Form {
                     descriptionSection
-                    amountSection
-                    dateSection
-                    if viewModel.liability.isNotNil {
-                        deleteSection
+                    if viewModel.liability.isNil {
+                        dataSection
+                    }
+                    if viewModel.deletionPossible {
+                        deletionButton
                     }
                 }
             }
@@ -40,8 +40,20 @@ struct LiabilityForm: View {
     
     private var descriptionSection: some View {
         Section {
-            TextField("creditor", text: $viewModel.liabilityCreditor)
-            TextField("purpose", text: $viewModel.liabilityName)
+            TextField("name", text: $viewModel.name)
+            NavigationLink {
+                LoanPartnerSelectionView(viewModel:
+                    LoanPartnerSelectionViewModel(selectedLoanPartner: viewModel.creditor) { selectedPerson in
+                        viewModel.creditor = selectedPerson
+                    }
+                )
+            } label: {
+                HStack {
+                    Text("creditor")
+                    Spacer()
+                    Text(viewModel.creditor?.name ?? "none selected")
+                }
+            }
             Picker("LiabilityPool", selection: $viewModel.liabilityPool) {
                 ForEach(viewModel.getLiabilityPools()) { pool in
                     Text(pool.name).tag(pool)
@@ -51,43 +63,25 @@ struct LiabilityForm: View {
         }
     }
     
-    private var amountSection: some View {
+    private var dataSection: some View {
         Section {
             HStack {
                 Text("initial amount")
                 Spacer()
-                CurrencyInputField(value: $viewModel.liabilityInitialAmount)
+                CurrencyInputField(value: $viewModel.disbursedAmount)
                     .padding(6)
             }
-            HStack {
-                Text("repaid amount")
-                Spacer()
-                CurrencyInputField(value: $viewModel.liabilityRepaidAmount)
-                    .padding(6)
-            }
+            DatePicker("date", selection: $viewModel.grantDate, in: ...Date(), displayedComponents: .date)
         }
     }
     
-    private var dateSection: some View {
-        Section {
-            DatePicker("date", selection: $viewModel.liabilityGrantDate, in: ...Date(), displayedComponents: .date)
+    private var deletionButton: some View {
+        Button("Delete") {
+            viewModel.deleteLiability()
+            viewModel.dismissSheet()
         }
-    }
-    
-    private var deleteSection: some View {
-        Section {
-            HStack(alignment: .center) {
-                Spacer()
-                Button {
-                    viewModel.deleteLiability()
-                    viewModel.dismissSheet()
-                } label: {
-                    Text("Delete")
-                        .foregroundStyle(.red)
-                }
-                Spacer()
-            }
-        }
+        .frame(maxWidth: .infinity, alignment: .center)
+        .foregroundStyle(.red)
     }
     
     private var cancelButton: some View {
@@ -108,3 +102,4 @@ struct LiabilityForm: View {
         }
     }
 }
+

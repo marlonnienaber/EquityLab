@@ -4,18 +4,18 @@ struct LoanManagementView: View {
     @State var viewModel = LoanManagementViewModel()
     
     var body: some View {
-        NavigationView {
+        NavigationStack {
             List {
                 if viewModel.receivables.isNotEmpty {
                     Section("Receivables") {
                         ForEach(viewModel.receivables) { receivable in
-                            Button {
-                                viewModel.activeLoanUpdateSheet = .receivableUpdateSheet(receivable)
-                            } label: {
-                                receivableCell(for: receivable)
+                            if let debtor = receivable.debtor {
+                                NavigationLink(value: Pair(receivable,debtor)) {
+                                    receivableCell(for: receivable)
+                                }
                             }
                         }
-                        .onDelete{ indexSet in
+                        .onDelete { indexSet in
                             viewModel.deleteReceivables(for: indexSet)
                         }
                     }
@@ -23,13 +23,13 @@ struct LoanManagementView: View {
                 if viewModel.liabilities.isNotEmpty {
                     Section("Liabilities") {
                         ForEach(viewModel.liabilities) { liability in
-                            Button {
-                                viewModel.activeLoanUpdateSheet = .liabilityUpdateSheet(liability)
-                            } label: {
-                                liabilityCell(for: liability)
+                            if let creditor = liability.creditor {
+                                NavigationLink(value: Pair(liability,creditor)) {
+                                    liabilityCell(for: liability)
+                                }
                             }
                         }
-                        .onDelete{ indexSet in
+                        .onDelete { indexSet in
                             viewModel.deleteLiabilities(for: indexSet)
                         }
                     }
@@ -43,37 +43,43 @@ struct LoanManagementView: View {
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button {
-                        viewModel.showLoanUpdatePickerSheet = true
+                        viewModel.showLoanCreatePickerSheet = true
                     } label: {
                         Image(systemName: "plus")
                     }
                 }
             }
-            .sheet(item: $viewModel.activeLoanUpdateSheet) { activeSheet in
-                updateSheetContent(for: activeSheet)
+            .sheet(item: $viewModel.activeLoanCreateSheet) { activeSheet in
+                loanCreateSheetContent(for: activeSheet)
             }
-            .sheet(isPresented: $viewModel.showLoanUpdatePickerSheet) {
-                loanUpdatePickerMenu
+            .sheet(isPresented: $viewModel.showLoanCreatePickerSheet) {
+                loanCreatePickerMenu
                     .presentationDetents([.fraction(0.25)])
+            }
+            .navigationDestination(for: Pair<Receivable,LoanPartner>.self) { pair in
+                ReceivableDetailView(viewModel: ReceivableDetailViewModel(receivable: pair.first, debtor: pair.second))
+            }
+            .navigationDestination(for: Pair<Liability,LoanPartner>.self) { pair in
+                LiabilityDetailView(viewModel: LiabilityDetailViewModel(liability: pair.first, creditor: pair.second))
             }
         }
     }
     
     func receivableCell(for receivable: Receivable) -> some View {
         HStack {
-            if let initialAmountStringRepresentation = LocalizedCurrencyFormatter.shared.string(from: receivable.initialAmount) {
+            if let disbursedAmountString = viewModel.getDisbursedAmountString(for: receivable) {
                 VStack(alignment: .leading) {
                     Text(receivable.name)
                         .foregroundColor(Color.primary)
-                    Text(receivable.debtor)
+                    Text(receivable.debtor?.name ?? "")
                         .font(.footnote)
                         .foregroundColor(Color.gray)
-                    Text(initialAmountStringRepresentation)
+                    Text(disbursedAmountString)
                         .font(.footnote)
                         .foregroundColor(Color.gray)
                 }
                 Spacer()
-                CircularProgressView(progress: receivable.repaymentPercentage)
+                CircularProgressView(progress: viewModel.getRepaymentPercentage(for: receivable))
                     .frame(width: 37, height: 37)
             }
         }
@@ -81,35 +87,33 @@ struct LoanManagementView: View {
     
     private func liabilityCell(for liability: Liability) -> some View {
         HStack {
-            if let initialAmountStringRepresentation = LocalizedCurrencyFormatter.shared.string(from: liability.initialAmount) {
+            if let initialAmountString = viewModel.getDisbursedAmountString(for: liability) {
                 VStack(alignment: .leading) {
                     Text(liability.name)
                         .foregroundColor(Color.primary)
-                    Text(liability.creditor)
+                    Text(liability.creditor?.name ?? "")
                         .font(.footnote)
                         .foregroundColor(Color.gray)
-                    Text(initialAmountStringRepresentation)
+                    Text(initialAmountString)
                         .font(.footnote)
                         .foregroundColor(Color.gray)
                 }
                 Spacer()
-                CircularProgressView(progress: liability.repaymentPercentage)
+                CircularProgressView(progress: viewModel.getRepaymentPercentage(for: liability))
                     .frame(width: 37, height: 37)
             }
         }
     }
     
     @ViewBuilder
-    private func updateSheetContent(for sheetType: LoanUpdateSheet) -> some View {
+    private func loanCreateSheetContent(for sheetType: LoanCreateSheet) -> some View {
         switch sheetType {
-        case .receivableCreateSheet: ReceivableForm(viewModel: ReceivableFormViewModel{ viewModel.activeLoanUpdateSheet = nil } )
-        case .liabilityCreateSheet: LiabilityForm(viewModel: LiabilityFormViewModel{ viewModel.activeLoanUpdateSheet = nil } )
-        case .liabilityUpdateSheet(let liability): LiabilityForm(viewModel: LiabilityFormViewModel(liability: liability){ viewModel.activeLoanUpdateSheet = nil } )
-        case .receivableUpdateSheet(let receivable): ReceivableForm(viewModel: ReceivableFormViewModel(receivable: receivable) { viewModel.activeLoanUpdateSheet = nil } )
+        case .receivableCreateSheet: ReceivableForm(viewModel: ReceivableFormViewModel{ viewModel.activeLoanCreateSheet = nil } )
+        case .liabilityCreateSheet: LiabilityForm(viewModel: LiabilityFormViewModel{viewModel.activeLoanCreateSheet = nil} )
         }
     }
     
-    private var loanUpdatePickerMenu: some View {
+    private var loanCreatePickerMenu: some View {
         NavigationView {
             VStack {
                 Text("Which kind of loan would you like to add?")
@@ -122,17 +126,17 @@ struct LoanManagementView: View {
             }
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
-                    Button("Cancel"){
-                        viewModel.activeLoanUpdateSheet = nil
+                    Button("Cancel") {
+                        viewModel.showLoanCreatePickerSheet = false
                     }
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button("OK") {
-                        viewModel.showLoanUpdatePickerSheet = false
+                        viewModel.showLoanCreatePickerSheet = false
                         guard let selectedLoanType = viewModel.selectedLoanType else { return }
                         switch selectedLoanType {
-                        case .receivable: viewModel.activeLoanUpdateSheet = .receivableCreateSheet
-                        case .liability: viewModel.activeLoanUpdateSheet = .liabilityCreateSheet
+                        case .receivable: viewModel.activeLoanCreateSheet = .receivableCreateSheet
+                        case .liability: viewModel.activeLoanCreateSheet = .liabilityCreateSheet
                         }
                     }
                     .disabled(viewModel.selectedLoanType.isNil)
@@ -141,3 +145,4 @@ struct LoanManagementView: View {
         }
     }
 }
+
