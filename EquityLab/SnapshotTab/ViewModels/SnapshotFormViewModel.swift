@@ -5,7 +5,7 @@ import CoreData
 class SnapshotFormViewModel {
     @ObservationIgnored private static let logger = Logger(subsystem: .snapshotTab, component: .snapshotFormViewModel)
     
-    @ObservationIgnored private var snapshotRepository: SnapshotRepository
+    @ObservationIgnored private var snapshotRepository: SnapshotRepositoryNew
     @ObservationIgnored private let snapshot: Snapshot?
     var date: Date
     let assetPoolNames: [String]
@@ -18,7 +18,7 @@ class SnapshotFormViewModel {
     
     init(
         snapshot: Snapshot? = nil,
-        snapshotRepository: SnapshotRepository = .production,
+        snapshotRepository: SnapshotRepositoryNew = .production,
         assetRepository: AssetRepository = .production,
         liabilityRepository: LiabilityRepository = .production,
         dismissSheet: @escaping () -> ()
@@ -47,17 +47,17 @@ class SnapshotFormViewModel {
     
     private static func createProxies(
         for snapshot: Snapshot,
-        using snapshotRepository: SnapshotRepository
+        using snapshotRepository: SnapshotRepositoryNew
     ) -> ([PositionProxy],[PositionProxy]) {
-        let assetPositions = snapshotRepository.getAssetPositions().filter{ $0.snapshot == snapshot }
+        let assetPositions = snapshotRepository.assetPositions.filter{ $0.snapshot == snapshot }
         let assetProxies = assetPositions.map{ PositionProxy(name: $0.name, value: $0.value.decimalValue, pool: $0.poolName) }
-        let liabilityPositions = snapshotRepository.getLiabilityPositions().filter{ $0.snapshot == snapshot }
+        let liabilityPositions = snapshotRepository.liabilityPositions.filter{ $0.snapshot == snapshot }
         let liabilityProxies = liabilityPositions.map{ PositionProxy(name: $0.name, value: $0.value.decimalValue, pool: $0.poolName) }
         return (assetProxies,liabilityProxies)
     }
     
     private static func createProxies(
-        using snapshotRepository: SnapshotRepository,
+        using snapshotRepository: SnapshotRepositoryNew,
         and assetRepository: AssetRepository,
         and liabilityRepository: LiabilityRepository
     ) -> ([PositionProxy],[PositionProxy]) {
@@ -76,7 +76,7 @@ class SnapshotFormViewModel {
                 if possession.volatile {
                     return PositionProxy(name: possession.name, value: 0.0, pool: pool.name)
                 } else {
-                    let positions = snapshotRepository.getAssetPositions().filter{ $0.name == possession.name }
+                    let positions = snapshotRepository.assetPositions.filter{ $0.name == possession.name }
                     let datesAndValues: [(date:Date,value:Decimal)] = positions.map{
                         if let date = $0.snapshot?.date {
                             return (date: date, value: $0.value.decimalValue)
@@ -106,8 +106,7 @@ class SnapshotFormViewModel {
     }
     
     private var snapshotWithSameDateDoesExist: Bool {
-        let snapshots = snapshotRepository.getSnapshots()
-        return snapshots.contains(where: { $0.date == date.startOfDay && $0 != snapshot })
+        snapshotRepository.snapshots.contains(where: { $0.date == date.startOfDay && $0 != snapshot })
     }
     
     private func validateSnapshot() throws {

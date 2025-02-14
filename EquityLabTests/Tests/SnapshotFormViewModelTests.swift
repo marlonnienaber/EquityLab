@@ -3,14 +3,14 @@ import XCTest
 
 final class SnapshotFormViewModelTests: XCTestCase {
     private var testingCoreDataStack: TestingCoreDataStack!
-    private var testingSnapshotRepository: SnapshotRepository!
+    private var testingSnapshotRepository: SnapshotRepositoryNew!
     private var testingAssetRepository: AssetRepository!
     private var testingLiabilityRepository: LiabilityRepository!
     private let testDataProvider = SnapshotFormViewModelTestDataProvider()
     
     override func setUpWithError() throws {
         testingCoreDataStack = TestingCoreDataStack()
-        testingSnapshotRepository = SnapshotRepository(context: testingCoreDataStack.context)
+        testingSnapshotRepository = SnapshotRepositoryNew(context: testingCoreDataStack.context)
         testingAssetRepository = AssetRepository(context: testingCoreDataStack.context)
         testingLiabilityRepository = LiabilityRepository(context: testingCoreDataStack.context)
     }
@@ -212,12 +212,12 @@ final class SnapshotFormViewModelTests: XCTestCase {
         
         try sut.saveSnapshot()
         
-        let snapshots = testingSnapshotRepository.getSnapshots()
+        let snapshots = testingSnapshotRepository.snapshots
         let snapshot = try XCTUnwrap(snapshots.first)
         
         let actualSnapshotDate = snapshot.date
-        let actualAssetPositionProperties = testingSnapshotRepository.getAssetPositions().filter{ $0.snapshot == snapshot }.map{ ($0.name, $0.value.decimalValue) }
-        let actualLiabilityPositionProperties = testingSnapshotRepository.getLiabilityPositions().filter{ $0.snapshot == snapshot }.map{ ($0.name, $0.value.decimalValue) }
+        let actualAssetPositionProperties = testingSnapshotRepository.assetPositions.filter{ $0.snapshot == snapshot }.map{ ($0.name, $0.value.decimalValue) }
+        let actualLiabilityPositionProperties = testingSnapshotRepository.liabilityPositions.filter{ $0.snapshot == snapshot }.map{ ($0.name, $0.value.decimalValue) }
         
         XCTAssertEqual(expectedSnapshotDate, actualSnapshotDate)
         XCTAssertTrue(expectedAssetPositionProperties ≡ actualAssetPositionProperties)
@@ -253,12 +253,12 @@ final class SnapshotFormViewModelTests: XCTestCase {
         
         try sut.saveSnapshot()
         
-        let snapshots = testingSnapshotRepository.getSnapshots()
+        let snapshots = testingSnapshotRepository.snapshots
         snapshot = try XCTUnwrap(snapshots.first)
         
         let actualSnapshotDate = snapshot.date
-        let actualAssetPositionProperties = testingSnapshotRepository.getAssetPositions().filter{ $0.snapshot == snapshot }.map{ ($0.name, $0.value.decimalValue) }
-        let actualLiabilityPositionProperties = testingSnapshotRepository.getLiabilityPositions().filter{ $0.snapshot == snapshot }.map{ ($0.name, $0.value.decimalValue) }
+        let actualAssetPositionProperties = testingSnapshotRepository.assetPositions.filter{ $0.snapshot == snapshot }.map{ ($0.name, $0.value.decimalValue) }
+        let actualLiabilityPositionProperties = testingSnapshotRepository.liabilityPositions.filter{ $0.snapshot == snapshot }.map{ ($0.name, $0.value.decimalValue) }
         
         XCTAssertEqual(expectedSnapshotDate, actualSnapshotDate)
         XCTAssertTrue(expectedAssetPositionProperties ≡ actualAssetPositionProperties)
