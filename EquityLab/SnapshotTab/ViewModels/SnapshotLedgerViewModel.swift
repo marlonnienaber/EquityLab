@@ -19,6 +19,7 @@ class SnapshotLedgerViewModel {
     var activeSheet: SnapshotSheetType? = nil
     
     
+    /* TODO: currently changes in AssetPositions or LiabilityPositions are only reflected in the ledger because this VM seems to be reinitialized after saveSnapshot(). -> investigate why */
     init(repository: SnapshotRepositoryNew = .production) {
         Self.logger.debug("SnapshotLedgerViewModel()")
         self.repository = repository
