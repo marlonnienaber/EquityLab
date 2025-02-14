@@ -109,3 +109,10 @@ struct EmptyDataError: LocalizedError {
         "The imported file does not contain any data"
     }
 }
+
+struct JsonBackup: Codable {
+    let snapshots: [Snapshot]
+    let loanPartners: [LoanPartner]
+    let liabilityPools: [LiabilityPool]
+    let assetPools: [AssetPool]
+}
