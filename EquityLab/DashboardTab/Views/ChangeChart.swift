@@ -3,15 +3,18 @@ import Charts
 import SwiftUI
 
 struct ChangenChart: View {
-    @State var viewModel: ChangeChartViewModel
+    @Binding var noChangesToLastSnapshot: Bool
+    @Binding var changeCategories: [BarChartCategory]
+    @Binding var maxChangePercentage: Decimal
+    let color: Color
     
     var body: some View {
-        if viewModel.noChangesToLastSnapshot {
+        if noChangesToLastSnapshot {
             Text("there were no changes compared to the last snapshot")
                 .multilineTextAlignment(.center)
         } else {
             Chart {
-                ForEach(viewModel.changeCategories, id: \.name) { category in
+                ForEach(changeCategories, id: \.name) { category in
                     BarMark(
                         x: .value("category", category.name),
                         y: .value("value", category.change)
@@ -20,7 +23,7 @@ struct ChangenChart: View {
                         Text(category.change == 0 ? "" : category.change.oneDecimalPercentageString)
                             .font(.caption)
                     }
-                    .foregroundStyle(viewModel.changeChartColor)
+                    .foregroundStyle(color)
                     .cornerRadius(5)
                 }
             }
@@ -35,8 +38,8 @@ struct ChangenChart: View {
                 }
             }
             .chartYScale(domain: [
-                -viewModel.maxChangePercentage - 11,
-                 viewModel.maxChangePercentage + 11
+                -maxChangePercentage - 11,
+                maxChangePercentage + 11
             ]
             )
             .animation(.easeInOut(duration: 0.5))

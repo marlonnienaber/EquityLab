@@ -90,6 +90,9 @@ struct Dashboard: View {
         .onAppear{
             viewModel.initializeSelectedSnapshot()
         }
+        .onChange(of: viewModel.selectedDate) {
+            viewModel.setSelectedDistributionCategoryOnNewSnapshot()
+        }
     }
     
     private func balanceDetailView(viewModel: BalanceViewModel) -> some View {
@@ -103,13 +106,26 @@ struct Dashboard: View {
     private var assetDetailView: some View {
         TabView(selection: $viewModel.selectedSnapshotDetailPage) {
             VStack {
-                ChangenChart(viewModel: ChangeChartViewModel(changeChartType: .assetChangeChart, dashboardViewModel: viewModel))
+                ChangenChart(
+                    noChangesToLastSnapshot: Binding.readOnly{ viewModel.noAssetChangesToLastSnapshot },
+                    changeCategories: Binding.readOnly{ viewModel.assetChangeChartCategories },
+                    maxChangePercentage: Binding.readOnly{ viewModel.maxAssetChangePercentage },
+                    color: .assetsUnselected
+                )
                 Spacer()
                     .frame(height: 45)
             }
             .tag(SnapshotDetailPage.changeDetailPage)
             VStack {
-                DistributionChart(viewModel: DistributionChartViewModel(distributionChartType: .assetDistributionChart, dashboardViewModel: viewModel))
+                DistributionChart(
+                    selectedCumulativeValue: $viewModel.selectedAssetCumulativeValue,
+                    showPopover: $viewModel.showAssetDistributionChartPopover,
+                    distributionCategories: Binding.readOnly{ viewModel.assetDistributionChartCategories },
+                    selectedCategory: $viewModel.selectedAssetDistributionCategory,
+                    noPositiveDistributionCategoriesRecorded: Binding.readOnly{ viewModel.noPositiveAssetDistributionCategoriesRecorded },
+                    color: .assetsUnselected,
+                    setSelectedDistributionCategoryWith: { viewModel.setSelectedDistributionCategory(for: .assets, with: $0) }
+                )
                 Spacer()
                     .frame(height: 45)
             }
@@ -121,13 +137,26 @@ struct Dashboard: View {
     private var liabilityDetailView: some View {
         TabView(selection: $viewModel.selectedSnapshotDetailPage) {
             VStack {
-                ChangenChart(viewModel: ChangeChartViewModel(changeChartType: .liabilityChangeChart, dashboardViewModel: viewModel))
+                ChangenChart(
+                    noChangesToLastSnapshot: Binding.readOnly{ viewModel.noLiabilityChangesToLastSnapshot },
+                    changeCategories: Binding.readOnly{ viewModel.liabilityChangeChartCategories },
+                    maxChangePercentage: Binding.readOnly{ viewModel.maxLiabilityChangePercentage },
+                    color: .liabilitiesUnselected
+                )
                 Spacer()
                     .frame(height: 45)
             }
             .tag(SnapshotDetailPage.changeDetailPage)
             VStack {
-                DistributionChart(viewModel: DistributionChartViewModel(distributionChartType: .liabilityDistributionChart, dashboardViewModel: viewModel))
+                DistributionChart(
+                    selectedCumulativeValue: $viewModel.selectedLiabilityCumulativeValue,
+                    showPopover: $viewModel.showLiabilityDistributionChartPopover,
+                    distributionCategories: Binding.readOnly{ viewModel.liabilityDistributionChartCategories },
+                    selectedCategory: $viewModel.selectedLiabilityDistributionCategory,
+                    noPositiveDistributionCategoriesRecorded: Binding.readOnly{ viewModel.noPositiveLiabilityDistributionCategoriesRecorded },
+                    color: .liabilitiesUnselected,
+                    setSelectedDistributionCategoryWith: { viewModel.setSelectedDistributionCategory(for: .liabilities, with: $0) }
+                )
                 Spacer()
                     .frame(height: 45)
             }

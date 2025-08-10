@@ -13,6 +13,10 @@ extension Decimal {
         String(format: "%.1f", self.doubleValue) + "%"
     }
     
+    var currencyString: String {
+        LocalizedCurrencyFormatter.shared.string(from: self as NSNumber) ?? ""
+    }
+    
     func roundTo(decimalPlace: Int) -> Decimal {
         var result = Decimal()
         var input = self

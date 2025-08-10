@@ -266,7 +266,7 @@ struct DashboardViewModelTestDataProvider {
     func createAndPersistTestObjects_selectedDate_2(using context: NSManagedObjectContext) -> (Snapshot, Snapshot) {
         let date_15_04_2024 = DateParser.shared.date(from: "2024-04-15T00:00:00")!
         let date_15_03_2024 = DateParser.shared.date(from: "2024-03-15T00:00:00")!
-
+        
         let snapshot_15_04_2024 = DataFactory.createSnapshotWithoutPositions(for: date_15_04_2024, in: context)
         let snapshot_15_03_2024 = DataFactory.createSnapshotWithoutPositions(for: date_15_03_2024, in: context)
         
@@ -350,5 +350,351 @@ struct DashboardViewModelTestDataProvider {
         snapshots.append(snapshot_31_05_2023)
         
         return snapshots
+    }
+    
+    
+    
+    func createAndPersistTestObjects_noPositiveAssetDistributionCategoriesRecorded_1(using context: NSManagedObjectContext) -> Snapshot {
+        let assetPosition1 = DataFactory.createAssetPosition(name: "Purse", poolName: "Cash", value: 0.0, context: context)
+        let liabilityPosition1 = DataFactory.createLiabilityPosition(name: "DJ Equipment", poolName: "Private", value: 0.0, context: context)
+        
+        let assetPositions: [AssetPosition] = [assetPosition1]
+        let liabilityPositions: [LiabilityPosition] = [liabilityPosition1]
+        let date: Date = .now
+        return DataFactory.createSnapshot(with: assetPositions, and: liabilityPositions, for: date, in: context)
+    }
+    
+    func createAndPersistTestObjects_noPositiveAssetDistributionCategoriesRecorded_2(using context: NSManagedObjectContext) -> Snapshot {
+        let assetPosition1 = DataFactory.createAssetPosition(name: "Purse", poolName: "Cash", value: 17.01, context: context)
+        let liabilityPosition1 = DataFactory.createLiabilityPosition(name: "Office Building", poolName: "Business", value: 17.01, context: context)
+        
+        let assetPositions: [AssetPosition] = [assetPosition1]
+        let liabilityPositions: [LiabilityPosition] = [liabilityPosition1]
+        let date: Date = .now
+        return DataFactory.createSnapshot(with: assetPositions, and: liabilityPositions, for: date, in: context)
+    }
+    
+    
+    
+    func createAndPersistTestObjects_distributionCategories_1(using context: NSManagedObjectContext) -> ([DonutChartCategory],[DonutChartCategory]) {
+        let assetPosition1 = DataFactory.createAssetPosition(name: "Sparkasse Konto", poolName: "Bank", value: 20.0, context: context)
+        let assetPosition2 = DataFactory.createAssetPosition(name: "FNZ Depot", poolName: "Wertpapiere", value: 30.0, context: context)
+        let assetPosition3 = DataFactory.createAssetPosition(name: "Geldbeutel", poolName: "Bargeld", value: 50.0, context: context)
+        
+        let liabilityPosition1 = DataFactory.createLiabilityPosition(name: "Auto-Kredit", poolName: "Privat", value: 40, context: context)
+        let liabilityPosition2 = DataFactory.createLiabilityPosition(name: "Studien-Kredit", poolName: "Staat", value: 60, context: context)
+        
+        let _ = DataFactory.createSnapshot(with: [assetPosition1, assetPosition2, assetPosition3],
+                                           and: [liabilityPosition1, liabilityPosition2],
+                                           for: .now,
+                                           in: context)
+        
+        let assetCategory1 = DonutChartCategory(pools: [Pool(value: 20.0, name: "Bank", percentage: 20.0)])
+        let assetCategory2 = DonutChartCategory(pools: [Pool(value: 30.0, name: "Wertpapiere", percentage: 30.0)])
+        let assetCategory3 = DonutChartCategory(pools: [Pool(value: 50.0, name: "Bargeld", percentage: 50.0)])
+        
+        let liabilityCategory1 = DonutChartCategory(pools: [Pool(value: 40.0, name: "Privat", percentage: 40.0)])
+        let liabilityCategory2 = DonutChartCategory(pools: [Pool(value: 60.0, name: "Staat", percentage: 60.0)])
+        
+        return ([assetCategory1, assetCategory2, assetCategory3], [liabilityCategory1,liabilityCategory2])
+    }
+    
+    func createAndPersistTestObjects_distributionCategories_2(using context: NSManagedObjectContext) -> ([DonutChartCategory],[DonutChartCategory]) {
+        let assetPosition1 = DataFactory.createAssetPosition(name: "Sparkasse Girokonto", poolName: "Bank", value: 10.0, context: context)
+        let assetPosition2 = DataFactory.createAssetPosition(name: "Sparkasse Tagesgeldkonto", poolName: "Bank", value: 25.0, context: context)
+        let assetPosition3 = DataFactory.createAssetPosition(name: "Commerzbank Konto", poolName: "Bank", value: 5.0, context: context)
+        let assetPosition4 = DataFactory.createAssetPosition(name: "FNZ Depot", poolName: "Wertpapiere", value: 1.0, context: context)
+        let assetPosition5 = DataFactory.createAssetPosition(name: "Sparkasse Depot", poolName: "Wertpapiere", value: 2.0, context: context)
+        let assetPosition6 = DataFactory.createAssetPosition(name: "Geldbeutel", poolName: "Bargeld", value: 57.0, context: context)
+        
+        let liabilityPosition1 = DataFactory.createLiabilityPosition(name: "Auto-Kredit", poolName: "Privat", value: 40, context: context)
+        let liabilityPosition2 = DataFactory.createLiabilityPosition(name: "Miete-Kredit", poolName: "Privat", value: 40, context: context)
+        let liabilityPosition3 = DataFactory.createLiabilityPosition(name: "Plattenspieler-Kredit", poolName: "Privat", value: 17, context: context)
+        let liabilityPosition4 = DataFactory.createLiabilityPosition(name: "Studien-Kredit", poolName: "Staat", value: 3.0, context: context)
+        
+        let _ = DataFactory.createSnapshot(with: [assetPosition1, assetPosition2, assetPosition3, assetPosition4, assetPosition5, assetPosition6],
+                                           and: [liabilityPosition1, liabilityPosition2, liabilityPosition3, liabilityPosition4],
+                                           for: .now,
+                                           in: context)
+        
+        let assetCategory1 = DonutChartCategory(pools: [Pool(value: 40.0, name: "Bank", percentage: 40.0)])
+        let assetCategory2 = DonutChartCategory(pools: [Pool(value: 3.0, name: "Wertpapiere", percentage: 3.0)])
+        let assetCategory3 = DonutChartCategory(pools: [Pool(value: 57.0, name: "Bargeld", percentage: 57.0)])
+        
+        let liabilityCategory1 = DonutChartCategory(pools: [Pool(value: 97.0, name: "Privat", percentage: 97.0)])
+        let liabilityCategory2 = DonutChartCategory(pools: [Pool(value: 3.0, name: "Staat", percentage: 3.0)])
+        
+        return ([assetCategory1, assetCategory2, assetCategory3], [liabilityCategory1,liabilityCategory2])
+    }
+    
+    func createAndPersistTestObjects_distributionCategories_3(using context: NSManagedObjectContext) -> ([DonutChartCategory],[DonutChartCategory]) {
+        let assetPosition1 = DataFactory.createAssetPosition(name: "Sparkasse Girokonto", poolName: "Bank", value: 10.0, context: context)
+        let assetPosition2 = DataFactory.createAssetPosition(name: "Sparkasse Tagesgeldkonto", poolName: "Bank", value: 25.0, context: context)
+        let assetPosition3 = DataFactory.createAssetPosition(name: "Commerzbank Konto", poolName: "Bank", value: 35.0, context: context)
+        let assetPosition4 = DataFactory.createAssetPosition(name: "FNZ Depot", poolName: "Wertpapiere", value: 16.0, context: context)
+        let assetPosition5 = DataFactory.createAssetPosition(name: "Sparkasse Depot", poolName: "Wertpapiere", value: 12.0, context: context)
+        let assetPosition6 = DataFactory.createAssetPosition(name: "Geldbeutel", poolName: "Bargeld", value: 1.0, context: context)
+        let assetPosition7 = DataFactory.createAssetPosition(name: "Sparschwein", poolName: "Bargeld", value: 1.0, context: context)
+        
+        let liabilityPosition1 = DataFactory.createLiabilityPosition(name: "Auto-Kredit", poolName: "Privat", value: 40, context: context)
+        let liabilityPosition2 = DataFactory.createLiabilityPosition(name: "Miete-Kredit", poolName: "Privat", value: 40, context: context)
+        let liabilityPosition3 = DataFactory.createLiabilityPosition(name: "Plattenspieler-Kredit", poolName: "Privat", value: 18, context: context)
+        let liabilityPosition4 = DataFactory.createLiabilityPosition(name: "Studien-Kredit", poolName: "Staat", value: 2.0, context: context)
+        
+        let _ = DataFactory.createSnapshot(with: [assetPosition1, assetPosition2, assetPosition3, assetPosition4, assetPosition5, assetPosition6, assetPosition7],
+                                           and: [liabilityPosition1, liabilityPosition2, liabilityPosition3, liabilityPosition4],
+                                           for: .now,
+                                           in: context)
+        
+        let assetCategory1 = DonutChartCategory(pools: [Pool(value: 70.0, name: "Bank", percentage: 70.0)])
+        let assetCategory2 = DonutChartCategory(pools: [
+            Pool(value: 28.0, name: "Wertpapiere", percentage: 28.0),
+            Pool(value: 2.0, name: "Bargeld", percentage: 2.0)
+        ])
+        
+        let liabilityCategory1 = DonutChartCategory(pools: [
+            Pool(value: 98.0, name: "Privat", percentage: 98.0),
+            Pool(value: 2.0, name: "Staat", percentage: 2.0)
+        ])
+        
+        return ([assetCategory1, assetCategory2], [liabilityCategory1])
+    }
+    
+    func createAndPersistTestObjects_distributionCategories_4(using context: NSManagedObjectContext) -> ([DonutChartCategory],[DonutChartCategory]) {
+        let assetPosition1 = DataFactory.createAssetPosition(name: "Sparkasse Girokonto", poolName: "Bank Inland", value: 10.0, context: context)
+        let assetPosition2 = DataFactory.createAssetPosition(name: "Sparkasse Tagesgeldkonto", poolName: "Bank Inland", value: 25.0, context: context)
+        let assetPosition3 = DataFactory.createAssetPosition(name: "Commerzbank Konto", poolName: "Bank Inland", value: 35.0, context: context)
+        let assetPosition4 = DataFactory.createAssetPosition(name: "FNZ Depot", poolName: "Wertpapiere", value: 16.0, context: context)
+        let assetPosition5 = DataFactory.createAssetPosition(name: "Sparkasse Depot", poolName: "Wertpapiere", value: 12.0, context: context)
+        let assetPosition6 = DataFactory.createAssetPosition(name: "Geldbeutel", poolName: "Bargeld", value: 1.0, context: context)
+        let assetPosition7 = DataFactory.createAssetPosition(name: "Sparschwein", poolName: "Bargeld", value: 0.5, context: context)
+        let assetPosition8 = DataFactory.createAssetPosition(name: "Bank of America Konto", poolName: "Bank Ausland", value: 0.5, context: context)
+        
+        let liabilityPosition1 = DataFactory.createLiabilityPosition(name: "Auto-Kredit", poolName: "Familie", value: 40, context: context)
+        let liabilityPosition2 = DataFactory.createLiabilityPosition(name: "Miete-Kredit", poolName: "Familie", value: 40, context: context)
+        let liabilityPosition3 = DataFactory.createLiabilityPosition(name: "Plattenspieler-Kredit", poolName: "Familie", value: 18, context: context)
+        let liabilityPosition4 = DataFactory.createLiabilityPosition(name: "Studien-Kredit", poolName: "Staat", value: 1.0, context: context)
+        let liabilityPosition5 = DataFactory.createLiabilityPosition(name: "Feiern Lenni", poolName: "Freunde", value: 1.0, context: context)
+        
+        let _ = DataFactory.createSnapshot(with: [assetPosition1, assetPosition2, assetPosition3, assetPosition4, assetPosition5, assetPosition6, assetPosition7, assetPosition8],
+                                           and: [liabilityPosition1, liabilityPosition2, liabilityPosition3, liabilityPosition4, liabilityPosition5],
+                                           for: .now,
+                                           in: context)
+        
+        let assetCategory1 = DonutChartCategory(pools: [Pool(value: 70.0, name: "Bank Inland", percentage: 70.0)])
+        let assetCategory2 = DonutChartCategory(pools: [
+            Pool(value: 28.0, name: "Wertpapiere", percentage: 28.0),
+            Pool(value: 1.5, name: "Bargeld", percentage: 1.5),
+            Pool(value: 0.5, name: "Bank Ausland", percentage: 0.5)
+        ])
+        
+        let liabilityCategory1 = DonutChartCategory(pools: [
+            Pool(value: 98.0, name: "Familie", percentage: 98.0),
+            Pool(value: 1.0, name: "Staat", percentage: 1.0),
+            Pool(value: 1.0, name: "Freunde", percentage: 1.0)
+        ])
+        
+        return ([assetCategory1, assetCategory2], [liabilityCategory1])
+    }
+    
+    func createAndPersistTestObjects_distributionCategories_5(using context: NSManagedObjectContext) -> ([DonutChartCategory],[DonutChartCategory]) {
+        let _ = DataFactory.createSnapshotWithoutPositions(for: .now, in: context)
+        return ([], [])
+    }
+    
+    
+    
+    func createAndPersistTestObjects_setSelectedCategoryForNewCumulativeValue_1(using context: NSManagedObjectContext) -> (DonutChartCategory, DonutChartCategory) {
+        let assetPosition1 = DataFactory.createAssetPosition(name: "Sparkasse Konto", poolName: "Bank", value: 20.0, context: context)
+        let assetPosition2 = DataFactory.createAssetPosition(name: "FNZ Depot", poolName: "Wertpapiere", value: 30.0, context: context)
+        let assetPosition3 = DataFactory.createAssetPosition(name: "Geldbeutel", poolName: "Bargeld", value: 50.0, context: context)
+        
+        let liabilityPosition1 = DataFactory.createLiabilityPosition(name: "Auto-Kredit", poolName: "Privat", value: 40, context: context)
+        let liabilityPosition2 = DataFactory.createLiabilityPosition(name: "Studien-Kredit", poolName: "Staat", value: 60, context: context)
+        
+        let _ = DataFactory.createSnapshot(with: [assetPosition1, assetPosition2, assetPosition3],
+                                           and: [liabilityPosition1, liabilityPosition2],
+                                           for: .now,
+                                           in: context)
+        
+        return (
+            .init(pools: [.init(value: 30.0, name: "Wertpapiere", percentage: 30.0)]),
+            .init(pools:[.init(value: 40.0, name: "Privat", percentage: 40.0)])
+        )
+    }
+    
+    func createAndPersistTestObjects_setSelectedCategoryForNewCumulativeValue_2(using context: NSManagedObjectContext) -> (DonutChartCategory, DonutChartCategory) {
+        let assetPosition1 = DataFactory.createAssetPosition(name: "Sparkasse Konto", poolName: "Bank", value: 20.0, context: context)
+        let assetPosition2 = DataFactory.createAssetPosition(name: "FNZ Depot", poolName: "Wertpapiere", value: 30.0, context: context)
+        let assetPosition3 = DataFactory.createAssetPosition(name: "Geldbeutel", poolName: "Bargeld", value: 50.0, context: context)
+        
+        let liabilityPosition1 = DataFactory.createLiabilityPosition(name: "Auto-Kredit", poolName: "Privat", value: 40, context: context)
+        let liabilityPosition2 = DataFactory.createLiabilityPosition(name: "Studien-Kredit", poolName: "Staat", value: 60, context: context)
+        
+        let _ = DataFactory.createSnapshot(with: [assetPosition1, assetPosition2, assetPosition3],
+                                           and: [liabilityPosition1, liabilityPosition2],
+                                           for: .now,
+                                           in: context)
+        
+        return (
+            .init(pools: [.init(value: 20.0, name: "Bank", percentage: 20.0)]),
+            .init(pools:[.init(value: 40.0, name: "Privat", percentage: 40.0)])
+        )
+    }
+    
+    
+    
+    func createAndPersistTestObjects_setSelectedDistributionCategoryOnNewSnapshot_1(using context: NSManagedObjectContext) -> (DonutChartCategory, DonutChartCategory, Date) {
+        let assetPosition1 = DataFactory.createAssetPosition(name: "Sparkasse Konto", poolName: "Bank", value: 20.0, context: context)
+        let assetPosition2 = DataFactory.createAssetPosition(name: "FNZ Depot", poolName: "Wertpapiere", value: 30.0, context: context)
+        
+        let liabilityPosition1 = DataFactory.createLiabilityPosition(name: "Auto-Kredit", poolName: "Privat", value: 40, context: context)
+        let liabilityPosition2 = DataFactory.createLiabilityPosition(name: "Studien-Kredit", poolName: "Staat", value: 60, context: context)
+        
+        let snapshot = DataFactory.createSnapshot(with: [assetPosition1, assetPosition2],
+                                                  and: [liabilityPosition1, liabilityPosition2],
+                                                  for: .now,
+                                                  in: context)
+        
+        let assetCategory1 = DonutChartCategory(pools: [Pool(value: 20.0, name: "Bank", percentage: 20.0)])
+        let assetCategory2 = DonutChartCategory(pools: [Pool(value: 30.0, name: "Wertpapiere", percentage: 30.0)])
+        
+        let liabilityCategory1 = DonutChartCategory(pools: [Pool(value: 40.0, name: "Privat", percentage: 40.0)])
+        let liabilityCategory2 = DonutChartCategory(pools: [Pool(value: 60.0, name: "Staat", percentage: 60.0)])
+        
+        return (assetCategory2, liabilityCategory2, snapshot.date!)
+    }
+    
+    func createAndPersistTestObjects_setSelectedDistributionCategoryOnNewSnapshot_2(using context: NSManagedObjectContext) -> (DonutChartCategory, DonutChartCategory, Date) {
+        let assetPosition1 = DataFactory.createAssetPosition(name: "Sparkasse Konto", poolName: "Bank", value: 20.0, context: context)
+        let assetPosition2 = DataFactory.createAssetPosition(name: "FNZ Depot", poolName: "Wertpapiere", value: 30.0, context: context)
+        
+        let liabilityPosition1 = DataFactory.createLiabilityPosition(name: "Auto-Kredit", poolName: "Privat", value: 40, context: context)
+        let liabilityPosition2 = DataFactory.createLiabilityPosition(name: "Studien-Kredit", poolName: "Staat", value: 60, context: context)
+        
+        let snapshot = DataFactory.createSnapshot(with: [assetPosition1, assetPosition2],
+                                                  and: [liabilityPosition1, liabilityPosition2],
+                                                  for: .now,
+                                                  in: context)
+        
+        let assetCategory1 = DonutChartCategory(pools: [Pool(value: 20.0, name: "Bank", percentage: 20.0)])
+        let assetCategory2 = DonutChartCategory(pools: [Pool(value: 30.0, name: "Wertpapiere", percentage: 30.0)])
+        
+        let liabilityCategory1 = DonutChartCategory(pools: [Pool(value: 40.0, name: "Privat", percentage: 40.0)])
+        let liabilityCategory2 = DonutChartCategory(pools: [Pool(value: 60.0, name: "Staat", percentage: 60.0)])
+        
+        return (assetCategory1, liabilityCategory1, snapshot.date!)
+    }
+    
+    
+    
+    func createAndPersistTestObjects_computeSnapshotBeforeSelectedSnapshot_1(using context: NSManagedObjectContext) -> (Snapshot,Snapshot) {
+        let date_21_10_1966 = DateParser.shared.date(from: "1966-10-21T00:00:00")!
+        let date_23_04_1970 = DateParser.shared.date(from: "1970-04-23T00:00:00")!
+        let date_01_01_2002 = DateParser.shared.date(from: "2002-01-01T00:00:00")!
+        let date_26_04_2002 = DateParser.shared.date(from: "2002-04-26T00:00:00")!
+        let date_31_12_2002 = DateParser.shared.date(from: "2002-12-31T00:00:00")!
+        let date_31_01_2004 = DateParser.shared.date(from: "2004-01-31T00:00:00")!
+        let snapshot1 = DataFactory.createSnapshotWithoutPositions(for: date_21_10_1966, in: context)
+        let snapshot2 = DataFactory.createSnapshotWithoutPositions(for: date_23_04_1970, in: context)
+        let snapshot3 = DataFactory.createSnapshotWithoutPositions(for: date_01_01_2002, in: context)
+        let snapshot4 = DataFactory.createSnapshotWithoutPositions(for: date_26_04_2002, in: context)
+        let snapshot5 = DataFactory.createSnapshotWithoutPositions(for: date_31_12_2002, in: context)
+        let snapshot6 = DataFactory.createSnapshotWithoutPositions(for: date_31_01_2004, in: context)
+        return (snapshot5,snapshot6)
+    }
+    
+    func createAndPersistTestObjects_computeSnapshotBeforeSelectedSnapshot_2(using context: NSManagedObjectContext) -> (Snapshot,Snapshot) {
+        let date_21_10_1966 = DateParser.shared.date(from: "1966-10-21T00:00:00")!
+        let date_23_04_1970 = DateParser.shared.date(from: "1970-04-23T00:00:00")!
+        let date_01_01_2002 = DateParser.shared.date(from: "2002-01-01T00:00:00")!
+        let date_26_04_2002 = DateParser.shared.date(from: "2002-04-26T00:00:00")!
+        let date_31_12_2002 = DateParser.shared.date(from: "2002-12-31T00:00:00")!
+        let date_31_01_2004 = DateParser.shared.date(from: "2004-01-31T00:00:00")!
+        let snapshot1 = DataFactory.createSnapshotWithoutPositions(for: date_21_10_1966, in: context)
+        let snapshot2 = DataFactory.createSnapshotWithoutPositions(for: date_23_04_1970, in: context)
+        let snapshot3 = DataFactory.createSnapshotWithoutPositions(for: date_01_01_2002, in: context)
+        let snapshot4 = DataFactory.createSnapshotWithoutPositions(for: date_26_04_2002, in: context)
+        let snapshot5 = DataFactory.createSnapshotWithoutPositions(for: date_31_12_2002, in: context)
+        let snapshot6 = DataFactory.createSnapshotWithoutPositions(for: date_31_01_2004, in: context)
+        return (snapshot3,snapshot4)
+    }
+    
+    func createAndPersistTestObjects_computeSnapshotBeforeSelectedSnapshot_3(using context: NSManagedObjectContext) -> Snapshot {
+        let date_21_10_1966 = DateParser.shared.date(from: "1966-10-21T00:00:00")!
+        let date_23_04_1970 = DateParser.shared.date(from: "1970-04-23T00:00:00")!
+        let date_01_01_2002 = DateParser.shared.date(from: "2002-01-01T00:00:00")!
+        let date_26_04_2002 = DateParser.shared.date(from: "2002-04-26T00:00:00")!
+        let date_31_12_2002 = DateParser.shared.date(from: "2002-12-31T00:00:00")!
+        let date_31_01_2004 = DateParser.shared.date(from: "2004-01-31T00:00:00")!
+        let snapshot1 = DataFactory.createSnapshotWithoutPositions(for: date_21_10_1966, in: context)
+        let snapshot2 = DataFactory.createSnapshotWithoutPositions(for: date_23_04_1970, in: context)
+        let snapshot3 = DataFactory.createSnapshotWithoutPositions(for: date_01_01_2002, in: context)
+        let snapshot4 = DataFactory.createSnapshotWithoutPositions(for: date_26_04_2002, in: context)
+        let snapshot5 = DataFactory.createSnapshotWithoutPositions(for: date_31_12_2002, in: context)
+        let snapshot6 = DataFactory.createSnapshotWithoutPositions(for: date_31_01_2004, in: context)
+        return snapshot1
+    }
+    
+    
+    
+    func createAndPersistTestObjects_changeChartCategories_1(using context: NSManagedObjectContext) -> (Snapshot,[BarChartCategory],Decimal) {
+        let firstLiabilityPosition1 = DataFactory.createLiabilityPosition(name: "Auto", poolName: "Privat", value: 0, context: context)
+        let secondLiabilityPosition1 = DataFactory.createLiabilityPosition(name: "Studium", poolName: "Staatlich", value: 50, context: context)
+        let thirdLiabilityPosition1 = DataFactory.createLiabilityPosition(name: "Wohnung", poolName: "Bank", value: 10, context: context)
+        let fourthLiabilityPosition1 = DataFactory.createLiabilityPosition(name: "Sport", poolName: "Freunde", value: 20, context: context)
+        let liabilityPositions1 = [firstLiabilityPosition1,secondLiabilityPosition1,thirdLiabilityPosition1,fourthLiabilityPosition1]
+        let date1 = DateParser.shared.date(from: "1966-10-21T00:00:00")!
+        let _ = DataFactory.createSnapshot(with: [], and: liabilityPositions1, for: date1, in: context)
+        
+        let firstLiabilityPosition2 = DataFactory.createLiabilityPosition(name: "Auto", poolName: "Privat", value: 5, context: context)
+        let secondLiabilityPosition2 = DataFactory.createLiabilityPosition(name: "Studium", poolName: "Staatlich", value: 25, context: context)
+        let thirdLiabilityPosition2 = DataFactory.createLiabilityPosition(name: "Wohnung", poolName: "Bank", value: 17, context: context)
+        let fourthLiabilityPosition2 = DataFactory.createLiabilityPosition(name: "Sport", poolName: "Freunde", value: 20, context: context)
+        let liabilityPositions2 = [firstLiabilityPosition2,secondLiabilityPosition2,thirdLiabilityPosition2,fourthLiabilityPosition2]
+        let date2 = DateParser.shared.date(from: "1966-10-25T00:00:00")!
+        let snapshot = DataFactory.createSnapshot(with: [], and: liabilityPositions2, for: date2, in: context)
+        
+        let firstExpectedChangeCategory = BarChartCategory(change: 0, name: "Privat")
+        let secondExpectedChangeCategory = BarChartCategory(change: -50, name: "Staatlich")
+        let thirdExpectedChangeCategory = BarChartCategory(change: 70, name: "Bank")
+        let fourthExpectedChangeCategory = BarChartCategory(change: 0, name: "Freunde")
+        let expectedChangeCategories = [
+            firstExpectedChangeCategory,
+            secondExpectedChangeCategory,
+            thirdExpectedChangeCategory,
+            fourthExpectedChangeCategory
+        ]
+        return (snapshot, expectedChangeCategories, 70)
+    }
+    
+    func createAndPersistTestObjects_changeChartCategories_2(using context: NSManagedObjectContext) -> (Snapshot,[BarChartCategory],Decimal) {
+        let firstAssetPosition1 = DataFactory.createAssetPosition(name: "Auto", poolName: "Privat", value: 0, context: context)
+        let secondAssetPosition1 = DataFactory.createAssetPosition(name: "Studium", poolName: "Staatlich", value: 50, context: context)
+        let thirdAssetPosition1 = DataFactory.createAssetPosition(name: "Wohnung", poolName: "Bank", value: 10, context: context)
+        let fourthAssetPosition1 = DataFactory.createAssetPosition(name: "Sport", poolName: "Freunde", value: 20, context: context)
+        let assetPositions1 = [firstAssetPosition1,secondAssetPosition1,thirdAssetPosition1,fourthAssetPosition1]
+        let date1 = DateParser.shared.date(from: "1966-10-21T00:00:00")!
+        let _ = DataFactory.createSnapshot(with: assetPositions1, and: [], for: date1, in: context)
+        
+        let firstAssetPosition2 = DataFactory.createAssetPosition(name: "Auto", poolName: "Privat", value: 5, context: context)
+        let secondAssetPosition2 = DataFactory.createAssetPosition(name: "Studium", poolName: "Staatlich", value: 25, context: context)
+        let thirdAssetPosition2 = DataFactory.createAssetPosition(name: "Wohnung", poolName: "Bank", value: 17, context: context)
+        let fourthAssetPosition2 = DataFactory.createAssetPosition(name: "Sport", poolName: "Freunde", value: 20, context: context)
+        let assetPositions2 = [firstAssetPosition2,secondAssetPosition2,thirdAssetPosition2,fourthAssetPosition2]
+        let date2 = DateParser.shared.date(from: "1966-10-25T00:00:00")!
+        let snapshot = DataFactory.createSnapshot(with: assetPositions2, and: [], for: date2, in: context)
+        
+        let firstExpectedChangeCategory = BarChartCategory(change: 0, name: "Privat")
+        let secondExpectedChangeCategory = BarChartCategory(change: -50, name: "Staatlich")
+        let thirdExpectedChangeCategory = BarChartCategory(change: 70, name: "Bank")
+        let fourthExpectedChangeCategory = BarChartCategory(change: 0, name: "Freunde")
+        let expectedChangeCategories = [
+            firstExpectedChangeCategory,
+            secondExpectedChangeCategory,
+            thirdExpectedChangeCategory,
+            fourthExpectedChangeCategory
+        ]
+        return (snapshot, expectedChangeCategories, 70)
     }
 }

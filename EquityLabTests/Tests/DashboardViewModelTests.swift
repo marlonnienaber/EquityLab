@@ -3,14 +3,14 @@ import XCTest
 
 final class DashboardViewModelTests: XCTestCase {
     private var testingCoreDataStack: TestingCoreDataStack!
-    private var testingSnapshotRepository: SnapshotRepository!
+    private var testingSnapshotRepository: SnapshotRepositoryNew!
     private var testingAssetRepository: AssetRepository!
     private var testingLiabilityRepository: LiabilityRepository!
     private let testDataProvider = DashboardViewModelTestDataProvider()
     
     override func setUpWithError() throws {
         testingCoreDataStack = TestingCoreDataStack()
-        testingSnapshotRepository = SnapshotRepository(context: testingCoreDataStack.context)
+        testingSnapshotRepository = SnapshotRepositoryNew(context: testingCoreDataStack.context)
         testingAssetRepository = AssetRepository(context: testingCoreDataStack.context)
         testingLiabilityRepository = LiabilityRepository(context: testingCoreDataStack.context)
     }
@@ -143,167 +143,6 @@ final class DashboardViewModelTests: XCTestCase {
         let expectedLiabilityValueString = LocalizedCurrencyFormatter.shared.string(from: 17.01)!
         let actualLiabilityValueString = balanceViewModel.liabilityValueString
         XCTAssertEqual(expectedLiabilityValueString, actualLiabilityValueString)
-    }
-    
-    
-    
-    /// several asset-/liabilityPools with multipe members
-    func test_computeValueByPool_1() throws {
-        let sut = DashboardViewModel(snapshotRepository: testingSnapshotRepository)
-        let testSnapshot = testDataProvider.createAndPersistTestObjects_computeValueByPool_1(using: testingCoreDataStack.context)
-        
-        let resultAssetPoolValueDictionary = sut.computeValueByPool(for: .assets, using: testSnapshot)
-        let expectedCashValue: Decimal = 166.18
-        let expectedBankValue: Decimal = 711.25
-        let expectedSecuritiesValue: Decimal = 870.7
-        
-        let cashValue = resultAssetPoolValueDictionary["Cash"]
-        let bankValue = resultAssetPoolValueDictionary["Bank"]
-        let securitiesValue = resultAssetPoolValueDictionary["Securities"]
-        XCTAssertNotNil(cashValue)
-        XCTAssertNotNil(bankValue)
-        XCTAssertNotNil(securitiesValue)
-        let actualCashValue = cashValue!
-        let actualBankValue = bankValue!
-        let actualSecuritiesValue = securitiesValue!
-        
-        XCTAssertEqual(expectedCashValue, actualCashValue, accuracy: 0.01)
-        XCTAssertEqual(expectedBankValue, actualBankValue, accuracy: 0.01)
-        XCTAssertEqual(expectedSecuritiesValue, actualSecuritiesValue, accuracy: 0.01)
-        
-        let expectedAssetPoolKeyNumber = 3
-        let actualAssetPoolKeyNumber = resultAssetPoolValueDictionary.keys.count
-        XCTAssertEqual(expectedAssetPoolKeyNumber, actualAssetPoolKeyNumber)
-        
-        let resultLiabilityPoolValueDictionary = sut.computeValueByPool(for: .liabilities, using: testSnapshot)
-        let expectedPrivateValue: Decimal = 225.75
-        let expectedBusinessValue: Decimal = 530.35
-        
-        let privateValue = resultLiabilityPoolValueDictionary["Private"]
-        let businessValue = resultLiabilityPoolValueDictionary["Business"]
-        XCTAssertNotNil(privateValue)
-        XCTAssertNotNil(businessValue)
-        let actualPrivateValue = privateValue!
-        let actualBusinessValue = businessValue!
-        
-        XCTAssertEqual(expectedPrivateValue, actualPrivateValue, accuracy: 0.01)
-        XCTAssertEqual(expectedBusinessValue, actualBusinessValue, accuracy: 0.01)
-        
-        let expectedLiabilityPoolKeyNumber = 2
-        let actualLiabilityPoolKeyNumber = resultLiabilityPoolValueDictionary.keys.count
-        XCTAssertEqual(expectedLiabilityPoolKeyNumber, actualLiabilityPoolKeyNumber)
-    }
-    
-    /// no asset-/liabilityPools
-    func test_computeValueByPool_2() throws {
-        let sut = DashboardViewModel(snapshotRepository: testingSnapshotRepository)
-        let testSnapshot = testDataProvider.createAndPersistTestObjects_computeValueByPool_2(using: testingCoreDataStack.context)
-        
-        let resultAssetPoolValueDictionary = sut.computeValueByPool(for: .assets, using: testSnapshot)
-        let expectedAssetPoolKeyNumber = 0
-        let actualAssetPoolKeyNumber = resultAssetPoolValueDictionary.keys.count
-        XCTAssertEqual(expectedAssetPoolKeyNumber, actualAssetPoolKeyNumber)
-        
-        let resultLiabilityPoolValueDictionary = sut.computeValueByPool(for: .liabilities, using: testSnapshot)
-        let expectedLiabilityPoolKeyNumber = 0
-        let actualLiabilityPoolKeyNumber = resultLiabilityPoolValueDictionary.keys.count
-        XCTAssertEqual(expectedLiabilityPoolKeyNumber, actualLiabilityPoolKeyNumber)
-    }
-    
-    /// one asset-/liabilityPools with one position respectively (value > 0)
-    func test_computeValueByPool_3() throws {
-        let sut = DashboardViewModel(snapshotRepository: testingSnapshotRepository)
-        let testSnapshot = testDataProvider.createAndPersistTestObjects_computeValueByPool_3(using: testingCoreDataStack.context)
-        
-        let resultAssetPoolValueDictionary = sut.computeValueByPool(for: .assets, using: testSnapshot)
-        let expectedCashValue: Decimal = 5.75
-        
-        let cashValue = resultAssetPoolValueDictionary["Cash"]
-        XCTAssertNotNil(cashValue)
-        let actualCashValue = cashValue!
-        
-        XCTAssertEqual(expectedCashValue, actualCashValue, accuracy: 0.01)
-
-        let expectedAssetPoolKeyNumber = 1
-        let actualAssetPoolKeyNumber = resultAssetPoolValueDictionary.keys.count
-        XCTAssertEqual(expectedAssetPoolKeyNumber, actualAssetPoolKeyNumber)
-        
-        let resultLiabilityPoolValueDictionary = sut.computeValueByPool(for: .liabilities, using: testSnapshot)
-        let expectedPrivateValue: Decimal = 120.99
-        
-        let privateValue = resultLiabilityPoolValueDictionary["Private"]
-        XCTAssertNotNil(privateValue)
-        let actualPrivateValue = privateValue!
-        
-        XCTAssertEqual(expectedPrivateValue, actualPrivateValue, accuracy: 0.01)
-        
-        let expectedLiabilityPoolKeyNumber = 1
-        let actualLiabilityPoolKeyNumber = resultLiabilityPoolValueDictionary.keys.count
-        XCTAssertEqual(expectedLiabilityPoolKeyNumber, actualLiabilityPoolKeyNumber)
-    }
-    
-    /// one asset-/liabilityPools with one position respectively (value == 0)
-    func test_computeValueByPool_4() throws {
-        let sut = DashboardViewModel(snapshotRepository: testingSnapshotRepository)
-        let testSnapshot = testDataProvider.createAndPersistTestObjects_computeValueByPool_4(using: testingCoreDataStack.context)
-        
-        let resultAssetPoolValueDictionary = sut.computeValueByPool(for: .assets, using: testSnapshot)
-        let expectedCashValue: Decimal = 0.0
-        
-        let cashValue = resultAssetPoolValueDictionary["Cash"]
-        XCTAssertNotNil(cashValue)
-        let actualCashValue = cashValue!
-        
-        XCTAssertEqual(expectedCashValue, actualCashValue, accuracy: 0.01)
-
-        let expectedAssetPoolKeyNumber = 1
-        let actualAssetPoolKeyNumber = resultAssetPoolValueDictionary.keys.count
-        XCTAssertEqual(expectedAssetPoolKeyNumber, actualAssetPoolKeyNumber)
-        
-        let resultLiabilityPoolValueDictionary = sut.computeValueByPool(for: .liabilities, using: testSnapshot)
-        let expectedPrivateValue: Decimal = 0.0
-        
-        let privateValue = resultLiabilityPoolValueDictionary["Private"]
-        XCTAssertNotNil(privateValue)
-        let actualPrivateValue = privateValue!
-        
-        XCTAssertEqual(expectedPrivateValue, actualPrivateValue, accuracy: 0.01)
-        
-        let expectedLiabilityPoolKeyNumber = 1
-        let actualLiabilityPoolKeyNumber = resultLiabilityPoolValueDictionary.keys.count
-        XCTAssertEqual(expectedLiabilityPoolKeyNumber, actualLiabilityPoolKeyNumber)
-    }
-    
-    /// one asset-/liabilityPools with two positions respectively (value == 0)
-    func test_computeValueByPool_5() throws {
-        let sut = DashboardViewModel(snapshotRepository: testingSnapshotRepository)
-        let testSnapshot = testDataProvider.createAndPersistTestObjects_computeValueByPool_5(using: testingCoreDataStack.context)
-        
-        let resultAssetPoolValueDictionary = sut.computeValueByPool(for: .assets, using: testSnapshot)
-        let expectedCashValue: Decimal = 0.0
-        
-        let cashValue = resultAssetPoolValueDictionary["Cash"]
-        XCTAssertNotNil(cashValue)
-        let actualCashValue = cashValue!
-        
-        XCTAssertEqual(expectedCashValue, actualCashValue, accuracy: 0.01)
-
-        let expectedAssetPoolKeyNumber = 1
-        let actualAssetPoolKeyNumber = resultAssetPoolValueDictionary.keys.count
-        XCTAssertEqual(expectedAssetPoolKeyNumber, actualAssetPoolKeyNumber)
-        
-        let resultLiabilityPoolValueDictionary = sut.computeValueByPool(for: .liabilities, using: testSnapshot)
-        let expectedPrivateValue: Decimal = 0.0
-        
-        let privateValue = resultLiabilityPoolValueDictionary["Private"]
-        XCTAssertNotNil(privateValue)
-        let actualPrivateValue = privateValue!
-        
-        XCTAssertEqual(expectedPrivateValue, actualPrivateValue, accuracy: 0.01)
-        
-        let expectedLiabilityPoolKeyNumber = 1
-        let actualLiabilityPoolKeyNumber = resultLiabilityPoolValueDictionary.keys.count
-        XCTAssertEqual(expectedLiabilityPoolKeyNumber, actualLiabilityPoolKeyNumber)
     }
     
     
@@ -589,5 +428,303 @@ final class DashboardViewModelTests: XCTestCase {
         expectedSelectedSnapshot = snapshot_31_07_2022
         actualSelectedSnapshot = try XCTUnwrap(sut.selectedSnapshot)
         XCTAssertEqual(expectedSelectedSnapshot, actualSelectedSnapshot)
+    }
+    
+    
+    
+    /// snapshot with 1 assetPositions and 1 liabilityPosition of value 0.0
+    func  test_noPositiveDistributionCategoriesRecorded_1() {
+        let snapshot = testDataProvider.createAndPersistTestObjects_noPositiveAssetDistributionCategoriesRecorded_1(using: testingCoreDataStack.context)
+        let sut = DashboardViewModel(snapshotRepository: testingSnapshotRepository)
+        
+        sut.selectedDate = snapshot.date
+        XCTAssertTrue(sut.noPositiveAssetDistributionCategoriesRecorded)
+        XCTAssertTrue(sut.noPositiveLiabilityDistributionCategoriesRecorded)
+    }
+    
+    /// snapshot with 1 assetPositions and liabilityPosition of value > 0.0
+    func  test_noPositiveDistributionCategoriesRecorded_2() {
+        let snapshot = testDataProvider.createAndPersistTestObjects_noPositiveAssetDistributionCategoriesRecorded_2(using: testingCoreDataStack.context)
+        let sut = DashboardViewModel(snapshotRepository: testingSnapshotRepository)
+        
+        sut.selectedDate = snapshot.date
+        XCTAssertFalse(sut.noPositiveAssetDistributionCategoriesRecorded)
+        XCTAssertFalse(sut.noPositiveLiabilityDistributionCategoriesRecorded)
+    }
+    
+    /// selected snapshot with 3 asset pool and 2 liability pools containing one position each (each position  making up >= 5% of respective total value)
+    func test_distributionCategories_1() throws {
+        let (assetCategories, liabilityCategories) = testDataProvider.createAndPersistTestObjects_distributionCategories_1(using: testingCoreDataStack.context)
+        let sut = DashboardViewModel(snapshotRepository: testingSnapshotRepository)
+        
+        let expectedAssetCategories = assetCategories
+        let actualAssetCategories = sut.assetDistributionChartCategories
+        
+        for category in actualAssetCategories {
+            XCTAssertTrue(expectedAssetCategories.contains(where: {$0 == category}))
+        }
+        XCTAssertEqual(expectedAssetCategories.count, actualAssetCategories.count)
+        
+        let expectedLiabilityCategories = liabilityCategories
+        let actualLiabilityCategories = sut.liabilityDistributionChartCategories
+        
+        for category in actualLiabilityCategories {
+            XCTAssertTrue(expectedLiabilityCategories.contains(where: {$0 == category}))
+        }
+        XCTAssertEqual(expectedLiabilityCategories.count, actualLiabilityCategories.count)
+    }
+    
+    /// selected snapshot with 3 asset pools and 2 liability pools containing >= 1 position each (each pool making up >= 3% of respective total value)
+    func test_distributionCategories_2() throws {
+        let (assetCategories, liabilityCategories) = testDataProvider.createAndPersistTestObjects_distributionCategories_2(using: testingCoreDataStack.context)
+        let sut = DashboardViewModel(snapshotRepository: testingSnapshotRepository)
+        
+        let expectedAssetCategories = assetCategories
+        let actualAssetCategories = sut.assetDistributionChartCategories
+        
+        for category in actualAssetCategories {
+            XCTAssertTrue(expectedAssetCategories.contains(where: {$0 == category}))
+        }
+        XCTAssertEqual(expectedAssetCategories.count, actualAssetCategories.count)
+        
+        let expectedLiabilityCategories = liabilityCategories
+        let actualLiabilityCategories = sut.liabilityDistributionChartCategories
+        
+        for category in actualLiabilityCategories {
+            XCTAssertTrue(expectedLiabilityCategories.contains(where: {$0 == category}))
+        }
+        XCTAssertEqual(expectedLiabilityCategories.count, actualLiabilityCategories.count)
+    }
+    
+    /// selected snapshot with 3 asset pool and 2 liability pools containing >= 1 position each (for both assets/liabilities only one pool making up less than 3% of respective value)
+    func test_distributionCategories_3() throws {
+        let (assetCategories, liabilityCategories) = testDataProvider.createAndPersistTestObjects_distributionCategories_3(using: testingCoreDataStack.context)
+        let sut = DashboardViewModel(snapshotRepository: testingSnapshotRepository)
+        
+        let expectedAssetCategories = assetCategories
+        let actualAssetCategories = sut.assetDistributionChartCategories
+        
+        for category in actualAssetCategories {
+            XCTAssertTrue(expectedAssetCategories.contains(where: {$0 == category}))
+        }
+        XCTAssertEqual(expectedAssetCategories.count, actualAssetCategories.count)
+        
+        let expectedLiabilityCategories = liabilityCategories
+        let actualLiabilityCategories = sut.liabilityDistributionChartCategories
+        
+        for category in actualLiabilityCategories {
+            XCTAssertTrue(expectedLiabilityCategories.contains(where: {$0 == category}))
+        }
+        XCTAssertEqual(expectedLiabilityCategories.count, actualLiabilityCategories.count)
+    }
+    
+    /// selected snapshot with multiple pools making up less than 3% for both liabilities and assets
+    func test_distributionCategories_4() throws {
+        let (assetCategories, liabilityCategories) = testDataProvider.createAndPersistTestObjects_distributionCategories_4(using: testingCoreDataStack.context)
+        let sut = DashboardViewModel(snapshotRepository: testingSnapshotRepository)
+        
+        let expectedAssetCategories = assetCategories
+        let actualAssetCategories = sut.assetDistributionChartCategories
+        
+        for category in actualAssetCategories {
+            XCTAssertTrue(expectedAssetCategories.contains(where: {$0 == category}))
+        }
+        XCTAssertEqual(expectedAssetCategories.count, actualAssetCategories.count)
+        
+        let expectedLiabilityCategories = liabilityCategories
+        let actualLiabilityCategories = sut.liabilityDistributionChartCategories
+        
+        for category in actualLiabilityCategories {
+            XCTAssertTrue(expectedLiabilityCategories.contains(where: {$0 == category}))
+        }
+        XCTAssertEqual(expectedLiabilityCategories.count, actualLiabilityCategories.count)
+    }
+    
+    /// selected snapshot with no asset pools or liability pools
+    func test_distributionCategories_5() throws {
+        let (assetCategories, liabilityCategories) = testDataProvider.createAndPersistTestObjects_distributionCategories_5(using: testingCoreDataStack.context)
+        let sut = DashboardViewModel(snapshotRepository: testingSnapshotRepository)
+        
+        let expectedAssetCategories = assetCategories
+        let actualAssetCategories = sut.assetDistributionChartCategories
+        
+        for category in actualAssetCategories {
+            XCTAssertTrue(expectedAssetCategories.contains(where: {$0 == category}))
+        }
+        XCTAssertEqual(expectedAssetCategories.count, actualAssetCategories.count)
+        
+        let expectedLiabilityCategories = liabilityCategories
+        let actualLiabilityCategories = sut.liabilityDistributionChartCategories
+        
+        for category in actualLiabilityCategories {
+            XCTAssertTrue(expectedLiabilityCategories.contains(where: {$0 == category}))
+        }
+        XCTAssertEqual(expectedLiabilityCategories.count, actualLiabilityCategories.count)
+    }
+    
+    
+    
+    /// cumulative value falling well within the range that should be attributed to the according category (far away from borders of range)
+    func test_setSelectedCategoryForNewCumulativeValue_1() throws {
+        let (expectedAssetSelectedCategory, expectedLiabilitySelectedCategory) = testDataProvider.createAndPersistTestObjects_setSelectedCategoryForNewCumulativeValue_1(using: testingCoreDataStack.context)
+        
+        let sut = DashboardViewModel(snapshotRepository: testingSnapshotRepository)
+        
+        sut.setSelectedDistributionCategory(for: .assets, with: 39.71)
+        let actualAssetSelectedCategory = sut.selectedAssetDistributionCategory
+        XCTAssertEqual(expectedAssetSelectedCategory, actualAssetSelectedCategory)
+        
+        sut.setSelectedDistributionCategory(for: .liabilities, with: 27.11)
+        let actualLiabilitySelectedCategory = sut.selectedLiabilityDistributionCategory
+        XCTAssertEqual(expectedLiabilitySelectedCategory, actualLiabilitySelectedCategory)
+    }
+    
+    /// last cumulative value that should be attributed to the first category
+    func test_setSelectedCategoryForNewCumulativeValue_2() throws {
+        let (expectedAssetSelectedCategory, expectedLiabilitySelectedCategory) = testDataProvider.createAndPersistTestObjects_setSelectedCategoryForNewCumulativeValue_2(using: testingCoreDataStack.context)
+        
+        let sut = DashboardViewModel(snapshotRepository: testingSnapshotRepository)
+        
+        sut.setSelectedDistributionCategory(for: .assets, with: 20)
+        let actualAssetSelectedCategory = sut.selectedAssetDistributionCategory
+        XCTAssertEqual(expectedAssetSelectedCategory, actualAssetSelectedCategory)
+        
+        sut.setSelectedDistributionCategory(for: .liabilities, with: 40)
+        let actualLiabilitySelectedCategory = sut.selectedLiabilityDistributionCategory
+        XCTAssertEqual(expectedLiabilitySelectedCategory, actualLiabilitySelectedCategory)
+    }
+    
+    
+    
+    /// snapshot with equal category
+    func test_setSelectedDistributionCategoryOnNewSnapshot_1() throws {
+        let (
+            expectedAssetCategory,
+            expectedLiabilityCategory,
+            snapshotDate,
+        ) = testDataProvider.createAndPersistTestObjects_setSelectedDistributionCategoryOnNewSnapshot_1(using: testingCoreDataStack.context)
+        
+        let sut = DashboardViewModel(snapshotRepository: testingSnapshotRepository)
+        sut.selectedAssetDistributionCategory = expectedAssetCategory
+        sut.selectedLiabilityDistributionCategory = expectedLiabilityCategory
+        sut.selectedDate = snapshotDate
+        
+        sut.selectedSnapshotDetailView = .assetDetailView
+        sut.setSelectedDistributionCategoryOnNewSnapshot()
+        
+        let actualSelectedAssetDistributionCategory = sut.selectedAssetDistributionCategory
+        XCTAssertEqual(expectedAssetCategory, actualSelectedAssetDistributionCategory)
+        
+        sut.selectedSnapshotDetailView = .liabilityDetailView
+        sut.setSelectedDistributionCategoryOnNewSnapshot()
+        
+        let actualSelectedLiabilityDistributionCategory = sut.selectedLiabilityDistributionCategory
+        XCTAssertEqual(expectedLiabilityCategory, actualSelectedLiabilityDistributionCategory)
+    }
+    
+    /// snapshot with different categories
+    func test_setSelectedDistributionCategoryOnNewSnapshot_2() throws {
+        let (
+            expectedAssetCategory,
+            expectedLiabilityCategory,
+            snapshotDate,
+        ) = testDataProvider.createAndPersistTestObjects_setSelectedDistributionCategoryOnNewSnapshot_2(using: testingCoreDataStack.context)
+        
+        let sut = DashboardViewModel(snapshotRepository: testingSnapshotRepository)
+        var differentAssetCategory = expectedAssetCategory
+        differentAssetCategory.pools.removeFirst()
+        sut.selectedAssetDistributionCategory = differentAssetCategory
+        var differentLiabilityCategory = expectedLiabilityCategory
+        differentLiabilityCategory.pools.removeFirst()
+        sut.selectedLiabilityDistributionCategory = differentLiabilityCategory
+        sut.selectedDate = snapshotDate
+        
+        sut.selectedSnapshotDetailView = .assetDetailView
+        sut.setSelectedDistributionCategoryOnNewSnapshot()
+        
+        let actualSelectedAssetDistributionCategory = sut.selectedAssetDistributionCategory
+        XCTAssertNotEqual(differentAssetCategory, actualSelectedAssetDistributionCategory)
+        XCTAssertEqual(expectedAssetCategory, actualSelectedAssetDistributionCategory)
+        
+        sut.selectedSnapshotDetailView = .liabilityDetailView
+        sut.setSelectedDistributionCategoryOnNewSnapshot()
+        
+        let actualSelectedLiabilityDistributionCategory = sut.selectedLiabilityDistributionCategory
+        XCTAssertNotEqual(differentLiabilityCategory, actualSelectedLiabilityDistributionCategory)
+        XCTAssertEqual(expectedLiabilityCategory, actualSelectedLiabilityDistributionCategory)
+    }
+    
+    
+    
+    /// test whether the Snapshot before the last Snapshot is correctly computed
+    func test_computeSnapshotBeforeSelectedSnapshot_1() throws {
+        let (expectedBeforeSnapshot,selectedSnapshot) = testDataProvider.createAndPersistTestObjects_computeSnapshotBeforeSelectedSnapshot_1(using: testingCoreDataStack.context)
+        
+        let sut = DashboardViewModel(snapshotRepository: testingSnapshotRepository)
+        sut.selectedSnapshot = selectedSnapshot
+        
+        let actualBeforeSnapshot = sut.computeSnapshotBeforeSelectedSnapshot()
+        
+        XCTAssertEqual(expectedBeforeSnapshot, actualBeforeSnapshot)
+    }
+    
+    /// test whether the Snapshot before one of the middle Snapshots is correctly computed
+    func test_computeSnapshotBeforeSelectedSnapshot_2() throws {
+        let (expectedBeforeSnapshot,selectedSnapshot) = testDataProvider.createAndPersistTestObjects_computeSnapshotBeforeSelectedSnapshot_2(using: testingCoreDataStack.context)
+        
+        let sut = DashboardViewModel(snapshotRepository: testingSnapshotRepository)
+        sut.selectedSnapshot = selectedSnapshot
+        
+        let actualBeforeSnapshot = sut.computeSnapshotBeforeSelectedSnapshot()
+        
+        XCTAssertEqual(expectedBeforeSnapshot, actualBeforeSnapshot)
+    }
+    
+    /// test whether computing the Snapshot before the last Snapshot correctly returns nil
+    func test_computeSnapshotBeforeSelectedSnapshot_3() throws {
+        let selectedSnapshot = testDataProvider.createAndPersistTestObjects_computeSnapshotBeforeSelectedSnapshot_3(using: testingCoreDataStack.context)
+        
+        let sut = DashboardViewModel(snapshotRepository: testingSnapshotRepository)
+        sut.selectedSnapshot = selectedSnapshot
+        
+        let beforeSnapshot = sut.computeSnapshotBeforeSelectedSnapshot()
+        
+        XCTAssertNil(beforeSnapshot)
+    }
+    
+    
+    
+    /// test liabilityChangeChartCategories/maxLiabilityChangePercentage for two consecutive Snapshots. The test includes positive, negative and no change  and a case where the category from the earlier snapshot was of value 0
+    func test_changeChartCategories_1() throws {
+        let (snapshot, expectedChangeCategories, expectedMaxChangePercentage) = testDataProvider.createAndPersistTestObjects_changeChartCategories_1(using: testingCoreDataStack.context)
+        let sut = DashboardViewModel(snapshotRepository: testingSnapshotRepository)
+        sut.selectedSnapshot = snapshot
+        
+        let actualChangeCategories = sut.liabilityChangeChartCategories
+        let actualMaxChangePercentage = sut.maxLiabilityChangePercentage
+        
+        XCTAssertTrue(
+            checkEquivalence(of: expectedChangeCategories, and: actualChangeCategories) {
+                $0.change == $1.change && $0.name == $1.name
+            }
+        )
+        XCTAssertEqual(expectedMaxChangePercentage, actualMaxChangePercentage)
+    }
+    
+    /// test assetChangeChartCategories/maxAssetChangePercentage for two consecutive Snapshots. The test includes positive, negative and no change and a case where the category from the earlier snapshot was of value 0
+    func test_changeChartCategories_2() throws {
+        let (snapshot, expectedChangeCategories, expectedMaxChangePercentage) = testDataProvider.createAndPersistTestObjects_changeChartCategories_2(using: testingCoreDataStack.context)
+        let sut = DashboardViewModel(snapshotRepository: testingSnapshotRepository)
+        sut.selectedSnapshot = snapshot
+        
+        let actualChangeCategories = sut.assetChangeChartCategories
+        let actualMaxChangePercentage = sut.maxAssetChangePercentage
+        
+        XCTAssertTrue(
+            checkEquivalence(of: expectedChangeCategories, and: actualChangeCategories) {
+                $0.change == $1.change && $0.name == $1.name
+            }
+        )
+        XCTAssertEqual(expectedMaxChangePercentage, actualMaxChangePercentage)
     }
 }

@@ -2,10 +2,16 @@ import SwiftUI
 import Charts
 
 struct DistributionChart: View {
-    @State var viewModel: DistributionChartViewModel
+    @Binding var selectedCumulativeValue: Decimal?
+    @Binding var showPopover: Bool
+    @Binding var distributionCategories: [DonutChartCategory]
+    @Binding var selectedCategory: DonutChartCategory?
+    @Binding var noPositiveDistributionCategoriesRecorded: Bool
+    let color: Color
+    let setSelectedDistributionCategoryWith: (Decimal) -> Void
     
     var body: some View {
-        if viewModel.noValuesRecordedForThisSnapshot {
+        if noPositiveDistributionCategoriesRecorded {
             Text("no positions with positive values were recorded with this snapshot")
                 .multilineTextAlignment(.center)
         } else {
@@ -14,29 +20,29 @@ struct DistributionChart: View {
                     chart(geometry)
                         .distributionChartPositioning(for: geometry)
                     verticalSeperator(for: geometry)
-                    if let selectedCategory = viewModel.selectedCategory {
+                    if let selectedCategory = selectedCategory {
                         selectedCategoryDetails(selectedCategory: selectedCategory)
                             .selectedCategoryDetailsPositioning()
                     } else {
                         Spacer()
                     }
                 }
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
     }
     
     private func chart(_ geometry: GeometryProxy) -> some View {
-        Chart(viewModel.distributionCategories, id: \.self) { category in
+        Chart(distributionCategories, id: \.self) { category in
             SectorMark(angle: .value("type value", category.value),
                        innerRadius: .ratio(0.65),
-                       outerRadius: viewModel.calculateOuterRadius(for: geometry, and: category),
+                       outerRadius: calculateOuterRadius(for: geometry, and: category),
                        angularInset: 3)
-            .foregroundStyle(viewModel.color)
+            .foregroundStyle(color)
             .cornerRadius(5)
         }
-        .frame(width: viewModel.calculateFrameLength(for: geometry), height: viewModel.calculateFrameLength(for: geometry))
-        .chartAngleSelection(value: $viewModel.selectedCumulativeValue)
+        .frame(width: calculateFrameLength(for: geometry), height: calculateFrameLength(for: geometry))
+        .chartAngleSelection(value: $selectedCumulativeValue)
         .chartGesture { chart in
             SpatialTapGesture()
                 .onEnded { event in
@@ -45,19 +51,16 @@ struct DistributionChart: View {
                 }
         }
         .chartBackground { _ in
-            if let percentageString = viewModel.getSelectedCategoryPercentageString() {
+            if let percentageString = percentageString{
                 Text(percentageString)
             }
         }
-        .onChange(of: viewModel.selectedCumulativeValue) { oldValue, newValue in
+        .onChange(of: selectedCumulativeValue) { oldValue, newValue in
             if let newValue {
                 withAnimation {
-                    viewModel.setSelectedCategoryForNewCumulativeValue(cumulativeValue: newValue)
+                    setSelectedDistributionCategoryWith(newValue)
                 }
             }
-        }
-        .onChange(of: viewModel.dashboardViewModel.selectedSnapshot) {
-            viewModel.setSelectedCategoryForNewSnapshot()
         }
     }
     
@@ -68,28 +71,28 @@ struct DistributionChart: View {
                     ForEach(selectedCategory.pools[0...2], id: \.self) { pool in
                         VStack(alignment: .leading) {
                             Text(pool.name)
-                            Text(viewModel.getValueString(for: pool))
+                            Text(pool.value.currencyString)
                                 .font(.system(size: 13))
-                            Text(viewModel.getPercentageString(for: pool))
+                            Text(pool.percentage.oneDecimalPercentageString)
                                 .font(.system(size: 13))
                         }
                     }
                     HStack {
                         Button {
-                            viewModel.showPopover.toggle()
+                            showPopover.toggle()
                         } label: {
                             Image(systemName: "info.circle")
                         }
                         .foregroundColor(.primary)
-                        .popover(isPresented: $viewModel.showPopover) {
+                        .popover(isPresented: $showPopover) {
                             ScrollView {
                                 VStack(alignment: .leading, spacing: 10) {
                                     ForEach(selectedCategory.pools[3..<selectedCategory.pools.count], id: \.self) { hiddenPool in
                                         VStack(alignment: .leading) {
                                             Text(hiddenPool.name)
-                                            Text(viewModel.getValueString(for: hiddenPool))
+                                            Text(hiddenPool.value.currencyString)
                                                 .font(.system(size: 13))
-                                            Text(viewModel.getPercentageString(for: hiddenPool))
+                                            Text(hiddenPool.percentage.oneDecimalPercentageString)
                                                 .font(.system(size: 13))
                                         }
                                     }
@@ -106,9 +109,9 @@ struct DistributionChart: View {
                 ForEach(selectedCategory.pools, id: \.self) { pool in
                     VStack(alignment: .leading) {
                         Text(pool.name)
-                        Text(viewModel.getValueString(for: pool))
+                        Text(pool.value.currencyString)
                             .font(.system(size: 13))
-                        Text(viewModel.getPercentageString(for: pool))
+                        Text(pool.percentage.oneDecimalPercentageString)
                             .font(.system(size: 13))
                     }
                 }
@@ -116,7 +119,7 @@ struct DistributionChart: View {
         } else {
             VStack(alignment: .leading) {
                 Text(selectedCategory.pools.first!.name)
-                Text(viewModel.getValueString(for: selectedCategory.pools.first!))
+                Text(selectedCategory.pools.first!.value.currencyString)
                     .font(.system(size: 13))
             }
         }
@@ -126,6 +129,27 @@ struct DistributionChart: View {
         Rectangle()
             .frame(width: 1.2, height: geometry.size.height * 0.8)
             .foregroundColor(.gray.opacity(0.35))
+    }
+    
+    private var percentageString: String? {
+        selectedCategory?.percentage.oneDecimalPercentageString
+    }
+    
+    private func calculateFrameLength(for geometry: GeometryProxy) -> CGFloat {
+        let maxWidth = geometry.size.width * 0.5
+        let maxHeight = geometry.size.height
+        return min(maxWidth, maxHeight)
+    }
+    
+    private func calculateOuterRadius(for geometry: GeometryProxy, and category: DonutChartCategory) -> MarkDimension {
+        let chartSize = calculateFrameLength(for: geometry)
+        if chartSize >= 170 {
+            return selectedCategory == category ? 95 : 82
+        } else if chartSize >= 155 {
+            return selectedCategory == category ? 80 : 73
+        } else {
+            return selectedCategory == category ? 70 : 63
+        }
     }
 }
 
