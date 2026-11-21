@@ -26,7 +26,7 @@ struct CircularProgressView: View {
                 Image(systemName: "checkmark")
                     .foregroundColor(Color.primary)
             } else {
-                Text("\(progress * 100)%")
+                Text("\(Int((progress * 100).doubleValue.rounded()))%")
                     .font(.footnote)
                     .foregroundColor(Color.primary)
             }

@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 56;
+	objectVersion = 70;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -211,6 +211,7 @@
 		737967142D034FAA0001278D /* PossessionFormViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PossessionFormViewModelTests.swift; sourceTree = "<group>"; };
 		737967162D03500C0001278D /* PossessionFormViewModelTestDataProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PossessionFormViewModelTestDataProvider.swift; sourceTree = "<group>"; };
 		737967182D0350130001278D /* ReceivableFormViewModelTestDataProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceivableFormViewModelTestDataProvider.swift; sourceTree = "<group>"; };
+		737D477830B1BC2000C96790 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		73823CE02C68023E0049D03C /* BalanceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BalanceView.swift; sourceTree = "<group>"; };
 		7387C2402D5175EC00352252 /* SnapshotRepositoryNew.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapshotRepositoryNew.swift; sourceTree = "<group>"; };
 		7387C2432D52100A00352252 /* SnapshotLedgerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapshotLedgerViewModel.swift; sourceTree = "<group>"; };
@@ -256,6 +257,10 @@
 		73FE1F792D19E459000FC969 /* LoanPartner+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LoanPartner+CoreDataClass.swift"; sourceTree = SOURCE_ROOT; };
 		73FE1F7A2D19E459000FC969 /* LoanPartner+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LoanPartner+CoreDataProperties.swift"; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		737D476F30B1B9CE00C96790 /* Documentation */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Documentation; sourceTree = "<group>"; };
+/* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		7314FD622C75106500483835 /* Frameworks */ = {
@@ -398,6 +403,8 @@
 		7342ED1A2C44750200BA20A4 = {
 			isa = PBXGroup;
 			children = (
+				737D477830B1BC2000C96790 /* README.md */,
+				737D476F30B1B9CE00C96790 /* Documentation */,
 				7342ED252C44750200BA20A4 /* EquityLab */,
 				7314FD662C75106500483835 /* EquityLabTests */,
 				73EBA0AF2D529C4900C7D83D /* Frameworks */,

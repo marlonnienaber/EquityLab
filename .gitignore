@@ -1,2 +1,8 @@
 # Local Xcode build output
 /build/
+
+# Personal Xcode workspace state
+xcuserdata/
+
+# Automatically generated workspace for this project
+/EquityLab.xcodeproj/project.xcworkspace/contents.xcworkspacedata
