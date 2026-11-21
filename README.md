@@ -10,12 +10,10 @@ I built EquityLab to track my finances with a focus on equity, rather than the c
 
 Track money you borrow and lend, including the people or institutions involved. Record transactions and repayments, review their history, and see how much of each loan has been repaid.
 
-<table>
-  <tr>
-    <td><img src="Documentation/loanLedger.png" alt="Loan and receivable overview with repayment progress" width="280"></td>
-    <td><img src="Documentation/loanDetail.png" alt="Loan details and transaction history" width="280"></td>
-  </tr>
-</table>
+<p>
+  <img src="Documentation/loanLedger.png" alt="Loan and receivable overview with repayment progress" width="280">
+  <img src="Documentation/loanDetail.png" alt="Loan details and transaction history" width="280">
+</p>
 
 ### Define Snapshot Structure
 
@@ -27,24 +25,20 @@ Define the assets and liabilities you want to track and organize them into pools
 
 Capture your financial position on a chosen date by entering the value of each asset and liability. Browse previous snapshots and revisit the values behind your equity at each point in time.
 
-<table>
-  <tr>
-    <td><img src="Documentation/snapshotLedger.png" alt="Snapshot history with dates and equity totals" width="280"></td>
-    <td><img src="Documentation/snapshotDetail.png" alt="Snapshot form with asset and liability values" width="280"></td>
-  </tr>
-</table>
+<p>
+  <img src="Documentation/snapshotLedger.png" alt="Snapshot history with dates and equity totals" width="280">
+  <img src="Documentation/snapshotDetail.png" alt="Snapshot form with asset and liability values" width="280">
+</p>
 
 ### Visualize Snapshots
 
 Follow your equity over time and select a snapshot to explore its details. Review changes and distributions across asset and liability pools, or see the balance of assets, liabilities, and equity.
 
-<table>
-  <tr>
-    <td><img src="Documentation/dashboardAssets.png" alt="Equity history and changes across asset pools" width="280"></td>
-    <td><img src="Documentation/dashboardLiabilities.png" alt="Equity history and changes across liability pools" width="280"></td>
-    <td><img src="Documentation/dashboardBalance.png" alt="Snapshot balance showing assets, liabilities, and equity" width="280"></td>
-  </tr>
-</table>
+<p>
+  <img src="Documentation/dashboardAssets.png" alt="Equity history and changes across asset pools" width="280">
+  <img src="Documentation/dashboardLiabilities.png" alt="Equity history and changes across liability pools" width="280">
+  <img src="Documentation/dashboardBalance.png" alt="Snapshot balance showing assets, liabilities, and equity" width="280">
+</p>
 
 ## Local Setup
 
