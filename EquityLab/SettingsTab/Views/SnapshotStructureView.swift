@@ -255,7 +255,6 @@ struct BalanceSide: View {
             Spacer()
         }
         .padding(.horizontal)
-        .foregroundStyle(.primaryInverted)
         .background(
             Rectangle()
                 .cornerRadius(12)

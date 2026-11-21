@@ -38,23 +38,20 @@ struct LiabilityDetailView: View {
             Button {
                 viewModel.activeLiabilityDetailSheet = .editLiabilitySheet(viewModel.liability)
             } label: {
-                Text("edit liability")
-                    .padding(.horizontal, 9)
-                    .padding(.vertical, 4)
-                    .background(Capsule().fill(Color.primary))
-                    .foregroundColor(.primaryInverted)
+                Text("Edit liability")
             }
             Button {
                 viewModel.activeLiabilityDetailSheet = .addTransactionFormSheet
             } label: {
-                Text("add transaction")
-                    .padding(.horizontal, 9)
-                    .padding(.vertical, 4)
-                    .background(Capsule().fill(Color.primary))
-                    .foregroundColor(.primaryInverted)
+                Text("Add transaction")
             }
             Spacer()
         }
+        .font(.subheadline)
+        .foregroundStyle(.primary)
+        .buttonStyle(.bordered)
+        .buttonBorderShape(.capsule)
+        .tint(.gray)
     }
     
     private var transactionList: some View {
@@ -99,7 +96,7 @@ struct LiabilityDetailView: View {
                     .font(.footnote)
             }
             .frame(width: 45, height: 45)
-            .background(.gray.secondary)
+            .background(.gray)
             .cornerRadius(8)
             .foregroundColor(.white)
             Spacer()

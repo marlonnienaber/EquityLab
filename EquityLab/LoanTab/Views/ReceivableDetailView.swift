@@ -38,23 +38,20 @@ struct ReceivableDetailView: View {
             Button {
                 viewModel.activeReceivableDetailSheet = .editReceivableSheet(viewModel.receivable)
             } label: {
-                Text("edit receivable")
-                    .padding(.horizontal, 9)
-                    .padding(.vertical, 4)
-                    .background(Capsule().fill(Color.primary))
-                    .foregroundColor(.primaryInverted)
+                Text("Edit receivable")
             }
             Button {
                 viewModel.activeReceivableDetailSheet = .addTransactionFormSheet
             } label: {
-                Text("add transaction")
-                    .padding(.horizontal, 9)
-                    .padding(.vertical, 4)
-                    .background(Capsule().fill(Color.primary))
-                    .foregroundColor(.primaryInverted)
+                Text("Add transaction")
             }
             Spacer()
         }
+        .font(.subheadline)
+        .foregroundStyle(.primary)
+        .buttonStyle(.bordered)
+        .buttonBorderShape(.capsule)
+        .tint(.gray)
     }
     
     private var transactionList: some View {
@@ -99,7 +96,7 @@ struct ReceivableDetailView: View {
                     .font(.footnote)
             }
             .frame(width: 45, height: 45)
-            .background(.gray.secondary)
+            .background(.gray)
             .cornerRadius(8)
             .foregroundColor(.white)
             Spacer()
