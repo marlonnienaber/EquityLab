@@ -17,13 +17,13 @@ Track money you borrow and lend, including the people or institutions involved. 
 
 ### Define Snapshot Structure
 
-Define the assets and liabilities you want to track and organize them into pools such as bank accounts, investments, or personal loans. Edit the structure as your financial situation changes.
+Define the assets and liabilities you want to track and organize them into pools such as Accounts, Depots, Cash, or Loans Friends. Edit the structure as your financial situation changes.
 
 <img src="Documentation/snapshotStructure.png" alt="Assets and liabilities organized into snapshot pools" width="280">
 
 ### Take Snapshots
 
-Capture your financial position on a chosen date by entering the value of each asset and liability. Browse previous snapshots and revisit the values behind your equity at each point in time.
+Capture your financial position on a chosen date by entering the value of each asset and liability. Receivable and loan balances are filled in automatically based on their current repayment state. Browse previous snapshots and revisit the values behind your equity at each point in time.
 
 <p>
   <img src="Documentation/snapshotLedger.png" alt="Snapshot history with dates and equity totals" width="280">
