@@ -17,7 +17,7 @@ Track money you borrow and lend, including the people or institutions involved. 
 
 ### Define Snapshot Structure
 
-Define the assets and liabilities you want to track and organize them into pools such as Accounts, Depots, Cash, or Loans Friends. Edit the structure as your financial situation changes.
+Define the assets and liabilities you want to track and organize them into pools such as Accounts, Depots, etc. Edit the structure as your financial situation changes.
 
 <img src="Documentation/snapshotStructure.png" alt="Assets and liabilities organized into snapshot pools" width="280">
 
