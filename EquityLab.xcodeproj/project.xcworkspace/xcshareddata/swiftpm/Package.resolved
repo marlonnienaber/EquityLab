@@ -1,5 +1,5 @@
 {
-  "originHash" : "da97e40584204f89c5c9b03468426b4843dca682b424845a2f15553102b788be",
+  "originHash" : "adb3a5ef102807208b3903eff4afa51410564344df598321aca19223a4b617e9",
   "pins" : [
     {
       "identity" : "alerttoast",
@@ -17,6 +17,15 @@
       "state" : {
         "revision" : "e5b3ed359b04370287366a7c15ffa7013cdd4eec",
         "version" : "1.2.5"
+      }
+    },
+    {
+      "identity" : "retrievers",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/marlonnienaber/Retrievers",
+      "state" : {
+        "revision" : "7fd5457abed78aeb2748b47a04f89e07329da9ce",
+        "version" : "1.0.0"
       }
     }
   ],
